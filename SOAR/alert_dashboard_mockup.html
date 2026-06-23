@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng điều khiển SOAR - Thống kê Cảnh báo</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- ApexCharts CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        :root {
+            /* Palette Light Mode */
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
+            --primary: #0091ff;
+            --primary-hover: #0077d6;
+            --primary-bg: #e0f2fe;
+            --success: #10b981;
+            --success-bg: #d1fae5;
+            --warning: #f59e0b;
+            --warning-bg: #fef3c7;
+            --danger: #ef4444;
+            --danger-bg: #fee2e2;
+            --info: #3b82f6;
+            --info-bg: #dbeafe;
+            
+            --header-bg: #ffffff;
+            --tab-active-color: #0091ff;
+            --filter-bg: #f1f5f9;
+            --filter-btn-bg: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --radius-lg: 12px;
+            --radius-md: 8px;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        .dark-mode {
+            /* Palette Dark Mode */
+            --bg-body: #0b0f19;
+            --bg-card: #151b2c;
+            --border-color: #232c45;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-light: #64748b;
+            --primary: #38bdf8;
+            --primary-hover: #0ea5e9;
+            --primary-bg: #073b5c;
+            --success: #34d399;
+            --success-bg: #064e3b;
+            --warning: #fbbf24;
+            --warning-bg: #78350f;
+            --danger: #f87171;
+            --danger-bg: #7f1d1d;
+            --info: #60a5fa;
+            --info-bg: #1e3a8a;
+            
+            --header-bg: #111827;
+            --tab-active-color: #38bdf8;
+            --filter-bg: #1e293b;
+            --filter-btn-bg: #1e293b;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-body);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-light);
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo-box {
+            width: 32px;
+            height: 32px;
+            background-color: var(--primary-bg);
+            color: var(--primary);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        nav {
+            display: flex;
+            gap: 28px;
+            height: 60px;
+        }
+
+        nav a {
+            display: flex;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            height: 100%;
+        }
+
+        nav a:hover {
+            color: var(--text-main);
+        }
+
+        nav a.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background-color: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .badge-count {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background-color: var(--danger);
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 10px;
+            border: 2px solid var(--header-bg);
+        }
+
+        .lang-select {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-main);
+            background-color: transparent;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 0 0 2px var(--border-color);
+        }
+
+        /* --- Sub-navigation Tabs --- */
+        .sub-nav {
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 24px;
+            display: flex;
+            gap: 32px;
+            height: 48px;
+        }
+
+        .sub-nav a {
+            display: flex;
+            align-items: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            height: 100%;
+            position: relative;
+        }
+
+        .sub-nav a:hover {
+            color: var(--text-main);
+        }
+
+        .sub-nav a.active {
+            color: var(--tab-active-color);
+            font-weight: 600;
+        }
+
+        .sub-nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: var(--tab-active-color);
+            border-radius: 3px 3px 0 0;
+        }
+
+        /* --- Filter Control Bar --- */
+        .filter-bar {
+            background-color: var(--bg-body);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filter-select {
+            background-color: var(--filter-btn-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-select:hover {
+            border-color: var(--primary);
+        }
+
+        .date-range-picker {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--filter-btn-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            color: var(--text-main);
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .date-range-picker:hover {
+            border-color: var(--primary);
+        }
+
+        .date-range-picker input {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-family: var(--font-family);
+            font-size: 13px;
+            cursor: pointer;
+            width: 140px;
+            text-align: center;
+            outline: none;
+        }
+
+        .date-separator {
+            color: var(--text-muted);
+        }
+
+        .btn-action {
+            background-color: var(--filter-btn-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-action:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            border: 1px solid var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+            color: #ffffff;
+        }
+
+        /* --- Main Content --- */
+        main {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* --- KPI Row --- */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .kpi-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            height: 140px;
+        }
+
+        .kpi-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .kpi-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .kpi-icon-wrapper {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kpi-value-row {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: auto;
+        }
+
+        .kpi-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .kpi-trend {
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .kpi-trend.up {
+            color: var(--danger);
+        }
+
+        .kpi-trend.down {
+            color: var(--success);
+        }
+
+        .kpi-sparkline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 45px;
+        }
+
+        /* --- Dashboard Grid System --- */
+        .chart-grid-2col {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .chart-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Specific card heights */
+        .height-trend {
+            height: 380px;
+        }
+
+        .height-donut-row {
+            height: 320px;
+        }
+
+        .height-table-row {
+            height: 400px;
+        }
+
+        /* --- Tables styling --- */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            flex: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            color: var(--text-light);
+            font-weight: 500;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: var(--filter-bg);
+        }
+
+        .severity-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .severity-badge.critical {
+            background-color: var(--danger-bg);
+            color: var(--danger);
+        }
+        
+        .severity-badge.high {
+            background-color: var(--warning-bg);
+            color: var(--warning);
+        }
+
+        .severity-badge.medium {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+
+        .severity-badge.low {
+            background-color: var(--info-bg);
+            color: var(--info);
+        }
+
+        .text-truncate {
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .ip-address {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: 600;
+        }
+
+        .badge-ip-count {
+            background-color: var(--filter-bg);
+            color: var(--text-muted);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        /* --- Settings Overlay Popup --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            width: 480px;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .modal-overlay.open .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 12px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background-color: var(--bg-body);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .checkbox-item input {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Quick Layout Adjustments for smaller screens */
+        @media (max-width: 1200px) {
+            .chart-grid-2col, .chart-grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .kpi-row {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .kpi-row {
+                grid-template-columns: 1fr;
+            }
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <a href="#" class="logo">
+                <div class="logo-box">S</div>
+                <span>SOAR EAMC</span>
+            </a>
+            <nav>
+                <a href="#">TRANG CHỦ</a>
+                <a href="#" class="active">BẢNG ĐIỀU KHIỂN</a>
+                <a href="#">BÁO CÁO</a>
+                <a href="#">QUY TRÌNH</a>
+                <a href="#">SỰ VIỆC</a>
+                <a href="#">CÔNG VIỆC</a>
+                <a href="#">CẢNH BÁO</a>
+                <a href="#">QUẢN TRỊ</a>
+            </nav>
+        </div>
+
+        <div class="header-right">
+            <!-- Notifications -->
+            <button class="icon-btn">
+                <i data-lucide="bell" style="width: 20px; height: 20px;"></i>
+                <span class="badge-count">99+</span>
+            </button>
+            
+            <!-- Language Selector -->
+            <button class="lang-select">
+                <span>Tiếng Việt</span>
+                <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i>
+            </button>
+            
+            <!-- Dark Mode Toggle -->
+            <button class="icon-btn" id="theme-toggle">
+                <i data-lucide="moon" id="theme-icon" style="width: 20px; height: 20px;"></i>
+            </button>
+
+            <!-- User profile -->
+            <div class="avatar" title="Tài khoản cá nhân">S</div>
+        </div>
+    </header>
+
+    <!-- Sub-navigation Tab Bar -->
+    <div class="sub-nav">
+        <a href="#">TỔNG QUAN</a>
+        <a href="#">SỰ VIỆC</a>
+        <a href="#">CÔNG VIỆC</a>
+        <a href="#">LỰC LƯỢNG XỬ LÝ</a>
+        <a href="#" class="active">CẢNH BÁO</a>
+    </div>
+
+    <!-- Filter Control Bar -->
+    <div class="filter-bar">
+        <select class="filter-select" id="time-filter">
+            <option value="1h">1 giờ trước</option>
+            <option value="24h">24 giờ trước</option>
+            <option value="7d">7 ngày trước</option>
+            <option value="30d">30 ngày trước</option>
+            <option value="1y" selected>1 năm trước</option>
+            <option value="custom">Tùy chọn...</option>
+        </select>
+        
+        <div class="date-range-picker" id="date-range-picker-btn">
+            <i data-lucide="calendar" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+            <input type="text" id="start-date" value="04/06/2025 11:50:50" readonly>
+            <span class="date-separator">—</span>
+            <input type="text" id="end-date" value="04/06/2026 11:50:50" readonly>
+        </div>
+
+        <button class="icon-btn" style="border: 1px solid var(--border-color); background-color: var(--filter-btn-bg); border-radius: var(--radius-md);" id="reload-btn" title="Tải lại dữ liệu">
+            <i data-lucide="refresh-cw" style="width: 15px; height: 15px;"></i>
+        </button>
+
+        <button class="btn-action btn-primary" id="settings-btn">
+            <i data-lucide="settings" style="width: 15px; height: 15px;"></i>
+            <span>CÀI ĐẶT</span>
+        </button>
+    </div>
+
+    <!-- Main Content Area -->
+    <main>
+        <!-- Row 1: Mega KPI & Stacked Monthly (33/66 side-by-side) -->
+        <div class="chart-grid-3">
+            <!-- Widget 1: Mega KPI Card (Total Alerts) -->
+            <div class="card height-trend" id="widget-kpi-total" style="grid-column: span 1;">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="shield-alert" style="width: 16px; height: 16px; color: var(--primary);"></i>
+                        <span>Tổng số cảnh báo phát sinh</span>
+                    </span>
+                </div>
+                <div class="card-body" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <span class="kpi-value" id="kpi-total-val" style="font-size: 36px; font-weight: 700;">12,842</span>
+                        <span class="kpi-trend up" id="kpi-total-trend" style="font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 4px; color: var(--danger);">
+                            <i data-lucide="trending-up" style="width: 16px; height: 16px;"></i>
+                            <span>8.4%</span>
+                        </span>
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: -10px;">So với kỳ trước đó</div>
+                    <!-- Detailed Sparkline chart -->
+                    <div id="kpi-total-sparkline" style="width: 100%; height: 220px; margin-top: 10px;"></div>
+                </div>
+            </div>
+
+            <!-- Widget 5: Theo tháng (now spans 2 columns) -->
+            <div class="card height-trend" id="widget-monthly" style="grid-column: span 2;">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="bar-chart-3" style="width: 16px; height: 16px; color: var(--primary);"></i>
+                        <span>Thống kê cảnh báo theo tháng</span>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div id="alert-monthly-chart" style="width: 100%; height: 100%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Three Donuts (33/33/33) -->
+        <div class="chart-grid-3">
+            <!-- Widget 2: Mức độ nguy hiểm -->
+            <div class="card height-donut-row" id="widget-severity">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="pie-chart" style="width: 16px; height: 16px; color: var(--danger);"></i>
+                        <span>Cảnh báo theo mức độ nguy hiểm</span>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div id="alert-severity-chart" style="width: 100%; height: 100%;"></div>
+                </div>
+            </div>
+
+            <!-- Widget 3: Trạng thái -->
+            <div class="card height-donut-row" id="widget-status">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="check-square" style="width: 16px; height: 16px; color: var(--success);"></i>
+                        <span>Phân bổ theo trạng thái</span>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div id="alert-status-chart" style="width: 100%; height: 100%;"></div>
+                </div>
+            </div>
+
+            <!-- Widget 4: Nguồn -->
+            <div class="card height-donut-row" id="widget-source">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="database" style="width: 16px; height: 16px; color: var(--info);"></i>
+                        <span>Phân bổ theo nguồn tích hợp</span>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div id="alert-source-chart" style="width: 100%; height: 100%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3: Top 10 Tables -->
+        <div class="chart-grid-3">
+            <!-- Widget 6: Top 10 Cảnh báo (Nội dung) -->
+            <div class="card height-table-row" id="widget-top-alerts">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="list-ordered" style="width: 16px; height: 16px; color: var(--warning);"></i>
+                        <span>Top 10 cảnh báo xuất hiện nhiều nhất</span>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">STT</th>
+                                    <th>Nội dung cảnh báo</th>
+                                    <th style="width: 80px; text-align: right;">Số lượng</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top-alerts-table-body">
+                                <!-- Loaded dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Widget 7: Top 10 IP Nguồn -->
+            <div class="card height-table-row" id="widget-top-src-ips">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="shield-alert" style="width: 16px; height: 16px; color: var(--danger);"></i>
+                        <span>Top 10 IP nguồn phát sinh cảnh báo</span>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">STT</th>
+                                    <th>Địa chỉ IP nguồn</th>
+                                    <th>Quốc gia</th>
+                                    <th style="width: 80px; text-align: right;">Số lượng</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top-src-ips-table-body">
+                                <!-- Loaded dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Widget 8: Top 10 IP Đích -->
+            <div class="card height-table-row" id="widget-top-dst-ips">
+                <div class="card-header">
+                    <span class="card-title">
+                        <i data-lucide="shield-check" style="width: 16px; height: 16px; color: var(--success);"></i>
+                        <span>Top 10 IP đích bị ảnh hưởng</span>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">STT</th>
+                                    <th>Địa chỉ IP đích</th>
+                                    <th>Quốc gia</th>
+                                    <th style="width: 80px; text-align: right;">Số lượng</th>
+                                </tr>
+                            </thead>
+                            <tbody id="top-dst-ips-table-body">
+                                <!-- Loaded dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal settings popup -->
+    <div class="modal-overlay" id="settings-modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Cấu hình hiển thị Bảng điều khiển</span>
+                <button class="icon-btn" id="close-modal-btn">
+                    <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Chọn các biểu đồ thống kê bạn muốn hiển thị trên giao diện:</p>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="chk-kpi-total" checked>
+                        <span>Thẻ KPI Tổng số cảnh báo</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="chk-severity" checked>
+                        <span>Biểu đồ Cảnh báo theo mức độ nguy hiểm</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="chk-status" checked>
+                        <span>Biểu đồ Phân bổ theo trạng thái</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="chk-source" checked>
+                        <span>Biểu đồ Phân bổ theo nguồn tích hợp</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="chk-monthly" checked>
+                        <span>Biểu đồ Thống kê cảnh báo theo tháng</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="chk-top-alerts" checked>
+                        <span>Bảng Top 10 cảnh báo xuất hiện nhiều nhất</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="chk-top-src" checked>
+                        <span>Bảng Top 10 IP nguồn phát sinh cảnh báo</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="chk-top-dst" checked>
+                        <span>Bảng Top 10 IP đích bị ảnh hưởng</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-action" id="cancel-settings">Hủy</button>
+                <button class="btn-action btn-primary" id="save-settings">Lưu cấu hình</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script area -->
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // Theme Toggle (Light / Dark Mode)
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            themeIcon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+            lucide.createIcons();
+            
+            // Re-render charts with correct theme
+            updateChartsTheme(isDark);
+        });
+
+        // Modal Controls
+        const settingsBtn = document.getElementById('settings-btn');
+        const closeBtn = document.getElementById('close-modal-btn');
+        const cancelBtn = document.getElementById('cancel-settings');
+        const saveBtn = document.getElementById('save-settings');
+        const modalOverlay = document.getElementById('settings-modal-overlay');
+
+        settingsBtn.addEventListener('click', () => {
+            modalOverlay.classList.add('open');
+        });
+
+        const closeModal = () => {
+            modalOverlay.classList.remove('open');
+        };
+
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        saveBtn.addEventListener('click', () => {
+            // Apply visibility of cards based on checkboxes
+            const cardsVisibility = {
+                'widget-kpi-total': document.getElementById('chk-kpi-total').checked,
+                'widget-severity': document.getElementById('chk-severity').checked,
+                'widget-status': document.getElementById('chk-status').checked,
+                'widget-source': document.getElementById('chk-source').checked,
+                'widget-monthly': document.getElementById('chk-monthly').checked,
+                'widget-top-alerts': document.getElementById('chk-top-alerts').checked,
+                'widget-top-src-ips': document.getElementById('chk-top-src').checked,
+                'widget-top-dst-ips': document.getElementById('chk-top-dst').checked,
+            };
+
+            for (const [id, visible] of Object.entries(cardsVisibility)) {
+                const card = document.getElementById(id);
+                if (card) {
+                    card.style.display = visible ? 'flex' : 'none';
+                }
+            }
+
+            // Adjust grid layout dynamically if widgets are hidden
+            adjustGridLayouts();
+            closeModal();
+            
+            // Trigger simple toast message
+            showToast("Lưu cấu hình giao diện thành công!");
+        });
+
+        function adjustGridLayouts() {
+            const isMobile = window.innerWidth <= 1200;
+
+            // Row 1 adjustments
+            const kpiCard = document.getElementById('widget-kpi-total');
+            const monthlyCard = document.getElementById('widget-monthly');
+            const row1 = kpiCard ? kpiCard.parentElement : null;
+            
+            const kpiVisible = kpiCard && kpiCard.style.display !== 'none';
+            const monthlyVisible = monthlyCard && monthlyCard.style.display !== 'none';
+            
+            if (row1) {
+                if (!kpiVisible && !monthlyVisible) {
+                    row1.style.display = 'none';
+                } else {
+                    row1.style.display = 'grid';
+                    if (isMobile) {
+                        row1.style.gridTemplateColumns = '1fr';
+                        if (kpiCard) kpiCard.style.gridColumn = 'span 1';
+                        if (monthlyCard) monthlyCard.style.gridColumn = 'span 1';
+                    } else {
+                        row1.style.gridTemplateColumns = 'repeat(3, 1fr)';
+                        if (kpiVisible && monthlyVisible) {
+                            kpiCard.style.gridColumn = 'span 1';
+                            monthlyCard.style.gridColumn = 'span 2';
+                        } else if (kpiVisible) {
+                            kpiCard.style.gridColumn = 'span 3';
+                        } else if (monthlyVisible) {
+                            monthlyCard.style.gridColumn = 'span 3';
+                        }
+                    }
+                }
+            }
+
+            // Row 2 and Row 3 adjustments
+            const rows = document.querySelectorAll('.chart-grid-3');
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const visibleChildren = Array.from(row.children).filter(c => c.style.display !== 'none');
+                
+                if (visibleChildren.length === 0) {
+                    row.style.display = 'none';
+                } else {
+                    row.style.display = 'grid';
+                    if (isMobile) {
+                        row.style.gridTemplateColumns = '1fr';
+                        visibleChildren.forEach(c => c.style.gridColumn = 'span 1');
+                    } else {
+                        if (visibleChildren.length === 1) {
+                            row.style.gridTemplateColumns = '1fr';
+                            visibleChildren[0].style.gridColumn = 'span 1';
+                        } else if (visibleChildren.length === 2) {
+                            row.style.gridTemplateColumns = '1fr 1fr';
+                            visibleChildren[0].style.gridColumn = 'span 1';
+                            visibleChildren[1].style.gridColumn = 'span 1';
+                        } else {
+                            row.style.gridTemplateColumns = 'repeat(3, 1fr)';
+                            visibleChildren.forEach(c => c.style.gridColumn = 'span 1');
+                        }
+                    }
+                }
+            }
+        }
+
+        // Track window resizing for responsive grid adjustment
+        window.addEventListener('resize', adjustGridLayouts);
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.right = '20px';
+            toast.style.backgroundColor = 'var(--bg-card)';
+            toast.style.color = 'var(--text-main)';
+            toast.style.border = '1px solid var(--primary)';
+            toast.style.padding = '12px 24px';
+            toast.style.borderRadius = 'var(--radius-md)';
+            toast.style.boxShadow = 'var(--shadow-lg)';
+            toast.style.fontSize = '13px';
+            toast.style.fontWeight = '500';
+            toast.style.zIndex = '9999';
+            toast.style.display = 'flex';
+            toast.style.alignItems = 'center';
+            toast.style.gap = '8px';
+            
+            toast.innerHTML = `<i data-lucide="check-circle" style="width: 16px; height: 16px; color: var(--success);"></i><span>${message}</span>`;
+            document.body.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        // Reload trigger
+        const reloadBtn = document.getElementById('reload-btn');
+        reloadBtn.addEventListener('click', () => {
+            reloadBtn.classList.add('rotating');
+            reloadBtn.querySelector('i').style.transform = 'rotate(360deg)';
+            reloadBtn.querySelector('i').style.transition = 'transform 0.8s ease';
+            
+            setTimeout(() => {
+                reloadBtn.querySelector('i').style.transform = 'rotate(0deg)';
+                reloadBtn.querySelector('i').style.transition = 'none';
+                
+                // Regenerate random data
+                regenerateChartData();
+                showToast("Làm mới dữ liệu thống kê thành công!");
+            }, 800);
+        });
+
+        // --- Mock Data Generation & Chart Configs ---
+        let charts = {};
+
+        function getChartThemeMode() {
+            return document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+        }
+
+        function updateChartsTheme(isDark) {
+            const themeStr = isDark ? 'dark' : 'light';
+            Object.values(charts).forEach(chart => {
+                chart.updateOptions({
+                    theme: {
+                        mode: themeStr
+                    }
+                });
+            });
+        }
+
+        // Mega Sparkline initialization for Total Alerts KPI Card (30 days trend)
+        function initTotalSparkline() {
+            const data = [];
+            for (let i = 0; i < 30; i++) {
+                data.push(Math.floor(Math.random() * 200) + 300);
+            }
+            
+            const options = {
+                series: [{
+                    name: 'Tổng số cảnh báo',
+                    data: data
+                }],
+                chart: {
+                    type: 'area',
+                    height: 200,
+                    sparkline: {
+                        enabled: true
+                    },
+                    fontFamily: 'Inter, sans-serif',
+                    animations: {
+                        enabled: true,
+                        easing: 'easeinout',
+                        speed: 600,
+                    }
+                },
+                colors: ['#0091ff'],
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.45,
+                        opacityTo: 0.02,
+                    }
+                },
+                tooltip: {
+                    fixed: { enabled: false },
+                    x: { show: false },
+                    y: {
+                        title: {
+                            formatter: () => 'Cảnh báo: '
+                        }
+                    },
+                    marker: { show: false }
+                }
+            };
+
+            charts.sparkline_total = new ApexCharts(document.querySelector("#kpi-total-sparkline"), options);
+            charts.sparkline_total.render();
+        }
+
+        // Donut: Severity Chart
+        function initSeverityChart() {
+            const options = {
+                series: [124, 1124, 3840, 5240, 2514],
+                chart: {
+                    type: 'donut',
+                    height: 310,
+                    fontFamily: 'Inter, sans-serif',
+                },
+                labels: ['Critical (Nghiêm trọng)', 'High (Cao)', 'Medium (Trung bình)', 'Low (Thấp)', 'Info (Thông tin)'],
+                colors: ['#7f1d1d', '#ef4444', '#f59e0b', '#3b82f6', '#94a3b8'],
+                stroke: { show: false },
+                legend: {
+                    position: 'bottom',
+                    labels: { colors: 'var(--text-main)' }
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '70%',
+                            labels: {
+                                show: true,
+                                name: { show: true, fontSize: '13px', fontWeight: 500, color: 'var(--text-muted)' },
+                                value: { show: true, fontSize: '22px', fontWeight: 700, color: 'var(--text-main)', formatter: (w) => parseInt(w).toLocaleString() },
+                                total: { show: true, label: 'Tổng số', color: 'var(--text-muted)', formatter: (w) => w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString() }
+                            }
+                        }
+                    }
+                },
+                dataLabels: { enabled: false }
+            };
+
+            charts.severity = new ApexCharts(document.querySelector("#alert-severity-chart"), options);
+            charts.severity.render();
+        }
+
+        // Donut: Status Chart
+        function initStatusChart() {
+            const options = {
+                series: [1384, 6512, 4946],
+                chart: {
+                    type: 'donut',
+                    height: 250,
+                    fontFamily: 'Inter, sans-serif',
+                },
+                labels: ['Mới phát sinh (New)', 'Đang xử lý (Processing)', 'Đã đóng (Closed)'],
+                colors: ['#ef4444', '#f59e0b', '#64748b'],
+                stroke: { show: false },
+                legend: {
+                    position: 'bottom',
+                    labels: { colors: 'var(--text-main)' }
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '65%',
+                            labels: {
+                                show: true,
+                                total: { show: true, label: 'Alerts', color: 'var(--text-muted)', formatter: (w) => w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString() }
+                            }
+                        }
+                    }
+                },
+                dataLabels: { enabled: false }
+            };
+
+            charts.status = new ApexCharts(document.querySelector("#alert-status-chart"), options);
+            charts.status.render();
+        }
+
+        // Donut: Source Chart
+        function initSourceChart() {
+            const options = {
+                series: [5420, 3120, 2412, 1250, 640],
+                chart: {
+                    type: 'donut',
+                    height: 250,
+                    fontFamily: 'Inter, sans-serif',
+                },
+                labels: ['Hệ thống EDR', 'Hệ thống SIEM', 'Tường lửa (Firewall)', 'Active Directory', 'CloudTrail Audit'],
+                colors: ['#0091ff', '#06b6d4', '#6366f1', '#f59e0b', '#10b981'],
+                stroke: { show: false },
+                legend: {
+                    position: 'bottom',
+                    labels: { colors: 'var(--text-main)' }
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '65%',
+                            labels: {
+                                show: true,
+                                total: { show: true, label: 'Nguồn', color: 'var(--text-muted)', formatter: (w) => w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString() }
+                            }
+                        }
+                    }
+                },
+                dataLabels: { enabled: false }
+            };
+
+            charts.source = new ApexCharts(document.querySelector("#alert-source-chart"), options);
+            charts.source.render();
+        }
+
+        // Stacked Column: Monthly Alert Chart (by Severity levels)
+        function initMonthlyChart() {
+            const options = {
+                series: [
+                    { name: 'Critical (Nghiêm trọng)', data: [120, 90, 150, 110, 130, 80] },
+                    { name: 'High (Cao)', data: [1100, 950, 1200, 1050, 1150, 900] },
+                    { name: 'Medium (Trung bình)', data: [3800, 3100, 4200, 3600, 3900, 2900] },
+                    { name: 'Low (Thấp)', data: [4500, 3900, 5800, 4800, 5200, 3500] },
+                    { name: 'Info (Thông tin)', data: [1680, 1360, 2650, 1240, 2462, 1120] }
+                ],
+                chart: {
+                    type: 'bar',
+                    height: 290,
+                    stacked: true,
+                    toolbar: { show: false },
+                    fontFamily: 'Inter, sans-serif',
+                },
+                plotOptions: {
+                    bar: {
+                        borderRadius: 4,
+                        columnWidth: '40%',
+                    }
+                },
+                colors: ['#7f1d1d', '#ef4444', '#f59e0b', '#3b82f6', '#94a3b8'],
+                dataLabels: { enabled: false },
+                stroke: { show: false },
+                xaxis: {
+                    categories: ['Thg 12', 'Thg 01', 'Thg 02', 'Thg 03', 'Thg 04', 'Thg 05'],
+                    labels: { style: { colors: 'var(--text-light)', fontSize: '11px' } },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: { style: { colors: 'var(--text-light)', fontSize: '11px' } }
+                },
+                grid: {
+                    borderColor: 'var(--border-color)',
+                    strokeDashArray: 4,
+                    xaxis: { lines: { show: false } },
+                    yaxis: { lines: { show: true } }
+                },
+                legend: {
+                    position: 'bottom',
+                    labels: { colors: 'var(--text-main)' }
+                }
+            };
+
+            charts.monthly = new ApexCharts(document.querySelector("#alert-monthly-chart"), options);
+            charts.monthly.render();
+        }
+
+        // Populate tables
+        function populateTables() {
+            // Top 10 Alerts Content
+            const topAlertsData = [
+                { content: "Phát hiện Ransomware WannaCry thực thi tệp tin", count: 489, severity: "critical" },
+                { content: "Brute-force tấn công giao thức SSH từ ngoài Internet", count: 392, severity: "high" },
+                { content: "Quét cổng dịch vụ mạng quy mô lớn (Port Scan)", count: 284, severity: "medium" },
+                { content: "Đăng nhập bất thường vào tài khoản quản trị Admin", count: 189, severity: "high" },
+                { content: "Kết nối ra máy chủ điều khiển độc hại (C2 IP)", count: 142, severity: "critical" },
+                { content: "Rò rỉ dữ liệu thông qua giao thức HTTP POST", count: 120, severity: "high" },
+                { content: "Tải xuống công cụ hack Mimikatz trên máy trạm", count: 87, severity: "critical" },
+                { content: "Chạy lệnh Powershell mã hóa base64 đáng ngờ", count: 54, severity: "medium" },
+                { content: "Lưu lượng mạng tăng vọt bất thường (Traffic anomaly)", count: 42, severity: "low" },
+                { content: "Phát hiện tệp tin cấu hình độc hại trên Server", count: 32, severity: "medium" }
+            ];
+
+            const topAlertsBody = document.getElementById('top-alerts-table-body');
+            topAlertsBody.innerHTML = topAlertsData.map((item, idx) => `
+                <tr>
+                    <td>${idx + 1}</td>
+                    <td>
+                        <div class="text-truncate" title="${item.content}">
+                            <span class="severity-badge ${item.severity}" style="margin-right: 6px;"></span>
+                            ${item.content}
+                        </div>
+                    </td>
+                    <td style="text-align: right; font-weight: 600;">${item.count}</td>
+                </tr>
+            `).join('');
+
+            // Top 10 Source IPs
+            const topSrcIpsData = [
+                { ip: "192.168.143.27", geo: "Mạng LAN Nội bộ", count: 1420 },
+                { ip: "103.82.14.92", geo: "Trung Quốc (CN)", count: 980 },
+                { ip: "185.220.101.4", geo: "Mạng ẩn danh Tor Exit", count: 874 },
+                { ip: "10.10.12.44", geo: "Phân vùng DMZ", count: 624 },
+                { ip: "45.138.89.21", geo: "Nga (RU)", count: 489 },
+                { ip: "103.245.2.1", geo: "Việt Nam (VN)", count: 312 },
+                { ip: "172.16.89.12", geo: "Mạng Lab R&D", count: 220 },
+                { ip: "92.223.10.43", geo: "Đức (DE)", count: 189 },
+                { ip: "192.168.200.12", geo: "Mạng Khách (Guest)", count: 120 },
+                { ip: "8.8.8.8", geo: "Hoa Kỳ (US)", count: 87 }
+            ];
+
+            const topSrcIpsBody = document.getElementById('top-src-ips-table-body');
+            topSrcIpsBody.innerHTML = topSrcIpsData.map((item, idx) => `
+                <tr>
+                    <td>${idx + 1}</td>
+                    <td><span class="ip-address">${item.ip}</span></td>
+                    <td style="color: var(--text-muted);">${item.geo}</td>
+                    <td style="text-align: right;"><span class="badge-ip-count">${item.count}</span></td>
+                </tr>
+            `).join('');
+
+            // Top 10 Destination IPs
+            const topDstIpsData = [
+                { ip: "10.10.10.11", geo: "Việt Nam (VN)", count: 3930 },
+                { ip: "10.10.10.15", geo: "Việt Nam (VN)", count: 1210 },
+                { ip: "192.168.20.100", geo: "Việt Nam (VN)", count: 857 },
+                { ip: "10.10.50.4", geo: "Việt Nam (VN)", count: 649 },
+                { ip: "192.168.20.45", geo: "Việt Nam (VN)", count: 512 },
+                { ip: "192.168.30.22", geo: "Việt Nam (VN)", count: 310 },
+                { ip: "10.10.10.2", geo: "Việt Nam (VN)", count: 215 },
+                { ip: "10.10.90.12", geo: "Việt Nam (VN)", count: 198 },
+                { ip: "192.168.20.12", geo: "Việt Nam (VN)", count: 124 },
+                { ip: "10.10.10.200", geo: "Việt Nam (VN)", count: 96 }
+            ];
+
+            const topDstIpsBody = document.getElementById('top-dst-ips-table-body');
+            topDstIpsBody.innerHTML = topDstIpsData.map((item, idx) => `
+                <tr>
+                    <td>${idx + 1}</td>
+                    <td><span class="ip-address">${item.ip}</span></td>
+                    <td style="color: var(--text-muted);">${item.geo}</td>
+                    <td style="text-align: right;"><span class="badge-ip-count">${item.count}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        // Regenerate random data for demo refresh
+        function regenerateChartData() {
+            // Update Mega KPI card
+            const baseTotalVal = 12842;
+            const change = Math.floor((Math.random() * 0.2 - 0.1) * baseTotalVal); // -10% to +10%
+            const newVal = baseTotalVal + change;
+            
+            document.getElementById('kpi-total-val').innerText = newVal.toLocaleString('en-US');
+            
+            const pct = (Math.random() * 15).toFixed(1);
+            const isUp = Math.random() > 0.4;
+            const trendEl = document.getElementById('kpi-total-trend');
+            if (trendEl) {
+                trendEl.className = `kpi-trend ${isUp ? 'up' : 'down'}`;
+                trendEl.style.color = isUp ? 'var(--danger)' : 'var(--success)';
+                trendEl.innerHTML = `
+                    <i data-lucide="${isUp ? 'trending-up' : 'trending-down'}" style="width: 16px; height: 16px;"></i>
+                    <span>${pct}%</span>
+                `;
+            }
+            
+            // Generate and update Mega KPI sparkline
+            const newSparklineData = [];
+            for (let i = 0; i < 30; i++) {
+                newSparklineData.push(Math.floor(Math.random() * 200) + 300);
+            }
+            if (charts.sparkline_total) {
+                charts.sparkline_total.updateSeries([{ data: newSparklineData }]);
+            }
+
+            // Re-create icons in updated trends
+            lucide.createIcons();
+
+            // Random Donuts
+            const randomSeverity = Array.from({length: 5}, () => Math.floor(Math.random() * 2000) + 500);
+            charts.severity.updateSeries(randomSeverity);
+
+            const randomStatus = Array.from({length: 3}, () => Math.floor(Math.random() * 3000) + 200);
+            charts.status.updateSeries(randomStatus);
+
+            const randomSource = Array.from({length: 5}, () => Math.floor(Math.random() * 3000) + 200);
+            charts.source.updateSeries(randomSource);
+
+            // Random Monthly Stacked columns
+            const randomMonthlySeries = [
+                { name: 'Critical (Nghiêm trọng)', data: Array.from({length: 6}, () => Math.floor(Math.random() * 100) + 50) },
+                { name: 'High (Cao)', data: Array.from({length: 6}, () => Math.floor(Math.random() * 500) + 500) },
+                { name: 'Medium (Trung bình)', data: Array.from({length: 6}, () => Math.floor(Math.random() * 1500) + 1500) },
+                { name: 'Low (Thấp)', data: Array.from({length: 6}, () => Math.floor(Math.random() * 2000) + 2000) },
+                { name: 'Info (Thông tin)', data: Array.from({length: 6}, () => Math.floor(Math.random() * 1000) + 1000) }
+            ];
+            charts.monthly.updateSeries(randomMonthlySeries);
+
+            // Re-populate tables slightly shuffled
+            populateTables();
+        }
+
+        // Window Load Initialization
+        window.addEventListener('load', () => {
+            initTotalSparkline();
+            initSeverityChart();
+            initStatusChart();
+            initSourceChart();
+            initMonthlyChart();
+            populateTables();
+            adjustGridLayouts(); // ensure grid columns are correct on first load
+        });
+    </script>
+</body>
+</html>

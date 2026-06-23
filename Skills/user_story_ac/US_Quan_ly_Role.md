@@ -1,0 +1,49 @@
+- **US-01:** Là một Quản trị viên hệ thống (Admin), tôi muốn tạo mới Nhóm quyền và cấu hình quyền hạn cho nhóm đó, để tôi có thể định nghĩa các mức độ truy cập khác nhau trong hệ thống.
+  - **AC-01:** Tạo mới Nhóm quyền thành công
+    - **Cho:** Admin đang ở màn hình "Tạo Nhóm quyền"
+    - **Khi:** Admin nhập Tên nhóm quyền hợp lệ và tích chọn ít nhất một quyền (Menu/Hành động), sau đó nhấn "Lưu"
+    - **Thì:** Hệ thống lưu Nhóm quyền mới, hiển thị thông báo thành công và quay lại danh sách Nhóm quyền
+  - **AC-02:** Báo lỗi khi để trống Tên nhóm quyền
+    - **Cho:** Admin đang ở màn hình "Tạo Nhóm quyền"
+    - **Khi:** Admin để trống trường Tên nhóm quyền và nhấn "Lưu"
+    - **Thì:** Hệ thống hiển thị thông báo lỗi yêu cầu nhập Tên nhóm quyền và không lưu dữ liệu
+  - **AC-03:** Báo lỗi khi Tên nhóm quyền đã tồn tại
+    - **Cho:** Admin đang ở màn hình "Tạo Nhóm quyền"
+    - **Khi:** Admin nhập Tên nhóm quyền đã tồn tại trong hệ thống và nhấn "Lưu"
+    - **Thì:** Hệ thống hiển thị thông báo lỗi tên bị trùng và không lưu dữ liệu
+  - **AC-04:** Báo lỗi khi không chọn quyền nào
+    - **Cho:** Admin đang ở màn hình "Tạo Nhóm quyền"
+    - **Khi:** Admin nhập Tên nhóm quyền hợp lệ nhưng không chọn bất kỳ quyền nào và nhấn "Lưu"
+    - **Thì:** Hệ thống hiển thị thông báo lỗi yêu cầu chọn ít nhất một quyền và không lưu dữ liệu
+
+- **US-02:** Là một Quản trị viên hệ thống (Admin), tôi muốn hệ thống tự động xử lý logic chọn Menu cha và Menu con trên cây phân quyền, để tôi có thể thiết lập quyền nhanh chóng và không bị sót.
+  - **AC-01:** Chọn Menu cha thì tự động chọn tất cả Menu con
+    - **Cho:** Admin đang thao tác trên cây phân quyền và chưa chọn Menu con nào
+    - **Khi:** Admin tích chọn một Menu cha
+    - **Thì:** Hệ thống tự động tích chọn tất cả các Menu con và Hành động thuộc Menu cha đó
+  - **AC-02:** Bỏ chọn Menu cha thì tự động bỏ chọn tất cả Menu con
+    - **Cho:** Admin đang có một Menu cha và tất cả Menu con của nó đang được tích chọn
+    - **Khi:** Admin bỏ tích chọn ở Menu cha
+    - **Thì:** Hệ thống tự động bỏ tích chọn ở tất cả các Menu con thuộc Menu cha đó
+  - **AC-03:** Bỏ chọn một Menu con thì Menu cha chuyển trạng thái "Chọn một phần"
+    - **Cho:** Một Menu cha đang được chọn toàn bộ (tất cả Menu con đang được tích chọn)
+    - **Khi:** Admin bỏ tích chọn một Menu con bất kỳ
+    - **Thì:** Hệ thống chuyển trạng thái checkbox của Menu cha thành "Chọn một phần" (Indeterminate)
+  - **AC-04:** Chọn đủ tất cả Menu con thì Menu cha chuyển trạng thái "Đã chọn"
+    - **Cho:** Một Menu cha đang ở trạng thái "Chọn một phần" (một số Menu con chưa được tích chọn)
+    - **Khi:** Admin tích chọn các Menu con còn lại để tất cả Menu con đều được tích chọn
+    - **Thì:** Hệ thống tự động chuyển trạng thái của Menu cha thành "Đã chọn" (Checked)
+
+- **US-03:** Là một Quản trị viên hệ thống (Admin), tôi muốn gán một hoặc nhiều Nhóm quyền cho Nhân viên, để họ có thể thực hiện công việc trên hệ thống theo đúng thẩm quyền.
+  - **AC-01:** Gán Nhóm quyền cho Nhân viên thành công
+    - **Cho:** Admin đang ở màn hình gán quyền cho một Nhân viên
+    - **Khi:** Admin tích chọn một hoặc nhiều Nhóm quyền từ danh sách và nhấn "Lưu"
+    - **Thì:** Hệ thống cập nhật Nhóm quyền cho Nhân viên, hiển thị thông báo thành công
+  - **AC-02:** Gỡ bỏ Nhóm quyền khỏi Nhân viên
+    - **Cho:** Nhân viên đang có sẵn một Nhóm quyền (VD: "Nhân viên bán hàng")
+    - **Khi:** Admin bỏ chọn Nhóm quyền "Nhân viên bán hàng" của Nhân viên đó và nhấn "Lưu"
+    - **Thì:** Hệ thống xóa quyền tương ứng khỏi Nhân viên, hiển thị thông báo thành công và Nhân viên không còn quyền truy cập của nhóm đó
+  - **AC-03:** Cộng dồn quyền khi gán nhiều Nhóm quyền
+    - **Cho:** Nhân viên được gán cùng lúc Nhóm quyền A (có quyền Xem) và Nhóm quyền B (có quyền Sửa)
+    - **Khi:** Nhân viên đó đăng nhập vào hệ thống
+    - **Thì:** Hệ thống tự động tổng hợp (union) các quyền và cấp cho Nhân viên cả quyền Xem và Sửa

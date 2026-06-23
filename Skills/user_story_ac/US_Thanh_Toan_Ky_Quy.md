@@ -1,0 +1,29 @@
+- **US-01:** Là một Người mua (Buyer), tôi muốn thanh toán giá trị hợp đồng thông qua cổng Ví điện tử, để số tiền được chuyển vào tài khoản Ký quỹ (Escrow) của Hệ thống nhằm đảm bảo an toàn cho giao dịch.
+  - **AC-01:** Thanh toán thành công qua Ví điện tử
+    - **Cho:** Người mua đang ở màn hình thanh toán của một hợp đồng đã chốt (trạng thái "Chờ thanh toán")
+    - **Khi:** Người mua quét mã QR hoặc nhập OTP để xác nhận thanh toán thành công
+    - **Thì:** Hệ thống ghi nhận số tiền vào ví Ký quỹ (Escrow Wallet), đồng thời tự động cập nhật trạng thái hợp đồng sang "Đang thực hiện" và gửi thông báo cho cả Người mua và Người bán.
+  - **AC-02:** Xử lý khi Ví điện tử báo lỗi Timeout hoặc mất kết nối mạng
+    - **Cho:** Người mua đang trong quá trình xử lý thanh toán với Ví điện tử
+    - **Khi:** Hệ thống bị mất kết nối mạng hoặc nhận được phản hồi Timeout từ cổng thanh toán Ví điện tử
+    - **Thì:** Hệ thống hiển thị thông báo lỗi "Giao dịch đang được xử lý hoặc bị gián đoạn, vui lòng kiểm tra lại số dư trước khi thử lại", giữ nguyên trạng thái hợp đồng là "Chờ thanh toán" và lưu log giao dịch nghi ngờ để đối soát.
+  - **AC-03:** Người mua chủ động hủy thanh toán
+    - **Cho:** Người mua đang ở màn hình cổng thanh toán Ví điện tử
+    - **Khi:** Người mua bấm nút "Hủy" hoặc đóng màn hình thanh toán
+    - **Thì:** Hệ thống quay trở lại màn hình chi tiết hợp đồng, hiển thị thông báo "Đã hủy giao dịch thanh toán" và giữ nguyên trạng thái "Chờ thanh toán".
+
+- **US-02:** Là một Người mua (Buyer), tôi muốn bấm nút xác nhận đã nhận hàng sau khi Người bán giao hàng, để hệ thống tự động giải ngân tiền ký quỹ cho Người bán.
+  - **AC-01:** Giải ngân thành công khi Người mua xác nhận
+    - **Cho:** Hợp đồng đang ở trạng thái "Đang thực hiện" và Người bán đã cập nhật trạng thái "Giao hàng thành công"
+    - **Khi:** Người mua bấm nút "Xác nhận đã nhận hàng"
+    - **Thì:** Hệ thống tự động thực hiện lệnh chuyển tiền (Transfer) từ ví Ký quỹ sang ví của Người bán, đồng thời cập nhật trạng thái hợp đồng thành "Hoàn thành" và gửi thông báo cho Người bán.
+
+- **US-03:** Là một Hệ thống trung gian (System), tôi muốn tự động giải ngân tiền ký quỹ cho Người bán sau 7 ngày nếu không có tranh chấp, để đảm bảo quyền lợi cho Người bán khi Người mua quên hoặc không xác nhận nhận hàng.
+  - **AC-01:** Tự động giải ngân sau 7 ngày không có khiếu nại
+    - **Cho:** Người bán đã cập nhật trạng thái "Giao hàng thành công" được đúng 7 ngày và hợp đồng không có trạng thái khiếu nại/tranh chấp nào từ Người mua
+    - **Khi:** Hệ thống quét các hợp đồng đến hạn (Cron job)
+    - **Thì:** Hệ thống tự động chuyển tiền từ ví Ký quỹ sang ví của Người bán, đổi trạng thái hợp đồng thành "Hoàn thành" và gửi thông báo cho cả hai bên.
+  - **AC-02:** Đóng băng tiền ký quỹ khi có phát sinh khiếu nại/tranh chấp
+    - **Cho:** Thời gian chờ xác nhận 7 ngày vẫn đang đếm ngược
+    - **Khi:** Người mua bấm nút "Khiếu nại/Tranh chấp"
+    - **Thì:** Hệ thống tạm dừng bộ đếm thời gian 7 ngày, đóng băng số tiền trong ví Ký quỹ, chuyển trạng thái hợp đồng sang "Đang tranh chấp" và gửi thông báo cho Quản trị viên (Admin) vào can thiệp.
