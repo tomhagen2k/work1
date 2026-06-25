@@ -1,0 +1,2207 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Quy tắc SLA (CKTH) - SOAR</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            /* Light Mode Palette matching NCA SOAR Theme */
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --border-color: #dde1e8;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
+            --primary: #0091ff;
+            --primary-hover: #0077d6;
+            --primary-bg: #e0f2fe;
+            --success: #10b981;
+            --success-bg: #d1fae5;
+            --warning: #f59e0b;
+            --warning-bg: #fef3c7;
+            --danger: #ef4444;
+            --danger-bg: #fee2e2;
+            --info: #3b82f6;
+            --info-bg: #dbeafe;
+            
+            --header-bg: #0f172a;
+            --tab-active-color: #0091ff;
+            --sidebar-width: 240px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --radius-lg: 8px;
+            --radius-md: 6px;
+            --radius-sm: 4px;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Courier New', Courier, monospace;
+        }
+
+        .dark-mode {
+            /* Dark Mode Palette */
+            --bg-body: #0b0f19;
+            --bg-card: #151b2c;
+            --border-color: #232c45;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-light: #64748b;
+            --primary: #38bdf8;
+            --primary-hover: #0ea5e9;
+            --primary-bg: #073b5c;
+            --success: #34d399;
+            --success-bg: #064e3b;
+            --warning: #fbbf24;
+            --warning-bg: #78350f;
+            --danger: #f87171;
+            --danger-bg: #7f1d1d;
+            --info: #60a5fa;
+            --info-bg: #1e3a8a;
+            
+            --header-bg: #111827;
+            --tab-active-color: #38bdf8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.15s, border-color 0.15s;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 24px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 18px;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .logo-box {
+            width: 28px;
+            height: 28px;
+            background-color: var(--primary);
+            color: #ffffff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+            height: 54px;
+        }
+
+        nav a {
+            display: flex;
+            align-items: center;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            position: relative;
+            height: 100%;
+        }
+
+        nav a:hover {
+            color: #ffffff;
+        }
+
+        nav a.active {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: var(--tab-active-color);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .badge-count {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background-color: var(--danger);
+            color: #ffffff;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 10px;
+            border: 2px solid var(--header-bg);
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-bg);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- Workspace Layout --- */
+        .workspace {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* --- Left Sidebar --- */
+        aside {
+            width: var(--sidebar-width);
+            background-color: var(--bg-card);
+            border-right: 1px solid var(--border-color);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 16px 0;
+            overflow-y: auto;
+        }
+
+        .menu-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 8px 24px;
+            margin-top: 12px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 24px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+        }
+
+        .menu-item.active {
+            background-color: var(--primary-bg);
+            color: var(--primary);
+            font-weight: 600;
+            border-right: 3px solid var(--primary);
+        }
+
+        .menu-submenu {
+            display: flex;
+            flex-direction: column;
+            margin-left: 28px;
+            border-left: 1px dashed var(--border-color);
+            padding-left: 12px;
+            margin-top: 4px;
+            margin-bottom: 8px;
+        }
+
+        .submenu-item {
+            padding: 6px 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .submenu-item:hover, .submenu-item.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* --- Main Content Area --- */
+        main {
+            flex: 1;
+            padding: 24px 32px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumbs {
+            font-size: 12px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .breadcrumbs a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .breadcrumbs a:hover {
+            color: var(--primary);
+        }
+
+        /* Title Area */
+        .title-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title-left h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .title-left p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Controls Block */
+        .controls-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            max-width: 480px;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            height: 36px;
+            padding: 8px 12px 8px 36px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            outline: none;
+            font-size: 13px;
+        }
+
+        .search-wrapper input:focus {
+            border-color: var(--primary);
+            background-color: var(--bg-card);
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .btn {
+            height: 36px;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            outline: none;
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+            color: #ffffff;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-bg);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger);
+            color: #ffffff;
+        }
+
+        .btn-ghost {
+            border-color: transparent;
+            background: none;
+            box-shadow: none;
+        }
+
+        /* --- Data Table --- */
+        .table-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background-color: var(--bg-body);
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 12px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(0, 145, 255, 0.02);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .badge-default {
+            background-color: var(--info-bg);
+            color: var(--info);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .badge-priority {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            font-family: var(--font-mono);
+            font-size: 11px;
+        }
+
+        .badge-priority-high {
+            background-color: var(--warning-bg);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .condition-summary {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+            max-width: 400px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
+
+        /* Status Toggle */
+        .status-toggle {
+            position: relative;
+            width: 38px;
+            height: 20px;
+            background-color: var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .status-toggle::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #ffffff;
+            top: 2px;
+            left: 2px;
+            transition: left 0.18s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+
+        .status-toggle.active {
+            background-color: var(--success);
+        }
+
+        .status-toggle.active::after {
+            left: 20px;
+        }
+
+        /* Actions Cell */
+        .actions-cell {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .icon-action {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-card);
+            color: var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .icon-action:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background-color: var(--primary-bg);
+        }
+
+        .icon-action.danger:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+            background-color: var(--danger-bg);
+        }
+
+        /* --- Modal Backdrop & Overlay --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-out;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-lg);
+            width: min(720px, 95vw);
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.95);
+            transition: transform 0.2s ease-out;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+        }
+
+        .modal-overlay.open .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            background-color: var(--primary);
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #ffffff;
+        }
+
+        .modal-title {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            opacity: 0.8;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .modal-footer {
+            padding: 14px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background-color: var(--bg-body);
+        }
+
+        /* Form Fields */
+        .form-row-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .form-group label span {
+            color: var(--danger);
+        }
+
+        .form-control {
+            height: 36px;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            outline: none;
+            font-size: 13px;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+
+        .form-control:disabled {
+            background-color: var(--bg-body);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            border-color: var(--border-color);
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .checkbox-label input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+        }
+
+        .checkbox-label.disabled {
+            color: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* --- Condition Builder --- */
+        .condition-builder {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background-color: var(--bg-body);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .condition-builder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .condition-builder-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .or-group {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+
+        .or-group-connector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: -4px 0;
+            position: relative;
+        }
+
+        .or-group-connector::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 1px;
+            border-top: 1px dashed var(--border-color);
+            z-index: 1;
+        }
+
+        .or-group-connector span {
+            background-color: var(--warning-bg);
+            color: var(--warning);
+            border: 1px solid rgba(245,158,11,0.2);
+            font-size: 9px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
+            z-index: 2;
+            text-transform: uppercase;
+        }
+
+        .or-group-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+            margin-bottom: 4px;
+        }
+
+        .logic-toggle {
+            display: inline-flex;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .logic-btn {
+            background-color: var(--bg-body);
+            border: none;
+            color: var(--text-muted);
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .logic-btn.active {
+            background-color: var(--primary);
+            color: #ffffff;
+        }
+
+        .or-group-delete {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .or-group-delete:hover {
+            color: var(--danger);
+        }
+
+        .condition-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .condition-row-logic {
+            width: 32px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: right;
+            text-transform: uppercase;
+        }
+
+        .cond-field { width: 150px; }
+        .cond-op { width: 110px; }
+        .cond-val-wrapper { flex: 1; min-width: 150px; }
+
+        .btn-add-cond {
+            font-size: 11px;
+            padding: 4px 10px;
+            height: 26px;
+            border-style: dashed;
+            margin-top: 4px;
+        }
+
+        .btn-add-group {
+            font-size: 11px;
+            padding: 4px 10px;
+            height: 28px;
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        .btn-add-group:hover {
+            background-color: var(--warning-bg);
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+
+        /* --- Custom Multi-select Tag Combobox Styles --- */
+        .combo-select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .combo-select-box {
+            min-height: 36px;
+            padding: 4px 28px 4px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background-color: var(--bg-card);
+            cursor: pointer;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            align-items: center;
+            position: relative;
+        }
+        .combo-select-box::after {
+            content: '';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 4px solid transparent;
+            border-top-color: var(--text-muted);
+            pointer-events: none;
+            transition: transform 0.2s, border-top-color 0.2s;
+        }
+        .combo-select-box.open::after {
+            transform: translateY(-75%) rotate(180deg);
+            border-top-color: var(--primary);
+        }
+        .combo-tag {
+            background-color: var(--primary-bg);
+            color: var(--primary);
+            border: 1px solid rgba(0, 145, 255, 0.15);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .combo-tag-close {
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            opacity: 0.6;
+        }
+        .combo-tag-close:hover {
+            opacity: 1;
+        }
+        .combo-placeholder {
+            color: var(--text-light);
+            font-size: 13px;
+            user-select: none;
+        }
+        .combo-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 120;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            max-height: 180px;
+            overflow-y: auto;
+            margin-top: 4px;
+        }
+        .combo-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .combo-option:hover {
+            background-color: var(--bg-body);
+        }
+        .combo-option.selected {
+            background-color: var(--primary-bg);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* --- Toast Notification --- */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--success);
+            padding: 12px 18px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-title {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .toast-body {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <a href="#" class="logo">
+                <div class="logo-box">S</div>
+                <span>SOAR NCA</span>
+            </a>
+            <nav>
+                <a href="#">TRANG CHỦ</a>
+                <a href="#">BẢNG ĐIỀU KHIỂN</a>
+                <a href="#">BÁO CÁO</a>
+                <a href="#">QUY TRÌNH</a>
+                <a href="#">SỰ CỐ</a>
+                <a href="#">CÔNG VIỆC</a>
+                <a href="#" class="active">QUẢN TRỊ</a>
+            </nav>
+        </div>
+
+        <div class="header-right">
+            <!-- Notifications -->
+            <button class="icon-btn">
+                <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
+                <span class="badge-count">3</span>
+            </button>
+            
+            <!-- Dark Mode Toggle -->
+            <button class="icon-btn" id="theme-toggle" title="Đổi giao diện Sáng/Tối">
+                <i data-lucide="moon" id="theme-icon" style="width: 18px; height: 18px;"></i>
+            </button>
+
+            <!-- User profile -->
+            <div class="avatar" title="Tài khoản cá nhân (Admin)">AD</div>
+        </div>
+    </header>
+
+    <!-- Workspace -->
+    <div class="workspace">
+        <!-- Left Sidebar -->
+        <aside>
+            <span class="menu-title">Cấu hình</span>
+            <a href="#" class="menu-item">
+                <i data-lucide="users" style="width: 16px; height: 16px;"></i>
+                <span>Phòng ban</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i data-lucide="user-check" style="width: 16px; height: 16px;"></i>
+                <span>Người dùng</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i data-lucide="shield-alert" style="width: 16px; height: 16px;"></i>
+                <span>Nhóm quyền</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i data-lucide="briefcase" style="width: 16px; height: 16px;"></i>
+                <span>Khách hàng</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i data-lucide="globe" style="width: 16px; height: 16px;"></i>
+                <span>Đơn vị cấp dịch vụ</span>
+            </a>
+
+            <span class="menu-title">Danh mục</span>
+            <a href="#" class="menu-item active">
+                <i data-lucide="clock" style="width: 16px; height: 16px;"></i>
+                <span>SLA</span>
+            </a>
+            <div class="menu-submenu">
+                <a href="#" class="submenu-item active">Loại SLA (Quy tắc)</a>
+                <a href="#" class="submenu-item">Cảnh báo SLA</a>
+            </div>
+            <a href="#" class="menu-item">
+                <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+                <span>Cấu hình hệ thống</span>
+            </a>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main>
+            <!-- Breadcrumbs -->
+            <div class="breadcrumbs">
+                <a href="#">Quản trị</a>
+                <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
+                <a href="#">Danh mục</a>
+                <i data-lucide="chevron-right" style="width: 12px; height: 12px;"></i>
+                <span style="color: var(--text-main); font-weight: 500;">Quy tắc SLA</span>
+            </div>
+
+            <!-- Title Bar -->
+            <div class="title-bar">
+                <div class="title-left">
+                    <h1>Quản lý Quy tắc SLA</h1>
+                    <p>Cấu hình thứ tự ưu tiên và điều kiện tự động áp dụng thời hạn xử lý vào Sự cố (Case)</p>
+                </div>
+                <button class="btn btn-primary" onclick="openCreateModal()">
+                    <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                    <span>TẠO SLA</span>
+                </button>
+            </div>
+
+            <!-- Controls Block -->
+            <div class="controls-card">
+                <div class="search-wrapper">
+                    <input type="text" id="search-input" placeholder="Tìm kiếm theo Mã SLA, Tên SLA, Người tạo..." oninput="handleSearchFilter()">
+                    <i data-lucide="search" style="width: 16px; height: 16px;"></i>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <select class="form-control" id="status-filter" style="width: 160px; height: 36px;" onchange="handleSearchFilter()">
+                        <option value="all">Tất cả trạng thái</option>
+                        <option value="active">Kích hoạt</option>
+                        <option value="inactive">Không kích hoạt</option>
+                    </select>
+                    <button class="btn" title="Lọc nâng cao">
+                        <i data-lucide="sliders-horizontal" style="width: 16px; height: 16px;"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Data Table Card -->
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 110px;">Độ ưu tiên</th>
+                            <th style="width: 110px;">Mã SLA</th>
+                            <th style="width: 240px;">Tên SLA (Bản dịch Việt/Anh)</th>
+                            <th style="width: 120px; text-align: center;">SLA mặc định</th>
+                            <th>Quy tắc áp dụng</th>
+                            <th style="width: 100px;">Thời hạn</th>
+                            <th style="width: 100px;">Trạng thái</th>
+                            <th style="width: 100px;">Người tạo</th>
+                            <th style="width: 140px;">Ngày tạo</th>
+                            <th style="width: 100px; text-align: center;">Chức năng</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sla-table-body">
+                        <!-- Dynamic Content Generated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Form (Tạo mới / Chỉnh sửa SLA) -->
+    <div class="modal-overlay" id="sla-modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-title-text">Tạo mới SLA</span>
+                <button class="modal-close" onclick="closeModal()">
+                    <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Names Form Rows -->
+                <div class="form-row-2col">
+                    <div class="form-group">
+                        <label>Tên SLA (Tiếng Việt) <span>*</span></label>
+                        <input type="text" id="sla-name-vi" class="form-control" placeholder="Ví dụ: SLA Khách hàng VIP">
+                    </div>
+                    <div class="form-group">
+                        <label>Tên dịch thuật (Tiếng Anh)</label>
+                        <input type="text" id="sla-name-en" class="form-control" placeholder="Ví dụ: Premium VIP SLA">
+                    </div>
+                </div>
+
+                <div class="form-row-2col">
+                    <div class="form-group">
+                        <label>Mã SLA <span>*</span></label>
+                        <input type="text" id="sla-code" class="form-control" placeholder="Ví dụ: SLA_VIP_GOLD">
+                    </div>
+                    <div class="form-row-2col">
+                        <div class="form-group">
+                            <label>Thời hạn xử lý <span>*</span></label>
+                            <input type="number" id="sla-duration-val" class="form-control" value="2" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Đơn vị <span>*</span></label>
+                            <select id="sla-duration-unit" class="form-control">
+                                <option value="Phút">Phút</option>
+                                <option value="Giờ" selected>Giờ</option>
+                                <option value="Ngày">Ngày</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fallback Checkbox (Always Disabled to protect system logic) -->
+                <div style="margin: 4px 0;">
+                    <label class="checkbox-label disabled" title="Chỉ có thể xem trạng thái. Chỉ hệ thống mới tự tạo ra một SLA mặc định duy nhất khi khởi tạo Tenant.">
+                        <input type="checkbox" id="sla-is-default" disabled>
+                        <span>Là SLA mặc định</span>
+                    </label>
+                </div>
+
+                <!-- Priority Input -->
+                <div class="form-group" id="priority-form-group">
+                    <label>Độ ưu tiên <span>*</span></label>
+                    <small style="color: var(--text-muted); font-weight: normal; display: block; margin-top: 2px; margin-bottom: 4px;">
+                        SLA có độ ưu tiên thấp hơn (số nhỏ hơn) sẽ được gán cho Case nếu sự việc khớp với nhiều SLA. (Nhập số nguyên từ 1 đến 100)
+                    </small>
+                    <input type="number" id="sla-priority" class="form-control" value="1" min="1" max="100">
+                </div>
+
+                <!-- Interactive Condition Builder -->
+                <div class="form-group" id="conditions-form-group">
+                    <label>Cấu hình điều kiện áp dụng cho Sự cố</label>
+                    <div class="condition-builder">
+                        <div class="condition-builder-header">
+                            <span class="condition-builder-title">
+                                <i data-lucide="filter" style="width: 14px; height: 14px; color: var(--primary);"></i>
+                                Cây điều kiện lọc
+                            </span>
+                            <button class="btn btn-add-group" onclick="addOrGroup()">
+                                <i data-lucide="plus" style="width: 12px; height: 12px;"></i>
+                                Thêm nhóm OR
+                            </button>
+                        </div>
+
+                        <!-- OR Groups Container -->
+                        <div id="or-groups-container" style="display: flex; flex-direction: column; gap: 12px;">
+                            <!-- Dynamic Content -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Radio Buttons -->
+                <div class="form-group">
+                    <label>Trạng thái</label>
+                    <div style="display: flex; gap: 20px; font-size: 13px; margin-top: 4px;">
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                            <input type="radio" name="sla-status-radio" id="status-active" value="active" checked style="accent-color: var(--success);">
+                            Kích hoạt
+                        </label>
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                            <input type="radio" name="sla-status-radio" id="status-inactive" value="inactive" style="accent-color: var(--danger);">
+                            Không kích hoạt
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label>Mô tả</label>
+                    <input type="text" id="sla-desc" class="form-control" placeholder="Nhập mô tả chính sách...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeModal()">HUỶ</button>
+                <button class="btn btn-primary" id="modal-submit-btn" onclick="saveSlaRule()">TẠO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Alerts -->
+    <div class="toast" id="toast-alert">
+        <i data-lucide="check-circle" style="width: 18px; height: 18px; color: var(--success);" id="toast-icon"></i>
+        <div>
+            <div class="toast-title" id="toast-title">Thành công</div>
+            <div class="toast-body" id="toast-body">Thao tác đã được thực thi.</div>
+        </div>
+    </div>
+
+    <script>
+        // MOCK DATA: Initial SLA Rules representing Tenant Isolated data
+        let slaRulesList = [
+            {
+                id: "1",
+                code: "SLA_VIP_CRIT",
+                nameVi: "SLA Khách hàng VIP - Nghiêm trọng",
+                nameEn: "Premium VIP Critical SLA",
+                durationVal: 30,
+                durationUnit: "Phút",
+                priority: 1,
+                isDefault: false,
+                isActive: true,
+                creator: "admin",
+                createdDate: "09/10/2023 10:09:28",
+                desc: "Thời gian xử lý nhanh nhất cho các khách hàng VIP của Ngân hàng khi có sự cố nghiêm trọng",
+                conditions: {
+                    logic: "AND",
+                    rules: [
+                        { field: "severity", operator: "in", value: "Critical" },
+                        { field: "customer_id", operator: "in", value: "VIB Bank, Techcombank" }
+                    ]
+                }
+            },
+            {
+                id: "2",
+                code: "SLA_DDoS_TECH",
+                nameVi: "SLA Sự cố Tấn công DDoS",
+                nameEn: "DDoS Incident SLA",
+                durationVal: 2,
+                durationUnit: "Giờ",
+                priority: 15,
+                isDefault: false,
+                isActive: true,
+                creator: "admin",
+                createdDate: "12/10/2023 14:22:10",
+                desc: "SLA xử lý các mối đe dọa tấn công từ chối dịch vụ diện rộng",
+                conditions: {
+                    logic: "AND",
+                    rules: [
+                        { field: "incident_type", operator: "in", value: "Tấn công từ chối dịch vụ (DDoS)" }
+                    ]
+                }
+            },
+            {
+                id: "3",
+                code: "SLA_HIGH_SEV",
+                nameVi: "SLA Sự cố Mức độ Cao",
+                nameEn: "High Severity Incident SLA",
+                durationVal: 4,
+                durationUnit: "Giờ",
+                priority: 25,
+                isDefault: false,
+                isActive: true,
+                creator: "admin",
+                createdDate: "09/10/2023 10:09:28",
+                desc: "Áp dụng cho các sự cố nguy hiểm trung bình lớn",
+                conditions: {
+                    logic: "AND",
+                    rules: [
+                        { field: "severity", operator: "in", value: "High" }
+                    ]
+                }
+            },
+            {
+                id: "4",
+                code: "SLA_DEFAULT_FALLBACK",
+                nameVi: "SLA Mặc định",
+                nameEn: "Default Fallback SLA",
+                durationVal: 8,
+                durationUnit: "Giờ",
+                priority: 9999,
+                isDefault: true,
+                isActive: true,
+                creator: "system",
+                createdDate: "01/01/2023 00:00:00",
+                desc: "SLA mặc định dự phòng cho Tenant khi không khớp bất kỳ điều kiện quét nào.",
+                conditions: null
+            }
+        ];
+
+        // Options for condition selects
+        const fieldsOptions = [
+            { v: "title", l: "Tên sự cố" },
+            { v: "incident_type", l: "Loại sự cố" },
+            { v: "customer_id", l: "Khách hàng" },
+            { v: "severity", l: "Mức độ nguy hiểm" }
+        ];
+
+        const operatorsOptions = [
+            { v: "==", l: "bằng (==)" },
+            { v: "!=", l: "khác (!=)" },
+            { v: "in", l: "thuộc danh sách (in)" },
+            { v: "contains", l: "chứa chuỗi" },
+            { v: "regex", l: "biểu thức chính quy (regex)" }
+        ];
+
+        const valuesSuggestions = {
+            severity: [
+                { v: "Critical", l: "Nghiêm trọng (Critical)" },
+                { v: "High", l: "Cao (High)" },
+                { v: "Medium", l: "Trung bình (Medium)" },
+                { v: "Low", l: "Thấp (Low)" }
+            ],
+            customer_id: [
+                { v: "VIB Bank", l: "Ngân hàng VIB" },
+                { v: "Techcombank", l: "Ngân hàng Techcombank" },
+                { v: "EVN", l: "Tổng công ty Điện lực EVN" },
+                { v: "Vinamilk", l: "Công ty Cổ phần sữa Vinamilk" }
+            ],
+            incident_type: [
+                { v: "Dò quét cổng (Port Scan)", l: "Dò quét cổng (Port Scan)" },
+                { v: "Tấn công dò mật khẩu (Brute Force)", l: "Tấn công dò mật khẩu (Brute Force)" },
+                { v: "Phát tán mã độc (Malware Infection)", l: "Phát tán mã độc (Malware Infection)" },
+                { v: "Tấn công từ chối dịch vụ (DDoS)", l: "Tấn công từ chối dịch vụ (DDoS)" },
+                { v: "Rò rỉ dữ liệu (Data Leak)", l: "Rò rỉ dữ liệu (Data Leak)" }
+            ]
+        };
+
+        let editingRuleId = null;
+        let currentModalConditions = []; // Array of OR Groups: { id, logic: 'AND'|'OR', rules: [ { id, field, operator, value } ] }
+        let openDropdownId = null; // Track currently open combobox dropdown to prevent flicker on re-render
+
+        // --- Init Dashboard ---
+        window.addEventListener("DOMContentLoaded", () => {
+            renderSlaTable();
+            lucide.createIcons();
+            
+            // Dark Mode toggle handler
+            const themeBtn = document.getElementById("theme-toggle");
+            const themeIcon = document.getElementById("theme-icon");
+            themeBtn.addEventListener("click", () => {
+                document.body.classList.toggle("dark-mode");
+                const isDark = document.body.classList.contains("dark-mode");
+                themeIcon.setAttribute("data-lucide", isDark ? "sun" : "moon");
+                lucide.createIcons();
+            });
+
+            // Close combo dropdowns on clicking outside
+            window.addEventListener("click", () => {
+                document.querySelectorAll(".combo-dropdown").forEach(d => {
+                    d.style.display = "none";
+                });
+                document.querySelectorAll(".combo-select-box").forEach(b => {
+                    b.classList.remove("open");
+                });
+                openDropdownId = null;
+            });
+        });
+
+        // --- Render functions ---
+        function renderSlaTable() {
+            // Sort by priority ASC
+            slaRulesList.sort((a, b) => a.priority - b.priority);
+
+            const tbody = document.getElementById("sla-table-body");
+            tbody.innerHTML = "";
+
+            const qSearch = document.getElementById("search-input").value.toLowerCase().trim();
+            const statusFilter = document.getElementById("status-filter").value;
+
+            // Filter rules
+            const filteredRules = slaRulesList.filter(rule => {
+                const matchesSearch = rule.code.toLowerCase().includes(qSearch) || 
+                                      rule.nameVi.toLowerCase().includes(qSearch) ||
+                                      (rule.nameEn && rule.nameEn.toLowerCase().includes(qSearch)) ||
+                                      rule.creator.toLowerCase().includes(qSearch);
+                
+                const matchesStatus = statusFilter === "all" ||
+                                      (statusFilter === "active" && rule.isActive) ||
+                                      (statusFilter === "inactive" && !rule.isActive);
+
+                return matchesSearch && matchesStatus;
+            });
+
+            if (filteredRules.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: var(--text-light); padding: 40px;">Không tìm thấy quy tắc SLA nào phù hợp.</td></tr>`;
+                return;
+            }
+
+            filteredRules.forEach((rule, index) => {
+                const tr = document.createElement("tr");
+
+                // Priority Cell
+                let priorityDisplay = "";
+                if (rule.isDefault) {
+                    priorityDisplay = `<span style="color: var(--text-light); font-weight: 500; padding-left: 8px;">-</span>`;
+                } else {
+                    priorityDisplay = `<span class="badge badge-priority" style="padding-left: 8px; padding-right: 8px;">${rule.priority}</span>`;
+                }
+
+                // Name Cell with translations
+                const nameCell = `
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <div style="font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                            <img src="https://flagcdn.com/16x12/vn.png" alt="VN" style="vertical-align: middle;">
+                            <span>${rule.nameVi}</span>
+                        </div>
+                        ${rule.nameEn ? `
+                        <div style="font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+                            <img src="https://flagcdn.com/16x12/us.png" alt="EN" style="vertical-align: middle;">
+                            <span>${rule.nameEn}</span>
+                        </div>` : ""}
+                    </div>
+                `;
+
+                // SLA Mặc định checkbox
+                const defaultCheckboxCell = `
+                    <div style="text-align: center;">
+                        <input type="checkbox" disabled ${rule.isDefault ? 'checked' : ''} style="width: 16px; height: 16px; accent-color: var(--primary); cursor: not-allowed;">
+                    </div>
+                `;
+
+                // Condition description cell
+                const conditionsDesc = generateConditionTextSummary(rule.conditions);
+
+                // Status Toggle Cell
+                const statusToggle = `
+                    <button class="status-toggle ${rule.isActive ? 'active' : ''} ${rule.isDefault ? 'disabled' : ''}" 
+                            ${rule.isDefault ? 'disabled style="cursor: not-allowed; opacity: 0.5;"' : ''}
+                            onclick="${rule.isDefault ? '' : `toggleSlaActive('${rule.id}')`}" 
+                            title="${rule.isDefault ? 'Không thể thay đổi trạng thái của SLA mặc định' : (rule.isActive ? 'Tắt kích hoạt' : 'Kích hoạt')}">
+                    </button>
+                `;
+
+                // Actions cell
+                const actions = `
+                    <div class="actions-cell">
+                        <button class="icon-action" onclick="openEditModal('${rule.id}')" title="Sửa cấu hình"><i data-lucide="pencil" style="width: 13px; height: 13px;"></i></button>
+                        <button class="icon-action danger" onclick="deleteSlaRule('${rule.id}')" title="Xóa SLA" ${rule.isDefault ? 'disabled style="opacity: 0.3; cursor: not-allowed;"' : ''}><i data-lucide="trash-2" style="width: 13px; height: 13px;"></i></button>
+                    </div>
+                `;
+
+                tr.innerHTML = `
+                    <td>${priorityDisplay}</td>
+                    <td><span style="font-family: var(--font-mono); font-weight: 500;">${rule.code}</span></td>
+                    <td>${nameCell}</td>
+                    <td>${defaultCheckboxCell}</td>
+                    <td><span class="condition-summary" title="${conditionsDesc.replace(/"/g, '&quot;')}">${conditionsDesc}</span></td>
+                    <td style="font-weight: 500;">${rule.durationVal} ${rule.durationUnit}</td>
+                    <td>${statusToggle}</td>
+                    <td style="color: var(--text-muted);">${rule.creator}</td>
+                    <td style="font-size: 11px; color: var(--text-light); font-family: var(--font-mono);">${rule.createdDate}</td>
+                    <td align="center">${actions}</td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Generate clean readable text from nested condition logic
+        function generateConditionTextSummary(conditions) {
+            if (!conditions) return "Áp dụng cho tất cả (Mặc định)";
+            
+            const parseNode = (node) => {
+                if (node.field) {
+                    const fLabel = fieldsOptions.find(o => o.v === node.field)?.l || node.field;
+                    const valDisplay = node.value.includes(',') ? `(${node.value})` : `"${node.value}"`;
+                    const opDisplay = node.operator === "in" ? "IN" : node.operator;
+                    return `[${fLabel}] ${opDisplay} ${valDisplay}`;
+                }
+                if (node.logic && node.rules) {
+                    const children = node.rules.map(r => parseNode(r)).filter(t => t !== "");
+                    if (children.length === 1) return children[0];
+                    return `(${children.join(` ${node.logic} `)})`;
+                }
+                return "";
+            };
+
+            return parseNode(conditions) || "Chưa cấu hình điều kiện";
+        }
+
+        // --- Search and Filters ---
+        function handleSearchFilter() {
+            renderSlaTable();
+        }
+
+        // --- Actions Handlers ---
+        function toggleSlaActive(id) {
+            const rule = slaRulesList.find(r => r.id === id);
+            if (rule) {
+                if (rule.isDefault) {
+                    showToast("Lỗi thao tác", "Không thể tắt kích hoạt SLA mặc định.", "error");
+                    return;
+                }
+                rule.isActive = !rule.isActive;
+                showToast("Thành công", `Đã ${rule.isActive ? 'kích hoạt' : 'tắt kích hoạt'} quy tắc ${rule.code}`, "success");
+                renderSlaTable();
+            }
+        }
+
+        function deleteSlaRule(id) {
+            const rule = slaRulesList.find(r => r.id === id);
+            if (rule) {
+                if (rule.isDefault) return;
+                
+                if (confirm(`Bạn có chắc chắn muốn xóa quy tắc SLA "${rule.nameVi}" (${rule.code}) không?`)) {
+                    slaRulesList = slaRulesList.filter(r => r.id !== id);
+                    showToast("Đã xóa", "Đã xóa quy tắc SLA khỏi hệ thống", "error");
+                    renderSlaTable();
+                }
+            }
+        }
+
+        // --- Modal Opening & Editing ---
+        function openCreateModal() {
+            editingRuleId = null;
+            openDropdownId = null;
+            document.getElementById("modal-title-text").innerText = "Tạo mới SLA";
+            document.getElementById("modal-submit-btn").innerText = "TẠO";
+            
+            // Clean inputs
+            document.getElementById("sla-name-vi").value = "";
+            document.getElementById("sla-name-en").value = "";
+            document.getElementById("sla-code").value = "";
+            document.getElementById("sla-duration-val").value = "2";
+            document.getElementById("sla-duration-unit").value = "Giờ";
+            document.getElementById("sla-is-default").checked = false;
+            document.getElementById("sla-desc").value = "";
+            document.getElementById("status-active").checked = true;
+            document.getElementById("status-active").disabled = false;
+            document.getElementById("status-inactive").disabled = false;
+            document.getElementById("status-active").parentElement.style.opacity = "1";
+            document.getElementById("status-active").parentElement.style.cursor = "pointer";
+            document.getElementById("status-inactive").parentElement.style.opacity = "1";
+            document.getElementById("status-inactive").parentElement.style.cursor = "pointer";
+            
+            // Default priority value to an unused number between 1 and 100
+            let nextPriority = 1;
+            const existingPriorities = slaRulesList.filter(r => !r.isDefault).map(r => r.priority);
+            while (existingPriorities.includes(nextPriority) && nextPriority < 100) {
+                nextPriority++;
+            }
+            document.getElementById("sla-priority").value = nextPriority;
+
+            // Reset conditions: Start with 1 OR group containing 1 rule
+            currentModalConditions = [
+                {
+                    id: generateRandomId(),
+                    logic: "AND",
+                    rules: [
+                        { id: generateRandomId(), field: "severity", operator: "in", value: "High" }
+                    ]
+                }
+            ];
+
+            toggleDefaultSlaState();
+            renderConditionBuilder();
+            
+            document.getElementById("sla-modal-overlay").classList.add("open");
+        }
+
+        function openEditModal(id) {
+            editingRuleId = id;
+            openDropdownId = null;
+            const rule = slaRulesList.find(r => r.id === id);
+            if (!rule) return;
+
+            document.getElementById("modal-title-text").innerText = "Cấu hình chính sách SLA";
+            document.getElementById("modal-submit-btn").innerText = "LƯU";
+            
+            // Fill values
+            document.getElementById("sla-name-vi").value = rule.nameVi;
+            document.getElementById("sla-name-en").value = rule.nameEn || "";
+            document.getElementById("sla-code").value = rule.code;
+            document.getElementById("sla-duration-val").value = rule.durationVal;
+            document.getElementById("sla-duration-unit").value = rule.durationUnit;
+            document.getElementById("sla-is-default").checked = rule.isDefault;
+            document.getElementById("sla-priority").value = rule.isDefault ? "" : rule.priority;
+            document.getElementById("sla-desc").value = rule.desc || "";
+            
+            if (rule.isActive) {
+                document.getElementById("status-active").checked = true;
+            } else {
+                document.getElementById("status-inactive").checked = true;
+            }
+
+            // Disable status editing for default SLA
+            if (rule.isDefault) {
+                document.getElementById("status-active").disabled = true;
+                document.getElementById("status-inactive").disabled = true;
+                document.getElementById("status-active").parentElement.style.opacity = "0.5";
+                document.getElementById("status-active").parentElement.style.cursor = "not-allowed";
+                document.getElementById("status-inactive").parentElement.style.opacity = "0.5";
+                document.getElementById("status-inactive").parentElement.style.cursor = "not-allowed";
+            } else {
+                document.getElementById("status-active").disabled = false;
+                document.getElementById("status-inactive").disabled = false;
+                document.getElementById("status-active").parentElement.style.opacity = "1";
+                document.getElementById("status-active").parentElement.style.cursor = "pointer";
+                document.getElementById("status-inactive").parentElement.style.opacity = "1";
+                document.getElementById("status-inactive").parentElement.style.cursor = "pointer";
+            }
+
+            // Parse conditions to flat array of OR groups for UI
+            currentModalConditions = [];
+            
+            if (rule.conditions) {
+                if (rule.conditions.logic === "OR") {
+                    rule.conditions.rules.forEach(grp => {
+                        if (grp.logic) {
+                            currentModalConditions.push({
+                                id: generateRandomId(),
+                                logic: grp.logic,
+                                rules: grp.rules.map(r => ({ id: generateRandomId(), ...r }))
+                            });
+                        } else {
+                            currentModalConditions.push({
+                                id: generateRandomId(),
+                                logic: "AND",
+                                rules: [{ id: generateRandomId(), ...grp }]
+                            });
+                        }
+                    });
+                } else {
+                    currentModalConditions.push({
+                        id: generateRandomId(),
+                        logic: rule.conditions.logic,
+                        rules: rule.conditions.rules.map(r => ({ id: generateRandomId(), ...r }))
+                    });
+                }
+            } else {
+                currentModalConditions = [];
+            }
+
+            toggleDefaultSlaState();
+            renderConditionBuilder();
+            
+            document.getElementById("sla-modal-overlay").classList.add("open");
+        }
+
+        function closeModal() {
+            openDropdownId = null;
+            document.getElementById("sla-modal-overlay").classList.remove("open");
+        }
+
+        function toggleDefaultSlaState() {
+            const isDefaultChecked = document.getElementById("sla-is-default").checked;
+            const priorityGroup = document.getElementById("priority-form-group");
+            const conditionsGroup = document.getElementById("conditions-form-group");
+
+            if (isDefaultChecked) {
+                priorityGroup.style.display = "none";
+                conditionsGroup.style.display = "none";
+            } else {
+                priorityGroup.style.display = "flex";
+                conditionsGroup.style.display = "flex";
+            }
+        }
+
+        // --- Custom Combobox Tag Multi-select JS Logic ---
+        function toggleComboDropdown(event, dropdownId) {
+            event.stopPropagation();
+            
+            // Close other open combo dropdowns first
+            document.querySelectorAll(".combo-dropdown").forEach(d => {
+                if (d.id !== dropdownId) {
+                    d.style.display = "none";
+                }
+            });
+            document.querySelectorAll(".combo-select-box").forEach(b => {
+                const parentWrapper = b.closest(".combo-select-wrapper");
+                const dropdown = parentWrapper ? parentWrapper.querySelector(".combo-dropdown") : null;
+                if (dropdown && dropdown.id !== dropdownId) {
+                    b.classList.remove("open");
+                }
+            });
+
+            const d = document.getElementById(dropdownId);
+            const selectBox = d ? d.previousElementSibling : null;
+            if (d) {
+                const isVisible = d.style.display === "block";
+                d.style.display = isVisible ? "none" : "block";
+                if (selectBox) {
+                    if (isVisible) {
+                        selectBox.classList.remove("open");
+                    } else {
+                        selectBox.classList.add("open");
+                    }
+                }
+                openDropdownId = isVisible ? null : dropdownId;
+            }
+        }
+
+        function toggleComboOption(event, groupId, ruleId, optionVal) {
+            if (event) event.stopPropagation();
+
+            const group = currentModalConditions.find(g => g.id === groupId);
+            if (group) {
+                const rule = group.rules.find(r => r.id === ruleId);
+                if (rule) {
+                    let selectedVals = [];
+                    if (rule.value) {
+                        selectedVals = rule.value.split(', ').filter(x => x !== "");
+                    }
+
+                    if (selectedVals.includes(optionVal)) {
+                        // Remove if selected
+                        selectedVals = selectedVals.filter(v => v !== optionVal);
+                    } else {
+                        // Add if not selected
+                        selectedVals.push(optionVal);
+                    }
+
+                    rule.value = selectedVals.join(', ');
+                    renderConditionBuilder();
+                }
+            }
+        }
+
+        function deselectComboTag(event, groupId, ruleId, optionVal) {
+            if (event) event.stopPropagation();
+
+            const group = currentModalConditions.find(g => g.id === groupId);
+            if (group) {
+                const rule = group.rules.find(r => r.id === ruleId);
+                if (rule) {
+                    let selectedVals = [];
+                    if (rule.value) {
+                        selectedVals = rule.value.split(', ').filter(x => x !== "");
+                    }
+
+                    selectedVals = selectedVals.filter(v => v !== optionVal);
+                    rule.value = selectedVals.join(', ');
+                    renderConditionBuilder();
+                }
+            }
+        }
+
+        // --- Condition Builder Logic ---
+        function renderConditionBuilder() {
+            const container = document.getElementById("or-groups-container");
+            container.innerHTML = "";
+
+            if (currentModalConditions.length === 0) {
+                container.innerHTML = `<div style="text-align: center; color: var(--text-light); padding: 12px; font-size: 12px;">Chưa cấu hình điều kiện lọc (SLA này sẽ mặc định áp dụng).</div>`;
+                return;
+            }
+
+            currentModalConditions.forEach((group, gIdx) => {
+                const groupDiv = document.createElement("div");
+                groupDiv.className = "or-group";
+                
+                // Group separator logic (OR)
+                if (gIdx > 0) {
+                    const connector = document.createElement("div");
+                    connector.className = "or-group-connector";
+                    connector.innerHTML = "<span>OR</span>";
+                    container.appendChild(connector);
+                }
+
+                // Group header (Logic AND/OR toggle + delete)
+                const header = document.createElement("div");
+                header.className = "or-group-header";
+                header.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">Logic liên kết:</span>
+                        <div class="logic-toggle">
+                            <button class="logic-btn ${group.logic === 'AND' ? 'active' : ''}" onclick="toggleGroupLogic('${group.id}', 'AND')">AND</button>
+                            <button class="logic-btn ${group.logic === 'OR' ? 'active' : ''}" onclick="toggleGroupLogic('${group.id}', 'OR')">OR</button>
+                        </div>
+                    </div>
+                    ${currentModalConditions.length > 1 ? `
+                    <button class="or-group-delete" onclick="deleteOrGroup('${group.id}')" title="Xóa nhóm điều kiện này">
+                        <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                    </button>` : ""}
+                `;
+                groupDiv.appendChild(header);
+
+                // Condition rows list
+                group.rules.forEach((rule, rIdx) => {
+                    const row = document.createElement("div");
+                    row.className = "condition-row";
+                    row.style.marginTop = rIdx > 0 ? "8px" : "4px";
+
+                    // Logic Label inside group (e.g. "Khi", "AND", "OR")
+                    let rowLogicLabel = "";
+                    if (rIdx === 0) {
+                        rowLogicLabel = "<span style='color: var(--text-muted);'>KHI</span>";
+                    } else {
+                        rowLogicLabel = `<span>${group.logic}</span>`;
+                    }
+                    
+                    // Fields options select
+                    let fieldSelect = `<select class="form-control cond-field" onchange="changeRuleField('${group.id}', '${rule.id}', this.value)">`;
+                    fieldsOptions.forEach(opt => {
+                        fieldSelect += `<option value="${opt.v}" ${rule.field === opt.v ? 'selected' : ''}>${opt.l}</option>`;
+                    });
+                    fieldSelect += `</select>`;
+
+                    // Operators options select
+                    let opSelect = `<select class="form-control cond-op" onchange="changeRuleOperator('${group.id}', '${rule.id}', this.value)">`;
+                    operatorsOptions.forEach(opt => {
+                        opSelect += `<option value="${opt.v}" ${rule.operator === opt.v ? 'selected' : ''}>${opt.l}</option>`;
+                    });
+                    opSelect += `</select>`;
+
+                    // Value Input/Select matching selected Field type
+                    let valInput = "";
+                    const suggestions = valuesSuggestions[rule.field];
+
+                    if (suggestions) {
+                        // Multi-select combobox tag display
+                        let selectedVals = [];
+                        if (rule.value) {
+                            selectedVals = rule.value.split(', ').filter(x => x !== "");
+                        }
+
+                        // Selected tags list
+                        let tagsHtml = "";
+                        if (selectedVals.length === 0) {
+                            tagsHtml = `<span class="combo-placeholder">Chọn giá trị...</span>`;
+                        } else {
+                            selectedVals.forEach(val => {
+                                const label = suggestions.find(s => s.v === val)?.l || val;
+                                tagsHtml += `
+                                    <span class="combo-tag">
+                                        <span>${label}</span>
+                                        <span class="combo-tag-close" onclick="deselectComboTag(event, '${group.id}', '${rule.id}', '${val}')">&times;</span>
+                                    </span>
+                                `;
+                            });
+                        }
+
+                        // Dropdown selection list
+                        let optionsHtml = "";
+                        suggestions.forEach(s => {
+                            const isSelected = selectedVals.includes(s.v);
+                            optionsHtml += `
+                                <div class="combo-option ${isSelected ? 'selected' : ''}" onclick="toggleComboOption(event, '${group.id}', '${rule.id}', '${s.v}')">
+                                    <span>${s.l}</span>
+                                    ${isSelected ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="20 6 9 15 4 10"></polyline></svg>` : ''}
+                                </div>
+                            `;
+                        });
+
+                        const dropdownId = `dropdown-${group.id}-${rule.id}`;
+                        const isDropdownOpen = (openDropdownId === dropdownId);
+
+                        valInput = `
+                            <div class="combo-select-wrapper">
+                                <div class="combo-select-box ${isDropdownOpen ? 'open' : ''}" onclick="toggleComboDropdown(event, '${dropdownId}')">
+                                    ${tagsHtml}
+                                </div>
+                                <div class="combo-dropdown" id="${dropdownId}" style="display: ${isDropdownOpen ? 'block' : 'none'};">
+                                    ${optionsHtml}
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // Regular text input for Tên sự cố (no multi-select allowed)
+                        valInput = `<input type="text" class="form-control" value="${rule.value || ''}" placeholder="Nhập tên sự cố..." oninput="changeRuleValue('${group.id}', '${rule.id}', this.value)">`;
+                    }
+
+                    row.innerHTML = `
+                        <div class="condition-row-logic">${rowLogicLabel}</div>
+                        ${fieldSelect}
+                        ${opSelect}
+                        <div class="cond-val-wrapper">${valInput}</div>
+                        ${group.rules.length > 1 ? `
+                        <button class="or-group-delete" onclick="deleteConditionRow('${group.id}', '${rule.id}')" title="Xóa dòng này">
+                            <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+                        </button>` : ""}
+                    `;
+
+                    groupDiv.appendChild(row);
+                });
+
+                // Add condition button at bottom of group
+                const footerBtn = document.createElement("button");
+                footerBtn.className = "btn btn-add-cond";
+                footerBtn.innerHTML = `<i data-lucide="plus" style="width: 12px; height: 12px;"></i> Thêm điều kiện con`;
+                footerBtn.onclick = () => addConditionRow(group.id);
+                groupDiv.appendChild(footerBtn);
+
+                container.appendChild(groupDiv);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Actions inside Condition Builder
+        function addOrGroup() {
+            currentModalConditions.push({
+                id: generateRandomId(),
+                logic: "AND",
+                rules: [
+                    { id: generateRandomId(), field: "severity", operator: "in", value: "High" }
+                ]
+            });
+            renderConditionBuilder();
+        }
+
+        function deleteOrGroup(id) {
+            currentModalConditions = currentModalConditions.filter(g => g.id !== id);
+            renderConditionBuilder();
+        }
+
+        // Logic toggle AND/OR
+        function toggleGroupLogic(groupId, logic) {
+            const group = currentModalConditions.find(g => g.id === groupId);
+            if (group) {
+                group.logic = logic;
+                renderConditionBuilder();
+            }
+        }
+
+        function addConditionRow(groupId) {
+            const group = currentModalConditions.find(g => g.id === groupId);
+            if (group) {
+                group.rules.push({
+                    id: generateRandomId(),
+                    field: "severity",
+                    operator: "in",
+                    value: "High"
+                });
+                renderConditionBuilder();
+            }
+        }
+
+        function deleteConditionRow(groupId, ruleId) {
+            const group = currentModalConditions.find(g => g.id === groupId);
+            if (group) {
+                group.rules = group.rules.filter(r => r.id !== ruleId);
+                renderConditionBuilder();
+            }
+        }
+
+        function changeRuleField(groupId, ruleId, val) {
+            const group = currentModalConditions.find(g => g.id === groupId);
+            if (group) {
+                const rule = group.rules.find(r => r.id === ruleId);
+                if (rule) {
+                    rule.field = val;
+                    // Reset default values matching field type (default to empty string as per design spec)
+                    const suggestions = valuesSuggestions[val];
+                    rule.value = "";
+                    
+                    // Reset default operator
+                    rule.operator = suggestions ? "in" : "==";
+                    
+                    openDropdownId = null;
+                    renderConditionBuilder();
+                }
+            }
+        }
+
+        function changeRuleOperator(groupId, ruleId, val) {
+            const group = currentModalConditions.find(g => g.id === groupId);
+            if (group) {
+                const rule = group.rules.find(r => r.id === ruleId);
+                if (rule) {
+                    rule.operator = val;
+                }
+            }
+        }
+
+        function changeRuleValue(groupId, ruleId, val) {
+            const group = currentModalConditions.find(g => g.id === groupId);
+            if (group) {
+                const rule = group.rules.find(r => r.id === ruleId);
+                if (rule) {
+                    rule.value = val;
+                }
+            }
+        }
+
+        // --- Save and Store SLA Rules ---
+        function saveSlaRule() {
+            const nameVi = document.getElementById("sla-name-vi").value.trim();
+            const nameEn = document.getElementById("sla-name-en").value.trim();
+            const code = document.getElementById("sla-code").value.trim().toUpperCase();
+            const durationVal = parseInt(document.getElementById("sla-duration-val").value);
+            const durationUnit = document.getElementById("sla-duration-unit").value;
+            const isDefault = document.getElementById("sla-is-default").checked;
+            const desc = document.getElementById("sla-desc").value.trim();
+            const isActive = document.getElementById("status-active").checked;
+            
+            // Validation
+            if (!nameVi || !code || isNaN(durationVal)) {
+                showToast("Lỗi nhập liệu", "Vui lòng điền đầy đủ các trường bắt buộc (*)", "error");
+                return;
+            }
+
+            // Check duplicate code
+            const codeDup = slaRulesList.find(r => r.code === code && r.id !== editingRuleId);
+            if (codeDup) {
+                showToast("Lỗi trùng lặp", `Mã SLA "${code}" đã tồn tại trên hệ thống.`, "error");
+                return;
+            }
+
+            let priority = null;
+            if (isDefault) {
+                priority = 9999;
+            } else {
+                priority = parseInt(document.getElementById("sla-priority").value);
+                
+                // Validate priority type and range
+                if (isNaN(priority) || priority < 1 || priority > 100) {
+                    showToast("Lỗi nhập liệu", "Độ ưu tiên phải là số nguyên nằm trong khoảng từ 1 đến 100.", "error");
+                    return;
+                }
+
+                // Check duplicate priority (Unique check per tenant)
+                const priorityDup = slaRulesList.find(r => !r.isDefault && r.priority === priority && r.id !== editingRuleId);
+                if (priorityDup) {
+                    showToast("Lỗi trùng lặp", "Độ ưu tiên này đã được sử dụng. Vui lòng nhập giá trị khác từ 1 đến 100.", "error");
+                    return;
+                }
+            }
+
+            // Format UI Condition Tree array to DB-like nested format
+            let dbConditions = null;
+            if (!isDefault && currentModalConditions.length > 0) {
+                if (currentModalConditions.length === 1) {
+                    dbConditions = {
+                        logic: currentModalConditions[0].logic,
+                        rules: currentModalConditions[0].rules.map(({ field, operator, value }) => ({ field, operator, value }))
+                    };
+                } else {
+                    dbConditions = {
+                        logic: "OR",
+                        rules: currentModalConditions.map(group => ({
+                            logic: group.logic,
+                            rules: group.rules.map(({ field, operator, value }) => ({ field, operator, value }))
+                        }))
+                    };
+                }
+            }
+
+            if (editingRuleId) {
+                // Update existing
+                const rule = slaRulesList.find(r => r.id === editingRuleId);
+                if (rule) {
+                    rule.code = code;
+                    rule.nameVi = nameVi;
+                    rule.nameEn = nameEn;
+                    rule.durationVal = durationVal;
+                    rule.durationUnit = durationUnit;
+                    rule.isDefault = isDefault;
+                    rule.priority = priority;
+                    rule.desc = desc;
+                    rule.isActive = isActive;
+                    rule.conditions = dbConditions;
+                    
+                    showToast("Cập nhật thành công", `Quy tắc SLA ${code} đã được lưu thay đổi.`, "success");
+                }
+            } else {
+                // Add new
+                const newRule = {
+                    id: generateRandomId(),
+                    code: code,
+                    nameVi: nameVi,
+                    nameEn: nameEn,
+                    durationVal: durationVal,
+                    durationUnit: durationUnit,
+                    isDefault: isDefault,
+                    priority: priority,
+                    isActive: isActive,
+                    creator: "admin",
+                    createdDate: getFormattedCurrentDateTime(),
+                    desc: desc,
+                    conditions: dbConditions
+                };
+
+                slaRulesList.push(newRule);
+                showToast("Đã tạo mới", `Đã lưu thành công quy tắc SLA ${code} mới.`, "success");
+            }
+            
+            closeModal();
+            renderSlaTable();
+        }
+
+        // --- Helper Utils ---
+        function generateRandomId() {
+            return Math.random().toString(36).substring(2, 9);
+        }
+
+        function getFormattedCurrentDateTime() {
+            const now = new Date();
+            const pad = (n) => n.toString().padStart(2, "0");
+            return `${pad(now.getDate())}/${pad(now.getMonth() + 1)}/.${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+        }
+
+        // Custom alert toast display
+        function showToast(title, msg, type = "success") {
+            const toast = document.getElementById("toast-alert");
+            const tIcon = document.getElementById("toast-icon");
+            const tTitle = document.getElementById("toast-title");
+            const tBody = document.getElementById("toast-body");
+
+            tTitle.innerText = title;
+            tBody.innerText = msg;
+
+            if (type === "error") {
+                toast.classList.add("error");
+                tIcon.setAttribute("data-lucide", "alert-circle");
+                tIcon.style.color = "var(--danger)";
+            } else {
+                toast.classList.remove("error");
+                tIcon.setAttribute("data-lucide", "check-circle");
+                tIcon.style.color = "var(--success)";
+            }
+
+            lucide.createIcons();
+            toast.classList.add("show");
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
