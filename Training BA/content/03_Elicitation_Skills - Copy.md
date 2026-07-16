@@ -88,21 +88,3 @@ Bạn cần chuẩn bị **Bộ câu hỏi phỏng vấn** chi tiết để trao
 2. Chỉ ra **ít nhất 2 luồng ngoại lệ (Edge Cases)** có thể phát sinh trong quá trình vận hành thực tế đối với quy trình cấp phát thiết bị này.
 3. *Thực hành mô phỏng (Role-play):* Hãy sử dụng bộ câu hỏi vừa chuẩn bị để thực hiện phỏng vấn giả lập với Mentor của bạn (Mentor sẽ đóng vai đại diện bộ phận Hành chính).
 
-<!-- GÓC DÀNH CHO MENTOR (XÓA PHẦN NÀY TRƯỚC KHI GỬI CHO HỌC VIÊN) -->
-> [!CAUTION]
-> **TÀI LIỆU NỘI BỘ DÀNH CHO MENTOR (ĐÓNG VAI KHÁCH HÀNG):**
-> Dưới đây là logic nghiệp vụ ngầm định của hệ thống để Mentor dùng làm căn cứ trả lời khi học viên đặt câu hỏi phỏng vấn (Học viên hỏi đến đâu, Mentor cung cấp thông tin đến đó):
-> 
-> **1. Về Quy trình phê duyệt (Approval Workflow):** 
-> - Nếu xin thiết bị phụ trợ (chuột, bàn phím, cáp chuyển): Chỉ cần Quản lý trực tiếp (Line Manager) duyệt là IT được quyền xuất kho.
-> - Nếu xin thiết bị lớn (Laptop, Màn hình): Bắt buộc qua 2 cấp: Line Manager duyệt (Cấp 1) -> Trưởng phòng Hành chính duyệt (Cấp 2) -> IT mới được phép xuất kho.
-> 
-> **2. Về Luồng thu hồi thiết bị hỏng (Xử lý ngoại lệ):**
-> - Quy định: Bắt buộc phải giao nộp lại đồ hỏng mới được nhận đồ mới. Do đó, trên hệ thống, IT phải thao tác xác nhận trạng thái "Đã thu hồi đồ cũ" thì mới được phép thao tác nút "Cấp đồ mới".
-> 
-> **3. Về Xử lý Tồn kho (Xử lý ngoại lệ):**
-> - Nếu loại thiết bị được yêu cầu hiện tại trong kho IT đang báo hết (Quantity = 0): Yêu cầu cấp phát không bị hủy mà phải tự động chuyển sang trạng thái "Chờ mua hàng" (Pending Purchase), đồng thời hệ thống tự động đẩy thông báo cho bộ phận Mua sắm (Procurement).
-> 
-> **4. Về Luồng cấp thiết bị cho nhân sự mới (Onboarding):**
-> - Nhân viên mới ngày đầu đi làm chưa có tài khoản để tự tạo yêu cầu. Hệ thống bắt buộc phải có tính năng "Ủy quyền tạo yêu cầu" (Request on behalf), cho phép Hành chính hoặc Line Manager tạo lệnh xin cấp thiết bị thay cho nhân sự mới đó.
-<!-- KẾT THÚC PHẦN CỦA MENTOR -->

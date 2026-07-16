@@ -1,4 +1,20 @@
-import { useState } from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOAR Correlation Rules</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+const { useState } = React;
 
 /* ═══════════════════════════════════════════════════════════
    DESIGN TOKENS  (SOAR Design System)
@@ -242,6 +258,19 @@ const FItem = ({ label, required, help, error, children }) => (
   </div>
 );
 
+/* Summary Grid Components */
+const Grid2 = ({ children }) => (
+  <div style={{ display:"grid", gridTemplateColumns:"150px 1fr", rowGap:8, alignItems:"start" }}>
+    {children}
+  </div>
+);
+const Lbl = ({ children }) => (
+  <span style={{ fontFamily:DS.sans, fontSize:11, fontWeight:600, color:DS.text3, marginTop:2 }}>{children}</span>
+);
+const Val = ({ children }) => (
+  <span style={{ fontFamily:DS.mono, fontSize:11, color:DS.text, wordBreak:"break-all" }}>{children}</span>
+);
+
 /* Stat card */
 const StatCard = ({ icon, label, value, color }) => (
   <div style={{ background:DS.bg2, border:`1px solid ${DS.border}`, borderRadius:8,
@@ -369,15 +398,20 @@ const SevSel = ({ value, onChange }) => {
    DATA
 ═══════════════════════════════════════════════════════════ */
 const SLAS = ["Standard SLA","24/7 VIP SLA","Emergency SLA","Business Hours SLA","P1 Critical SLA"];
+const MOCK_CUSTOMERS = [
+  { id: "c1", name: "TechCorp Inc." },
+  { id: "c2", name: "Global Finance" },
+  { id: "c3", name: "CyberDefenders" }
+];
 const MOCK_RULES = [
-  { id:1, name:"Brute Force SSH Detection",       desc:"Detect repeated failed SSH logins from same source",           priority:"high",     active:true,  cases:47,  creator:"nguyen.van.a", updated:"2025-06-10" },
-  { id:2, name:"Lateral Movement — RDP Spread",   desc:"Multiple RDP connections from single host to >3 destinations", priority:"critical", active:true,  cases:12,  creator:"tran.thi.b",   updated:"2025-06-09" },
-  { id:3, name:"Data Exfil — Large Upload",        desc:"Outbound traffic >500 MB to unknown external IP in 1 h",      priority:"critical", active:false, cases:3,   creator:"le.van.c",     updated:"2025-06-07" },
-  { id:4, name:"Suspicious PowerShell Execution", desc:"Encoded PS commands from non-admin user accounts",             priority:"high",     active:true,  cases:89,  creator:"nguyen.van.a", updated:"2025-06-11" },
-  { id:5, name:"Port Scan Detection",             desc:"Single source scanning >20 ports within 5 minutes",            priority:"medium",   active:true,  cases:234, creator:"pham.thi.d",   updated:"2025-06-08" },
-  { id:6, name:"C2 Beacon Pattern",               desc:"Periodic outbound connections at regular intervals to same IP",priority:"critical", active:true,  cases:7,   creator:"tran.thi.b",   updated:"2025-06-11" },
-  { id:7, name:"Account Privilege Escalation",    desc:"User account granted admin rights outside business hours",     priority:"high",     active:false, cases:0,   creator:"le.van.c",     updated:"2025-06-05" },
-  { id:8, name:"Firewall Rule Modification",      desc:"Firewall policy changes not initiated via change mgmt",        priority:"medium",   active:true,  cases:15,  creator:"pham.thi.d",   updated:"2025-06-10" },
+  { id:1, customerId:"c1", executionOrder:1, name:"Brute Force SSH Detection",       desc:"Detect repeated failed SSH logins from same source",           priority:"high",     active:true,  cases:47,  creator:"nguyen.van.a", updated:"2025-06-10" },
+  { id:2, customerId:"c1", executionOrder:2, name:"Lateral Movement — RDP Spread",   desc:"Multiple RDP connections from single host to >3 destinations", priority:"critical", active:true,  cases:12,  creator:"tran.thi.b",   updated:"2025-06-09" },
+  { id:3, customerId:"c2", executionOrder:1, name:"Data Exfil — Large Upload",        desc:"Outbound traffic >500 MB to unknown external IP in 1 h",      priority:"critical", active:false, cases:3,   creator:"le.van.c",     updated:"2025-06-07" },
+  { id:4, customerId:"c2", executionOrder:2, name:"Suspicious PowerShell Execution", desc:"Encoded PS commands from non-admin user accounts",             priority:"high",     active:true,  cases:89,  creator:"nguyen.van.a", updated:"2025-06-11" },
+  { id:5, customerId:"c3", executionOrder:1, name:"Port Scan Detection",             desc:"Single source scanning >20 ports within 5 minutes",            priority:"medium",   active:true,  cases:234, creator:"pham.thi.d",   updated:"2025-06-08" },
+  { id:6, customerId:"c3", executionOrder:2, name:"C2 Beacon Pattern",               desc:"Periodic outbound connections at regular intervals to same IP",priority:"critical", active:true,  cases:7,   creator:"tran.thi.b",   updated:"2025-06-11" },
+  { id:7, customerId:"c1", executionOrder:3, name:"Account Privilege Escalation",    desc:"User account granted admin rights outside business hours",     priority:"high",     active:false, cases:0,   creator:"le.van.c",     updated:"2025-06-05" },
+  { id:8, customerId:"c2", executionOrder:3, name:"Firewall Rule Modification",      desc:"Firewall policy changes not initiated via change mgmt",        priority:"medium",   active:true,  cases:15,  creator:"pham.thi.d",   updated:"2025-06-10" },
 ];
 const FIELDS = ["Severity","Source","Category","EventType","Protocol","Destination"];
 const OPS    = ["==","!=","contains","startsWith","endsWith"];
@@ -396,7 +430,7 @@ const PERSONS = {
 const newCond  = () => ({ id:Date.now()+Math.random(), field:"Severity", op:"==", val:"High" });
 const newGroup = () => ({ id:Date.now()+Math.random(), conditions:[newCond()], logic:"AND" });
 const EMPTY = {
-  name:"", desc:"", priority:"high",
+  customerId:"", name:"", desc:"", priority:"high",
   filterGroups:[newGroup()],
   tw:15, twu:"minutes", twType:"sliding",
   groupBy:["src_ip"],
@@ -414,10 +448,11 @@ const EMPTY = {
 /* ═══════════════════════════════════════════════════════════
    APP
 ═══════════════════════════════════════════════════════════ */
-export default function App() {
+function App() {
   const [scr,    setScr]    = useState("list");
   const [rules,  setRules]  = useState(MOCK_RULES);
   const [q,      setQ]      = useState("");
+  const [fCus,   setFCus]   = useState("all");
   const [fSt,    setFSt]    = useState("all");
   const [fPr,    setFPr]    = useState("all");
   const [editing,setEditing]= useState(null);
@@ -427,7 +462,11 @@ export default function App() {
   const [testing,setTesting]= useState(false);
   const [results,setResults]= useState(null);
   const [modal,  setModal]  = useState(false);
+  const [cloneModal, setCloneModal] = useState(null);
+  const [expandedCus, setExpandedCus] = useState(MOCK_CUSTOMERS.map(c=>c.id));
   const [gbOpen, setGbOpen] = useState(false);
+  const [draggedItem, setDraggedItem] = useState(null);
+  const [dragEnabledId, setDragEnabledId] = useState(null);
   const [form,   setForm]   = useState(EMPTY);
   const sf = (k,v) => setForm(f=>({...f,[k]:v}));
 
@@ -436,13 +475,19 @@ export default function App() {
 
   const openEditor = (rule=null) => {
     setEditing(rule);
-    setForm(rule ? {...EMPTY, name:rule.name, desc:rule.desc, priority:rule.priority} : {...EMPTY, filterGroups:[newGroup()]});
+    setForm(rule ? {...EMPTY, ...rule} : {...EMPTY, customerId: fCus!=="all"?fCus:MOCK_CUSTOMERS[0].id, filterGroups:[newGroup()]});
     setStep(1); setErrs({}); go("editor");
   };
 
   const validate = s => {
     const e = {};
-    if (s===1 && !form.name.trim()) e.name="Tên Rule không được để trống";
+    if (s===1) {
+      if (!form.customerId) e.customerId="Khách hàng không được để trống";
+      if (!form.name.trim()) e.name="Tên Rule không được để trống";
+      if (form.name.trim() && rules.some(r => r.customerId === form.customerId && r.name.toLowerCase() === form.name.toLowerCase() && r.id !== editing?.id)) {
+        e.name = "Tên Rule đã tồn tại trong Khách hàng này";
+      }
+    }
     if (s===2) {
       if (form.filterGroups.flatMap(g=>g.conditions.map(c=>c.val.trim())).some(v=>!v)) e.f1v="Tất cả điều kiện cần có giá trị";
       if (!form.tw||form.tw<1) e.tw="Phải ≥ 1";
@@ -454,10 +499,15 @@ export default function App() {
   const handleNext = () => { if (validate(step)) setStep(s=>s+1); };
   const handleBack = () => { if (step===1) go("list"); else setStep(s=>s-1); };
   const handleSave = () => {
-    const r = { id:editing?.id||Date.now(), name:form.name, desc:form.desc, priority:form.priority,
+    let order = editing?.executionOrder;
+    if (!editing || form.customerId !== editing.customerId) {
+      const cusRules = rules.filter(r => r.customerId === form.customerId);
+      order = cusRules.length ? Math.max(...cusRules.map(r=>r.executionOrder)) + 1 : 1;
+    }
+    const r = { ...form, id:editing?.id||Date.now(), executionOrder:order,
       active:editing?editing.active:false, cases:editing?.cases||0,
       creator:"current.user", updated:new Date().toISOString().slice(0,10) };
-    setRules(editing?rules.map(x=>x.id===r.id?r:x):[r,...rules]);
+    setRules(editing?rules.map(x=>x.id===r.id?r:x):[...rules,r]);
     notify(editing?"Cập nhật Rule thành công":"Tạo Rule mới thành công"); go("list");
   };
   const runTest = () => {
@@ -472,9 +522,30 @@ export default function App() {
 
   const filtered = rules.filter(r=>
     r.name.toLowerCase().includes(q.toLowerCase()) &&
+    (fCus==="all"||r.customerId===fCus) &&
     (fSt==="all"||(fSt==="active"?r.active:!r.active)) &&
     (fPr==="all"||r.priority===fPr)
-  );
+  ).sort((a,b)=>a.executionOrder - b.executionOrder);
+
+  const handleDragStart = (e, rule) => { setDraggedItem(rule); e.dataTransfer.effectAllowed = "move"; };
+  const handleDragOver = (e, targetRule) => { e.preventDefault(); };
+  const handleDrop = (e, targetRule) => {
+    e.preventDefault();
+    if (!draggedItem || draggedItem.id === targetRule.id || draggedItem.customerId !== targetRule.customerId) return;
+    let cusRules = rules.filter(r => r.customerId === draggedItem.customerId).sort((a,b)=>a.executionOrder - b.executionOrder);
+    cusRules = cusRules.filter(r => r.id !== draggedItem.id);
+    const targetIndex = cusRules.findIndex(r => r.id === targetRule.id);
+    cusRules.splice(targetIndex, 0, draggedItem);
+    const newRules = rules.map(r => {
+      if (r.customerId === draggedItem.customerId) {
+        return { ...r, executionOrder: cusRules.findIndex(x => x.id === r.id) + 1 };
+      }
+      return { ...r, executionOrder: r.executionOrder };
+    });
+    setRules(newRules);
+    setDraggedItem(null);
+    notify("Đã cập nhật vị trí ưu tiên của Rule");
+  };
 
   /* ── Step 2 helpers ── */
   const updGrp = (gid,fn) => sf("filterGroups",form.filterGroups.map(g=>g.id===gid?fn(g):g));
@@ -593,7 +664,7 @@ export default function App() {
           display:"flex", flexDirection:"column", gap:12 }}>
 
           {/* ════════════════ LIST ════════════════ */}
-          {scr==="list" && (
+          {true && (
             <>
               {/* Page title */}
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
@@ -608,13 +679,7 @@ export default function App() {
                 <Btn variant="primary" icon="plus" onClick={()=>openEditor()}>Tạo mới Rule</Btn>
               </div>
 
-              {/* Stats */}
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:10 }}>
-                <StatCard icon="layers" label="Tổng Rules"    value={rules.length}                                     color={DS.accent}/>
-                <StatCard icon="power"  label="Hoạt động"     value={rules.filter(r=>r.active).length}                 color={DS.low}/>
-                <StatCard icon="alert"  label="Critical Rules" value={rules.filter(r=>r.priority==="critical").length}  color={DS.crit}/>
-                <StatCard icon="zap"    label="Cases đã tạo"  value={rules.reduce((a,r)=>a+r.cases,0)}                 color={DS.med}/>
-              </div>
+
 
               {/* Filter bar */}
               <div style={{ background:DS.bg2, border:`1px solid ${DS.border}`, borderRadius:8,
@@ -632,12 +697,13 @@ export default function App() {
                     onBlur={e=>e.target.style.borderColor=DS.border}/>
                 </div>
                 <div style={{ width:1, height:16, background:DS.border }}/>
+                <Sel value={fCus} onChange={e=>setFCus(e.target.value)}
+                  options={[{v:"all",l:"Tất cả khách hàng"}, ...MOCK_CUSTOMERS.map(c=>({v:c.id, l:c.name}))]}
+                  style={{ width:180 }}/>
                 <Sel value={fSt} onChange={e=>setFSt(e.target.value)}
                   options={[{v:"all",l:"Tất cả trạng thái"},{v:"active",l:"Hoạt động"},{v:"inactive",l:"Không hoạt động"}]}
-                  style={{ width:160 }}/>
-                <Sel value={fPr} onChange={e=>setFPr(e.target.value)}
-                  options={[{v:"all",l:"Tất cả mức độ"},{v:"critical",l:"Critical"},{v:"high",l:"High"},{v:"medium",l:"Medium"},{v:"low",l:"Low"}]}
-                  style={{ width:140 }}/>
+                  style={{ width:150 }}/>
+
                 <span style={{ marginLeft:"auto", fontFamily:DS.mono, fontSize:10, color:DS.text3 }}>
                   {filtered.length}/{rules.length} rules
                 </span>
@@ -648,7 +714,7 @@ export default function App() {
                 <table>
                   <thead>
                     <tr>
-                      {["Tên Rule","Mô tả","Priority","Trạng thái","Cases","Người tạo","Cập nhật","Thao tác"].map(h=>(
+                      {["Tên Rule","Mô tả","Trạng thái","Người tạo","Cập nhật","Thao tác"].map(h=>(
                         <th key={h} style={{ padding:"8px 10px", textAlign:"left",
                           fontFamily:DS.mono, fontSize:10, fontWeight:600, color:DS.text3,
                           textTransform:"uppercase", letterSpacing:".07em",
@@ -658,64 +724,79 @@ export default function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filtered.map(rule=>(
-                      <tr key={rule.id}>
-                        <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}` }}>
-                          <span style={{ fontFamily:DS.sans, fontSize:12, fontWeight:600,
-                            color:DS.text }}>{rule.name}</span>
-                        </td>
-                        <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}`,
-                          maxWidth:200 }}>
-                          <span style={{ fontFamily:DS.sans, fontSize:11, color:DS.text3,
-                            display:"block", whiteSpace:"nowrap", overflow:"hidden",
-                            textOverflow:"ellipsis" }} title={rule.desc}>{rule.desc}</span>
-                        </td>
-                        <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}` }}>
-                          <SevBadge sev={rule.priority}/>
-                        </td>
-                        <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}` }}>
-                          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                            <Toggle value={rule.active}
-                              onChange={v=>setRules(rules.map(r=>r.id===rule.id?{...r,active:v}:r))}/>
-                            <StatusPill active={rule.active}/>
-                          </div>
-                        </td>
-                        <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}` }}>
-                          <span style={{ fontFamily:DS.mono, fontWeight:700, color:DS.accent, fontSize:12 }}>
-                            {rule.cases}
-                          </span>
-                        </td>
-                        <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}`,
-                          fontFamily:DS.mono, fontSize:10, color:DS.text3 }}>{rule.creator}</td>
-                        <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}`,
-                          fontFamily:DS.mono, fontSize:10, color:DS.text4 }}>{rule.updated}</td>
-                        <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}` }}>
-                          <div style={{ display:"flex", gap:4 }}>
-                            <IconBtn icon="edit" tip="Chỉnh sửa" onClick={()=>openEditor(rule)}/>
-                            <IconBtn icon="copy" tip="Nhân bản"
-                              onClick={()=>{ setRules([...rules,{...rule,id:Date.now(),name:rule.name+" (Copy)",cases:0,active:false}]); notify("Đã nhân bản Rule"); }}/>
-                            <IconBtn icon="trash" tip={rule.active?"Tắt rule trước khi xóa":"Xóa"} danger
-                              disabled={rule.active}
-                              onClick={()=>{ setRules(rules.filter(r=>r.id!==rule.id)); notify("Đã xóa Rule","error"); }}/>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                    {!filtered.length && (
-                      <tr><td colSpan={8} style={{ padding:"40px 10px", textAlign:"center",
-                        fontFamily:DS.sans, fontSize:11, color:DS.text4 }}>
-                        Không tìm thấy rule nào phù hợp
-                      </td></tr>
-                    )}
+                    {(() => {
+                      if (!filtered.length) return (
+                        <tr><td colSpan={6} style={{ padding:"40px 10px", textAlign:"center", fontFamily:DS.sans, fontSize:11, color:DS.text4 }}>Không tìm thấy rule nào phù hợp</td></tr>
+                      );
+                      const groups = fCus === "all" ? MOCK_CUSTOMERS.map(c=>({ cus:c, rules:filtered.filter(r=>r.customerId===c.id) })).filter(g=>g.rules.length) : [{ cus:MOCK_CUSTOMERS.find(c=>c.id===fCus), rules:filtered }];
+                      return groups.map(g => (
+                        <React.Fragment key={g.cus.id}>
+                          {fCus === "all" && (
+                            <tr style={{ background:DS.bg3 }}>
+                              <td colSpan={6} style={{ padding:"6px 10px", borderBottom:`1px solid ${DS.border}` }}>
+                                <div style={{ display:"flex", alignItems:"center", gap:6, cursor:"pointer" }}
+                                  onClick={()=>setExpandedCus(ex=>ex.includes(g.cus.id)?ex.filter(x=>x!==g.cus.id):[...ex,g.cus.id])}>
+                                  <IC n="chevR" s={12} c="" style={{ color:DS.text3, transform:expandedCus.includes(g.cus.id)?"rotate(90deg)":"rotate(0deg)", transition:"transform .15s" }}/>
+                                  <span style={{ fontFamily:DS.sans, fontSize:12, fontWeight:700, color:DS.text2 }}>Khách hàng: {g.cus.name}</span>
+                                  <span style={{ fontFamily:DS.mono, fontSize:10, color:DS.text4, marginLeft:8 }}>{g.rules.length} rules</span>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                          {(fCus !== "all" || expandedCus.includes(g.cus.id)) && g.rules.map(rule=>(
+                            <tr key={rule.id}
+                              draggable={dragEnabledId === rule.id}
+                              onDragStart={e=>handleDragStart(e,rule)}
+                              onDragOver={e=>handleDragOver(e,rule)}
+                              onDrop={e=>handleDrop(e,rule)}
+                              style={{ cursor: dragEnabledId === rule.id ? "grab" : "default" }}>
+                              <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}` }}>
+                                <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+                                  <span 
+                                    onMouseEnter={()=>setDragEnabledId(rule.id)}
+                                    onMouseLeave={()=>setDragEnabledId(null)}
+                                    style={{ color:DS.text4, cursor:"grab", padding:"0 4px" }} 
+                                    title="Kéo thả để sắp xếp ưu tiên">⋮⋮</span>
+                                  <span style={{ fontFamily:DS.mono, fontSize:10, color:DS.text4, minWidth:18 }}>#{rule.executionOrder}</span>
+                                  <span style={{ fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text }}>{rule.name}</span>
+                                </div>
+                              </td>
+                              <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}`, maxWidth:200 }}>
+                                <span style={{ fontFamily:DS.sans, fontSize:11, color:DS.text3, display:"block", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }} title={rule.desc}>{rule.desc}</span>
+                              </td>
+
+                              <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}` }}>
+                                <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                                  <Toggle value={rule.active} onChange={v=>setRules(rules.map(r=>r.id===rule.id?{...r,active:v}:r))}/>
+                                  <StatusPill active={rule.active}/>
+                                </div>
+                              </td>
+
+                              <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}`, fontFamily:DS.mono, fontSize:10, color:DS.text3 }}>{rule.creator}</td>
+                              <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}`, fontFamily:DS.mono, fontSize:10, color:DS.text4 }}>{rule.updated}</td>
+                              <td style={{ padding:"9px 10px", borderBottom:`1px solid ${DS.border}` }}>
+                                <div style={{ display:"flex", gap:4 }}>
+                                  <IconBtn icon="edit" tip="Chỉnh sửa" onClick={()=>openEditor(rule)}/>
+                                  <IconBtn icon="copy" tip="Nhân bản" onClick={()=>setCloneModal(rule)}/>
+                                  <IconBtn icon="trash" tip={rule.active?"Tắt rule trước khi xóa":"Xóa"} danger disabled={rule.active} onClick={()=>{ setRules(rules.filter(r=>r.id!==rule.id)); notify("Đã xóa Rule","error"); }}/>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </React.Fragment>
+                      ));
+                    })()}
                   </tbody>
                 </table>
               </div>
             </>
           )}
 
-          {/* ════════════════ EDITOR ════════════════ */}
+                    {/* ════════════════ EDITOR ════════════════ */}
           {scr==="editor" && (
-            <div style={{ maxWidth:720 }}>
+            <div style={{ position:"fixed", inset:0, zIndex:1000, background:"rgba(15,20,30,.45)", backdropFilter:"blur(3px)", display:"flex", alignItems:"center", justifyContent:"center" }} onMouseDown={e=>{if(e.target===e.currentTarget) go("list");}}>
+              <div style={{ width:760, maxHeight:"90vh", overflowY:"auto", background:DS.bg1, borderRadius:12, boxShadow:"0 20px 60px rgba(0,0,0,.18)", display:"flex", flexDirection:"column" }}>
+                <div style={{ padding:"24px" }}>
               {/* Breadcrumb */}
               <div style={{ display:"flex", alignItems:"center", gap:5, fontFamily:DS.sans,
                 fontSize:11, color:DS.text3, marginBottom:14 }}>
@@ -730,7 +811,7 @@ export default function App() {
               {/* Step bar */}
               <div style={{ background:DS.bg2, border:`1px solid ${DS.border}`, borderRadius:8,
                 padding:"16px 22px", marginBottom:12, display:"flex", alignItems:"center" }}>
-                {[{n:1,l:"Thông tin chung"},{n:2,l:"Correlation Logic"},{n:3,l:"Action & Template"}].map((s,i)=>{
+                {[{n:1,l:"Điều kiện lọc"},{n:2,l:"Thông tin xử lý"},{n:3,l:"Xác nhận cấu hình"}].map((s,i)=>{
                   const done=step>s.n, active=step===s.n;
                   return (
                     <div key={s.n} style={{ display:"flex", alignItems:"center", flex:i<2?1:"auto" }}>
@@ -763,44 +844,60 @@ export default function App() {
               <div style={{ background:DS.bg2, border:`1px solid ${DS.border}`, borderRadius:8,
                 padding:"20px 24px", marginBottom:10 }}>
 
-                {/* ── STEP 1 ── */}
+                {/* ── STEP 1: ĐIỀU KIỆN LỌC ── */}
                 {step===1 && (
                   <div>
+                    {/* THÔNG TIN CƠ BẢN */}
                     <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:18,
                       fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text }}>
-                      <IC n="shield" s={14} c="" style={{ color:DS.accent }}/>Thông tin chung
+                      <IC n="shield" s={14} c="" style={{ color:DS.accent }}/>Thông tin cơ bản
                     </div>
-                    <FItem label="Tên Rule" required error={errs.name}>
-                      <Input value={form.name}
-                        onChange={e=>{ sf("name",e.target.value); setErrs(er=>({...er,name:""})); }}
-                        placeholder="VD: Brute Force SSH Detection" error={errs.name}/>
-                    </FItem>
-                    <FItem label="Mô tả">
-                      <textarea value={form.desc} onChange={e=>sf("desc",e.target.value)} rows={3}
-                        placeholder="Mô tả ngắn gọn về mục đích và phạm vi của rule..."
-                        style={{ width:"100%", padding:"7px 10px", fontSize:11, lineHeight:1.6,
-                          fontFamily:DS.sans, border:`1px solid ${DS.border}`, borderRadius:6,
-                          resize:"vertical", color:DS.text, background:DS.bg3, outline:"none" }}
-                        onFocus={e=>e.target.style.borderColor=DS.accent}
-                        onBlur={e=>e.target.style.borderColor=DS.border}/>
-                    </FItem>
-                  </div>
-                )}
+                    
+                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:12 }}>
+                      <FItem label="Khách hàng (Customer)" required error={errs.customerId}>
+                        <Sel value={form.customerId}
+                          onChange={e=>{ sf("customerId",e.target.value); setErrs(er=>({...er,customerId:""})); }}
+                          options={[{v:"",l:"-- Chọn Khách hàng --"}, ...MOCK_CUSTOMERS.map(c=>({v:c.id,l:c.name}))]}
+                          style={{ width:"100%" }}/>
+                      </FItem>
+                      <FItem label="Tên quy tắc" required error={errs.name}>
+                        <Input value={form.name}
+                          onChange={e=>{ sf("name",e.target.value); setErrs(er=>({...er,name:""})); }}
+                          placeholder="VD: Brute Force SSH Detection" error={errs.name}/>
+                      </FItem>
+                    </div>
 
-                {/* ── STEP 2 ── */}
-                {step===2 && (
-                  <div>
+                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
+                      <FItem label="Mô tả">
+                        <textarea value={form.desc} onChange={e=>sf("desc",e.target.value)} rows={3}
+                          placeholder="Mô tả ngắn gọn về mục đích và phạm vi của rule..."
+                          style={{ width:"100%", padding:"7px 10px", fontSize:11, lineHeight:1.6,
+                            fontFamily:DS.sans, border:`1px solid ${DS.border}`, borderRadius:6,
+                            resize:"vertical", color:DS.text, background:DS.bg3, outline:"none" }}
+                          onFocus={e=>e.target.style.borderColor=DS.accent}
+                          onBlur={e=>e.target.style.borderColor=DS.border}/>
+                      </FItem>
+                      <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                        <FItem label="Trạng thái">
+                          <div style={{ display:"flex", alignItems:"center", gap:8, marginTop: 4 }}>
+                            <Toggle value={form.active!==false} onChange={v=>sf("active",v)}/>
+                            <StatusPill active={form.active!==false}/>
+                          </div>
+                        </FItem>
+                      </div>
+                    </div>
+
+                    <div style={{ margin:"24px 0 16px", height:1, background:DS.border }}/>
+
+                    {/* ĐIỀU KIỆN LỌC CẢNH BÁO */}
                     <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:18,
-                      fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text }}>
-                      <IC n="sliders" s={14} c="" style={{ color:DS.accent }}/>Correlation Logic
-                      <span style={{ fontSize:10, color:DS.text3, fontWeight:400 }}>
-                        — Cấu hình dòng chảy xử lý Alert
-                      </span>
+                      fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text, textTransform:"uppercase" }}>
+                      ĐIỀU KIỆN LỌC CẢNH BÁO
                     </div>
 
                     {/* 1. INPUT FILTER */}
                     <SCard num="1" color={DS.accent} icon="filter"
-                      title="Input Filter" subtitle="— Điều kiện lọc Alert đầu vào" badge="KHI">
+                      title="Input Filter" subtitle="Các nhóm nối nhau bằng OR. Điều kiện trong nhóm nối nhau theo logic của nhóm (AND/OR).">
                       {errs.f1v && (
                         <div style={{ color:DS.crit, fontSize:10, marginBottom:7,
                           display:"flex", alignItems:"center", gap:3, fontFamily:DS.sans }}>
@@ -896,53 +993,19 @@ export default function App() {
                             background:"transparent", cursor:"pointer", color:DS.high }}
                           onMouseEnter={e=>e.currentTarget.style.background="rgba(234,88,12,.06)"}
                           onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
-                          <IC n="plus" s={10}/>Thêm nhóm OR
+                          <IC n="plus" s={10}/>Thêm nhóm điều kiện (OR)
                         </button>
                         <span style={{ fontSize:10, color:DS.text4, fontFamily:DS.sans }}>
                           Tạo nhóm điều kiện mới, nối bằng OR
                         </span>
                       </div>
                     </SCard>
+                    
                     <SConnector/>
 
-                    {/* 2. TIME WINDOW */}
-                    <SCard num="2" color="#7c3aed" icon="clock"
-                      title="Time Window" subtitle="— Khoảng thời gian xét tương quan" badge="TRONG VÒNG">
-                      <div style={{ display:"flex", alignItems:"center", gap:10, flexWrap:"wrap" }}>
-                        <input type="number" value={form.tw}
-                          onChange={e=>{sf("tw",parseInt(e.target.value)||"");setErrs(er=>({...er,tw:""}));}}
-                          style={{ ...inp2(68) }}
-                          onFocus={e=>e.target.style.borderColor="#7c3aed"}
-                          onBlur={e=>e.target.style.borderColor=DS.border}/>
-                        <Sel value={form.twu} onChange={e=>sf("twu",e.target.value)}
-                          options={[{v:"minutes",l:"Phút"},{v:"hours",l:"Giờ"}]} style={{ width:80 }}/>
-                        <div style={{ width:1, height:16, background:DS.border }}/>
-                        {[{v:"sliding",l:"Sliding",desc:"Tịnh tiến"},{v:"tumbling",l:"Tumbling",desc:"Cố định"}].map(opt=>(
-                          <label key={opt.v} onClick={()=>sf("twType",opt.v)}
-                            style={{ display:"inline-flex", alignItems:"center", gap:6,
-                              padding:"4px 10px", borderRadius:5, cursor:"pointer", fontSize:11,
-                              fontFamily:DS.sans,
-                              border:`1.5px solid ${form.twType===opt.v?"#7c3aed":DS.border}`,
-                              background:form.twType===opt.v?"rgba(124,58,237,.08)":DS.bg3,
-                              color:form.twType===opt.v?"#7c3aed":DS.text2 }}>
-                            <input type="radio" checked={form.twType===opt.v} onChange={()=>{}}
-                              style={{ accentColor:"#7c3aed", margin:0 }}/>
-                            <span style={{ fontWeight:500 }}>{opt.l}</span>
-                            <span style={{ fontSize:10, color:DS.text4 }}>{opt.desc}</span>
-                          </label>
-                        ))}
-                        <span title="Sliding: tịnh tiến liên tục, không bỏ lỡ tấn công qua 2 khung giờ. Tumbling: reset theo chu kỳ."
-                          style={{ cursor:"help" }}>
-                          <IC n="info" s={12} c="" style={{ color:DS.text4 }}/>
-                        </span>
-                        {errs.tw && <span style={{ color:DS.crit, fontSize:10, fontFamily:DS.sans }}>{errs.tw}</span>}
-                      </div>
-                    </SCard>
-                    <SConnector/>
-
-                    {/* 3. GROUPING */}
-                    <SCard num="3" color="#0891b2" icon="link"
-                      title="Grouping Fields" subtitle="— Trường gom nhóm Alert" badge="GOM THEO">
+                    {/* 2. GROUPING */}
+                    <SCard num="2" color="#0891b2"
+                      title="Group field" subtitle="Trường gom nhóm Alert">
                       {errs.gb && (
                         <div style={{ color:DS.crit, fontSize:10, marginBottom:7,
                           display:"flex", alignItems:"center", gap:3, fontFamily:DS.sans }}>
@@ -1010,308 +1073,108 @@ export default function App() {
                         )}
                       </div>
                     </SCard>
+
                     <SConnector/>
 
-                    {/* 4. THRESHOLD */}
-                    <SCard num="4" color={DS.med} icon="alert"
-                      title="Threshold" subtitle="— Ngưỡng kích hoạt tạo Case" badge="THỎA MÃN">
-                      {errs.thr && (
-                        <div style={{ color:DS.crit, fontSize:10, marginBottom:7,
-                          display:"flex", alignItems:"center", gap:3, fontFamily:DS.sans }}>
-                          <IC n="alert" s={10}/>{errs.thr}
-                        </div>
-                      )}
-                      <div style={{ display:"flex", flexDirection:"column", gap:7 }}>
-                        {[
-                          { type:"count", content:(
-                            <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
-                              <span style={{ fontSize:11, color:DS.text2, fontFamily:DS.sans }}>Số Alert lớn hơn</span>
-                              <input type="number" value={form.thrN}
-                                onChange={e=>{sf("thrN",parseInt(e.target.value)||"");setErrs(er=>({...er,thr:""}));}}
-                                onClick={e=>e.stopPropagation()}
-                                style={{ ...inp2(64) }}/>
-                              <span style={{ fontSize:11, color:DS.text3, fontFamily:DS.sans }}>lần</span>
-                            </div>
-                          )},
-                          { type:"unique", content:(
-                            <div style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
-                              <span style={{ fontSize:11, color:DS.text2, fontFamily:DS.sans }}>Unique</span>
-                              <div onClick={e=>e.stopPropagation()}>
-                                <Sel value={form.thrF} onChange={e=>sf("thrF",e.target.value)}
-                                  options={GROUPS} style={{ width:130, fontFamily:DS.mono }}/>
-                              </div>
-                              <span style={{ fontSize:11, color:DS.text2, fontFamily:DS.sans }}>lớn hơn</span>
-                              <input type="number" value={form.thrU}
-                                onChange={e=>sf("thrU",parseInt(e.target.value)||"")}
-                                onClick={e=>e.stopPropagation()}
-                                style={{ ...inp2(64) }}/>
-                            </div>
-                          )},
-                        ].map(row=>(
-                          <div key={row.type}
-                            style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer",
-                              padding:"8px 12px", borderRadius:6,
-                              border:`1.5px solid ${form.thrType===row.type?DS.med:DS.border}`,
-                              background:form.thrType===row.type?"rgba(217,119,6,.07)":DS.bg3 }}
-                            onClick={()=>sf("thrType",row.type)}>
-                            <input type="radio" checked={form.thrType===row.type}
-                              onChange={()=>sf("thrType",row.type)}
-                              onClick={e=>e.stopPropagation()}
-                              style={{ accentColor:DS.med, flexShrink:0, margin:0, cursor:"pointer" }}/>
-                            <div onClick={e=>e.stopPropagation()}
-                              style={{ display:"flex", alignItems:"center", gap:8, flexWrap:"wrap" }}>
-                              {row.content}
-                            </div>
+                    {/* 3. TÙY CHỌN NÂNG CAO */}
+                    <SCard num="3" color={DS.high}
+                      title="Tùy chọn nâng cao" subtitle="">
+                      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:20 }}>
+                        <div>
+                          <div style={{ fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text2 }}>Giới hạn số lượng cảnh báo</div>
+                          <div style={{ fontFamily:DS.sans, fontSize:10, color:DS.text4, fontStyle:"italic", marginBottom:8 }}>(nhập 0 để không đặt giới hạn)</div>
+                          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                            <input type="number" value={form.thrN}
+                              onChange={e=>{sf("thrN",parseInt(e.target.value)||"");setErrs(er=>({...er,thr:""}));}}
+                              style={{ ...inp2(80) }}/>
+                            <span style={{ fontSize:11, color:DS.text3, fontFamily:DS.sans }}>cảnh báo / sự việc</span>
                           </div>
-                        ))}
+                        </div>
+                        <div>
+                          <div style={{ fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text2 }}>Khoảng thời gian gom nhóm</div>
+                          <div style={{ fontFamily:DS.sans, fontSize:10, color:DS.text4, fontStyle:"italic", marginBottom:8 }}>(Tối thiểu 1 phút)</div>
+                          <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                            <input type="number" value={form.tw}
+                              onChange={e=>{sf("tw",parseInt(e.target.value)||"");setErrs(er=>({...er,tw:""}));}}
+                              style={{ ...inp2(80) }}/>
+                            <span style={{ fontSize:11, color:DS.text3, fontFamily:DS.sans }}>phút</span>
+                          </div>
+                        </div>
                       </div>
                     </SCard>
+
                   </div>
                 )}
 
-                {/* ── STEP 3 ── */}
-                {step===3 && (
+                {/* ── STEP 2: THÔNG TIN XỬ LÝ ── */}
+                {step===2 && (
                   <div>
-                    <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:18,
+                    {/* CẤU HÌNH GỘP SỰ VIỆC */}
+                    <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:12,
                       fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text }}>
-                      <IC n="zap" s={14} c="" style={{ color:DS.accent }}/>Action & Case Template
+                      Cấu hình gộp sự việc
                     </div>
-
-                    {/* Case title */}
-                    <FItem label="Tiêu đề Case" help="Dùng {{src_ip}}, {{user_name}}, {{hostname}} để tự điền dữ liệu">
-                      <Input value={form.title} onChange={e=>sf("title",e.target.value)} mono/>
-                      <div style={{ marginTop:5, display:"flex", flexWrap:"wrap", gap:4, alignItems:"center" }}>
-                        <span style={{ fontFamily:DS.sans, fontSize:10, color:DS.text4 }}>Biến:</span>
-                        {["{{src_ip}}","{{user_name}}","{{hostname}}","{{process_name}}"].map(v=>(
-                          <code key={v} onClick={()=>sf("title",form.title+v)}
-                            style={{ fontFamily:DS.mono, fontSize:9, cursor:"pointer",
-                              padding:"1px 5px", borderRadius:4,
-                              background:DS.bg3, border:`1px solid ${DS.border}`, color:DS.accent }}
-                            title="Click để chèn">{v}</code>
-                        ))}
-                      </div>
-                    </FItem>
-
-                    <div style={{ height:1, background:DS.border, margin:"4px 0 16px" }}/>
-
-                    {/* 2-col: Phân công + Quản lý */}
-                    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:16 }}>
-                      {/* Phân công */}
-                      <div style={{ border:`1px solid ${DS.border}`, borderRadius:8, overflow:"hidden" }}>
-                        <div style={{ padding:"8px 14px", borderBottom:`1px solid ${DS.border}`,
-                          background:`linear-gradient(to right,${DS.accentDim},transparent)`,
-                          display:"flex", alignItems:"center", gap:7 }}>
-                          <IC n="tag" s={12} c="" style={{ color:DS.accent }}/>
-                          <span style={{ fontFamily:DS.sans, fontSize:11, fontWeight:600, color:DS.text }}>
-                            Phân công
-                          </span>
-                        </div>
-                        <div style={{ padding:"12px 14px", display:"flex", flexDirection:"column", gap:12 }}>
-                          <div>
-                            <FLabel label="Đơn vị xử lý"/>
-                            <Sel value={form.assignUnit}
-                              onChange={e=>{ sf("assignUnit",e.target.value); sf("assignPerson","Chưa chỉ định"); }}
-                              options={UNITS} style={{ width:"100%" }}/>
-                          </div>
-                          <div>
-                            <FLabel label="Người thực hiện"/>
-                            <SearchSel value={form.assignPerson||"Chưa chỉ định"}
-                              onChange={v=>sf("assignPerson",v)}
-                              options={PERSONS[form.assignUnit]||["Chưa chỉ định","Tự động phân bổ"]}/>
-                          </div>
-                        </div>
-                      </div>
-                      {/* Quản lý */}
-                      <div style={{ border:`1px solid ${DS.border}`, borderRadius:8, overflow:"hidden" }}>
-                        <div style={{ padding:"8px 14px", borderBottom:`1px solid ${DS.border}`,
-                          background:"linear-gradient(to right,rgba(217,119,6,.08),transparent)",
-                          display:"flex", alignItems:"center", gap:7 }}>
-                          <IC n="sliders" s={12} c="" style={{ color:DS.med }}/>
-                          <span style={{ fontFamily:DS.sans, fontSize:11, fontWeight:600, color:DS.text }}>
-                            Quản lý
-                          </span>
-                        </div>
-                        <div style={{ padding:"12px 14px", display:"flex", flexDirection:"column", gap:12 }}>
-                          <div>
-                            <FLabel label="Mức độ nghiêm trọng"/>
-                            <SevSel value={form.caseSeverity} onChange={v=>sf("caseSeverity",v)}/>
-                          </div>
-                          <div>
-                            <FLabel label="SLA" help="Chính sách thời gian xử lý áp dụng cho Case"/>
-                            <Sel value={form.caseSLA} onChange={e=>sf("caseSLA",e.target.value)}
-                              options={SLAS.map(s=>({v:s,l:s}))} style={{ width:"100%" }}/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Case Merging */}
-                    <FItem label="Case Merging">
-                      {/* Master toggle */}
-                      <label style={{ display:"flex", alignItems:"flex-start", gap:8, cursor:"pointer",
-                        padding:"10px 13px",
-                        border:`1px solid ${form.merge?DS.accent:DS.border}`,
-                        borderRadius: form.merge?"6px 6px 0 0":6,
-                        background: form.merge?DS.accentDim:DS.bg3,
-                        borderBottom: form.merge?`1px solid ${DS.accent}`:`1px solid ${DS.border}` }}>
-                        <input type="checkbox" checked={form.merge}
-                          onChange={e=>sf("merge",e.target.checked)}
-                          style={{ marginTop:2, accentColor:DS.accent, flexShrink:0 }}/>
+                    
+                    <div style={{ background:DS.bg2, border:`1px solid ${DS.border}`, borderRadius:6, overflow:"hidden", marginBottom:24 }}>
+                      <label style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer", padding:"12px 16px", background:DS.bg3, borderBottom:form.merge?`1px solid ${DS.border}`:"none" }}>
+                        <input type="checkbox" checked={form.merge} onChange={e=>sf("merge",e.target.checked)} style={{ accentColor:DS.accent, width:16, height:16 }}/>
                         <div>
-                          <div style={{ fontFamily:DS.sans, fontSize:12, fontWeight:500,
-                            color:form.merge?DS.accent:DS.text }}>
-                            Cho phép gộp Alert vào Case đã tồn tại
-                            <span style={{ fontSize:10, color:DS.text4, marginLeft:5, fontStyle:"italic" }}>
-                              (Enable Case Merging)
-                            </span>
-                          </div>
-                          <div style={{ fontFamily:DS.sans, fontSize:11, color:DS.text3, marginTop:2 }}>
-                            Alert mới thỏa điều kiện sẽ được gộp vào Case cũ thay vì tạo Case trùng lặp
-                          </div>
+                          <div style={{ fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text }}>Gộp vào sự việc đang có sẵn</div>
+                          <div style={{ fontFamily:DS.sans, fontSize:11, color:DS.text4 }}>Quy định cách cảnh báo mới được gộp vào các sự việc đang mở</div>
                         </div>
                       </label>
-
                       {form.merge && (
-                        <div style={{ border:`1px solid ${DS.accent}`, borderTop:"none",
-                          borderRadius:"0 0 6px 6px", background:DS.bg2,
-                          padding:"14px 14px 12px" }}>
-                          {/* Section label */}
-                          <div style={{ fontFamily:DS.sans, fontSize:11, fontWeight:600,
-                            color:DS.text2, marginBottom:10 }}>
-                            Trạng thái Case áp dụng
-                            <span style={{ fontSize:10, color:DS.text4, fontStyle:"italic",
-                              marginLeft:5, fontWeight:400 }}>(Applicable Case Status)</span>
-                          </div>
-
-                          {/* Open Cases */}
-                          <div style={{ border:`1px solid ${DS.border}`, borderRadius:6,
-                            overflow:"hidden", marginBottom:8 }}>
-                            <div style={{ display:"flex", alignItems:"flex-start", gap:8,
-                              padding:"9px 12px", background:DS.bg3,
-                              borderBottom:`1px solid ${DS.border}` }}>
-                              <input type="checkbox" checked={true} disabled
-                                style={{ marginTop:2, accentColor:DS.accent, flexShrink:0,
-                                  cursor:"not-allowed" }}/>
-                              <div style={{ flex:1 }}>
-                                <div style={{ display:"flex", alignItems:"center", gap:5, flexWrap:"wrap" }}>
-                                  <span style={{ fontFamily:DS.sans, fontSize:11, fontWeight:600,
-                                    color:DS.text }}>Case đang mở</span>
-                                  <span style={{ fontFamily:DS.sans, fontSize:10, color:DS.text3,
-                                    fontStyle:"italic" }}>(Open Cases)</span>
-                                  <span style={{ fontFamily:DS.mono, fontSize:9, fontWeight:700,
-                                    padding:"1px 6px", borderRadius:4, letterSpacing:".04em",
-                                    color:DS.accent, background:DS.accentDim,
-                                    border:`1px solid rgba(29,107,243,.25)` }}>MẶC ĐỊNH</span>
-                                </div>
-                                <div style={{ fontFamily:DS.sans, fontSize:10, color:DS.text3, marginTop:2 }}>
-                                  Luôn tìm và gộp vào Case đang ở trạng thái Open
-                                </div>
-                              </div>
-                            </div>
-                            <div style={{ padding:"9px 12px 9px 36px", background:DS.bg2 }}>
-                              <label style={{ display:"flex", alignItems:"flex-start", gap:7,
-                                cursor:"pointer" }}>
-                                <input type="checkbox" checked={form.mergeOpenSLAOnly}
-                                  onChange={e=>sf("mergeOpenSLAOnly",e.target.checked)}
-                                  style={{ marginTop:2, accentColor:DS.accent, flexShrink:0 }}/>
-                                <div>
-                                  <div style={{ fontFamily:DS.sans, fontSize:11, fontWeight:500,
-                                    color:DS.text2 }}>Chỉ áp dụng khi Case còn trong thời hạn SLA</div>
-                                  <div style={{ fontFamily:DS.sans, fontSize:10, color:DS.text4, marginTop:1 }}>
-                                    Bỏ qua các Case đang mở nhưng đã hết hạn SLA
-                                  </div>
-                                </div>
-                              </label>
-                            </div>
-                          </div>
-
-                          {/* Closed Cases */}
-                          <div style={{ border:`1px solid ${form.mergeClosedCases?DS.accent:DS.border}`,
-                            borderRadius:6, overflow:"hidden", transition:"border-color .15s" }}>
-                            <label style={{ display:"flex", alignItems:"flex-start", gap:8,
-                              cursor:"pointer", padding:"9px 12px",
-                              background:form.mergeClosedCases?DS.accentDim:DS.bg3,
-                              borderBottom:form.mergeClosedCases?`1px solid ${DS.accent}`:"none" }}>
-                              <input type="checkbox" checked={form.mergeClosedCases}
-                                onChange={e=>sf("mergeClosedCases",e.target.checked)}
-                                style={{ marginTop:2, accentColor:DS.accent, flexShrink:0 }}/>
+                        <div style={{ padding:"16px" }}>
+                          <div style={{ fontFamily:DS.sans, fontSize:12, fontWeight:700, color:DS.text, marginBottom:12 }}>Trạng thái sự việc áp dụng</div>
+                          <div style={{ border:`1px solid ${DS.border}`, borderRadius:6, overflow:"hidden", marginBottom:12 }}>
+                            <label style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer", padding:"10px 14px", background:DS.accentDim, borderBottom:`1px solid ${DS.border}` }}>
+                              <input type="checkbox" checked disabled style={{ accentColor:DS.text4, width:14, height:14 }}/>
                               <div>
-                                <div style={{ display:"flex", alignItems:"center", gap:5 }}>
-                                  <span style={{ fontFamily:DS.sans, fontSize:11, fontWeight:500,
-                                    color:form.mergeClosedCases?DS.accent:DS.text }}>
-                                    Case đã đóng
-                                  </span>
-                                  <span style={{ fontFamily:DS.sans, fontSize:10, color:DS.text3,
-                                    fontStyle:"italic" }}>(Closed Cases)</span>
+                                <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                                  <span style={{ fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text }}>Sự việc đang mở</span>
+                                  <span style={{ fontSize:9, fontWeight:600, background:"rgba(29,107,243,.15)", color:DS.accent, padding:"2px 6px", borderRadius:4, letterSpacing:".5px" }}>MẶC ĐỊNH</span>
                                 </div>
-                                <div style={{ fontFamily:DS.sans, fontSize:10, color:DS.text3, marginTop:2 }}>
-                                  Cho phép mở lại và gộp vào Case đã Closed
-                                </div>
+                                <div style={{ fontFamily:DS.sans, fontSize:11, color:DS.text4 }}>Luôn tìm và gộp vào sự việc đang ở trạng thái mở</div>
                               </div>
                             </label>
-
+                            <label style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer", padding:"10px 14px 10px 40px", background:DS.bg2 }}>
+                              <input type="checkbox" checked={form.mergeOpenSLAOnly} onChange={e=>sf("mergeOpenSLAOnly",e.target.checked)} style={{ accentColor:DS.accent, width:14, height:14 }}/>
+                              <div>
+                                <div style={{ fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text }}>Chỉ gộp vào sự việc mở còn hạn SLA</div>
+                                <div style={{ fontFamily:DS.sans, fontSize:11, color:DS.text4 }}>Bỏ qua các sự việc đang mở nhưng đã hết hạn SLA</div>
+                              </div>
+                            </label>
+                          </div>
+                          <div style={{ border:`1px solid ${DS.border}`, borderRadius:6, overflow:"hidden" }}>
+                            <label style={{ display:"flex", alignItems:"center", gap:10, cursor:"pointer", padding:"10px 14px", background:form.mergeClosedCases?DS.accentDim:DS.bg2, borderBottom:form.mergeClosedCases?`1px solid ${DS.border}`:"none" }}>
+                              <input type="checkbox" checked={form.mergeClosedCases} onChange={e=>sf("mergeClosedCases",e.target.checked)} style={{ accentColor:DS.accent, width:14, height:14 }}/>
+                              <div>
+                                <div style={{ fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text }}>Sự việc đã đóng</div>
+                                <div style={{ fontFamily:DS.sans, fontSize:11, color:DS.text4 }}>Cho phép mở lại sự việc đã đóng để gộp</div>
+                              </div>
+                            </label>
                             {form.mergeClosedCases && (
-                              <div style={{ padding:"12px 12px 12px 34px", background:DS.bg2,
-                                display:"flex", flexDirection:"column", gap:12 }}>
-                                {/* Lookback */}
-                                <div>
-                                  <div style={{ display:"flex", alignItems:"center", gap:5, marginBottom:7 }}>
-                                    <IC n="clock" s={11} c="" style={{ color:DS.text3 }}/>
-                                    <span style={{ fontFamily:DS.sans, fontSize:11, fontWeight:600,
-                                      color:DS.text2 }}>Thời gian tìm kiếm Case</span>
-                                    <span style={{ fontFamily:DS.sans, fontSize:10, color:DS.text4,
-                                      fontStyle:"italic" }}>(Lookback Window)</span>
-                                    <span title="Tìm các Case đã đóng trong khoảng thời gian này để mở lại."
-                                      style={{ cursor:"help" }}>
-                                      <IC n="info" s={11} c="" style={{ color:DS.text4 }}/>
-                                    </span>
-                                  </div>
+                              <div style={{ padding:"14px 14px 14px 40px", background:DS.bg2 }}>
+                                <div style={{ marginBottom:16 }}>
+                                  <div style={{ fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text, marginBottom:8 }}>Khoảng thời gian tìm case đã đóng</div>
                                   <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                                    <input type="number" value={form.mergeClosedLookback} min={1}
-                                      onChange={e=>sf("mergeClosedLookback",parseInt(e.target.value)||1)}
-                                      style={{ ...inp2(68) }}
-                                      onFocus={e=>e.target.style.borderColor=DS.accent}
-                                      onBlur={e=>e.target.style.borderColor=DS.border}/>
-                                    <Sel value={form.mergeClosedLookbackUnit}
-                                      onChange={e=>sf("mergeClosedLookbackUnit",e.target.value)}
-                                      options={[{v:"hours",l:"Giờ"},{v:"days",l:"Ngày"}]}
-                                      style={{ width:80 }}/>
-                                    <span style={{ fontFamily:DS.sans, fontSize:10, color:DS.text4 }}>
-                                      tính từ hiện tại
-                                    </span>
+                                    <input type="number" value={form.mergeClosedLookback||24} onChange={e=>sf("mergeClosedLookback",e.target.value)} style={{ ...inp2(180), textAlign:"center" }}/>
+                                    <Sel value={form.mergeClosedLookbackUnit||"hours"} onChange={e=>sf("mergeClosedLookbackUnit",e.target.value)} options={[{v:"hours",l:"Giờ"},{v:"days",l:"Ngày"}]} style={{ width:100 }}/>
+                                    <span style={{ fontSize:11, color:DS.text4, fontFamily:DS.sans }}>tính từ hiện tại</span>
                                   </div>
                                 </div>
-                                <div style={{ height:1, background:DS.border }}/>
-                                {/* Re-open SLA */}
                                 <div>
-                                  <div style={{ fontFamily:DS.sans, fontSize:11, fontWeight:600,
-                                    color:DS.text2, marginBottom:7 }}>
-                                    Cấu hình SLA khi mở lại
-                                    <span style={{ fontSize:10, color:DS.text4, fontStyle:"italic",
-                                      marginLeft:5, fontWeight:400 }}>(Re-open SLA)</span>
-                                  </div>
-                                  <div style={{ display:"flex", flexDirection:"column", gap:5 }}>
+                                  <div style={{ fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text, marginBottom:8 }}>Chính sách SLA khi mở lại</div>
+                                  <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                                     {[
-                                      { v:"reset", l:"Đặt lại SLA", sub:"Tính lại từ đầu kể từ lúc gộp Alert mới" },
-                                      { v:"keep",  l:"Giữ nguyên SLA", sub:"Tiếp tục dùng deadline của Case cũ" },
-                                    ].map(opt=>(
-                                      <label key={opt.v}
-                                        onClick={()=>sf("mergeReopenSLA",opt.v)}
-                                        style={{ display:"flex", alignItems:"flex-start", gap:7,
-                                          padding:"8px 11px", borderRadius:5, cursor:"pointer",
-                                          border:`1.5px solid ${form.mergeReopenSLA===opt.v?DS.accent:DS.border}`,
-                                          background:form.mergeReopenSLA===opt.v?DS.accentDim:DS.bg3 }}>
-                                        <input type="radio" checked={form.mergeReopenSLA===opt.v}
-                                          onChange={()=>sf("mergeReopenSLA",opt.v)}
-                                          onClick={e=>e.stopPropagation()}
-                                          style={{ marginTop:2, accentColor:DS.accent, flexShrink:0 }}/>
+                                      {v:"reset", l:"Đặt lại SLA", d:"Tính lại từ đầu kể từ lúc gộp Cảnh báo mới"},
+                                      {v:"keep", l:"Giữ SLA cũ", d:"Tiếp tục dùng thời hạn của sự việc cũ"}
+                                    ].map(o=>(
+                                      <label key={o.v} style={{ display:"flex", alignItems:"flex-start", gap:10, cursor:"pointer", padding:"10px 14px", border:`1px solid ${form.mergeClosedSLA===o.v ? DS.accent : DS.border}`, borderRadius:6, background:form.mergeClosedSLA===o.v ? DS.accentDim : DS.bg2 }}>
+                                        <input type="radio" name="mergeClosedSLA" checked={form.mergeClosedSLA===o.v} onChange={()=>sf("mergeClosedSLA",o.v)} style={{ accentColor:DS.accent, marginTop:2 }}/>
                                         <div>
-                                          <div style={{ fontFamily:DS.sans, fontSize:11, fontWeight:500,
-                                            color:form.mergeReopenSLA===opt.v?DS.accent:DS.text2 }}>
-                                            {opt.l}
-                                          </div>
-                                          <div style={{ fontFamily:DS.sans, fontSize:10, color:DS.text4,
-                                            marginTop:1 }}>{opt.sub}</div>
+                                          <div style={{ fontFamily:DS.sans, fontSize:11, fontWeight:600, color:form.mergeClosedSLA===o.v ? DS.accent : DS.text }}>{o.l}</div>
+                                          <div style={{ fontFamily:DS.sans, fontSize:10, color:form.mergeClosedSLA===o.v ? DS.accent : DS.text4 }}>{o.d}</div>
                                         </div>
                                       </label>
                                     ))}
@@ -1322,227 +1185,164 @@ export default function App() {
                           </div>
                         </div>
                       )}
+                    </div>
+
+                    <FItem label="Tiêu đề sự việc" required>
+                      <Input value={form.title} onChange={e=>sf("title",e.target.value)} mono/>
+                      <div style={{ marginTop:5, display:"flex", flexWrap:"wrap", gap:4, alignItems:"center" }}>
+                        <span style={{ fontFamily:DS.sans, fontSize:10, color:DS.text4 }}>Biến:</span>
+                        {["{{severity}}","{{source}}","{{content}}"].map(v=>(
+                          <code key={v} onClick={()=>sf("title",form.title+v)}
+                            style={{ fontFamily:DS.mono, fontSize:9, cursor:"pointer",
+                              padding:"1px 5px", borderRadius:4,
+                              background:DS.bg3, border:`1px solid ${DS.border}`, color:DS.accent }}
+                            title="Click để chèn">{v}</code>
+                        ))}
+                      </div>
                     </FItem>
 
-                    {/* Summary */}
-                    <div style={{ height:1, background:DS.border, margin:"4px 0 16px" }}/>
-                    <div style={{ background:"rgba(22,163,74,.06)", border:"1px solid rgba(22,163,74,.25)",
-                      borderRadius:8, padding:"12px 16px" }}>
-                      <div style={{ fontFamily:DS.sans, fontSize:11, fontWeight:600, color:DS.low,
-                        marginBottom:10, display:"flex", alignItems:"center", gap:5 }}>
-                        <IC n="check" s={12}/>Tóm tắt cấu hình Rule
-                      </div>
-                      <div style={{ display:"grid", gridTemplateColumns:"150px 1fr", rowGap:5 }}>
-                        {[
-                          ["Tên Rule",    form.name||"(Chưa đặt tên)"],
-                          ["Filter",      form.filterGroups.map(g=>g.conditions.map(c=>`${c.field} ${c.op} "${c.val}"`).join(` ${g.logic} `)).join(") OR (") || "—"],
-                          ["Time Window", `${form.tw} ${form.twu} (${form.twType==="sliding"?"Sliding":"Tumbling"})`],
-                          ["Group By",    form.groupBy.join(", ")||"—"],
-                          ["Threshold",   form.thrType==="count"?`Alert count > ${form.thrN}`:`Unique ${form.thrF} > ${form.thrU}`],
-                          ["Đơn vị",      form.assignUnit],
-                          ["Thực hiện",   form.assignPerson||"Chưa chỉ định"],
-                          ["Severity",    form.caseSeverity.charAt(0).toUpperCase()+form.caseSeverity.slice(1)],
-                          ["SLA",         form.caseSLA],
-                          ["Merge",       form.merge?`Bật${form.mergeOpenSLAOnly?" (còn SLA)":""}${form.mergeClosedCases?` + Closed ${form.mergeClosedLookback}${form.mergeClosedLookbackUnit==="hours"?"h":"d"}`:""}` : "Tắt"],
-                        ].map(([k,v],i)=>(
-                          <>
-                            <span key={i+"k"} style={{ fontFamily:DS.sans, fontSize:11,
-                              fontWeight:600, color:DS.text3 }}>{k}:</span>
-                            <span key={i+"v"} style={{ fontFamily: ["Filter","Time Window","Group By","Threshold"].includes(k)?DS.mono:DS.sans,
-                              fontSize:11, color:DS.text2 }}>{v}</span>
-                          </>
-                        ))}
+                    <div style={{ margin:"24px 0 16px", height:1, background:DS.border }}/>
+
+                    {/* CẤU HÌNH SỰ VIỆC TỰ ĐỘNG TẠO */}
+                    <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:12,
+                      fontFamily:DS.sans, fontSize:12, fontWeight:600, color:DS.text }}>
+                      Cấu hình sự việc tự động tạo
+                    </div>
+
+                    <div style={{ background:DS.bg3, border:`1px solid ${DS.border}`, borderRadius:6, padding:"16px" }}>
+                      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 }}>
+                        <FItem label="Loại sự việc" required>
+                          <Sel value={form.caseType || "Sự cố"} onChange={e=>sf("caseType",e.target.value)}
+                            options={[{v:"Sự cố",l:"Sự cố"},{v:"Bất thường",l:"Bất thường"}]} style={{ width:"100%" }}/>
+                        </FItem>
+                        <FItem label="Đơn vị xử lý" required>
+                          <Sel value={form.assignUnit}
+                            onChange={e=>{ sf("assignUnit",e.target.value); sf("assignPerson","Chưa chỉ định"); }}
+                            options={UNITS} style={{ width:"100%" }}/>
+                        </FItem>
+                        <FItem label="Người thực hiện (tùy chọn)">
+                          <SearchSel value={form.assignPerson||"Chưa chỉ định"}
+                            onChange={v=>sf("assignPerson",v)}
+                            options={PERSONS[form.assignUnit]||["Chưa chỉ định","Tự động phân bổ"]}/>
+                        </FItem>
+                        <FItem label="Mức độ nghiêm trọng" required>
+                          <SevSel value={form.caseSeverity} onChange={v=>sf("caseSeverity",v)}/>
+                        </FItem>
+                        <FItem label="Chính sách SLA" required>
+                          <Sel value={form.caseSLA} onChange={e=>sf("caseSLA",e.target.value)}
+                            options={SLAS.map(s=>({v:s,l:s}))} style={{ width:"100%" }}/>
+                        </FItem>
                       </div>
                     </div>
                   </div>
                 )}
-              </div>
 
-              {/* Footer nav */}
-              <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-                <Btn variant="ghost" icon="chevL" onClick={handleBack}>{step===1?"Huỷ":"Quay lại"}</Btn>
-                <div style={{ display:"flex", gap:8 }}>
-                  {step===3 && (
-                    <Btn variant="ghost" icon="eye"
-                      onClick={()=>{ setResults(null); setTesting(false); setModal(true); }}>
-                      Test Rule
-                    </Btn>
-                  )}
-                  {step<3
-                    ? <Btn variant="primary" onClick={handleNext}>
-                        Tiếp theo <IC n="chevR" s={11}/>
-                      </Btn>
-                    : <Btn variant="primary" icon="check" onClick={handleSave}>
-                        {editing?"Lưu thay đổi":"Tạo Rule"}
-                      </Btn>}
-                </div>
-              </div>
-
-              {/* ── TEST MODAL ── */}
-              {modal && (
-                <div style={{ position:"fixed", inset:0, zIndex:1000,
-                  background:"rgba(15,20,30,.45)", backdropFilter:"blur(3px)",
-                  display:"flex", alignItems:"center", justifyContent:"center" }}
-                  onClick={e=>{ if(e.target===e.currentTarget) setModal(false); }}>
-                  <div style={{ background:DS.bg2, borderRadius:12, width:"min(820px,94vw)",
-                    maxHeight:"88vh", display:"flex", flexDirection:"column",
-                    boxShadow:"0 20px 60px rgba(0,0,0,.18),0 4px 16px rgba(0,0,0,.1)",
-                    border:`1px solid ${DS.border}` }}>
-                    {/* Modal header */}
-                    <div style={{ padding:"18px 20px 14px", borderBottom:`1px solid ${DS.border}`,
-                      display:"flex", alignItems:"center", justifyContent:"space-between",
-                      flexShrink:0 }}>
-                      <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-                        <div style={{ width:36, height:36, borderRadius:8,
-                          background:DS.accentDim, border:`1px solid rgba(29,107,243,.22)`,
-                          display:"flex", alignItems:"center", justifyContent:"center" }}>
-                          <IC n="eye" s={16} c="" style={{ color:DS.accent }}/>
-                        </div>
-                        <div>
-                          <div style={{ fontFamily:DS.sans, fontSize:14, fontWeight:700, color:DS.text }}>
-                            Test Rule — Simulation
-                          </div>
-                          <div style={{ fontFamily:DS.sans, fontSize:11, color:DS.text3, marginTop:2 }}>
-                            Quét dữ liệu Alert 24h qua để ước tính Case sẽ được tạo
-                          </div>
-                        </div>
-                      </div>
-                      <IconBtn icon="x" tip="Đóng" onClick={()=>setModal(false)}/>
+                {/* ── STEP 3: XÁC NHẬN CẤU HÌNH ── */}
+                {step===3 && (
+                  <div>
+                    <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:10,
+                      fontFamily:DS.sans, fontSize:14, fontWeight:700, color:DS.text, textTransform:"uppercase" }}>
+                      XÁC NHẬN CẤU HÌNH
+                    </div>
+                    <div style={{ fontSize:11, color:DS.text4, marginBottom: 20 }}>
+                      Xem lại toàn bộ cấu hình trước khi lưu
                     </div>
 
-                    {/* Modal body */}
-                    <div style={{ flex:1, overflowY:"auto", padding:"14px 20px" }}>
-                      {/* Config chips */}
-                      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8, marginBottom:10 }}>
-                        {[
-                          { icon:"filter", label:"INPUT FILTER",  val:filterText||"—" },
-                          { icon:"clock",  label:"TIME WINDOW",   val:twText },
-                          { icon:"link",   label:"GROUP BY",      val:grpText },
-                          { icon:"alert",  label:"THRESHOLD",     val:thrText },
-                        ].map(c=>(
-                          <div key={c.label} style={{ background:DS.bg3, border:`1px solid ${DS.border}`,
-                            borderRadius:6, padding:"9px 12px" }}>
-                            <div style={{ display:"flex", alignItems:"center", gap:5,
-                              fontFamily:DS.mono, fontSize:9, fontWeight:700, letterSpacing:".07em",
-                              textTransform:"uppercase", color:DS.text3, marginBottom:5 }}>
-                              <IC n={c.icon} s={10}/>{c.label}
-                            </div>
-                            <div style={{ fontFamily:DS.mono, fontSize:11, fontWeight:600,
-                              color:DS.text, wordBreak:"break-all" }}>{c.val}</div>
-                          </div>
-                        ))}
-                      </div>
-                      <div style={{ marginBottom:12 }}>
-                        <Btn variant="primary" icon={testing?"spin":"play"} onClick={runTest}
-                          disabled={testing}>
-                          {testing?"Đang phân tích...":"Chạy Test"}
-                        </Btn>
-                      </div>
-
-                      {/* Results */}
-                      <div style={{ border:`1px solid ${DS.border}`, borderRadius:8, overflow:"hidden" }}>
-                        <div style={{ padding:"9px 14px", background:DS.bg3,
-                          borderBottom:`1px solid ${DS.border}`,
-                          display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-                          <span style={{ fontFamily:DS.sans, fontSize:11, fontWeight:600, color:DS.text,
-                            display:"flex", alignItems:"center", gap:6 }}>
-                            <IC n="layers" s={12} c="" style={{ color:DS.accent }}/>
-                            Kết quả Simulation
-                          </span>
-                          {results && (
-                            <span style={{ fontFamily:DS.mono, fontSize:9, fontWeight:700,
-                              padding:"2px 7px", borderRadius:4, letterSpacing:".04em",
-                              color:DS.low, background:"rgba(22,163,74,.10)",
-                              border:"1px solid rgba(22,163,74,.25)" }}>
-                              {results.length} CASES
-                            </span>
-                          )}
-                        </div>
-
-                        {!results && !testing && (
-                          <div style={{ padding:"36px 20px", textAlign:"center" }}>
-                            <IC n="play" s={28} c="" style={{ color:DS.border }}/>
-                            <div style={{ fontFamily:DS.sans, fontSize:12, fontWeight:500,
-                              color:DS.text2, marginTop:8 }}>Nhấn "Chạy Test" để bắt đầu phân tích</div>
-                          </div>
-                        )}
-
-                        {testing && (
-                          <div style={{ padding:"36px 20px", textAlign:"center" }}>
-                            <IC n="spin" s={24} c="" style={{ color:DS.accent,
-                              animation:"spin 1s linear infinite" }}/>
-                            <div style={{ fontFamily:DS.sans, fontSize:11, color:DS.text3, marginTop:8 }}>
-                              Đang quét Alert database...
-                            </div>
-                            <div style={{ margin:"8px auto 0", maxWidth:140, height:3,
-                              background:DS.bg3, borderRadius:4, overflow:"hidden" }}>
-                              <div style={{ height:"100%", background:DS.accent, borderRadius:4,
-                                animation:"barAnim 1.2s ease-in-out infinite" }}/>
-                            </div>
-                          </div>
-                        )}
-
-                        {results && (
-                          <>
-                            <div style={{ margin:"10px 14px", padding:"7px 11px",
-                              background:"rgba(22,163,74,.08)", border:"1px solid rgba(22,163,74,.22)",
-                              borderRadius:6, display:"flex", alignItems:"center", gap:7,
-                              fontFamily:DS.sans, fontSize:11, color:DS.low }}>
-                              <IC n="check" s={12}/>
-                              Hoàn tất — {results.length} Case từ {results.reduce((s,r)=>s+r.alerts,0)} Alerts
-                              {" "}(nén ~{Math.round((1-results.length/results.reduce((s,r)=>s+r.alerts,0))*100)}%)
-                            </div>
-                            <table>
-                              <thead>
-                                <tr>
-                                  {["Case ID","Tiêu đề","Severity","Alerts","Thời điểm"].map(h=>(
-                                    <th key={h} style={{ padding:"7px 10px", textAlign:"left",
-                                      fontFamily:DS.mono, fontSize:9, fontWeight:700, color:DS.text3,
-                                      textTransform:"uppercase", letterSpacing:".07em",
-                                      background:DS.bg3, borderTop:`1px solid ${DS.border}`,
-                                      borderBottom:`1px solid ${DS.border}` }}>{h}</th>
-                                  ))}
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {results.map(r=>(
-                                  <tr key={r.id} style={{ borderBottom:`1px solid ${DS.border}` }}>
-                                    <td style={{ padding:"8px 10px" }}>
-                                      <code style={{ fontFamily:DS.mono, fontSize:10,
-                                        fontWeight:700, color:DS.accent }}>{r.id}</code>
-                                    </td>
-                                    <td style={{ padding:"8px 10px", fontFamily:DS.sans,
-                                      fontSize:11, color:DS.text2 }}>{r.title}</td>
-                                    <td style={{ padding:"8px 10px" }}><SevBadge sev={r.sev}/></td>
-                                    <td style={{ padding:"8px 10px", fontFamily:DS.mono,
-                                      fontSize:12, fontWeight:700, color:DS.med }}>{r.alerts}</td>
-                                    <td style={{ padding:"8px 10px", fontFamily:DS.mono,
-                                      fontSize:10, color:DS.text3 }}>{r.time}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </>
-                        )}
-                      </div>
+                    <div style={{ background:DS.bg3, borderRadius:6, border:`1px solid ${DS.border}`, padding:"16px", marginBottom:16 }}>
+                      <div style={{ fontSize:12, fontWeight:700, color:DS.text, marginBottom:12 }}>Thông tin chung</div>
+                      <Grid2>
+                        <Lbl>Khách hàng:</Lbl><Val>{MOCK_CUSTOMERS.find(c=>c.id===form.customerId)?.name || "—"}</Val>
+                        <Lbl>Tên quy tắc:</Lbl><Val>{form.name}</Val>
+                        <Lbl>Mô tả:</Lbl><Val>{form.desc||"—"}</Val>
+                        <Lbl>Trạng thái:</Lbl><Val><StatusPill active={form.active!==false}/></Val>
+                      </Grid2>
                     </div>
 
-                    {/* Modal footer */}
-                    <div style={{ padding:"14px 20px", borderTop:`1px solid ${DS.border}`,
-                      display:"flex", justifyContent:"space-between", alignItems:"center",
-                      flexShrink:0, background:DS.bg3, borderRadius:"0 0 12px 12px" }}>
-                      <Btn variant="ghost" icon="chevL" onClick={()=>setModal(false)}>
-                        Quay lại chỉnh sửa
-                      </Btn>
-                      <Btn variant="primary" icon="check"
-                        onClick={()=>{ setModal(false); handleSave(); }}>
-                        {editing?"Lưu thay đổi":"Tạo Rule"}
-                      </Btn>
+                    <div style={{ background:DS.bg3, borderRadius:6, border:`1px solid ${DS.border}`, padding:"16px", marginBottom:16 }}>
+                      <div style={{ fontSize:12, fontWeight:700, color:DS.text, marginBottom:12 }}>Điều kiện lọc & Threshold</div>
+                      <Grid2>
+                        <Lbl>Filter:</Lbl>
+                        <Val>
+                          {form.filterGroups.map((g,gi)=>(
+                            <div key={g.id}>
+                              {gi>0 && <span style={{ color:DS.high, fontSize:10, fontWeight:700, marginRight:6 }}>OR</span>}
+                              {g.conditions.map(c=>`${c.field} ${c.op} "${c.val}"`).join(` ${g.logic} `)}
+                            </div>
+                          ))}
+                        </Val>
+                        <Lbl>Group field:</Lbl><Val>{form.groupBy && form.groupBy.length > 0 ? form.groupBy.join(", ") : "—"}</Val>
+                        <Lbl>Threshold:</Lbl>
+                        <Val>{">"} {form.thrN} sự việc trong khoảng {form.tw} phút</Val>
+                      </Grid2>
+                    </div>
+
+                    <div style={{ background:DS.bg3, borderRadius:6, border:`1px solid ${DS.border}`, padding:"16px", marginBottom:16 }}>
+                      <div style={{ fontSize:12, fontWeight:700, color:DS.text, marginBottom:12 }}>Action & Case Template</div>
+                      <Grid2>
+                        <Lbl>Tiêu đề sự việc:</Lbl><Val>{form.title}</Val>
+                        <Lbl>Loại sự việc:</Lbl><Val>{form.caseType || "Sự cố"}</Val>
+                        <Lbl>Đơn vị xử lý:</Lbl><Val>{form.assignUnit}</Val>
+                        <Lbl>Người thực hiện:</Lbl><Val>{form.assignPerson||"—"}</Val>
+                        <Lbl>Mức độ nghiêm trọng:</Lbl><Val>{form.caseSeverity}</Val>
+                        <Lbl>Chính sách SLA:</Lbl><Val>{form.caseSLA}</Val>
+                        <Lbl>Cấu hình gộp sự việc:</Lbl><Val>{form.merge?"Bật":"Tắt"}</Val>
+                      </Grid2>
                     </div>
                   </div>
+                )}
+
+                {/* Footer */}
+                <div style={{ display:"flex", justifyContent:"flex-end", gap:10, marginTop:24,
+                  paddingTop:20, borderTop:`1px solid ${DS.border}` }}>
+                  {step > 1 && (
+                    <Btn variant="ghost" onClick={()=>setStep(step-1)}>Quay lại</Btn>
+                  )}
+                  {step < 3 ? (
+                    <Btn variant="primary" onClick={()=>handleNext(step)}>Tiếp tục</Btn>
+                  ) : (
+                    <Btn variant="primary" icon="check"
+                      onClick={()=>{ setModal(false); handleSave(); }}>
+                      {editing?"Lưu quy tắc":"Tạo quy tắc"}
+                    </Btn>
+                  )}
                 </div>
-              )}
+              </div>
+              </div>
             </div>
+            </div>
+          )}
+
+
+          {/* ── CLONE MODAL ── */}
+          {cloneModal && (
+            <CloneModal rule={cloneModal} rules={rules} customers={MOCK_CUSTOMERS}
+              onClose={()=>setCloneModal(null)}
+              onConfirm={(selectedCustomerIds) => {
+                let newRules = [...rules];
+                selectedCustomerIds.forEach(cusId => {
+                  let name = cloneModal.name;
+                  let counter = 1;
+                  while (newRules.some(r => r.customerId === cusId && r.name.toLowerCase() === name.toLowerCase())) {
+                    name = `${cloneModal.name} (${counter++})`;
+                  }
+                  const cusRules = newRules.filter(r => r.customerId === cusId);
+                  const maxOrder = cusRules.length ? Math.max(...cusRules.map(r=>r.executionOrder)) : 0;
+                  newRules.push({
+                    ...cloneModal,
+                    id: Date.now() + Math.random(),
+                    customerId: cusId,
+                    name: name,
+                    executionOrder: maxOrder + 1,
+                    active: false,
+                    cases: 0,
+                    updated: new Date().toISOString().slice(0,10)
+                  });
+                });
+                setRules(newRules);
+                setCloneModal(null);
+                notify(`Đã nhân bản Rule cho ${selectedCustomerIds.length} khách hàng`);
+              }}
+            />
           )}
 
         </main>
@@ -1550,3 +1350,71 @@ export default function App() {
     </div>
   );
 }
+
+/* ── CLONE MODAL COMPONENT ── */
+const CloneModal = ({ rule, rules, customers, onClose, onConfirm }) => {
+  const [q, setQ] = useState("");
+  const [sel, setSel] = useState([rule.customerId]);
+  const filtered = customers.filter(c=>c.name.toLowerCase().includes(q.toLowerCase()));
+  const allSel = filtered.length > 0 && filtered.every(c=>sel.includes(c.id));
+  
+  const toggleAll = () => {
+    if (allSel) {
+      setSel(sel.filter(id => !filtered.some(c=>c.id===id)));
+    } else {
+      const newSel = new Set([...sel, ...filtered.map(c=>c.id)]);
+      setSel(Array.from(newSel));
+    }
+  };
+
+  return (
+    <div style={{ position:"fixed", inset:0, zIndex:1000, background:"rgba(15,20,30,.45)", backdropFilter:"blur(3px)", display:"flex", alignItems:"center", justifyContent:"center" }} onClick={e=>{if(e.target===e.currentTarget) onClose();}}>
+      <div style={{ background:DS.bg2, borderRadius:10, width:400, border:`1px solid ${DS.border}`, boxShadow:"0 20px 60px rgba(0,0,0,.18)" }}>
+        <div style={{ padding:"14px 18px", borderBottom:`1px solid ${DS.border}`, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+          <div style={{ fontFamily:DS.sans, fontSize:13, fontWeight:700, color:DS.text }}>Nhân bản Rule</div>
+          <IconBtn icon="x" tip="Đóng" onClick={onClose}/>
+        </div>
+        <div style={{ padding:"16px 18px" }}>
+          <div style={{ fontFamily:DS.sans, fontSize:11, color:DS.text3, marginBottom:12 }}>
+            Chọn các khách hàng bạn muốn sao chép rule <strong style={{color:DS.text}}>{rule.name}</strong> tới:
+          </div>
+          <div style={{ position:"relative", marginBottom:10 }}>
+            <span style={{ position:"absolute", left:8, top:8, color:DS.text4 }}><IC n="search" s={12}/></span>
+            <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Tìm khách hàng..."
+              style={{ width:"100%", height:30, padding:"4px 10px 4px 26px", fontSize:11, fontFamily:DS.sans, border:`1px solid ${DS.border}`, borderRadius:6, outline:"none", background:DS.bg3, color:DS.text }}/>
+          </div>
+          <div style={{ border:`1px solid ${DS.border}`, borderRadius:6, overflow:"hidden" }}>
+            <div style={{ padding:"8px 12px", background:DS.bg3, borderBottom:`1px solid ${DS.border}` }}>
+              <label style={{ display:"flex", alignItems:"center", gap:8, cursor:"pointer" }}>
+                <input type="checkbox" checked={allSel} onChange={toggleAll} style={{ accentColor:DS.accent }}/>
+                <span style={{ fontFamily:DS.sans, fontSize:11, fontWeight:600, color:DS.text2 }}>Chọn tất cả</span>
+              </label>
+            </div>
+            <div style={{ maxHeight:200, overflowY:"auto" }}>
+              {filtered.map(c=>(
+                <label key={c.id} style={{ display:"flex", alignItems:"center", gap:8, padding:"8px 12px", cursor:"pointer", borderBottom:`1px solid ${DS.border}`, background:DS.bg2 }}>
+                  <input type="checkbox" checked={sel.includes(c.id)} onChange={e=>{
+                    if(e.target.checked) setSel([...sel, c.id]);
+                    else setSel(sel.filter(id=>id!==c.id));
+                  }} style={{ accentColor:DS.accent }}/>
+                  <span style={{ fontFamily:DS.sans, fontSize:11, color:DS.text }}>{c.name}</span>
+                </label>
+              ))}
+              {!filtered.length && <div style={{ padding:"12px", textAlign:"center", fontSize:11, color:DS.text4 }}>Không tìm thấy khách hàng</div>}
+            </div>
+          </div>
+        </div>
+        <div style={{ padding:"12px 18px", borderTop:`1px solid ${DS.border}`, background:DS.bg3, borderRadius:"0 0 10px 10px", display:"flex", justifyContent:"flex-end", gap:8 }}>
+          <Btn variant="ghost" onClick={onClose}>Huỷ</Btn>
+          <Btn variant="primary" onClick={()=>onConfirm(sel)} disabled={sel.length===0}>Xác nhận Nhân bản</Btn>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

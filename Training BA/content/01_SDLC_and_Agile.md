@@ -118,3 +118,19 @@ Qua buổi làm việc ban đầu, bạn thu thập được các thông tin sau
 
 **Yêu cầu:**
 Đứng ở vai trò là một BA Tư vấn (Consultant), bạn sẽ đề xuất công ty sử dụng mô hình **Waterfall** hay **Agile (Scrum)** cho dự án này? Hãy lập luận chi tiết để bảo vệ quan điểm của bạn, đồng thời chỉ ra những rủi ro có thể gặp phải với mô hình bạn đã chọn và cách phòng tránh.
+
+<!-- GÓC DÀNH CHO MENTOR (XÓA PHẦN NÀY TRƯỚC KHI GỬI CHO HỌC VIÊN) -->
+> [!CAUTION]
+> **TÀI LIỆU NỘI BỘ DÀNH CHO MENTOR (HƯỚNG DẪN ĐÁNH GIÁ ĐÁP ÁN):**
+> 
+> **Phần 4.1: Câu hỏi lý thuyết**
+> 1. **Agile vs Scrum:** Agile là một *Tư duy/Triết lý* (Mindset/Philosophy) cốt lõi dựa trên các tuyên ngôn định hướng. Scrum là một *Khung làm việc thực thi cụ thể* (Framework) cung cấp các quy tắc, vai trò (PO, SM, Dev) và quy trình (Sprint) để hiện thực hóa triết lý Agile.
+> 2. **Kanban:** Cũng là một khung làm việc Agile. Khác biệt lớn nhất: (1) Scrum đóng gói công việc theo các phân đoạn thời gian cố định (Sprint 1-4 tuần), Kanban xử lý theo luồng công việc liên tục không ngắt quãng (Continuous Flow). (2) Scrum có quy định chặt chẽ về chức danh (PO, SM), Kanban không bắt buộc thay đổi chức danh hiện hành của tổ chức.
+> 3. **Xử lý tình huống Sprint bị can thiệp:** Theo nguyên tắc Scrum tiêu chuẩn, không được phép thay đổi Mục tiêu (Sprint Goal) khi Sprint đang diễn ra. Do đó, Scrum Master phải đứng ra bảo vệ Development Team. PO có trách nhiệm đàm phán với khách hàng, thuyết phục họ đưa tính năng khẩn cấp đó lên vị trí ưu tiên cao nhất trong **Sprint Backlog của Sprint TIẾP THEO**, thay vì nhồi nhét phá vỡ cấu trúc Sprint hiện hành. (Chỉ hủy Sprint hiện tại nếu Mục tiêu Sprint đã hoàn toàn vô giá trị).
+> 
+> **Phần 4.2: Bài tập phân tích tình huống (Case Study)**
+> *Lưu ý: Không có đáp án đúng/sai tuyệt đối, Mentor chấm điểm dựa trên sự logic trong lập luận của học viên.*
+> - **Đề xuất tối ưu:** Lựa chọn **Agile (Scrum)** hoặc mô hình lai (Hybrid).
+> - **Lập luận bảo vệ:** Dù dự án bị khóa cứng ngân sách và thời hạn 6 tháng (thường là môi trường ưu tiên Waterfall), nhưng yêu cầu cốt lõi về AI lại biến động cao: *"chưa có quy trình chuẩn, vừa làm vừa điều chỉnh"*. Nếu dùng Waterfall, toàn bộ hệ thống sẽ đóng băng thiết kế, dẫn đến rủi ro sụp đổ ở khâu Nghiệm thu (UAT) do hệ thống không khớp với thực tế vận hành xưởng. Agile cho phép triển khai sớm một phiên bản thử nghiệm tại 1 phân xưởng để tinh chỉnh model AI kịp thời.
+> - **Rủi ro & Phòng tránh:** Nhược điểm chí mạng của Agile trong dự án fix ngân sách/thời gian là Tràn phạm vi (Scope Creep). Cách phòng tránh: PO phải cực kỳ cứng rắn áp dụng quy tắc Time-box và Budget-box, sẵn sàng hi sinh các tính năng "Nice-to-have" để đảm bảo các tính năng "Must-have" (chấm công khuôn mặt) lên sóng thành công đúng ngày hạn định.
+<!-- KẾT THÚC PHẦN CỦA MENTOR -->

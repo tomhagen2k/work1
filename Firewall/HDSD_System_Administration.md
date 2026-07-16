@@ -421,11 +421,36 @@ Giúp theo dõi chi tiết các phiên làm việc (sessions) đang hoạt độ
 
 ---
 
-## 3.5. Giám sát Lưu lượng Ứng dụng (Application Traffic)
+## 3.5. Giám sát Kết nối (Connections)
+
+Cung cấp cái nhìn trực quan về các mối quan hệ kết nối mạng dưới dạng sơ đồ đồ thị (Node-link diagram), giúp quản trị viên dễ dàng phát hiện các luồng giao tiếp bất thường giữa các thiết bị hoặc địa chỉ IP trong hệ thống.
+
+### 3.5.1. Xem và phân tích sơ đồ kết nối
+Giúp phân tích trực quan luồng dữ liệu mạng giữa nguồn và đích dựa trên các bộ lọc cấu hình linh hoạt.
+
+**Các bước thực hiện:**
+1. Truy cập menu **Giám sát** > **Kết nối**.
+2. Tại màn hình Kết nối, sử dụng thanh công cụ lọc ở phía trên để thiết lập các tham số hiển thị:
+   - **Tìm kiếm:** Nhập biểu thức lọc dữ liệu chi tiết (ví dụ: `dstip==8.8.8.8&&appproto==dns`).
+   - **Khoảng thời gian / Thời gian bắt đầu / Thời gian kết thúc:** Chọn khoảng thời gian để quét và hiển thị sơ đồ (ví dụ: `24H`).
+   - **Kích thước (Tối đa):** Giới hạn số lượng nút (node) tối đa hiển thị trên sơ đồ để tránh quá tải (ví dụ: `100`).
+   - **Tổng kết nối tối thiểu:** Chỉ hiển thị các nút có số lượng kết nối lớn hơn hoặc bằng giá trị này (ví dụ: `1`).
+   - **Trường nguồn / Trường đích:** Chọn thuộc tính muốn hiển thị ở hai đầu kết nối (ví dụ: `Source IP` và `Destination IP`).
+   - Nhấn nút **Tìm kiếm** để hệ thống vẽ lại sơ đồ kết nối theo tham số mới.
+3. Ở góc trên bên phải, hệ thống cung cấp nhanh các thống kê: Số lượng **Nút**, **Liên kết** và **Bản ghi lọc** được.
+4. Thao tác trên sơ đồ trực quan bên dưới:
+   - Các nút (node) đại diện cho các địa chỉ IP hoặc thực thể mạng (ví dụ: `192.168.142.21`, `40.104.210.2:443`). Mũi tên thể hiện chiều kết nối và luồng dữ liệu.
+   - **Kéo nút:** Nhấn giữ và kéo các nút để thay đổi vị trí, giúp dễ nhìn hơn.
+   - **Pan sơ đồ:** Nhấn giữ và kéo vào khoảng trống để di chuyển (pan) toàn bộ sơ đồ.
+   - **Xem chi tiết:** Di chuột (hover) qua một nút hoặc một liên kết (mũi tên) để xem các thông tin chi tiết về thực thể hoặc luồng dữ liệu đó.
+
+---
+
+## 3.6. Giám sát Lưu lượng Ứng dụng (Application Traffic)
 
 Cung cấp cái nhìn tổng quan về việc sử dụng băng thông của các ứng dụng trên toàn mạng, giúp phát hiện sớm các ứng dụng tiêu tốn băng thông bất thường.
 
-### 3.5.1. Xem thống kê lưu lượng ứng dụng
+### 3.6.1. Xem thống kê lưu lượng ứng dụng
 Cung cấp số liệu chi tiết về việc tiêu thụ băng thông của các ứng dụng, giúp phát hiện nhanh các địa chỉ IP hoặc ứng dụng gây nghẽn mạng.
 
 **Các bước thực hiện:**
@@ -443,6 +468,57 @@ Cung cấp số liệu chi tiết về việc tiêu thụ băng thông của cá
      - **Số Phiên:** Số lượng phiên kết nối do IP này tạo ra.
      - **Dữ liệu:** Dung lượng dữ liệu IP này đã tiêu thụ.
      - **Số gói:** Số lượng gói tin truyền tải.
+
+---
+
+## 3.7. Điều tra và Tìm kiếm (Hunting)
+
+Tính năng Tìm kiếm cho phép quản trị viên truy vấn và tìm kiếm chuyên sâu vào nội dung gói tin (payload) hoặc các siêu dữ liệu (metadata) trên một hoặc nhiều thiết bị (Agent), hỗ trợ đắc lực cho công tác điều tra và truy vết sự cố an toàn thông tin.
+
+### 3.7.1. Thực hiện tìm kiếm mới
+Giúp thiết lập các tham số và điều kiện để quét và tìm kiếm dữ liệu.
+
+**Các bước thực hiện:**
+1. Truy cập vào menu **Giám sát** > **Tìm kiếm**.
+2. Tại phần **Tìm kiếm mới**, cấu hình các thông số cơ bản:
+   - **Agent:** Chọn một thiết bị (Agent) cần quét từ danh sách, hoặc tích chọn **Chọn nhiều agent** nếu muốn tìm kiếm trên diện rộng.
+   - **Thời gian chờ (ms):** Thời gian tối đa hệ thống chờ đợi kết quả trả về từ thiết bị (ví dụ: 120000).
+   - **Snippet phiên:** Dung lượng dữ liệu trích xuất từ mỗi phiên để kiểm tra (ví dụ: 64).
+   - **Thời gian bắt đầu / kết thúc:** Khoảng thời gian giới hạn để tìm kiếm dữ liệu.
+   - **Bộ lọc phiên:** Cú pháp lọc trước các phiên làm việc dựa trên 5-tuple (IP, Port, Protocol) trước khi tiến hành khớp nội dung (Ví dụ: `srcip==1.2.3.4 && dstport==443`).
+3. Chọn tab phương thức tìm kiếm phù hợp:
+   - **Tìm kiếm đơn giản:** Phù hợp cho các truy vấn nhanh bằng một từ khóa duy nhất.
+     - Lựa chọn **Kiểu tìm kiếm** phù hợp với định dạng dữ liệu cần tìm. Các lựa chọn bao gồm:
+       - *ASCII (case-sensitive):* Tìm kiếm chuỗi ký tự ASCII có phân biệt chữ hoa, chữ thường.
+       - *ASCII (case-insensitive):* Tìm kiếm chuỗi ký tự ASCII không phân biệt hoa thường.
+       - *Regex (POSIX ERE):* Tìm kiếm sử dụng biểu thức chính quy (Regular Expression) theo chuẩn POSIX ERE.
+       - *Hex bytes:* Tìm kiếm theo chuỗi mã Hex (Ví dụ: deadbeef).
+       - *Hex regex:* Tìm kiếm bằng biểu thức chính quy áp dụng trên chuỗi Hex.
+     - Nhập **Mẫu tìm kiếm (*):** Từ khóa, mã Hex hoặc biểu thức chính quy cần tìm.
+   - **Bộ lọc nâng cao:** Hỗ trợ tìm kiếm phức tạp bằng cách kết hợp nhiều điều kiện logic với nhau.
+     - **Bộ lọc (JSON):** Bạn có thể cấu hình thông qua 2 giao diện:
+       - *Cây trực quan:* Xây dựng bộ lọc bằng cách thêm các **Nhóm** điều kiện (AND - tất cả đều đúng, OR - một trong các điều kiện đúng) và thêm các **Điều kiện** con bên trong (lựa chọn kiểu tìm kiếm và nhập giá trị khớp). Có thể lồng ghép nhiều cấp nhóm.
+       - *JSON:* Dành cho người dùng nâng cao. Cho phép nhập trực tiếp cấu trúc bộ lọc bằng mã JSON (Hệ thống có kiểm tra tính hợp lệ, ví dụ báo xanh "JSON hợp lệ"). Mã JSON bao gồm các trường cấu trúc như `op` (toán tử logic) và mảng `conditions` (chứa type và value).
+     - **Bản ghi index (mảng JSON):** Cho phép nhập trực tiếp mảng JSON chứa các chỉ mục (index) cụ thể để tìm kiếm chính xác vào các đoạn dữ liệu lưu trữ (Ví dụ: `[{"id":777,"file_seq":0,"ts_first":1700000000,"ts_last":1700000600}]`).
+4. Cấu hình các tùy chọn mở rộng (bằng cách bật/tắt các công tắc phía dưới):
+   - **Chỉ payload:** Chỉ khớp nội dung ở lớp 4 (sau header TCP/UDP/SCTP).
+   - **Mọi phiên:** Khớp mọi gói tin, không phụ thuộc vào trạng thái của phiên.
+   - **Không giới hạn thời gian** (ở tab Bộ lọc nâng cao).
+   - **Chi tiết:** Cung cấp thông tin tiến trình thực thi từng phiên trên agent.
+   - **5-tuple:** Chỉ khớp thông tin 5-tuple mà không phân tích nội dung gói tin.
+5. Nhấn nút **Bắt đầu tìm** để khởi chạy quá trình điều tra. Tác vụ đang chạy sẽ được hiển thị ở tab **Đang chạy** bên dưới, tại đây bạn có thể theo dõi và nhấn biểu tượng hình vuông (Stop) ở cột Hành động để dừng tác vụ nếu muốn.
+
+### 3.7.2. Xem lịch sử và kết quả tìm kiếm
+Cho phép tra cứu lại các tác vụ tìm kiếm đã và đang được thực thi trên hệ thống.
+
+**Các bước thực hiện:**
+1. Chuyển sang tab **Lịch sử** ở phía dưới màn hình.
+2. Tại đây hiển thị danh sách các lần tìm kiếm với thông tin: **Agent**, **Tìm kiếm** (Nội dung/Tham số truy vấn), **Trạng thái** (Hoàn thành, Lỗi), **Kết thúc** (Thời điểm kết thúc), và **Hành động**.
+3. Tại cột Hành động, bạn có thể thao tác:
+   - Nhấn biểu tượng **Làm lại (Refresh/Restart)** để chạy lại tác vụ truy vấn với tham số tương tự.
+   - Nhấn biểu tượng **Con mắt (Xem chi tiết)** đối với các tác vụ đã Hoàn thành để mở popup **Kết quả tìm kiếm**. 
+4. Trên popup **Kết quả tìm kiếm** sẽ hiển thị chi tiết các Tham số cấu hình đầu vào (dạng JSON) và Kết quả trả về (Trạng thái tác vụ, Summary) từ thiết bị để quản trị viên phân tích và phục vụ điều tra.
+   - Nhấn **Đóng** hoặc dấu **[X]** để thoát cửa sổ.
 
 ---
 

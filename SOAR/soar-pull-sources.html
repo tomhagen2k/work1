@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOAR Pull Sources Management</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 0; background: #f0f2f5; font-family: 'Inter', sans-serif; }
+        * { box-sizing: border-box; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c8cdd7; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+const { useState, useEffect } = React;
+
+/* ═══════════════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════════════ */
+const DS = {
+  bg0:"#f0f2f5", bg1:"#ffffff", bg2:"#ffffff", bg3:"#f8fafc", bg4:"#f1f5f9",
+  border:"#e2e8f0", border2:"#cbd5e1",
+  accent:"#2563eb", accentH:"#1d4ed8", accentDim:"rgba(37,99,235,0.08)",
+  text:"#0f172a", text2:"#334155", text3:"#64748b", text4:"#94a3b8",
+  crit:"#dc2626", high:"#ea580c", med:"#d97706", low:"#16a34a",
+  mono:"'JetBrains Mono',monospace", sans:"'Inter',sans-serif",
+};
+
+/* ═══════════════════════════════════════════════════════════
+   ICONS
+═══════════════════════════════════════════════════════════ */
+const IC = ({ n, s=14, c="" }) => {
+  const d = {
+    plus:    <><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></>,
+    search:  <><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></>,
+    edit:    <><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></>,
+    trash:   <><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></>,
+    play:    <polygon points="5 3 19 12 5 21 5 3"/>,
+    alert:   <><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></>,
+    case:    <><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></>,
+    arrowR:  <><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></>,
+    check:   <polyline points="20 6 9 15 4 10"/>,
+    link:    <><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></>,
+    clock:   <><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>,
+    database:<><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></>,
+    map:     <><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></>,
+    x:       <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>,
+  };
+  return (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round"
+      className={c} style={{ display:"inline-block", verticalAlign:"middle", flexShrink:0 }}>
+      {d[n]}
+    </svg>
+  );
+};
+
+/* ═══════════════════════════════════════════════════════════
+   COMPONENTS
+═══════════════════════════════════════════════════════════ */
+const Toggle = ({ value, onChange }) => (
+  <button onClick={()=>onChange(!value)}
+    style={{ position:"relative", width:34, height:18, borderRadius:9, border:"none",
+      cursor:"pointer", padding:0, flexShrink:0,
+      background: value ? DS.low : DS.border2, transition:"background .2s" }}>
+    <span style={{ position:"absolute", top:2, left: value?18:2, width:14, height:14,
+      borderRadius:7, background:"#fff", boxShadow:"0 1px 2px rgba(0,0,0,.2)",
+      transition:"left .18s", display:"block" }}/>
+  </button>
+);
+
+const Btn = ({ children, variant="ghost", icon, onClick, disabled }) => {
+  const styles = {
+    primary: { background:DS.accent, border:`1px solid ${DS.accent}`, color:"#fff" },
+    secondary: { background:DS.bg1, border:`1px solid ${DS.border}`, color:DS.text },
+    ghost:   { background:"transparent", border:`1px solid transparent`, color:DS.text3 },
+    danger:  { background:"rgba(220,38,38,.08)", border:"1px solid rgba(220,38,38,.2)", color:DS.crit },
+  };
+  const s = styles[variant];
+  return (
+    <button onClick={disabled?undefined:onClick} disabled={disabled}
+      style={{ display:"inline-flex", alignItems:"center", gap:6, height:30, padding:"0 12px",
+        fontFamily:DS.sans, fontSize:12, fontWeight:500, borderRadius:6,
+        cursor:disabled?"not-allowed":"pointer", transition:"all .2s",
+        opacity:disabled?0.5:1, whiteSpace:"nowrap", ...s }}
+      onMouseEnter={e=>{ if(!disabled){
+        if(variant==='primary') e.currentTarget.style.background = DS.accentH;
+        if(variant==='secondary'||variant==='ghost') e.currentTarget.style.background = DS.bg4;
+        if(variant==='danger') e.currentTarget.style.background = "rgba(220,38,38,.15)";
+      }}}
+      onMouseLeave={e=>{ if(!disabled){
+        e.currentTarget.style.background = s.background;
+      }}}>
+      {icon && <IC n={icon} s={14}/>}
+      {children}
+    </button>
+  );
+};
+
+const Input = ({ value, onChange, placeholder, error, type="text", mono, style={} }) => (
+  <div>
+    <input type={type} value={value} onChange={onChange} placeholder={placeholder}
+      style={{ width:"100%", height:32, padding:"0 10px", fontSize:12,
+        fontFamily: mono ? DS.mono : DS.sans,
+        border:`1px solid ${error ? DS.crit : DS.border}`,
+        borderRadius:6, outline:"none", background:DS.bg1, color:DS.text,
+        transition:"border-color .2s", boxSizing:"border-box", ...style }}
+      onFocus={e=> !error && (e.target.style.borderColor=DS.accent)}
+      onBlur={e=> !error && (e.target.style.borderColor=DS.border)} />
+    {error && <div style={{ color:DS.crit, fontSize:11, marginTop:4, display:"flex", alignItems:"center", gap:4 }}><IC n="alert" s={11}/>{error}</div>}
+  </div>
+);
+
+const Sel = ({ value, onChange, options, error, style={} }) => (
+  <div>
+    <select value={value} onChange={onChange}
+      style={{ width:"100%", height:32, padding:"0 28px 0 10px", fontSize:12, fontFamily:DS.sans,
+        border:`1px solid ${error ? DS.crit : DS.border}`, borderRadius:6, outline:"none",
+        background:`${DS.bg1} url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center`,
+        color:DS.text, cursor:"pointer", appearance:"none", boxSizing:"border-box", ...style }}
+        onFocus={e=> !error && (e.target.style.borderColor=DS.accent)}
+        onBlur={e=> !error && (e.target.style.borderColor=DS.border)}>
+      <option value="" disabled hidden>-- Chọn --</option>
+      {options.map(o => typeof o==="string" ? <option key={o} value={o}>{o}</option> : <option key={o.v} value={o.v}>{o.l}</option>)}
+    </select>
+    {error && <div style={{ color:DS.crit, fontSize:11, marginTop:4, display:"flex", alignItems:"center", gap:4 }}><IC n="alert" s={11}/>{error}</div>}
+  </div>
+);
+
+const FormItem = ({ label, req, desc, children }) => (
+  <div style={{ marginBottom: 16 }}>
+    <div style={{ display:"flex", alignItems:"center", gap:4, marginBottom:6 }}>
+      <label style={{ fontSize:12, fontWeight:600, color:DS.text2 }}>{label}</label>
+      {req && <span style={{ color:DS.crit }}>*</span>}
+    </div>
+    {children}
+    {desc && <div style={{ fontSize:11, color:DS.text4, marginTop:4 }}>{desc}</div>}
+  </div>
+);
+
+const Badge = ({ type }) => {
+  const isAlert = type === 'ALERT';
+  return (
+    <span style={{ display:"inline-flex", alignItems:"center", gap:4, padding:"3px 8px", borderRadius:4,
+      background: isAlert ? "rgba(234,88,12,.1)" : "rgba(37,99,235,.1)",
+      color: isAlert ? DS.high : DS.accent, border:`1px solid ${isAlert?"rgba(234,88,12,.2)":"rgba(37,99,235,.2)"}`,
+      fontSize:10, fontWeight:700, fontFamily:DS.mono }}>
+      <IC n={isAlert ? 'alert' : 'case'} s={10}/>
+      {type}
+    </span>
+  );
+};
+
+/* ═══════════════════════════════════════════════════════════
+   MOCK DATA
+═══════════════════════════════════════════════════════════ */
+const MOCK_SOURCES = [
+  { id: 1, name: "SIEM-QRadar", data_type: "ALERT", base_url: "https://siem.local", endpoint_path: "/api/alerts", cron_expression: "0 */5 * * * ?", enabled: true, last_id: "105492", last_sync: "2026-07-07 15:45:00" },
+  { id: 2, name: "Wazuh-Agents", data_type: "ALERT", base_url: "https://wazuh.local", endpoint_path: "/api/v1/events", cron_expression: "0 0 * * * ?", enabled: false, last_id: "8821", last_sync: "2026-07-07 00:00:00" },
+  { id: 3, name: "TheHive-Cases", data_type: "CASE", base_url: "https://thehive.local", endpoint_path: "/api/case", cron_expression: "0 */10 * * * ?", enabled: true, last_id: "CASE-105", last_sync: "2026-07-07 15:50:00" },
+];
+const MOCK_CUSTOMERS = [{v:"CUST01", l:"Khách hàng CUST01"}, {v:"ACME", l:"Khách hàng ACME"}];
+const MOCK_INTEG_SOURCES = [{v:5, l:"QRadar (ID: 5)"}, {v:8, l:"Wazuh (ID: 8)"}, {v:12, l:"TheHive (ID: 12)"}];
+
+const MAPPING_KEYS = {
+  ALERT: [
+    { key: "externalId", req: true, label: "External ID", desc: "Khóa dedup + cursor" },
+    { key: "severity", req: false, label: "Severity" },
+    { key: "content", req: false, label: "Content (Message)" },
+    { key: "customerCode", req: false, label: "Customer Code" },
+    { key: "events", req: false, label: "Events Array" }
+  ],
+  CASE: [
+    { key: "externalId", req: true, label: "External ID", desc: "Khóa dedup + cursor (Map code)" },
+    { key: "name", req: true, label: "Case Name / Title" },
+    { key: "customerCode", req: true, label: "Customer Code" },
+    { key: "departmentCode", req: false, label: "Department Code" },
+    { key: "catalogTypeCode", req: false, label: "Catalog Type Code" },
+    { key: "catalogDangerLevelCode", req: false, label: "Danger Level (Severity)" },
+    { key: "description", req: false, label: "Description" },
+    { key: "alertId", req: false, label: "Source Alert ID" }
+  ]
+};
+
+/* ═══════════════════════════════════════════════════════════
+   JSON TREE COMPONENT
+═══════════════════════════════════════════════════════════ */
+const JsonTree = ({ data, path="", onSelect }) => {
+  if (data === null) return <span style={{color:DS.high}}>null</span>;
+  if (typeof data === 'boolean') return <span style={{color:DS.high}}>{data ? 'true' : 'false'}</span>;
+  if (typeof data === 'number') return <span style={{color:DS.low}}>{data}</span>;
+  if (typeof data === 'string') return <span style={{color:DS.low}}>"{data}"</span>;
+
+  if (Array.isArray(data)) {
+    return (
+      <div style={{ marginLeft: 16 }}>
+        [
+        <div style={{ marginLeft: 8, paddingLeft: 8, borderLeft: `1px dashed ${DS.border2}` }}>
+          {data.map((item, i) => (
+            <div key={i} style={{ marginBottom: 4 }}>
+              <span 
+                style={{ cursor:"pointer", color:DS.accent, marginRight:4 }}
+                onClick={(e) => { e.stopPropagation(); onSelect(path ? `${path}[${i}]` : `[${i}]`); }}
+                title="Click để map đường dẫn này"
+              >
+                <IC n="link" s={10}/> {i}: 
+              </span>
+              <JsonTree data={item} path={path ? `${path}[${i}]` : `[${i}]`} onSelect={onSelect} />
+            </div>
+          ))}
+        </div>
+        ]
+      </div>
+    );
+  }
+
+  if (typeof data === 'object') {
+    return (
+      <div style={{ marginLeft: path ? 16 : 0 }}>
+        {'{'}
+        <div style={{ marginLeft: 8, paddingLeft: 8, borderLeft: `1px dashed ${DS.border2}` }}>
+          {Object.keys(data).map(key => {
+            const nextPath = path ? `${path}.${key}` : key;
+            return (
+              <div key={key} style={{ marginBottom: 4 }}>
+                <span 
+                  style={{ cursor:"pointer", color:DS.accent, fontWeight:600, marginRight:4 }}
+                  onClick={(e) => { e.stopPropagation(); onSelect(nextPath); }}
+                  title="Click để map đường dẫn này"
+                >
+                  <IC n="link" s={10}/> "{key}": 
+                </span>
+                <JsonTree data={data[key]} path={nextPath} onSelect={onSelect} />
+              </div>
+            );
+          })}
+        </div>
+        {'}'}
+      </div>
+    );
+  }
+  return null;
+};
+
+/* ═══════════════════════════════════════════════════════════
+   MAIN APP
+═══════════════════════════════════════════════════════════ */
+const App = () => {
+  const [view, setView] = useState('list'); // list | form
+  const [sources, setSources] = useState(MOCK_SOURCES);
+  const [editId, setEditId] = useState(null);
+  const [toast, setToast] = useState("");
+
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(""), 3000);
+  };
+
+  const handleRun = (id) => {
+    showToast(`Đã gửi lệnh quét cho Nguồn ID: ${id}`);
+  };
+
+  const handleToggle = (id) => {
+    setSources(sources.map(s => s.id === id ? {...s, enabled: !s.enabled} : s));
+  };
+
+  const openForm = (source = null) => {
+    setEditId(source ? source.id : null);
+    setView('form');
+  };
+
+  const closeForm = () => {
+    setView('list');
+    setEditId(null);
+  };
+
+  return (
+    <div style={{ minHeight:"100vh", padding:24, display:"flex", justifyContent:"center" }}>
+      <div style={{ width:"100%", maxWidth:1100 }}>
+        {/* Header */}
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:24 }}>
+          <div>
+            <h1 style={{ margin:0, fontSize:22, fontWeight:700, color:DS.text }}>Quản lý Nguồn Pull (Pull Sources)</h1>
+            <p style={{ margin:"4px 0 0", fontSize:13, color:DS.text3 }}>Cấu hình gọi API lấy dữ liệu Alert / Case từ hệ thống bên ngoài.</p>
+          </div>
+          {view === 'list' && (
+            <Btn variant="primary" icon="plus" onClick={()=>openForm()}>Tạo Nguồn Pull</Btn>
+          )}
+        </div>
+
+        {/* Content */}
+        <ListView sources={sources} onRun={handleRun} onToggle={handleToggle} onEdit={openForm} />
+      </div>
+
+      {view === 'form' && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(15,23,42,0.85)", zIndex:999, display:"flex", alignItems:"center", justifyContent:"center" }}>
+          <div style={{ width: 1100, maxHeight:"90vh", overflow:"hidden", display:"flex", flexDirection:"column" }}>
+            <FormWizard editData={sources.find(s=>s.id===editId)} onClose={closeForm} showToast={showToast} onSave={(data) => {
+              if(editId) {
+                setSources(sources.map(s => s.id === editId ? {...s, ...data} : s));
+                showToast("Đã cập nhật nguồn thành công!");
+              } else {
+                setSources([...sources, { id: Date.now(), ...data, last_id: "-", last_sync: "-" }]);
+                showToast("Đã tạo nguồn pull mới!");
+              }
+              closeForm();
+            }} />
+          </div>
+        </div>
+      )}
+
+      {/* Toast */}
+      {toast && (
+        <div style={{ position:"fixed", bottom:24, right:24, background:"#1e293b", color:"#fff",
+          padding:"10px 16px", borderRadius:6, fontSize:13, fontWeight:500, boxShadow:"0 4px 12px rgba(0,0,0,.15)",
+          display:"flex", alignItems:"center", gap:8, zIndex:9999, animation:"slideIn .3s ease-out" }}>
+          <IC n="check" s={16} c="text-low" />
+          {toast}
+        </div>
+      )}
+      <style>{`@keyframes slideIn { from{ transform:translateY(20px); opacity:0; } to{ transform:translateY(0); opacity:1; } }`}</style>
+    </div>
+  );
+};
+
+/* ═══════════════════════════════════════════════════════════
+   LIST VIEW
+═══════════════════════════════════════════════════════════ */
+const ListView = ({ sources, onRun, onToggle, onEdit }) => {
+  return (
+    <div style={{ background:DS.bg1, borderRadius:8, border:`1px solid ${DS.border}`, boxShadow:"0 1px 2px rgba(0,0,0,.04)" }}>
+      {/* Toolbar */}
+      <div style={{ padding:16, borderBottom:`1px solid ${DS.border}`, display:"flex", gap:12 }}>
+        <div style={{ position:"relative", width:280 }}>
+          <div style={{ position:"absolute", top:8, left:10, color:DS.text4 }}><IC n="search" s={14}/></div>
+          <input type="text" placeholder="Tìm kiếm nguồn..." 
+            style={{ width:"100%", height:32, padding:"0 10px 0 32px", fontSize:13, border:`1px solid ${DS.border}`, borderRadius:6, outline:"none", color:DS.text }}/>
+        </div>
+        <Sel value="" onChange={()=>{}} options={[{v:"",l:"Tất cả loại"},{v:"ALERT",l:"Alert"},{v:"CASE",l:"Case"}]} style={{ width:160 }} />
+      </div>
+      
+      {/* Table */}
+      <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
+        <thead>
+          <tr style={{ background:DS.bg3, borderBottom:`1px solid ${DS.border}`, textAlign:"left", color:DS.text3 }}>
+            <th style={{ padding:"12px 16px", fontWeight:600 }}>Tên Nguồn</th>
+            <th style={{ padding:"12px 16px", fontWeight:600 }}>Loại</th>
+            <th style={{ padding:"12px 16px", fontWeight:600 }}>Lịch (Cron)</th>
+            <th style={{ padding:"12px 16px", fontWeight:600 }}>Trạng thái Cursor</th>
+            <th style={{ padding:"12px 16px", fontWeight:600, width:90 }}>Kích hoạt</th>
+            <th style={{ padding:"12px 16px", fontWeight:600, width:180, textAlign:"right" }}>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sources.map(s => (
+            <tr key={s.id} style={{ borderBottom:`1px solid ${DS.border}`, transition:"background .15s" }} onMouseEnter={e=>e.currentTarget.style.background=DS.bg3} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+              <td style={{ padding:"12px 16px", fontWeight:600, color:DS.text }}>
+                <div>{s.name}</div>
+                <div style={{ fontSize:11, color:DS.text4, fontWeight:400, marginTop:2, fontFamily:DS.mono }}>{s.base_url}</div>
+              </td>
+              <td style={{ padding:"12px 16px" }}><Badge type={s.data_type}/></td>
+              <td style={{ padding:"12px 16px" }}>
+                <div style={{ fontFamily:DS.mono, fontSize:11, color:DS.text2, background:DS.bg4, padding:"3px 6px", borderRadius:4, display:"inline-block" }}>
+                  {s.cron_expression}
+                </div>
+              </td>
+              <td style={{ padding:"12px 16px" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:6, color:DS.text2 }}>
+                  <IC n="clock" s={12}/> <span style={{ fontFamily:DS.mono, fontSize:11 }}>{s.last_sync}</span>
+                </div>
+                <div style={{ display:"flex", alignItems:"center", gap:6, color:DS.text2, marginTop:4 }}>
+                  <IC n="database" s={12}/> <span style={{ fontFamily:DS.mono, fontSize:11 }}>ID: {s.last_id}</span>
+                </div>
+              </td>
+              <td style={{ padding:"12px 16px" }}><Toggle value={s.enabled} onChange={()=>onToggle(s.id)}/></td>
+              <td style={{ padding:"12px 16px", textAlign:"right" }}>
+                <div style={{ display:"flex", gap:6, justifyContent:"flex-end" }}>
+                  <Btn variant="secondary" icon="play" onClick={()=>onRun(s.id)}>Chạy ngay</Btn>
+                  <Btn variant="ghost" icon="edit" onClick={()=>onEdit(s)} />
+                </div>
+              </td>
+            </tr>
+          ))}
+          {sources.length === 0 && (
+            <tr><td colSpan="6" style={{ padding:40, textAlign:"center", color:DS.text4 }}>Chưa có nguồn nào được cấu hình</td></tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+/* ═══════════════════════════════════════════════════════════
+   FORM WIZARD
+═══════════════════════════════════════════════════════════ */
+const FormWizard = ({ editData, onClose, onSave, showToast }) => {
+  const [step, setStep] = useState(1);
+  const [errs, setErrs] = useState({});
+  const [f, setF] = useState(editData || {
+    name: "", data_type: "ALERT", cron_expression: "0 */5 * * * ?", customer_code: "CUST01", integrate_source_id: 5,
+    base_url: "", endpoint_path: "", auth_header_name: "Authorization", auth_token: "", time_param: "start_time", size_param: "limit", page_size: 100, initial_from_time: "", records_path: "data.items",
+    field_mapping: { externalId: "", severity: "", content: "" }, enabled: true
+  });
+  const [newField, setNewField] = useState("");
+  const [activeInput, setActiveInput] = useState(null);
+  const [mockJson, setMockJson] = useState(null);
+
+  const sf = (k, v) => { setF({...f, [k]: v}); setErrs({...errs, [k]: null}); };
+  const sfm = (k, v) => { setF({...f, field_mapping: {...f.field_mapping, [k]: v}}); };
+
+  // Validate current step before proceeding
+  const nextStep = () => {
+    let e = {};
+    if (step === 1) {
+      if (!f.name.trim()) e.name = "Vui lòng nhập tên nguồn";
+    }
+    if (step === 2) {
+      if (!f.base_url.trim()) e.base_url = "Vui lòng nhập Base URL";
+      if (!f.endpoint_path.trim()) e.endpoint_path = "Vui lòng nhập Endpoint Path";
+      if (!f.time_param.trim()) e.time_param = "Tên tham số Thời gian là bắt buộc (Cursor)";
+    }
+    if (Object.keys(e).length > 0) { setErrs(e); return; }
+    setStep(step + 1);
+  };
+
+  const handleSave = () => {
+    let e = {};
+    const reqKeys = MAPPING_KEYS[f.data_type].filter(k=>k.req).map(k=>k.key);
+    reqKeys.forEach(k => {
+      if (!f.field_mapping[k] || !f.field_mapping[k].trim()) e[`map_${k}`] = "Bắt buộc map";
+    });
+    if (Object.keys(e).length > 0) { setErrs(e); return; }
+    onSave(f);
+  };
+
+  // When changing data type, initialize mapping with required fields
+  useEffect(() => {
+    if(!editData) {
+      const initMap = {};
+      MAPPING_KEYS[f.data_type].filter(k=>k.req).forEach(k => initMap[k.key] = "");
+      setF(prev => ({...prev, field_mapping: initMap}));
+    }
+    setErrs({});
+    setNewField("");
+  }, [f.data_type, editData]);
+
+  const STPS = [
+    { n: 1, l: "Thông tin chung", i: "alert" },
+    { n: 2, l: "Kết nối & Phân trang", i: "link" },
+    { n: 3, l: "Ánh xạ dữ liệu", i: "map" }
+  ];
+
+  
+  const DDS = { bg1:"#0f172a", bg2:"#1e293b", bg3:"#1e293b", bg4:"#334155", border:"#334155", border2:"#475569", text:"#f8fafc", text2:"#cbd5e1", text3:"#94a3b8", text4:"#64748b", accent:"#1DA1F2", accentH:"#0ea5e9", crit:"#ef4444", high:"#f97316", med:"#f59e0b", low:"#22c55e", mono:DS.mono, sans:DS.sans };
+  const DInput = (p) => <Input {...p} mono={p.mono} style={{...p.style, background:DDS.bg1, color:DDS.text, borderColor: p.error ? DDS.crit : DDS.border2}} />;
+  const DSel = (p) => <Sel {...p} style={{...p.style, background:DDS.bg1, color:DDS.text, borderColor: p.error ? DDS.crit : DDS.border2, backgroundImage:`url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23cbd5e1' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`}} />;
+  const DFormItem = (p) => <div style={{ marginBottom: 16 }}><div style={{ display:"flex", alignItems:"center", gap:4, marginBottom:6 }}><label style={{ fontSize:12, fontWeight:600, color:DDS.text2 }}>{p.label}</label>{p.req && <span style={{ color:DDS.crit }}>*</span>}</div>{p.children}{p.desc && <div style={{ fontSize:11, color:DDS.text4, marginTop:4 }}>{p.desc}</div>}</div>;
+  const DToggle = ({ value, onChange }) => (
+    <button onClick={()=>onChange(!value)} style={{ position:"relative", width:34, height:18, borderRadius:9, border:"none", cursor:"pointer", padding:0, flexShrink:0, background: value ? DDS.accent : DDS.border2, transition:"background .2s" }}>
+      <span style={{ position:"absolute", top:2, left: value?18:2, width:14, height:14, borderRadius:7, background:"#fff", boxShadow:"0 1px 2px rgba(0,0,0,.2)", transition:"left .18s", display:"block" }}/>
+    </button>
+  );
+  const DBtn = (p) => {
+    let s = {};
+    if(p.variant==='ghost') s = { color:DDS.text3 };
+    if(p.variant==='secondary') s = { background:DDS.bg1, border:`1px solid ${DDS.border}`, color:DDS.text };
+    if(p.variant==='primary') s = { background:DDS.accent, border:`1px solid ${DDS.accent}`, color:"#fff" };
+    return <Btn {...p} style={{...s, ...p.style}} />;
+  };
+
+  return (
+    <div style={{ background:DDS.bg2, borderRadius:12, border:`1px solid ${DDS.border}`, boxShadow:"0 10px 25px rgba(0,0,0,.5)", display:"flex", flexDirection:"column", height:"100%" }}>
+      {/* Wizard Header - Blue */}
+      <div style={{ padding:"16px 24px", background:DDS.accent, display:"flex", justifyContent:"space-between", alignItems:"center", borderTopLeftRadius:12, borderTopRightRadius:12 }}>
+        <h2 style={{ margin:0, fontSize:16, fontWeight:600, color:"#fff" }}>{editData ? "Chỉnh sửa Nguồn Pull" : "Tạo Nguồn Pull"}</h2>
+        <button onClick={onClose} style={{ background:"transparent", border:"none", color:"#fff", cursor:"pointer", padding:4 }}><IC n="x" s={18}/></button>
+      </div>
+      
+      {/* Horizontal Stepper */}
+      <div style={{ display:"flex", justifyContent:"space-between", padding:"24px 60px 20px", position:"relative", borderBottom:`1px solid ${DDS.border}`, background:DDS.bg1 }}>
+        <div style={{ position:"absolute", top:39, left:100, right:100, height:2, background:DDS.border2, zIndex:0 }}></div>
+        {STPS.map((s, i) => {
+          const active = step >= s.n;
+          return (
+            <div key={s.n} style={{ display:"flex", flexDirection:"column", alignItems:"center", zIndex:1, gap:8, width:140 }}>
+              <div style={{ width:32, height:32, borderRadius:16, background:active ? DDS.accent : DDS.bg4, color:active ? "#fff" : DDS.text2, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, fontSize:13, border:`2px solid ${DDS.bg1}`, boxShadow:`0 0 0 2px ${active ? DDS.accent : DDS.border}` }}>
+                {step > s.n ? <IC n="check" s={16}/> : s.n}
+              </div>
+              <div style={{ fontSize:12, fontWeight:600, color:active ? DDS.text : DDS.text3, textAlign:"center" }}>{s.l}</div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Form Area */}
+      <div style={{ flex:1, padding:32, overflowY:"auto" }}>          {/* STEP 1 */}
+          {step === 1 && (
+            <div style={{ animation:"fadeIn .3s" }}>
+              <div style={{ display:"flex", gap:20 }}>
+                <div style={{ flex:1 }}>
+                  <DFormItem label="Tên nguồn (Name)" req>
+                    <DInput value={f.name} onChange={e=>sf("name",e.target.value)} placeholder="VD: SIEM-QRadar-HQ" error={errs.name} />
+                  </DFormItem>
+                </div>
+                <div style={{ flex:1 }}>
+                  <DFormItem label="Loại dữ liệu (Data Type)" req>
+                    <div style={{ display:"flex", gap:12 }}>
+                      <label style={{ display:"flex", alignItems:"center", gap:6, fontSize:13, cursor:"pointer" }}>
+                        <input type="radio" name="dt" checked={f.data_type==='ALERT'} onChange={()=>sf("data_type", "ALERT")} />
+                        Alert
+                      </label>
+                      <label style={{ display:"flex", alignItems:"center", gap:6, fontSize:13, cursor:"pointer" }}>
+                        <input type="radio" name="dt" checked={f.data_type==='CASE'} onChange={()=>sf("data_type", "CASE")} />
+                        Case
+                      </label>
+                    </div>
+                  </DFormItem>
+                </div>
+              </div>
+              
+              <DFormItem label="Lịch đồng bộ (Cron Expression)" desc="VD: 0 */5 * * * ? (Mỗi 5 phút)">
+                <DInput value={f.cron_expression} onChange={e=>sf("cron_expression",e.target.value)} placeholder="0 */5 * * * ?" mono />
+              </DFormItem>
+              
+              <div style={{ display:"flex", gap:20 }}>
+                <div style={{ flex:1 }}>
+                  <DFormItem label="Khách hàng đích" req>
+                    <DSel value={f.customer_code} onChange={e=>sf("customer_code",e.target.value)} options={MOCK_CUSTOMERS} />
+                  </DFormItem>
+                </div>
+                <div style={{ flex:1 }}>
+                  <DFormItem label="Nguồn Tích hợp Cha (Integrate Source)" req desc="Đóng dấu source lên Alert/Case">
+                    <DSel value={f.integrate_source_id} onChange={e=>sf("integrate_source_id",Number(e.target.value))} options={MOCK_INTEG_SOURCES} />
+                  </DFormItem>
+                </div>
+              </div>
+              
+              <DFormItem label="Kích hoạt">
+                <DToggle value={f.enabled} onChange={v=>sf("enabled",v)} />
+              </DFormItem>
+            </div>
+          )}
+
+          {/* STEP 2 */}
+          {step === 2 && (
+            <div style={{ animation:"fadeIn .3s" }}>
+              <h3 style={{ margin:"0 0 16px", fontSize:14, color:DDS.text, borderBottom:`1px solid ${DDS.border}`, paddingBottom:8 }}>API Endpoint & Xác thực</h3>
+              <div style={{ display:"flex", gap:20 }}>
+                <div style={{ flex:2 }}>
+                  <DFormItem label="Base URL" req>
+                    <DInput value={f.base_url} onChange={e=>sf("base_url",e.target.value)} placeholder="https://api.example.com" mono error={errs.base_url} />
+                  </DFormItem>
+                </div>
+                <div style={{ flex:1 }}>
+                  <DFormItem label="Endpoint Path" req>
+                    <DInput value={f.endpoint_path} onChange={e=>sf("endpoint_path",e.target.value)} placeholder="/api/v1/alerts" mono error={errs.endpoint_path} />
+                  </DFormItem>
+                </div>
+              </div>
+              
+              <div style={{ display:"flex", gap:20 }}>
+                <div style={{ flex:1 }}>
+                  <DFormItem label="Auth Header Name">
+                    <DInput value={f.auth_header_name} onChange={e=>sf("auth_header_name",e.target.value)} placeholder="Authorization" mono />
+                  </DFormItem>
+                </div>
+                <div style={{ flex:2 }}>
+                  <DFormItem label="Auth Token">
+                    <DInput value={f.auth_token} onChange={e=>sf("auth_token",e.target.value)} type="password" placeholder="Bearer token..." mono />
+                  </DFormItem>
+                </div>
+              </div>
+
+              <h3 style={{ margin:"24px 0 16px", fontSize:14, color:DDS.text, borderBottom:`1px solid ${DDS.border}`, paddingBottom:8 }}>Cấu hình Cursor & Phân trang</h3>
+              <div style={{ display:"flex", gap:20 }}>
+                <div style={{ flex:1 }}>
+                  <DFormItem label="Tham số Cursor (time_param)" req desc="Vd: start_time (để nối vào query ?start_time=)">
+                    <DInput value={f.time_param} onChange={e=>sf("time_param",e.target.value)} placeholder="start_time" mono error={errs.time_param} />
+                  </DFormItem>
+                </div>
+                <div style={{ flex:1 }}>
+                  <DFormItem label="Thời gian bắt đầu (Initial Time)" desc="Epoch hoặc ISO8601, nếu trống lấy từ đầu">
+                    <DInput value={f.initial_from_time} onChange={e=>sf("initial_from_time",e.target.value)} placeholder="VD: 1680000000" mono />
+                  </DFormItem>
+                </div>
+              </div>
+              
+              <div style={{ display:"flex", gap:20 }}>
+                <div style={{ flex:1 }}>
+                  <DFormItem label="Tên tham số Limit (size_param)" desc="Vd: limit">
+                    <DInput value={f.size_param} onChange={e=>sf("size_param",e.target.value)} placeholder="limit" mono />
+                  </DFormItem>
+                </div>
+                <div style={{ flex:1 }}>
+                  <DFormItem label="Kích thước trang (Page Size)">
+                    <DInput value={f.page_size} onChange={e=>sf("page_size",Number(e.target.value))} type="number" />
+                  </DFormItem>
+                </div>
+                <div style={{ flex:1 }}>
+                  <DFormItem label="Đường dẫn mảng (Records path)" desc="Dot-path mảng, vd data.items">
+                    <DInput value={f.records_path} onChange={e=>sf("records_path",e.target.value)} placeholder="data.items" mono />
+                  </DFormItem>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3 */}
+          {step === 3 && (() => {
+            const currentKeys = Object.keys(f.field_mapping);
+            const availFields = MAPPING_KEYS[f.data_type].filter(k => !currentKeys.includes(k.key));
+
+            const handleAddField = () => {
+              if (newField) {
+                sfm(newField, "");
+                setNewField("");
+              }
+            };
+            
+            const handleRemoveField = (key) => {
+              const newMap = {...f.field_mapping};
+              delete newMap[key];
+              setF({...f, field_mapping: newMap});
+            };
+
+            const loadMockJson = () => {
+              setMockJson({
+                id: 1050,
+                priority: "high",
+                message: "Brute force detected",
+                customer: { code: "ACME" },
+                events: [ { src_ip: "1.2.3.4" } ],
+                time: "2023-10-01T10:00:00Z"
+              });
+            };
+
+            return (
+              <div style={{ display:"flex", gap:24, animation:"fadeIn .3s" }}>
+                
+                {/* Cột trái: Form Mapping */}
+                <div style={{ flex: 1 }}>
+                  <div style={{ background:DDS.bg4, padding:12, borderRadius:6, marginBottom:20, fontSize:12, color:DDS.text2, display:"flex", alignItems:"flex-start", gap:8 }}>
+                    <IC n="alert" s={14} c="text-accent"/>
+                    <div>Khai báo đường dẫn (Dot-path) để map vào SOAR <b>{f.data_type}</b>. Các trường <span style={{color:DDS.crit}}>*</span> là bắt buộc và không thể xóa. Mẹo: Hãy lấy JSON mẫu ở cột bên phải, chọn 1 ô input bên trái, sau đó click vào biến trong JSON để tự động điền!</div>
+                  </div>
+                  
+                  {availFields.length > 0 && (
+                    <div style={{ display:"flex", gap:12, marginBottom:24, alignItems:"flex-end" }}>
+                      <div style={{ flex: 1, maxWidth: 300 }}>
+                        <label style={{ fontSize:12, fontWeight:600, color:DDS.text2, display:"block", marginBottom:6 }}>Thêm trường ánh xạ</label>
+                        <select value={newField} onChange={e=>setNewField(e.target.value)}
+                          style={{ width:"100%", height:32, padding:"0 10px", fontSize:12, fontFamily:DS.sans, border:`1px solid ${DDS.border}`, borderRadius:6, outline:"none", background:DS.bg1, color:DDS.text, cursor:"pointer" }}>
+                          <option value="">-- Chọn trường... --</option>
+                          {availFields.map(k => <option key={k.key} value={k.key}>{k.label} ({k.key})</option>)}
+                        </select>
+                      </div>
+                      <DBtn variant="secondary" icon="plus" onClick={handleAddField} disabled={!newField}>Thêm</DBtn>
+                    </div>
+                  )}
+
+                  <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
+                    {MAPPING_KEYS[f.data_type].filter(k => currentKeys.includes(k.key)).map(k => {
+                      const isActive = activeInput === k.key;
+                      return (
+                        <div key={k.key} style={{ display:"flex", gap:16, alignItems:"flex-start", padding:"8px 12px", borderRadius:6, background: isActive ? DDS.bg4 : "transparent", transition:"background .2s", border:`1px solid ${isActive ? DDS.border2 : "transparent"}` }}>
+                          <div style={{ width: 180, flexShrink:0, paddingTop:6 }}>
+                            <div style={{ fontSize:13, fontWeight:600, color:DDS.text }}>{k.label} {k.req && <span style={{ color:DDS.crit }}>*</span>}</div>
+                            <div style={{ fontSize:11, color:DDS.text4, fontFamily:DS.mono }}>{k.key}</div>
+                          </div>
+                          <div style={{ flex:1 }}>
+                            <div onClick={() => setActiveInput(k.key)}>
+                              <DInput value={f.field_mapping[k.key] || ""} onChange={e=>sfm(k.key, e.target.value)} placeholder={`data.${k.key}`} mono error={errs[`map_${k.key}`]} style={{ borderColor: isActive ? DDS.accent : undefined }} />
+                            </div>
+                          </div>
+                          {!k.req && (
+                            <div style={{ paddingTop:1 }}>
+                              <DBtn variant="ghost" icon="trash" onClick={()=>handleRemoveField(k.key)}></DBtn>
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* Cột phải: JSON Preview */}
+                <div style={{ width: 360, flexShrink: 0, borderLeft: `1px solid ${DDS.border}`, paddingLeft: 24, display:"flex", flexDirection:"column" }}>
+                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:16 }}>
+                    <h4 style={{ margin:0, fontSize:13, fontWeight:600, color:DDS.text }}>JSON Preview</h4>
+                    <DBtn variant="secondary" onClick={loadMockJson}>Tải JSON Mẫu</DBtn>
+                  </div>
+                  {mockJson ? (
+                    <div style={{ flex:1, background:"#1e293b", color:"#e2e8f0", padding:16, borderRadius:8, fontSize:12, fontFamily:DS.mono, overflowY:"auto", maxHeight:"calc(100vh - 350px)", boxShadow:"inset 0 2px 4px rgba(0,0,0,0.1)" }}>
+                      <JsonTree data={mockJson} onSelect={(path) => {
+                        if (activeInput) {
+                          sfm(activeInput, path);
+                          showToast(`Đã map đường dẫn: ${path}`);
+                        } else {
+                          showToast("Hãy click vào 1 ô input bên trái trước!");
+                        }
+                      }} />
+                    </div>
+                  ) : (
+                    <div style={{ flex:1, display:"flex", alignItems:"center", justifyContent:"center", background:DS.bg3, border:`1px dashed ${DDS.border}`, borderRadius:8, color:DDS.text4, fontSize:12, padding:32, textAlign:"center" }}>
+                      Nhấn "Tải JSON Mẫu" để hiển thị dữ liệu gốc.
+                    </div>
+                  )}
+                </div>
+
+              </div>
+            );
+          })()}
+        </div>
+      
+      {/* Wizard Footer */}
+      <div style={{ padding:"16px 24px", borderTop:`1px solid ${DDS.border}`, display:"flex", justifyContent:"space-between", background:DDS.bg1, borderBottomLeftRadius:12, borderBottomRightRadius:12 }}>
+        <DBtn variant="ghost" onClick={step > 1 ? ()=>setStep(step-1) : onClose}>
+          {step > 1 ? "Quay lại" : "Hủy"}
+        </DBtn>
+        <DBtn variant="primary" icon={step===3 ? "check" : "arrowR"} onClick={step===3 ? handleSave : nextStep}>
+          {step === 3 ? (editData ? "Lưu thay đổi" : "Tạo nguồn Pull") : "Tiếp tục"}
+        </DBtn>
+      </div>
+      <style>{`@keyframes fadeIn { from{ opacity:0; transform:translateX(5px); } to{ opacity:1; transform:translateX(0); } }`}</style>
+    </div>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+    </script>
+</body>
+</html>

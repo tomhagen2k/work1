@@ -125,3 +125,39 @@ Tính năng Đăng nhập thường đi liền với tính năng Đăng ký. Hã
 2. **Dạng tài liệu Agile (User Story):**
    - Viết **01 User Story** riêng biệt tập trung xử lý riêng cho luồng ngoại lệ: *"Khách hàng thêm sản phẩm vượt quá số lượng tồn kho tối đa cho phép"*. 
    - Viết kèm theo bộ Tiêu chí chấp nhận (AC) chi tiết cho Story này.
+
+<!-- GÓC DÀNH CHO MENTOR (XÓA PHẦN NÀY TRƯỚC KHI GỬI CHO HỌC VIÊN) -->
+> [!CAUTION]
+> **TÀI LIỆU NỘI BỘ DÀNH CHO MENTOR (HƯỚNG DẪN ĐÁNH GIÁ ĐÁP ÁN):**
+> 
+> **Phần 4.1: Câu hỏi lý thuyết**
+> 1. **Tiêu chuẩn INVEST:** 
+>    - **I (Independent - Độc lập):** Story này có thể phát triển riêng rẽ, ít phụ thuộc vào Story khác.
+>    - **N (Negotiable - Thương lượng được):** Không phải là hợp đồng kỹ thuật cứng nhắc, có thể thảo luận điều chỉnh cách làm với Team Dev.
+>    - **V (Valuable - Mang lại giá trị):** Phải tạo ra giá trị nghiệp vụ rõ ràng cho khách hàng hoặc doanh nghiệp.
+>    - **E (Estimable - Ước lượng được):** Đội ngũ Lập trình phải có khả năng hiểu và ước lượng được thời gian hoàn thành.
+>    - **S (Small - Nhỏ):** Khối lượng công việc được chia nhỏ, vừa đủ để hoàn thành trong 1 Sprint.
+>    - **T (Testable - Kiểm thử được):** Phải có Tiêu chí chấp nhận rõ ràng để kiểm tra tính đúng đắn.
+> 2. **Các định dạng AC khác:** Thường gặp nhất là *Checklist Format* (Liệt kê gạch đầu dòng các quy tắc kiểm tra trực tiếp mà không dùng cấu trúc Given-When-Then) hoặc *Rule-oriented Format* (Định dạng tập trung vào luật nghiệp vụ).
+> 
+> **Phần 4.2: Bài tập thực hành phân tích**
+> 
+> **Bài tập 1: Đăng ký tài khoản**
+> *1. Dạng SRS:* 
+> - **Happy Path:** Khách điền đủ 4 trường hợp lệ -> Bấm Đăng ký -> Hệ thống gửi Email kích hoạt -> Khách click link -> Thành công.
+> - **Edge Cases (Đánh giá sự nhạy bén của học viên):** Email đã tồn tại; Nhập Password và Confirm Password không khớp; Bỏ trống thông tin bắt buộc; Email gửi đi nhưng server Mail bị gián đoạn.
+> - **Validation Mật khẩu:** Rất nhiều quy tắc (VD: Độ dài > 8, có chữ hoa, chữ thường, số, ký tự đặc biệt).
+> *2. Dạng User Story (Ví dụ lấy Edge Case Mật khẩu không khớp):*
+> - **Mô tả:** Là người dùng, tôi muốn hệ thống báo lỗi khi nhập lại mật khẩu xác nhận không khớp, để đảm bảo tôi ghi nhớ đúng mật khẩu vừa tạo.
+> - **AC1:** Given người dùng đang ở trang Đăng ký, When họ nhập giá trị ở ô Mật khẩu và Xác nhận mật khẩu khác nhau, Then hệ thống bôi đỏ ô Xác nhận và cảnh báo "Mật khẩu không trùng khớp".
+> 
+> **Bài tập 2: Thêm vào Giỏ hàng**
+> *1. Dạng SRS (Các luồng ngoại lệ khó):*
+> - (1) Sản phẩm hết hàng ngay tích tắc người dùng bấm nút (Xử lý đồng thời).
+> - (2) Người dùng nhập tay số lượng là số âm (VD: -5) hoặc chèn ký tự đặc biệt.
+> - (3) Sản phẩm yêu cầu bắt buộc chọn Phân loại (Size/Màu) nhưng khách chưa chọn mà đã bấm Thêm vào giỏ.
+> - (4) Giỏ hàng đã đạt giới hạn dung lượng tối đa (VD: Giỏ chỉ cho phép chứa 50 món).
+> *2. Dạng User Story (Luồng vượt tồn kho):*
+> - **Mô tả:** Là người dùng, tôi muốn được thông báo khi số lượng mua vượt quá số lượng tồn kho hiện tại, để tôi điều chỉnh lại số lượng giỏ hàng cho hợp lệ.
+> - **AC1:** Given sản phẩm áo thun đang còn 5 chiếc trong kho, When người dùng nhập số lượng mua là 6 và bấm nút "Thêm vào giỏ hàng", Then hệ thống chặn hành động này và hiển thị cảnh báo: "Số lượng sản phẩm vượt quá tồn kho (Còn lại: 5)".
+<!-- KẾT THÚC PHẦN CỦA MENTOR -->
