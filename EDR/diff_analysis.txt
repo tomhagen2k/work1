@@ -1,0 +1,3314 @@
+--- ioc_management.html
++++ ioc_management_edit_27_08.html
+@@ -4,5 +4,5 @@
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-  <title>NCS EDR - Quản lý Thông tin Nhận diện Mối nguy hại (IOC Management)</title>
++  <title>NCS EDR - Quản lý IOC và chia sẻ dữ liệu</title>
+   
+   <!-- Fonts: Inter & JetBrains Mono -->
+@@ -114,4 +114,13 @@
+       animation: subtlePulse 2s infinite ease-in-out;
+     }
++
++    table.table-fixed th,
++    table.table-fixed td {
++      overflow: hidden;
++      vertical-align: middle;
++    }
++    table.table-fixed td.cell-actions {
++      overflow: visible;
++    }
+   </style>
+ </head>
+@@ -156,5 +165,5 @@
+         <button class="px-3 py-1 rounded-md bg-ncs-cyan/20 text-cyan-300 font-medium border border-ncs-cyan/40 shadow-sm flex items-center space-x-1">
+           <i data-lucide="fingerprint" class="w-3.5 h-3.5 text-cyan-400"></i>
+-          <span>IOC Management</span>
++          <span>Quản lý IOC</span>
+         </button>
+       </div>
+@@ -164,7 +173,8 @@
+     <div class="flex items-center space-x-3 text-xs">
+       <!-- Sharing Gateway Status Badge -->
+-      <div class="hidden lg:flex items-center space-x-2 px-2.5 py-1 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-emerald-400">
+-        <span class="w-2 h-2 rounded-full bg-emerald-400 status-pulse"></span>
+-        <span>Trạng thái kết nối: <strong class="text-white">Connected</strong> (113.160.25.10)</span>
++      <div id="topbar-conn-wrap" class="hidden lg:flex items-center space-x-2 px-2.5 py-1 rounded-full bg-slate-800/70 border border-slate-600 text-slate-300">
++        <span id="topbar-conn-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
++        <span id="topbar-conn-label">Chưa kiểm tra</span>
++        <span class="text-ncs-muted">(<span id="topbar-static-ip">192.0.2.10</span>)</span>
+       </div>
+ 
+@@ -194,13 +204,14 @@
+       <div>
+         <div class="flex items-center space-x-3">
+-          <h1 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">Quản lý IOCs</h1>
+-        </div>
+-        <p class="text-xs text-ncs-muted mt-1">
+-          Giám sát tập trung, quản lý và tự động chuẩn hóa, khử trùng thông tin nhận diện mối nguy hại (IOC) từ các nguồn Alert và TIP.
++          <h1 id="page-title" class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">Quản lý IOC</h1>
++        </div>
++        <p id="page-subtitle" class="text-xs text-ncs-muted mt-1 max-w-3xl">
++          Tập hợp và quản lý chỉ báo xâm nhập (IOC) từ cảnh báo EDR, Threat Intel, import và nhập tay. Chọn bản ghi để chia sẻ báo cáo tới Trung tâm An ninh mạng.
+         </p>
+       </div>
+ 
+-      <!-- Action Buttons Group (Right Header) -->
++      <!-- Action Buttons Group (Right Header) — IOC list actions only -->
+       <div class="flex items-center flex-wrap gap-2 text-xs">
++        <div id="ioc-list-actions" class="flex items-center flex-wrap gap-2">
+         <!-- Button: Share Data (Bulk Action) -->
+         <button id="btn-bulk-share-a05" onclick="openShareModal()" class="px-3.5 py-2 rounded bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-medium shadow-md shadow-cyan-900/30 transition flex items-center space-x-1.5 opacity-60 cursor-not-allowed" disabled>
+@@ -210,10 +221,4 @@
+         </button>
+ 
+-        <!-- Button: Simulate Alert Ingestion (data.iocs) - Hidden -->
+-        <button onclick="openSimulateAlertModal()" class="hidden px-3 py-2 rounded bg-purple-950/70 hover:bg-purple-900/80 border border-purple-700/60 text-purple-300 font-medium transition flex items-center space-x-1.5 shadow-sm" title="Mô phỏng cơ chế trích xuất data.iocs từ Alert và Deduplication">
+-          <i data-lucide="zap" class="w-3.5 h-3.5 text-purple-400"></i>
+-          <span>Mô phỏng Alert (data.iocs)</span>
+-        </button>
+-
+         <!-- Button: Create IOC -->
+         <button onclick="openCreateModal()" class="px-3 py-2 rounded bg-ncs-card hover:bg-ncs-cardHover border border-ncs-border text-ncs-text font-medium transition flex items-center space-x-1.5">
+@@ -226,4 +231,5 @@
+           <i data-lucide="upload" class="w-3.5 h-3.5 text-emerald-400"></i>
+           <span>Import file</span>
++          <span class="text-[9px] text-ncs-dim">demo</span>
+         </button>
+ 
+@@ -232,5 +238,7 @@
+           <i data-lucide="download" class="w-3.5 h-3.5 text-amber-400"></i>
+           <span>Export</span>
++          <span class="text-[9px] text-ncs-dim">demo</span>
+         </button>
++        </div>
+ 
+         <!-- Button: Refresh -->
+@@ -241,5 +249,5 @@
+     </div>
+ 
+-    <!-- Main Module Sub-tabs (Inventory / Sharing History / Gateway Settings / Audit Log) -->
++    <!-- Main Module Sub-tabs -->
+     <div class="flex border-b border-ncs-border space-x-6 text-sm font-medium">
+       <button id="tab-btn-inventory" onclick="switchMainTab('inventory')" class="pb-3 text-cyan-400 border-b-2 border-ncs-cyan flex items-center space-x-2 transition">
+@@ -255,10 +263,5 @@
+       <button id="tab-btn-settings" onclick="switchMainTab('settings')" class="pb-3 text-ncs-muted hover:text-white border-b-2 border-transparent hover:border-ncs-border flex items-center space-x-2 transition">
+         <i data-lucide="settings-2" class="w-4 h-4"></i>
+-        <span>Cấu hình Kết nối & Chia sẻ</span>
+-      </button>
+-
+-      <button id="tab-btn-audit" onclick="switchMainTab('audit')" class="hidden pb-3 text-ncs-muted hover:text-white border-b-2 border-transparent hover:border-ncs-border flex items-center space-x-2 transition">
+-        <i data-lucide="shield-check" class="w-4 h-4 text-purple-400"></i>
+-        <span>Audit Log</span>
++        <span>Cấu hình chia sẻ</span>
+       </button>
+     </div>
+@@ -280,16 +283,19 @@
+               id="search-input" 
+               onkeyup="handleSearch(event)"
+-              placeholder="Nhập để tìm kiếm"
++              placeholder="Tìm hash, IP, CVE, tên mã độc..."
+               class="w-full bg-ncs-input text-xs text-white pl-9 pr-4 py-2.5 rounded border border-ncs-border focus:border-ncs-cyan focus:outline-none placeholder-ncs-dim transition"
+             />
+           </div>
+ 
+-          <!-- Date Range Picker Control (As seen in NCS screenshots) -->
+-          <div class="flex items-center bg-ncs-input border border-ncs-border rounded px-3 py-1.5 text-xs text-ncs-muted space-x-2.5 cursor-pointer hover:border-ncs-borderLight">
+-            <i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400"></i>
+-            <span class="text-ncs-text font-mono text-[11px]">2026-08-19 @ 00:00</span>
+-            <i data-lucide="arrow-right" class="w-3 h-3 text-ncs-dim"></i>
+-            <span class="text-ncs-text font-mono text-[11px]">2026-08-26 @ 15:30</span>
+-            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-ncs-dim ml-1"></i>
++          <div class="flex flex-wrap items-center gap-2 text-xs">
++            <div class="flex items-center bg-ncs-input border border-ncs-border rounded px-2.5 py-1.5 text-ncs-muted space-x-2">
++              <i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400"></i>
++              <span class="text-ncs-dim text-[11px]">Từ</span>
++              <input type="datetime-local" id="filter-time-from" onchange="applyFilters()" class="bg-transparent text-ncs-text font-mono text-[11px] focus:outline-none [color-scheme:dark]" />
++            </div>
++            <div class="flex items-center bg-ncs-input border border-ncs-border rounded px-2.5 py-1.5 text-ncs-muted space-x-2">
++              <span class="text-ncs-dim text-[11px]">Đến</span>
++              <input type="datetime-local" id="filter-time-to" onchange="applyFilters()" class="bg-transparent text-ncs-text font-mono text-[11px] focus:outline-none [color-scheme:dark]" />
++            </div>
+           </div>
+         </div>
+@@ -340,8 +346,15 @@
+               <select id="filter-source" onchange="applyFilters()" class="bg-transparent text-ncs-text focus:outline-none text-xs cursor-pointer">
+                 <option value="ALL" class="bg-ncs-card text-white">Tất cả nguồn</option>
+-                <option value="ALERT" class="bg-ncs-card text-white">EDR Alert Engine</option>
++                <option value="ALERT" class="bg-ncs-card text-white">Cảnh báo EDR</option>
+                 <option value="TIP" class="bg-ncs-card text-white">Threat Intel (TIP)</option>
+                 <option value="IMPORT" class="bg-ncs-card text-white">Import File</option>
+                 <option value="MANUAL" class="bg-ncs-card text-white">Nhập thủ công</option>
++              </select>
++            </div>
++
++            <div class="flex items-center space-x-1.5 bg-ncs-input px-2.5 py-1.5 rounded border border-ncs-border">
++              <span class="text-ncs-dim text-[11px]">Nhãn:</span>
++              <select id="filter-tag" onchange="applyFilters()" class="bg-transparent text-ncs-text focus:outline-none text-xs cursor-pointer max-w-[180px]">
++                <option value="ALL" class="bg-ncs-card text-white">Tất cả nhãn</option>
+               </select>
+             </div>
+@@ -369,5 +382,5 @@
+           </span>
+           <span class="text-ncs-dim">|</span>
+-          <span class="text-ncs-muted text-[11px]">Sẵn sàng chia sẻ dữ liệu hoặc Xuất file</span>
++          <span class="text-ncs-muted text-[11px]">Có thể chia sẻ tới Trung tâm An ninh mạng hoặc xuất file</span>
+         </div>
+         <div class="flex items-center space-x-2">
+@@ -393,39 +406,55 @@
+ 
+         <div class="overflow-x-auto">
+-          <table class="w-full text-left text-xs border-collapse min-w-[1340px]">
+-            <!-- Table Header -->
++          <table class="w-full text-left text-xs border-collapse table-fixed">
++            <colgroup>
++              <col class="w-[3%]" />
++              <col class="w-[5%]" />
++              <col class="w-[7%]" />
++              <col class="w-[18%]" />
++              <col class="w-[12%]" />
++              <col class="w-[7%]" />
++              <col class="w-[7%]" />
++              <col class="w-[7%]" />
++              <col class="w-[10%]" />
++              <col class="w-[9%]" />
++              <col class="w-[8%]" />
++              <col class="w-[7%]" />
++            </colgroup>
+             <thead class="bg-ncs-topbar/90 text-cyan-400 font-semibold border-b border-ncs-border text-[11px] tracking-wider uppercase select-none">
+               <tr>
+-                <th class="p-3 w-10 text-center whitespace-nowrap">
++                <th class="p-2 text-center">
+                   <input type="checkbox" id="check-all" onchange="toggleSelectAll(this)" title="Chọn tất cả" />
+                 </th>
+-                <th class="p-3 w-16 min-w-[70px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortTable('id')">
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortTable('id')">
+                   <div class="flex items-center gap-1">ID <span id="sort-icon-id" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 w-28 min-w-[110px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortTable('type')">
+-                  <div class="flex items-center gap-1">LOẠI IOC <span id="sort-icon-type" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortTable('type')">
++                  <div class="flex items-center gap-1">LOẠI <span id="sort-icon-type" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 min-w-[320px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortTable('value')">
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortTable('value')">
+                   <div class="flex items-center gap-1">GIÁ TRỊ IOC <span id="sort-icon-value" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 w-32 min-w-[130px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortTable('confidence')">
+-                  <div class="flex items-center gap-1">ĐIỂM TIN CẬY <span id="sort-icon-confidence" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortTable('tags')">
++                  <div class="flex items-center gap-1">NHÃN <span id="sort-icon-tags" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 w-28 min-w-[100px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortTable('source')">
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortTable('confidence')" title="Điểm tin cậy">
++                  <div class="flex items-center gap-1">TIN CẬY <span id="sort-icon-confidence" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
++                </th>
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortTable('source')">
+                   <div class="flex items-center gap-1">NGUỒN <span id="sort-icon-source" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 w-44 min-w-[180px] whitespace-nowrap text-center cursor-pointer hover:text-white transition" onclick="handleSortTable('alerts')">
+-                  <div class="flex items-center justify-center gap-1">CẢNH BÁO LIÊN QUAN <span id="sort-icon-alerts" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
++                <th class="p-2 text-center cursor-pointer hover:text-white transition" onclick="handleSortTable('alerts')" title="Cảnh báo liên quan">
++                  <div class="flex items-center justify-center gap-1">CẢNH BÁO <span id="sort-icon-alerts" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 w-36 min-w-[140px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortTable('share_status')">
+-                  <div class="flex items-center gap-1">TRẠNG THÁI GỬI <span id="sort-icon-share_status" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortTable('share_status')" title="Trạng thái chia sẻ">
++                  <div class="flex items-center gap-1">TRẠNG THÁI <span id="sort-icon-share_status" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 w-44 min-w-[170px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortTable('last_seen')">
+-                  <div class="flex items-center gap-1">LẦN THẤY GẦN NHẤT <span id="sort-icon-last_seen" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortTable('last_seen')" title="Lần thấy gần nhất">
++                  <div class="flex items-center gap-1">THẤY <span id="sort-icon-last_seen" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 w-44 min-w-[170px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortTable('last_shared')">
+-                  <div class="flex items-center gap-1">LẦN GỬI GẦN NHẤT <span id="sort-icon-last_shared" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortTable('last_shared')" title="Lần gửi gần nhất">
++                  <div class="flex items-center gap-1">GỬI <span id="sort-icon-last_shared" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 w-32 min-w-[120px] whitespace-nowrap text-center">HÀNH ĐỘNG</th>
++                <th class="p-2 text-center">HÀNH ĐỘNG</th>
+               </tr>
+             </thead>
+@@ -442,5 +471,5 @@
+           <!-- Rows Per Page (Blue text + dropdown) -->
+           <div class="flex items-center space-x-2">
+-            <span class="text-[#2094f3] font-medium">Rows per page</span>
++            <span class="text-[#2094f3] font-medium">Số dòng mỗi trang</span>
+             <div class="relative">
+               <select id="rows-per-page" onchange="changeRowsPerPage(this.value)" class="bg-[#151922] text-white border border-[#2c3446] rounded px-2.5 py-1 text-xs focus:outline-none focus:border-[#2094f3] cursor-pointer">
+@@ -448,4 +477,8 @@
+                 <option value="20">20</option>
+                 <option value="50">50</option>
++                <option value="100">100</option>
++                <option value="200">200</option>
++                <option value="500">500</option>
++                <option value="1000">1000</option>
+               </select>
+             </div>
+@@ -454,15 +487,9 @@
+ 
+           <!-- Pagination Number Pills -->
+-          <div class="flex items-center space-x-1.5 text-xs select-none">
++          <div id="ioc-pagination" class="flex items-center space-x-1.5 text-xs select-none">
+             <button onclick="prevPage()" class="p-1 rounded text-slate-500 hover:text-white transition disabled:opacity-30" id="btn-prev-page">
+               <i data-lucide="chevron-left" class="w-4 h-4"></i>
+             </button>
+             <button class="w-7 h-7 rounded-full bg-[#2094f3] text-white font-bold flex items-center justify-center text-xs shadow-md shadow-blue-500/20">1</button>
+-            <button onclick="goToPage(2)" class="w-7 h-7 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center text-xs transition">2</button>
+-            <button onclick="goToPage(3)" class="w-7 h-7 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center text-xs transition">3</button>
+-            <button onclick="goToPage(4)" class="w-7 h-7 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center text-xs transition">4</button>
+-            <button onclick="goToPage(5)" class="w-7 h-7 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center text-xs transition">5</button>
+-            <span class="px-1 text-slate-600">...</span>
+-            <button onclick="goToPage(468)" class="w-7 h-7 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center text-xs transition">468</button>
+             <button onclick="nextPage()" class="p-1 rounded text-slate-500 hover:text-white transition" id="btn-next-page">
+               <i data-lucide="chevron-right" class="w-4 h-4"></i>
+@@ -483,5 +510,5 @@
+           <div>
+             <div class="text-ncs-muted">Tổng đợt chia sẻ</div>
+-            <div class="text-xl font-bold text-white mt-1">28 <span class="text-xs font-normal text-ncs-dim">phiên</span></div>
++            <div class="text-xl font-bold text-white mt-1"><span id="hist-metric-sessions">0</span> <span class="text-xs font-normal text-ncs-dim">phiên</span></div>
+           </div>
+           <div class="w-10 h-10 rounded-lg bg-blue-950/60 border border-blue-800/40 flex items-center justify-center text-blue-400">
+@@ -492,6 +519,6 @@
+         <div class="bg-ncs-card border border-ncs-border rounded-lg p-3.5 flex items-center justify-between">
+           <div>
+-            <div class="text-ncs-muted">IOCs đã chia sẻ thành công</div>
+-            <div class="text-xl font-bold text-emerald-400 mt-1">1,292 <span class="text-xs font-normal text-ncs-dim">bản ghi</span></div>
++            <div class="text-ncs-muted">Đã gửi thành công</div>
++            <div class="text-xl font-bold text-emerald-400 mt-1"><span id="hist-metric-success">0</span> <span class="text-xs font-normal text-ncs-dim">mục</span></div>
+           </div>
+           <div class="w-10 h-10 rounded-lg bg-emerald-950/60 border border-emerald-800/40 flex items-center justify-center text-emerald-400">
+@@ -502,6 +529,6 @@
+         <div class="bg-ncs-card border border-ncs-border rounded-lg p-3.5 flex items-center justify-between">
+           <div>
+-            <div class="text-ncs-muted">Bản ghi chia sẻ lỗi</div>
+-            <div class="text-xl font-bold text-red-400 mt-1">14 <span class="text-xs font-normal text-ncs-dim">bản ghi</span></div>
++            <div class="text-ncs-muted">Gửi lỗi</div>
++            <div class="text-xl font-bold text-red-400 mt-1"><span id="hist-metric-failed">0</span> <span class="text-xs font-normal text-ncs-dim">bản ghi</span></div>
+           </div>
+           <div class="w-10 h-10 rounded-lg bg-red-950/60 border border-red-800/40 flex items-center justify-center text-red-400">
+@@ -513,8 +540,83 @@
+           <div>
+             <div class="text-ncs-muted">Tỷ lệ thành công</div>
+-            <div class="text-xl font-bold text-cyan-400 mt-1">98.9%</div>
++            <div class="text-xl font-bold text-cyan-400 mt-1" id="hist-metric-rate">0%</div>
+           </div>
+           <div class="w-10 h-10 rounded-lg bg-cyan-950/60 border border-cyan-800/40 flex items-center justify-center text-cyan-400">
+             <i data-lucide="activity" class="w-5 h-5"></i>
++          </div>
++        </div>
++      </div>
++
++      <div class="bg-ncs-card rounded-lg border border-ncs-border p-3.5 space-y-3">
++        <div class="flex flex-col lg:flex-row gap-2.5">
++          <div class="relative flex-1">
++            <i data-lucide="search" class="w-4 h-4 text-ncs-muted absolute left-3 top-1/2 -translate-y-1/2"></i>
++            <input
++              type="text"
++              id="history-search-input"
++              onkeyup="applyHistoryFilters()"
++              placeholder="Tìm mã phiên, người gửi..."
++              class="w-full bg-ncs-input text-xs text-white pl-9 pr-4 py-2.5 rounded border border-ncs-border focus:border-ncs-cyan focus:outline-none placeholder-ncs-dim transition"
++            />
++          </div>
++          <div class="flex flex-wrap items-center gap-2 text-xs">
++            <div class="flex items-center bg-ncs-input border border-ncs-border rounded px-2.5 py-1.5 text-ncs-muted space-x-2">
++              <i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400"></i>
++              <span class="text-ncs-dim text-[11px]">Từ</span>
++              <input
++                type="datetime-local"
++                id="history-time-from"
++                onchange="applyHistoryFilters()"
++                class="bg-transparent text-ncs-text font-mono text-[11px] focus:outline-none [color-scheme:dark]"
++              />
++            </div>
++            <div class="flex items-center bg-ncs-input border border-ncs-border rounded px-2.5 py-1.5 text-ncs-muted space-x-2">
++              <span class="text-ncs-dim text-[11px]">Đến</span>
++              <input
++                type="datetime-local"
++                id="history-time-to"
++                onchange="applyHistoryFilters()"
++                class="bg-transparent text-ncs-text font-mono text-[11px] focus:outline-none [color-scheme:dark]"
++              />
++            </div>
++          </div>
++        </div>
++
++        <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-ncs-border/60 text-xs">
++          <div class="flex flex-wrap items-center gap-2">
++            <div class="flex items-center space-x-1.5 bg-ncs-input px-2.5 py-1.5 rounded border border-ncs-border">
++              <span class="text-ncs-dim text-[11px]">Hình thức:</span>
++              <select id="history-filter-type" onchange="applyHistoryFilters()" class="bg-transparent text-ncs-text focus:outline-none text-xs cursor-pointer">
++                <option value="ALL" class="bg-ncs-card text-white">Tất cả</option>
++                <option value="AUTO" class="bg-ncs-card text-white">Tự động</option>
++                <option value="MANUAL" class="bg-ncs-card text-white">Thủ công</option>
++              </select>
++            </div>
++            <div class="flex items-center space-x-1.5 bg-ncs-input px-2.5 py-1.5 rounded border border-ncs-border">
++              <span class="text-ncs-dim text-[11px]">Trạng thái:</span>
++              <select id="history-filter-status" onchange="applyHistoryFilters()" class="bg-transparent text-ncs-text focus:outline-none text-xs cursor-pointer">
++                <option value="ALL" class="bg-ncs-card text-white">Tất cả</option>
++                <option value="SUCCESS" class="bg-ncs-card text-white">Thành công</option>
++                <option value="PARTIAL" class="bg-ncs-card text-white">Lỗi một phần</option>
++                <option value="FAILED" class="bg-ncs-card text-white">Thất bại</option>
++              </select>
++            </div>
++            <div class="flex items-center space-x-1.5 bg-ncs-input px-2.5 py-1.5 rounded border border-ncs-border">
++              <span class="text-ncs-dim text-[11px]">Người gửi:</span>
++              <select id="history-filter-user" onchange="applyHistoryFilters()" class="bg-transparent text-ncs-text focus:outline-none text-xs cursor-pointer">
++                <option value="ALL" class="bg-ncs-card text-white">Tất cả</option>
++                <option value="admin_soc" class="bg-ncs-card text-white">admin_soc</option>
++                <option value="System Scheduler" class="bg-ncs-card text-white">System Scheduler</option>
++              </select>
++            </div>
++          </div>
++          <div class="flex items-center space-x-3">
++            <div class="text-xs text-ncs-muted">
++              Kết quả: <strong id="history-filter-count" class="text-cyan-400 font-bold">4</strong> / <span id="history-total-count" class="text-white">4</span> phiên
++            </div>
++            <button onclick="resetHistoryFilters()" class="text-ncs-muted hover:text-white text-xs flex items-center space-x-1 px-2.5 py-1 rounded bg-ncs-input hover:bg-ncs-cardHover border border-ncs-border transition">
++              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
++              <span>Xóa bộ lọc</span>
++            </button>
+           </div>
+         </div>
+@@ -526,38 +628,49 @@
+           <div class="font-semibold text-white text-xs flex items-center gap-2">
+             <i data-lucide="archive" class="w-4 h-4 text-cyan-400"></i>
+-            Danh sách Lịch sử Phiên chia sẻ dữ liệu
+-          </div>
+-          <div class="text-xs text-ncs-muted">Chuẩn dữ liệu: SOAP edXML & Chữ ký số XML-DSig X.509</div>
++            Danh sách phiên gửi
++          </div>
++          <div class="text-xs text-ncs-muted">Gửi tới Trung tâm An ninh mạng</div>
+         </div>
+ 
+         <div class="overflow-x-auto">
+-          <table class="w-full text-left text-xs border-collapse min-w-[1240px]">
++          <table class="w-full text-left text-xs border-collapse table-fixed">
++            <colgroup>
++              <col style="width:16%" />
++              <col style="width:11%" />
++              <col style="width:11%" />
++              <col style="width:13%" />
++              <col style="width:6%" />
++              <col style="width:6%" />
++              <col style="width:6%" />
++              <col style="width:12%" />
++              <col style="width:19%" />
++            </colgroup>
+             <thead class="bg-ncs-topbar/60 text-cyan-400 font-semibold border-b border-ncs-border text-[11px] uppercase select-none">
+               <tr>
+-                <th class="p-3 w-56 min-w-[210px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('id')">
+-                  <div class="flex items-center gap-1">MÃ PHIÊN (BATCH ID) <span id="batch-sort-id" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('id')">
++                  <div class="flex items-center gap-1">MÃ PHIÊN <span id="batch-sort-id" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 w-44 min-w-[160px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('time')">
+-                  <div class="flex items-center gap-1">THỜI GIAN GỬI <span id="batch-sort-time" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('time')">
++                  <div class="flex items-center gap-1">THỜI GIAN <span id="batch-sort-time" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 w-36 min-w-[130px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('type')">
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('type')">
+                   <div class="flex items-center gap-1">HÌNH THỨC <span id="batch-sort-type" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 w-44 min-w-[170px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('user')">
+-                  <div class="flex items-center gap-1">NGƯỜI / TIẾN TRÌNH <span id="batch-sort-user" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('user')">
++                  <div class="flex items-center gap-1">NGƯỜI GỬI <span id="batch-sort-user" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 text-center w-24 min-w-[90px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('total')">
+-                  <div class="flex items-center justify-center gap-1">TỔNG SỐ <span id="batch-sort-total" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
++                <th class="p-2 text-center cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('total')">
++                  <div class="flex items-center justify-center gap-1">TỔNG <span id="batch-sort-total" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 text-center w-28 min-w-[110px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('success')">
+-                  <div class="flex items-center justify-center gap-1">THÀNH CÔNG <span id="batch-sort-success" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
++                <th class="p-2 text-center cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('success')">
++                  <div class="flex items-center justify-center gap-1">OK <span id="batch-sort-success" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 text-center w-20 min-w-[80px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('failed')">
++                <th class="p-2 text-center cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('failed')">
+                   <div class="flex items-center justify-center gap-1">LỖI <span id="batch-sort-failed" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 w-36 min-w-[130px] whitespace-nowrap cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('status')">
++                <th class="p-2 cursor-pointer hover:text-white transition" onclick="handleSortBatchTable('status')">
+                   <div class="flex items-center gap-1">TRẠNG THÁI <span id="batch-sort-status" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+                 </th>
+-                <th class="p-3 text-center w-48 min-w-[180px] whitespace-nowrap">THAO TÁC</th>
++                <th class="p-2 text-left">THAO TÁC</th>
+               </tr>
+             </thead>
+@@ -571,10 +684,10 @@
+         <div class="bg-ncs-topbar px-4 py-3 border-t border-ncs-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+           <div class="flex items-center space-x-2">
+-            <span class="text-[#2094f3] font-medium">Rows per page</span>
++            <span class="text-[#2094f3] font-medium">Số dòng mỗi trang</span>
+             <select class="bg-[#151922] text-white border border-[#2c3446] rounded px-2.5 py-1 text-xs focus:outline-none">
+               <option value="10" selected>10</option>
+               <option value="20">20</option>
+             </select>
+-            <span class="text-ncs-dim pl-2">Hiển thị 1 - 4 trong 28 phiên</span>
++            <span id="history-page-info" class="text-ncs-dim pl-2">Hiển thị 1 - 4 trong 4 phiên</span>
+           </div>
+           <div class="flex items-center space-x-1.5 text-xs select-none">
+@@ -603,68 +716,86 @@
+               <h3 class="font-semibold text-white text-sm flex items-center gap-2">
+                 <i data-lucide="building" class="w-4 h-4 text-cyan-400"></i>
+-                1. Thông tin Đơn vị gửi báo cáo (edXML:From)
++                1. Thông tin đơn vị gửi
+               </h3>
+-              <span class="text-[11px] text-ncs-muted">Cấu hình thông tin đơn vị chia sẻ dữ liệu</span>
+             </div>
+ 
+             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+               <div>
+-                <label class="block text-ncs-dim text-[11px] mb-1">Mã định danh đơn vị (OrganId) <span class="text-red-400">*</span></label>
+-                <input type="text" value="000.01.12.H28" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
+-                <span class="text-[10px] text-ncs-dim mt-0.5 block">Tối đa 13 ký tự theo chuẩn QCVN 102:2016/BTTTT</span>
++                <label class="block text-ncs-dim text-[11px] mb-1">Mã định danh đơn vị <span class="text-red-400">*</span></label>
++                <input id="cfg-organ-id" type="text" maxlength="13" value="000.01.12.H28" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
++                <span class="text-[10px] text-ncs-dim mt-0.5 block">Tối đa 13 ký tự</span>
+               </div>
+               <div>
+-                <label class="block text-ncs-dim text-[11px] mb-1">Tên cơ quan, tổ chức chủ quản trực tiếp</label>
+-                <input type="text" value="UBND Tỉnh ABC" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
++                <label class="block text-ncs-dim text-[11px] mb-1">Cơ quan chủ quản</label>
++                <input id="cfg-org-in-charge" type="text" maxlength="200" value="UBND Tỉnh ABC" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
+               </div>
+               <div class="sm:col-span-2">
+-                <label class="block text-ncs-dim text-[11px] mb-1">Tên đơn vị gửi báo cáo (OrganName) <span class="text-red-400">*</span></label>
+-                <input type="text" value="Sở Thông tin và Truyền thông ABC" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
++                <label class="block text-ncs-dim text-[11px] mb-1">Tên đơn vị <span class="text-red-400">*</span></label>
++                <input id="cfg-organ-name" type="text" maxlength="200" value="Sở Thông tin và Truyền thông ABC" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
+               </div>
+               <div class="sm:col-span-2">
+-                <label class="block text-ncs-dim text-[11px] mb-1">Địa chỉ đơn vị (OrganAdd) <span class="text-red-400">*</span></label>
+-                <input type="text" value="Số 10 Đường Hùng Vương, TP ABC" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
++                <label class="block text-ncs-dim text-[11px] mb-1">Địa chỉ <span class="text-red-400">*</span></label>
++                <input id="cfg-organ-add" type="text" maxlength="250" value="Số 10 Đường Hùng Vương, TP ABC" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
+               </div>
+               <div>
+-                <label class="block text-ncs-dim text-[11px] mb-1">Email đầu mối kỹ thuật <span class="text-red-400">*</span></label>
+-                <input type="email" value="soc@sttt.abc.gov.vn" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
++                <label class="block text-ncs-dim text-[11px] mb-1">Email <span class="text-red-400">*</span></label>
++                <input id="cfg-email" type="email" maxlength="100" value="soc@sttt.abc.gov.vn" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
+               </div>
+               <div>
+-                <label class="block text-ncs-dim text-[11px] mb-1">Số điện thoại liên hệ <span class="text-red-400">*</span></label>
+-                <input type="text" value="0243.888.9999" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
++                <label class="block text-ncs-dim text-[11px] mb-1">Số điện thoại <span class="text-red-400">*</span></label>
++                <input id="cfg-telephone" type="text" maxlength="20" value="02438889999" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
++              </div>
++              <div>
++                <label class="block text-ncs-dim text-[11px] mb-1">Fax</label>
++                <input id="cfg-fax" type="text" maxlength="20" value="02438889998" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
++              </div>
++              <div>
++                <label class="block text-ncs-dim text-[11px] mb-1">Website</label>
++                <input id="cfg-website" type="text" maxlength="100" value="https://sttt.abc.gov.vn" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
++              </div>
++              <div>
++                <label class="block text-ncs-dim text-[11px] mb-1">Họ tên đầu mối kỹ thuật</label>
++                <input id="cfg-contact-name" type="text" value="Nguyễn Văn A" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
++              </div>
++              <div>
++                <label class="block text-ncs-dim text-[11px] mb-1">Trích yếu báo cáo <span class="text-red-400">*</span></label>
++                <input id="cfg-subject" type="text" maxlength="500" value="Báo cáo chia sẻ dữ liệu mã độc và kết nối nghi ngờ EDR" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" />
+               </div>
+             </div>
+           </div>
+ 
+-          <!-- Card 2: Digital Certificate (XML-DSig X.509) -->
+           <div class="bg-ncs-card rounded-lg border border-ncs-border p-4 space-y-3">
+             <div class="flex items-center justify-between border-b border-ncs-border pb-2.5">
+               <h3 class="font-semibold text-white text-sm flex items-center gap-2">
+                 <i data-lucide="key-round" class="w-4 h-4 text-amber-400"></i>
+-                2. Chứng thư số Ký gói tin (XML Digital Signature)
++                2. Chứng thư số
+               </h3>
+-              <span id="cert-status-badge" class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-semibold">Đã xác thực</span>
++              <div class="flex items-center gap-2">
++                <button type="button" onclick="refreshServerCertList()" class="px-2 py-1 rounded bg-ncs-input hover:bg-ncs-cardHover border border-ncs-border text-ncs-muted hover:text-white text-[10px] flex items-center gap-1">
++                  <i data-lucide="refresh-cw" class="w-3 h-3"></i>
++                  Làm mới
++                </button>
++                <span id="cert-status-badge" class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-semibold">Hợp lệ</span>
++              </div>
+             </div>
+ 
+             <div class="space-y-3 text-xs">
+-              <!-- Hidden File Input for Certificate Upload -->
+-              <input type="file" id="cert-file-input" accept=".pfx,.p12,.pem,.cer,.crt" onchange="handleCertFileUpload(this)" class="hidden" />
+-
+-              <div class="p-3 bg-ncs-input rounded border border-ncs-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+-                <div class="flex items-center space-x-3">
+-                  <div class="p-2 bg-blue-950/60 rounded text-cyan-400 flex-shrink-0">
+-                    <i data-lucide="file-check" class="w-5 h-5"></i>
+-                  </div>
+-                  <div>
+-                    <div id="cert-filename-display" class="font-semibold text-white text-xs">cert_auth_sttt_abc_2026.pfx</div>
+-                    <div id="cert-subject-display" class="text-[11px] text-ncs-muted">Subject: CN=STTT ABC, O=UBND Tinh ABC, C=VN</div>
+-                    <div id="cert-expiry-display" class="text-[10px] text-ncs-dim">Hạn chứng thư: 31/12/2027 (Còn 492 ngày) | Thuật toán: RSA-SHA256</div>
+-                  </div>
+-                </div>
+-                <button type="button" onclick="triggerCertFileInput()" class="px-3.5 py-2 rounded bg-ncs-card hover:bg-ncs-cardHover border border-cyan-700/60 hover:border-cyan-500 text-cyan-300 text-xs font-medium flex items-center justify-center gap-1.5 transition flex-shrink-0">
+-                  <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+-                  Thay đổi file cert...
+-                </button>
++              <div>
++                <label class="block text-ncs-dim text-[11px] mb-1">Chứng thư sử dụng <span class="text-red-400">*</span></label>
++                <select id="cfg-server-cert" onchange="onServerCertChange()" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none cursor-pointer">
++                  <option value="thumb-sttt-abc" selected>STTT ABC — hết hạn 31/12/2027</option>
++                  <option value="">Chưa chọn</option>
++                </select>
+               </div>
++              <div class="p-3 bg-ncs-input rounded border border-ncs-border space-y-1">
++                <div id="cert-filename-display" class="font-semibold text-white text-xs">STTT ABC</div>
++                <div id="cert-subject-display" class="text-[11px] text-ncs-muted">Đơn vị: Sở Thông tin và Truyền thông ABC</div>
++                <div id="cert-issuer-display" class="text-[11px] text-ncs-muted">Người cấp: CA Chính phủ</div>
++                <div id="cert-expiry-display" class="text-[10px] text-ncs-dim">Hết hạn: 31/12/2027</div>
++              </div>
++              <select id="cfg-sig-algo" class="hidden">
++                <option value="rsa-sha256" selected>rsa-sha256</option>
++                <option value="rsa-sha1">rsa-sha1</option>
++              </select>
+             </div>
+           </div>
+@@ -675,5 +806,5 @@
+               <h3 class="font-semibold text-white text-sm flex items-center gap-2">
+                 <i data-lucide="clock" class="w-4 h-4 text-emerald-400"></i>
+-                3. Thiết lập Chia sẻ Tự động theo Lịch (Cron Scheduler)
++                3. Chia sẻ tự động
+               </h3>
+               <label class="relative inline-flex items-center cursor-pointer">
+@@ -690,5 +821,5 @@
+                 <div class="text-[11px] font-semibold text-cyan-300 flex items-center gap-1.5">
+                   <i data-lucide="timer" class="w-3.5 h-3.5 text-cyan-400"></i>
+-                  Chế độ Tần suất gửi (Chọn 1 trong 2 chế độ):
++                  Tần suất gửi
+                 </div>
+ 
+@@ -698,5 +829,5 @@
+                     <input type="radio" name="cron-schedule-mode" id="cron-mode-interval" value="interval" checked onchange="toggleScheduleMode()" class="mt-1 text-cyan-400" />
+                     <div class="flex-1 space-y-1.5">
+-                      <div class="font-medium text-white">Chế độ 1: Gửi định kỳ lặp lại (Interval)</div>
++                      <div class="font-medium text-white">Gửi định kỳ</div>
+                       <div class="flex items-center gap-2 text-xs" id="interval-controls">
+                         <span class="text-ncs-muted">Lặp lại mỗi:</span>
+@@ -716,5 +847,5 @@
+                     <input type="radio" name="cron-schedule-mode" id="cron-mode-fixed" value="fixed" onchange="toggleScheduleMode()" class="mt-1 text-cyan-400" />
+                     <div class="flex-1 space-y-1.5">
+-                      <div class="font-medium text-white">Chế độ 2: Gửi vào khung giờ cố định trong ngày</div>
++                      <div class="font-medium text-white">Gửi vào giờ cố định mỗi ngày</div>
+                       <div class="flex items-center gap-2 text-xs opacity-60 pointer-events-none" id="fixed-controls">
+                         <span class="text-ncs-muted">Vào lúc:</span>
+@@ -729,7 +860,5 @@
+               <!-- 2. Giới hạn Kích thước lô tối đa (Giới hạn 10 - 1,000) -->
+               <div>
+-                <label class="block text-ncs-dim text-[11px] mb-1">
+-                  Kích thước lô tối đa (Max Batch Size) <span class="text-cyan-400 font-semibold">[Giới hạn: 10 - 1,000 IOCs]</span>
+-                </label>
++                <label class="block text-ncs-dim text-[11px] mb-1">Số máy tối đa mỗi lần gửi</label>
+                 <div class="flex items-center gap-3">
+                   <div class="relative w-full max-w-xs">
+@@ -743,9 +872,7 @@
+                       class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none" 
+                     />
+-                    <span class="absolute right-3 top-2 text-ncs-dim text-[11px]">IOCs / Batch</span>
++                    <span class="absolute right-3 top-2 text-ncs-dim text-[11px]">máy</span>
+                   </div>
+-                  <span class="text-[10px] text-ncs-dim flex-1">
+-                    Tự động chia tách nhiều batch nhỏ nếu vượt quá. Giới hạn tối đa <strong class="text-white">1,000 IOCs/Batch</strong> để bảo vệ băng thông gateway.
+-                  </span>
++                  <span class="text-[10px] text-ncs-dim flex-1">Từ 10 đến 1.000 máy. Hệ thống tự chia nếu vượt quá.</span>
+                 </div>
+               </div>
+@@ -754,6 +881,6 @@
+               <div class="p-3 bg-ncs-input/80 rounded border border-ncs-border space-y-3">
+                 <div class="flex items-center justify-between">
+-                  <span class="text-[11px] font-semibold text-cyan-300">Tiêu chí lọc dữ liệu chia sẻ tự động:</span>
+-                  <span class="text-[10px] text-ncs-dim">Hệ thống chỉ gửi các IOC thỏa mãn tất cả tiêu chí bên dưới</span>
++                  <span class="text-[11px] font-semibold text-cyan-300">Dữ liệu gửi tự động</span>
++                  <span class="text-[10px] text-ncs-dim">Chỉ gửi bản ghi thỏa tất cả điều kiện</span>
+                 </div>
+                 
+@@ -764,13 +891,13 @@
+                     <label class="flex items-center space-x-1.5 cursor-pointer">
+                       <input type="checkbox" id="sc-status-unshared" checked />
+-                      <span>Chưa chia sẻ (UNSHARED)</span>
++                      <span>Chưa chia sẻ</span>
+                     </label>
+                     <label class="flex items-center space-x-1.5 cursor-pointer">
+                       <input type="checkbox" id="sc-status-failed" checked />
+-                      <span>Chia sẻ lỗi (SHARE_FAILED)</span>
++                      <span>Gửi lỗi</span>
+                     </label>
+                     <label class="flex items-center space-x-1.5 cursor-pointer">
+                       <input type="checkbox" id="sc-status-shared" />
+-                      <span>Gửi lại cả IOC Đã chia sẻ (SHARED)</span>
++                      <span>Đã chia sẻ (gửi lại)</span>
+                     </label>
+                   </div>
+@@ -780,5 +907,5 @@
+                 <div class="pt-1 border-t border-ncs-border/60">
+                   <div class="flex justify-between items-center mb-1">
+-                    <span class="text-[10px] text-ncs-dim font-medium">Chọn các loại IOC gửi đi (Multi-select):</span>
++                    <span class="text-[10px] text-ncs-dim font-medium">Loại dữ liệu gửi đi:</span>
+                     <div class="space-x-2 text-[10px]">
+                       <button type="button" onclick="toggleAllCronTypes(true)" class="text-cyan-400 hover:underline">Chọn tất cả</button>
+@@ -787,28 +914,20 @@
+                     </div>
+                   </div>
+-                  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-xs">
++                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                     <label class="flex items-center space-x-1.5 p-1.5 bg-ncs-card rounded border border-ncs-border cursor-pointer hover:border-cyan-800">
+                       <input type="checkbox" class="cron-ioc-type-cb" value="SHA256" checked />
+-                      <span>SHA256</span>
++                      <span>Mã độc (SHA256)</span>
+                     </label>
+                     <label class="flex items-center space-x-1.5 p-1.5 bg-ncs-card rounded border border-ncs-border cursor-pointer hover:border-cyan-800">
+                       <input type="checkbox" class="cron-ioc-type-cb" value="MD5" checked />
+-                      <span>MD5</span>
++                      <span>Mã độc (MD5)</span>
+                     </label>
+                     <label class="flex items-center space-x-1.5 p-1.5 bg-ncs-card rounded border border-ncs-border cursor-pointer hover:border-cyan-800">
+                       <input type="checkbox" class="cron-ioc-type-cb" value="IPV4" checked />
+-                      <span>IPv4</span>
+-                    </label>
+-                    <label class="flex items-center space-x-1.5 p-1.5 bg-ncs-card rounded border border-ncs-border cursor-pointer hover:border-cyan-800">
+-                      <input type="checkbox" class="cron-ioc-type-cb" value="DOMAIN" checked />
+-                      <span>Domain</span>
+-                    </label>
+-                    <label class="flex items-center space-x-1.5 p-1.5 bg-ncs-card rounded border border-ncs-border cursor-pointer hover:border-cyan-800">
+-                      <input type="checkbox" class="cron-ioc-type-cb" value="URL" checked />
+-                      <span>URL</span>
++                      <span>Kết nối (IPv4)</span>
+                     </label>
+                     <label class="flex items-center space-x-1.5 p-1.5 bg-ncs-card rounded border border-ncs-border cursor-pointer hover:border-cyan-800">
+                       <input type="checkbox" class="cron-ioc-type-cb" value="CVE" checked />
+-                      <span>CVE</span>
++                      <span>Lỗ hổng (CVE)</span>
+                     </label>
+                   </div>
+@@ -818,17 +937,17 @@
+                 <div class="pt-1 border-t border-ncs-border/60 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                   <div>
+-                    <span class="text-[10px] text-ncs-dim block mb-1 font-medium">Nguồn dữ liệu IOC chấp nhận:</span>
++                    <span class="text-[10px] text-ncs-dim block mb-1 font-medium">Nguồn dữ liệu:</span>
+                     <div class="grid grid-cols-2 gap-1.5 text-xs">
+                       <label class="flex items-center space-x-1.5 cursor-pointer">
+                         <input type="checkbox" class="cron-src-cb" value="ALERT" checked />
+-                        <span>EDR Alert</span>
++                        <span>Cảnh báo EDR</span>
+                       </label>
+                       <label class="flex items-center space-x-1.5 cursor-pointer">
+                         <input type="checkbox" class="cron-src-cb" value="TIP" checked />
+-                        <span>Threat Intel (TIP)</span>
++                        <span>Threat Intel</span>
+                       </label>
+                       <label class="flex items-center space-x-1.5 cursor-pointer">
+                         <input type="checkbox" class="cron-src-cb" value="IMPORT" checked />
+-                        <span>Import File</span>
++                        <span>Import file</span>
+                       </label>
+                       <label class="flex items-center space-x-1.5 cursor-pointer">
+@@ -844,157 +963,74 @@
+                       <span class="text-ncs-muted text-xs">≥</span>
+                       <input type="number" id="cron-min-confidence" min="0" max="100" value="80" class="w-20 bg-ncs-card border border-ncs-border rounded px-2.5 py-1 text-white text-center text-xs focus:border-ncs-cyan focus:outline-none" />
+-                      <span class="text-xs text-ncs-muted">(Chỉ gửi IOC có điểm từ mức này trở lên)</span>
++                      <span class="text-xs text-ncs-muted">Chỉ gửi bản ghi từ mức này trở lên</span>
+                     </div>
+                   </div>
+                 </div>
+ 
++                <div id="auto-share-preview" class="p-2.5 rounded bg-ncs-card border border-ncs-border text-[11px] text-ncs-muted leading-relaxed">
++                  Ước lượng lần gửi tới: <strong id="auto-share-next" class="text-white">--</strong>.
++                  Số bản ghi đủ điều kiện: <strong id="auto-share-count" class="text-cyan-300">0</strong>.
++                </div>
++
+               </div>
+             </div>
+-
+-            <div class="pt-2 flex justify-end space-x-2">
+-              <button type="button" onclick="testConnectionA05()" class="px-3.5 py-2 rounded bg-ncs-input hover:bg-ncs-cardHover border border-ncs-border text-cyan-400 font-medium transition flex items-center gap-1.5 text-xs">
+-                <i data-lucide="activity" class="w-3.5 h-3.5"></i>
+-                Kiểm tra Kết nối & Ký thử
+-              </button>
+-              <button type="button" onclick="saveFlexibleSchedulerConfig()" class="px-4 py-2 rounded bg-cyan-600 hover:bg-cyan-500 text-white font-medium shadow transition text-xs">
+-                Lưu cấu hình
++          </div>
++        </div>
++
++        <!-- Right 1 Col: Connection (sticky on desktop) -->
++        <div class="space-y-4 lg:sticky lg:top-20 lg:self-start">
++          <div class="bg-ncs-card rounded-lg border border-ncs-border p-4 space-y-3">
++            <div class="flex items-center justify-between border-b border-ncs-border pb-2.5">
++              <h3 class="font-semibold text-white text-sm flex items-center gap-2">
++                <i data-lucide="info" class="w-4 h-4 text-cyan-400"></i>
++                Kết nối Trung tâm An ninh mạng
++              </h3>
++              <button type="button" onclick="refreshGatewayProfiles()" class="px-2 py-1 rounded bg-ncs-input hover:bg-ncs-cardHover border border-ncs-border text-ncs-muted hover:text-white text-[10px] flex items-center gap-1">
++                <i data-lucide="refresh-cw" class="w-3 h-3"></i>
++                Làm mới
+               </button>
+             </div>
+-          </div>
+-        </div>
+-
+-        <!-- Right 1 Col: Status & Technical Summary Card -->
+-        <div class="space-y-4">
+-          <div class="bg-ncs-card rounded-lg border border-ncs-border p-4 space-y-3">
+-            <h3 class="font-semibold text-white text-sm flex items-center gap-2 border-b border-ncs-border pb-2.5">
+-              <i data-lucide="info" class="w-4 h-4 text-cyan-400"></i>
+-              Thông số Cổng Kỹ thuật Tiếp nhận
+-            </h3>
+-
+-            <div class="space-y-2.5 text-xs text-ncs-muted">
++
++            <div class="space-y-3 text-xs">
+               <div>
+-                <span class="text-ncs-dim block text-[10px]">Hệ thống tiếp nhận dữ liệu:</span>
+-                <span class="font-mono text-cyan-300 select-all">https://monitor.soc.gov.vn</span>
++                <label class="block text-ncs-dim text-[11px] mb-1">Hồ sơ kết nối <span class="text-red-400">*</span></label>
++                <select id="cfg-gateway-profile" onchange="onGatewayProfileChange()" class="w-full bg-ncs-input border border-ncs-border rounded px-3 py-2 text-white focus:border-ncs-cyan focus:outline-none cursor-pointer">
++                  <option value="gw-prod" selected>Trung tâm An ninh mạng — vận hành</option>
++                  <option value="gw-test">Trung tâm An ninh mạng — thử nghiệm</option>
++                  <option value="">Chưa chọn</option>
++                </select>
+               </div>
+-              <div>
+-                <span class="text-ncs-dim block text-[10px]">IP Public tĩnh đơn vị (Đã duyệt):</span>
+-                <span class="font-mono text-emerald-400 font-semibold">113.160.25.10</span>
+-              </div>
+-              <div>
+-                <span class="text-ncs-dim block text-[10px]">Giao thức đóng gói:</span>
+-                <span class="text-white">SOAP 1.1 Envelope with edXML Body</span>
+-              </div>
+-              <div>
+-                <span class="text-ncs-dim block text-[10px]">Chuẩn ký số:</span>
+-                <span class="text-white">W3C XML-DSig (Canonicalization: C14N)</span>
+-              </div>
+-              <div>
+-                <span class="text-ncs-dim block text-[10px]">Đầu mối hỗ trợ kỹ thuật:</span>
+-                <span class="text-white">contact@nca.gov.vn | 0593 505 999</span>
++              <div class="p-3 bg-ncs-input rounded border border-ncs-border space-y-1">
++                <div class="flex items-center justify-between gap-2">
++                  <div id="gw-profile-name" class="font-semibold text-white text-xs">Trung tâm An ninh mạng — vận hành</div>
++                  <span id="gw-profile-badge" class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-semibold shrink-0">Đã cấu hình</span>
++                </div>
++                <div id="gw-profile-env" class="text-[11px] text-ncs-muted">Môi trường: Vận hành</div>
++                <div id="gw-profile-endpoint" class="text-[11px] text-ncs-muted">Cổng tiếp nhận: https://monitor.soc.gov.vn</div>
++                <div id="gw-profile-ip" class="text-[11px] text-ncs-muted">IP gửi đi: 192.0.2.10</div>
++                <div id="gw-profile-username" class="text-[11px] text-ncs-muted">Tài khoản: demo.sttt.abc</div>
++                <div id="gw-profile-auth-method" class="text-[11px] text-ncs-muted">Phương thức: Tài khoản và token</div>
++                <div id="gw-profile-updated" class="text-[11px] text-ncs-muted">Cập nhật: 20/08/2026</div>
++                <div id="gw-profile-auth" class="text-[10px] text-ncs-dim">Xác thực: Đã cấu hình trên máy chủ</div>
+               </div>
+             </div>
+-
+-            <div class="p-2.5 rounded bg-blue-950/40 border border-blue-800/40 text-[11px] text-blue-300">
+-              <i data-lucide="shield-check" class="w-3.5 h-3.5 inline mr-1 text-cyan-400"></i>
+-              Gói tin được tự động mã hóa TLS 1.3 và xác thực tính toàn vẹn bằng chứng thư số trước khi truyền tải qua Internet.
+-            </div>
+           </div>
+         </div>
+       </div>
++
++      <div class="h-16"></div>
+     </div>
+ 
+-    <!-- ========================================================================= -->
+-    <!-- VIEW 4: AUDIT LOG TAB (NHẬT KÝ HOẠT ĐỘNG IOC) -->
+-    <!-- ========================================================================= -->
+-    <div id="view-audit" class="hidden space-y-3">
+-      <!-- Audit Filter Bar -->
+-      <div class="bg-ncs-card rounded-lg border border-ncs-border p-3.5 space-y-3">
+-        <div class="flex flex-col lg:flex-row gap-2.5">
+-          <div class="relative flex-1">
+-            <i data-lucide="search" class="w-4 h-4 text-ncs-muted absolute left-3 top-1/2 -translate-y-1/2"></i>
+-            <input 
+-              type="text" 
+-              id="audit-search-input" 
+-              onkeyup="applyAuditFilters()"
+-              placeholder="Tìm kiếm theo User thực hiện, Giá trị IOC, Chi tiết hành động..."
+-              class="w-full bg-ncs-input text-xs text-white pl-9 pr-4 py-2.5 rounded border border-ncs-border focus:border-ncs-cyan focus:outline-none placeholder-ncs-dim transition"
+-            />
+-          </div>
+-          <div class="flex items-center space-x-2">
+-            <select id="audit-filter-action" onchange="applyAuditFilters()" class="bg-ncs-input text-xs text-cyan-300 border border-ncs-border rounded px-3 py-2 focus:outline-none">
+-              <option value="ALL">Tất cả hành động</option>
+-              <option value="CREATE">Thêm mới IOC</option>
+-              <option value="UPDATE">Cập nhật / Sửa IOC</option>
+-              <option value="DELETE">Xóa IOC</option>
+-              <option value="SHARE">Chia sẻ dữ liệu</option>
+-              <option value="IMPORT">Import file</option>
+-              <option value="EXPORT">Export dữ liệu</option>
+-            </select>
+-            <button onclick="resetAuditFilters()" class="px-3 py-2 rounded bg-ncs-input hover:bg-ncs-card border border-ncs-border text-xs text-ncs-muted hover:text-white transition flex items-center gap-1">
+-              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Xóa lọc
+-            </button>
+-          </div>
+-        </div>
+-      </div>
+-
+-      <!-- Audit Log Table -->
+-      <div class="bg-ncs-card rounded-lg border border-ncs-border overflow-hidden shadow-xl">
+-        <div class="p-3.5 bg-ncs-topbar flex items-center justify-between border-b border-ncs-border">
+-          <div class="font-semibold text-white text-xs flex items-center gap-2">
+-            <i data-lucide="file-spreadsheet" class="w-4 h-4 text-purple-400"></i>
+-            <span id="audit-title-label">Nhật ký thay đổi IOC (10)</span>
+-          </div>
+-          <div class="text-xs text-ncs-muted">Ghi nhận toàn bộ thao tác Thêm, Sửa, Xóa, Chia sẻ và Xuất nhập dữ liệu</div>
+-        </div>
+-
+-        <div class="overflow-x-auto">
+-          <table class="w-full text-left text-xs border-collapse">
+-            <thead class="bg-ncs-topbar/60 text-cyan-400 font-semibold border-b border-ncs-border text-[11px] uppercase select-none">
+-              <tr>
+-                <th class="p-3 min-w-[170px] w-48 cursor-pointer hover:text-white transition" onclick="handleSortAuditTable('id')">
+-                  <div class="flex items-center gap-1">ID <span id="audit-sort-id" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+-                </th>
+-                <th class="p-3 w-36 cursor-pointer hover:text-white transition" onclick="handleSortAuditTable('time')">
+-                  <div class="flex items-center gap-1">THỜI GIAN <span id="audit-sort-time" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+-                </th>
+-                <th class="p-3 w-36 cursor-pointer hover:text-white transition" onclick="handleSortAuditTable('user')">
+-                  <div class="flex items-center gap-1">NGƯỜI THỰC HIỆN <span id="audit-sort-user" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+-                </th>
+-                <th class="p-3 w-28 cursor-pointer hover:text-white transition" onclick="handleSortAuditTable('action')">
+-                  <div class="flex items-center gap-1">HÀNH ĐỘNG <span id="audit-sort-action" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+-                </th>
+-                <th class="p-3 min-w-[200px] cursor-pointer hover:text-white transition" onclick="handleSortAuditTable('target')">
+-                  <div class="flex items-center gap-1">ĐỐI TƯỢNG (IOC) <span id="audit-sort-target" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+-                </th>
+-                <th class="p-3 min-w-[280px] cursor-pointer hover:text-white transition" onclick="handleSortAuditTable('detail')">
+-                  <div class="flex items-center gap-1">CHI TIẾT THAY ĐỔI <span id="audit-sort-detail" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+-                </th>
+-                <th class="p-3 w-32 cursor-pointer hover:text-white transition" onclick="handleSortAuditTable('ip')">
+-                  <div class="flex items-center gap-1">IP TRUY CẬP <span id="audit-sort-ip" class="text-ncs-dim"><i data-lucide="arrow-up-down" class="w-3 h-3"></i></span></div>
+-                </th>
+-              </tr>
+-            </thead>
+-            <tbody id="audit-log-table-body" class="divide-y divide-ncs-border text-ncs-text">
+-              <!-- Rendered via JS -->
+-            </tbody>
+-          </table>
+-        </div>
+-
+-        <!-- Audit Pagination (Matching media_1787739652633.png) -->
+-        <div class="bg-ncs-topbar px-4 py-3 border-t border-ncs-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+-          <div class="flex items-center space-x-2">
+-            <span class="text-[#2094f3] font-medium">Rows per page</span>
+-            <select class="bg-[#151922] text-white border border-[#2c3446] rounded px-2.5 py-1 text-xs focus:outline-none">
+-              <option value="10" selected>10</option>
+-              <option value="20">20</option>
+-            </select>
+-            <span id="audit-page-info" class="text-ncs-dim pl-2">Hiển thị 1 - 10 trong 12 nhật ký</span>
+-          </div>
+-          <div class="flex items-center space-x-1.5 text-xs select-none">
+-            <button class="p-1 rounded text-slate-500 hover:text-white"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+-            <button class="w-7 h-7 rounded-full bg-[#2094f3] text-white font-bold flex items-center justify-center text-xs">1</button>
+-            <button class="w-7 h-7 rounded-full text-slate-400 hover:text-white flex items-center justify-center text-xs">2</button>
+-            <button class="p-1 rounded text-slate-500 hover:text-white"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+-          </div>
++    <div id="settings-action-bar" class="hidden fixed bottom-0 left-0 right-0 z-30 border-t border-ncs-border bg-ncs-topbar/95 backdrop-blur-sm">
++      <div class="max-w-[1720px] mx-auto px-5 py-3 flex items-center justify-between gap-3">
++        <span id="settings-save-hint" class="text-[11px] text-ncs-muted">Chọn hồ sơ kết nối và chứng thư đã cấu hình trên máy chủ.</span>
++        <div class="flex items-center gap-2 shrink-0">
++          <button type="button" onclick="testConnectionA05()" class="px-3.5 py-2 rounded bg-ncs-input hover:bg-ncs-cardHover border border-ncs-border text-cyan-400 font-medium transition flex items-center gap-1.5 text-xs">
++            <i data-lucide="activity" class="w-3.5 h-3.5"></i>
++            Kiểm tra kết nối
++          </button>
++          <button type="button" onclick="saveFlexibleSchedulerConfig()" class="px-4 py-2 rounded bg-cyan-600 hover:bg-cyan-500 text-white font-medium shadow transition text-xs">
++            Lưu cấu hình
++          </button>
+         </div>
+       </div>
+@@ -1011,14 +1047,19 @@
+     <!-- Drawer Header -->
+     <div class="p-4 bg-ncs-topbar border-b border-ncs-border flex items-center justify-between">
+-      <div class="flex items-center space-x-3 truncate">
++      <div class="flex items-center space-x-3 min-w-0 flex-1">
+         <div class="p-2 rounded bg-cyan-950 border border-cyan-800 text-cyan-400">
+           <i data-lucide="fingerprint" class="w-5 h-5"></i>
+         </div>
+-        <div class="truncate">
++        <div class="min-w-0 flex-1">
+           <div class="flex items-center space-x-2">
+             <span id="drawer-ioc-type" class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-950 text-purple-300 border border-purple-800 uppercase">SHA256</span>
+             <span id="drawer-ioc-confidence" class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-800">Điểm tin cậy: 95</span>
+           </div>
+-          <h2 id="drawer-ioc-value" class="text-sm font-mono font-bold text-white truncate mt-1 select-all">--</h2>
++          <div class="flex items-center gap-1.5 min-w-0 mt-1">
++            <h2 id="drawer-ioc-value" class="text-sm font-mono font-bold text-white truncate select-all">--</h2>
++            <button type="button" onclick="copyToClipboard(currentSelectedIOC.value)" class="p-1 rounded hover:bg-ncs-card text-ncs-muted hover:text-white shrink-0" title="Sao chép giá trị IOC">
++              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
++            </button>
++          </div>
+         </div>
+       </div>
+@@ -1045,7 +1086,4 @@
+           <i data-lucide="trash-2" class="w-3 h-3"></i> Xóa
+         </button>
+-        <button onclick="copyToClipboard(currentSelectedIOC.value)" class="p-1.5 rounded bg-ncs-card hover:bg-ncs-cardHover border border-ncs-border text-ncs-muted hover:text-white" title="Sao chép giá trị">
+-          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+-        </button>
+       </div>
+     </div>
+@@ -1055,4 +1093,7 @@
+       <button id="dtab-overview" onclick="switchDrawerTab('overview')" class="py-2.5 px-3 text-cyan-400 border-b-2 border-ncs-cyan flex items-center gap-1.5">
+         <i data-lucide="info" class="w-3.5 h-3.5"></i> Tổng quan
++      </button>
++      <button id="dtab-intel" onclick="switchDrawerTab('intel')" class="py-2.5 px-3 text-ncs-muted hover:text-white border-b-2 border-transparent flex items-center gap-1.5">
++        <i data-lucide="shield" class="w-3.5 h-3.5 text-blue-400"></i> Threat Intel
+       </button>
+       <button id="dtab-alerts" onclick="switchDrawerTab('alerts')" class="py-2.5 px-3 text-ncs-muted hover:text-white border-b-2 border-transparent flex items-center gap-1.5">
+@@ -1070,25 +1111,25 @@
+       <div id="dpanel-overview" class="space-y-3">
+         <div class="bg-ncs-input/80 rounded border border-ncs-border p-3 space-y-2.5">
+-          <div class="text-[11px] font-bold uppercase text-cyan-400 tracking-wider">Thông tin Nhận diện</div>
++          <div class="text-[11px] font-bold uppercase text-cyan-400 tracking-wider">Thông tin IOC</div>
+           
+           <div class="grid grid-cols-2 gap-2 text-xs">
+             <div>
+-              <span class="text-ncs-dim block text-[10px]">Nguồn thu thập & Nguồn gốc:</span>
++              <span class="text-ncs-dim block text-[10px]">Nguồn</span>
+               <span id="drawer-source" class="text-cyan-300 font-medium">--</span>
+             </div>
+             <div>
+-              <span class="text-ncs-dim block text-[10px]">Người tạo (Created By):</span>
++              <span class="text-ncs-dim block text-[10px]">Người tạo</span>
+               <span id="drawer-created-by" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700 inline-block mt-0.5">SYSTEM</span>
+             </div>
+             <div>
+-              <span class="text-ncs-dim block text-[10px]">First Seen:</span>
++              <span class="text-ncs-dim block text-[10px]">Lần thấy đầu</span>
+               <span id="drawer-first-seen" class="font-mono text-ncs-text">--</span>
+             </div>
+             <div>
+-              <span class="text-ncs-dim block text-[10px]">Last Seen:</span>
++              <span class="text-ncs-dim block text-[10px]">Lần thấy gần nhất</span>
+               <span id="drawer-last-seen" class="font-mono text-ncs-text">--</span>
+             </div>
+             <div class="col-span-2">
+-              <span class="text-ncs-dim block text-[10px]">Số lần bắt gặp trong Cảnh báo:</span>
++              <span class="text-ncs-dim block text-[10px]">Số lần xuất hiện trong cảnh báo</span>
+               <span id="drawer-hit-count" class="font-bold text-white">--</span>
+             </div>
+@@ -1109,5 +1150,5 @@
+         <!-- Description & Tags -->
+         <div class="bg-ncs-input/80 rounded border border-ncs-border p-3 space-y-2">
+-          <span class="text-ncs-dim block text-[10px]">Mô tả & Ngữ cảnh tấn công:</span>
++          <span class="text-ncs-dim block text-[10px]">Mô tả</span>
+           <p id="drawer-description" class="text-ncs-text text-xs leading-relaxed">--</p>
+           <div id="drawer-tags-container" class="flex flex-wrap gap-1.5 pt-1">
+@@ -1115,4 +1156,54 @@
+           </div>
+         </div>
++      </div>
++
++      <div id="dpanel-intel" class="hidden space-y-3">
++        <div class="bg-ncs-input/80 rounded border border-ncs-border p-4 space-y-3">
++          <div class="min-w-0">
++            <div id="ti-ioc-value" class="font-mono text-sm text-white break-all select-all leading-relaxed">--</div>
++            <div class="flex flex-wrap items-center gap-2 mt-2">
++              <span id="ti-severity-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-950 text-red-400 border border-red-800">Critical</span>
++              <span id="ti-type-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-950 text-purple-300 border border-purple-800 uppercase">SHA256</span>
++            </div>
++          </div>
++
++          <div class="grid grid-cols-2 gap-3 text-xs pt-1 border-t border-ncs-border/60">
++            <div>
++              <span class="text-ncs-dim block text-[10px]">Thời điểm tạo</span>
++              <span id="ti-created-at" class="font-mono text-ncs-text">--</span>
++            </div>
++            <div>
++              <span class="text-ncs-dim block text-[10px]">Trạng thái</span>
++              <span id="ti-related-status" class="text-ncs-muted inline-flex items-center gap-1">Không có đối tượng liên quan</span>
++            </div>
++            <div>
++              <span class="text-ncs-dim block text-[10px]">Tên mối đe dọa</span>
++              <span id="ti-malware-name" class="text-white">--</span>
++            </div>
++            <div>
++              <span class="text-ncs-dim block text-[10px]">Phân loại</span>
++              <span id="ti-malware-type" class="text-white">--</span>
++            </div>
++            <div>
++              <span class="text-ncs-dim block text-[10px]">Hành vi</span>
++              <span id="ti-malware-behavior" class="text-white">--</span>
++            </div>
++            <div>
++              <span class="text-ncs-dim block text-[10px]">Nguồn intel</span>
++              <span id="ti-source" class="text-cyan-300">--</span>
++            </div>
++          </div>
++
++          <div>
++            <span class="text-ncs-dim block text-[10px] mb-1.5">Nhãn</span>
++            <div id="ti-tags" class="flex flex-wrap gap-1.5"></div>
++          </div>
++        </div>
++
++        <p class="text-[11px] text-ncs-dim leading-relaxed">Dữ liệu threat intelligence lưu trên hệ thống EDR. Chưa kết nối TIP.</p>
++        <button type="button" disabled class="w-full px-4 py-2.5 rounded bg-ncs-input border border-ncs-border text-ncs-dim text-xs font-medium flex items-center justify-center gap-2 cursor-not-allowed opacity-70">
++          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
++          View In TIP Platform
++        </button>
+       </div>
+ 
+@@ -1122,18 +1213,18 @@
+         <div class="bg-ncs-card rounded-lg border border-ncs-border overflow-hidden shadow-xl">
+           <div class="overflow-x-auto">
+-            <table class="w-full text-left text-xs border-collapse min-w-[1180px]">
++            <table class="w-full text-left text-xs border-collapse table-fixed">
+               <thead class="bg-ncs-topbar/90 text-cyan-400 font-semibold border-b border-ncs-border text-[11px] uppercase tracking-wider select-none">
+                 <tr>
+-                  <th class="p-3 w-40 whitespace-nowrap">ALERT ID</th>
+-                  <th class="p-3 w-44 whitespace-nowrap">TIME</th>
+-                  <th class="p-3 w-20 whitespace-nowrap">AGENT ID</th>
+-                  <th class="p-3 w-56 whitespace-nowrap">AGENT NAME</th>
+-                  <th class="p-3 w-24 whitespace-nowrap">RULE ID</th>
+-                  <th class="p-3 min-w-[280px]">RULE DESCRIPTION</th>
+-                  <th class="p-3 w-24 text-center whitespace-nowrap">RULE LEVEL</th>
+-                  <th class="p-3 w-28 whitespace-nowrap">ALERT STATUS</th>
+-                  <th class="p-3 w-28 whitespace-nowrap">MITRE ID</th>
+-                  <th class="p-3 min-w-[200px] whitespace-nowrap">MITRE TACTIC</th>
+-                  <th class="p-3 w-16 text-center whitespace-nowrap">ACTION</th>
++                  <th class="p-2">MÃ CẢNH BÁO</th>
++                  <th class="p-2">THỜI GIAN</th>
++                  <th class="p-2">AGENT</th>
++                  <th class="p-2">MÁY</th>
++                  <th class="p-2">RULE</th>
++                  <th class="p-2">MÔ TẢ</th>
++                  <th class="p-2 text-center">MỨC</th>
++                  <th class="p-2">TRẠNG THÁI</th>
++                  <th class="p-2">MITRE</th>
++                  <th class="p-2">CHIẾN THUẬT</th>
++                  <th class="p-2 text-center">XEM</th>
+                 </tr>
+               </thead>
+@@ -1147,5 +1238,5 @@
+           <div class="bg-ncs-topbar px-4 py-3 border-t border-ncs-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+             <div class="flex items-center space-x-2">
+-              <span class="text-[#2094f3] font-medium">Rows per page</span>
++              <span class="text-[#2094f3] font-medium">Số dòng mỗi trang</span>
+               <select class="bg-[#151922] text-white border border-[#2c3446] rounded px-2.5 py-1 text-xs focus:outline-none cursor-pointer">
+                 <option value="10" selected>10</option>
+@@ -1188,5 +1279,5 @@
+       <!-- Modal Header -->
+       <div class="px-5 py-4 border-b border-[#2c3446] flex items-center justify-between">
+-        <h3 class="text-base font-semibold text-cyan-400">Create an indicator</h3>
++        <h3 class="text-base font-semibold text-cyan-400">Thêm mới IOC</h3>
+         <button onclick="closeModal('modal-create-ioc')" class="text-cyan-400 hover:text-white transition">
+           <i data-lucide="x" class="w-5 h-5"></i>
+@@ -1197,10 +1288,10 @@
+       <form id="create-ioc-form" onsubmit="handleCreateIOC(event)" class="p-5 space-y-3.5 text-xs">
+         <div>
+-          <label class="block text-ncs-muted text-[11px] mb-1">Name <span class="text-red-400">*</span></label>
+-          <input type="text" id="ci-name" required placeholder="www.arise.weefduvg.cc hoặc tên mã độc..." class="w-full bg-[#151922] border border-[#2c3446] rounded px-3 py-2 text-white focus:border-cyan-400 focus:outline-none placeholder-slate-600" />
++          <label class="block text-ncs-muted text-[11px] mb-1">Tên mã độc / mối đe dọa <span class="text-red-400">*</span></label>
++          <input type="text" id="ci-name" required placeholder="Ví dụ: Trojan.Win32.AgentTesla" class="w-full bg-[#151922] border border-[#2c3446] rounded px-3 py-2 text-white focus:border-cyan-400 focus:outline-none placeholder-slate-600" />
+         </div>
+ 
+         <div>
+-          <label class="block text-ncs-muted text-[11px] mb-1">Pattern type <span class="text-red-400">*</span></label>
++          <label class="block text-ncs-muted text-[11px] mb-1">Loại IOC <span class="text-red-400">*</span></label>
+           <select id="ci-type" class="w-full bg-[#151922] border border-[#2c3446] rounded px-3 py-2 text-white focus:border-cyan-400 focus:outline-none cursor-pointer">
+             <option value="SHA256">SHA256 (File Hash)</option>
+@@ -1215,6 +1306,6 @@
+ 
+         <div>
+-          <label class="block text-ncs-muted text-[11px] mb-1">Pattern / Value <span class="text-red-400">*</span></label>
+-          <input type="text" id="ci-value" required placeholder="[domain-name:value = 'www.arise.weefduvg.cc']" class="w-full bg-[#151922] border border-[#2c3446] rounded px-3 py-2 text-white focus:border-cyan-400 focus:outline-none placeholder-slate-600 font-mono text-[11px]" />
++          <label class="block text-ncs-muted text-[11px] mb-1">Giá trị IOC <span class="text-red-400">*</span></label>
++          <input type="text" id="ci-value" required placeholder="Hash, địa chỉ IP, domain hoặc CVE..." class="w-full bg-[#151922] border border-[#2c3446] rounded px-3 py-2 text-white focus:border-cyan-400 focus:outline-none placeholder-slate-600 font-mono text-[11px]" />
+         </div>
+ 
+@@ -1229,41 +1320,24 @@
+ 
+         <div>
+-          <label class="block text-ncs-muted text-[11px] mb-1">Source</label>
+-          <input type="text" id="ci-source" value="EDR" class="w-full bg-[#151922] border border-[#2c3446] rounded px-3 py-2 text-white focus:border-cyan-400 focus:outline-none" />
+-        </div>
+-
+-        <div class="grid grid-cols-2 gap-2">
+-          <div>
+-            <label class="block text-ncs-muted text-[11px] mb-1">Label</label>
+-            <div class="flex flex-wrap gap-1 p-1 bg-[#151922] border border-[#2c3446] rounded min-h-[34px]">
+-              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-900/40 text-cyan-300 border border-cyan-700 text-[10px]">
+-                Malware <i data-lucide="x" class="w-2.5 h-2.5 cursor-pointer"></i>
+-              </span>
+-            </div>
+-          </div>
+-          <div>
+-            <label class="block text-ncs-muted text-[11px] mb-1">Marking</label>
+-            <div class="flex flex-wrap gap-1 p-1 bg-[#151922] border border-[#2c3446] rounded min-h-[34px]">
+-              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-950 text-red-300 border border-red-800 text-[10px]">
+-                TLP:RED <i data-lucide="x" class="w-2.5 h-2.5 cursor-pointer"></i>
+-              </span>
+-              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 text-[10px]">
+-                PAP:GREEN <i data-lucide="x" class="w-2.5 h-2.5 cursor-pointer"></i>
+-              </span>
+-            </div>
+-          </div>
++          <label class="block text-ncs-muted text-[11px] mb-1">Nguồn</label>
++          <input type="text" id="ci-source" value="MANUAL" readonly class="w-full bg-[#151922]/50 border border-[#2c3446] rounded px-3 py-2 text-slate-400 cursor-not-allowed" />
+         </div>
+ 
+         <div>
+-          <label class="block text-ncs-muted text-[11px] mb-1">Description</label>
+-          <textarea id="ci-desc" rows="3" placeholder="Mô tả thông tin ngữ cảnh mối đe dọa..." class="w-full bg-[#151922] border border-[#2c3446] rounded px-3 py-2 text-white focus:border-cyan-400 focus:outline-none placeholder-slate-600"></textarea>
++          <label class="block text-ncs-muted text-[11px] mb-1">Nhãn</label>
++          <input type="text" id="ci-tags" placeholder="Phân cách bằng dấu phẩy, ví dụ: Malware, C2" class="w-full bg-[#151922] border border-[#2c3446] rounded px-3 py-2 text-white focus:border-cyan-400 focus:outline-none placeholder-slate-600" />
++        </div>
++
++        <div>
++          <label class="block text-ncs-muted text-[11px] mb-1">Mô tả</label>
++          <textarea id="ci-desc" rows="3" placeholder="Ngữ cảnh phát hiện, mã độc, chiến dịch..." class="w-full bg-[#151922] border border-[#2c3446] rounded px-3 py-2 text-white focus:border-cyan-400 focus:outline-none placeholder-slate-600"></textarea>
+         </div>
+ 
+         <div class="pt-3 border-t border-[#2c3446] flex items-center justify-between">
+           <button type="button" onclick="closeModal('modal-create-ioc')" class="px-6 py-2 rounded-full border border-cyan-500/50 hover:bg-cyan-500/10 text-cyan-400 font-semibold transition uppercase tracking-wider text-[11px]">
+-            Cancel
++            Hủy
+           </button>
+           <button type="submit" class="px-6 py-2 rounded-full bg-[#2094f3] hover:bg-blue-500 text-white font-semibold shadow-lg shadow-blue-500/20 transition uppercase tracking-wider text-[11px]">
+-            Push to TIP & Lưu
++            Lưu
+           </button>
+         </div>
+@@ -1310,5 +1384,5 @@
+ 
+         <div>
+-          <label class="block text-ncs-muted text-[11px] mb-1">Giá trị IOC (Pattern / Value) <span class="text-red-400">*</span></label>
++          <label class="block text-ncs-muted text-[11px] mb-1">Giá trị IOC <span class="text-red-400">*</span></label>
+           <input type="text" id="edit-ioc-value" required class="w-full bg-[#151922] border border-[#2c3446] rounded px-3 py-2 text-white focus:border-cyan-400 focus:outline-none font-mono text-[11px]" />
+         </div>
+@@ -1321,4 +1395,9 @@
+           </div>
+           <input type="range" id="edit-ioc-confidence" min="0" max="100" value="90" oninput="document.getElementById('edit-conf-val').innerText = this.value" class="w-full accent-cyan-400 cursor-pointer" />
++        </div>
++
++        <div>
++          <label class="block text-ncs-muted text-[11px] mb-1">Nhãn</label>
++          <input type="text" id="edit-ioc-tags" placeholder="Phân cách bằng dấu phẩy" class="w-full bg-[#151922] border border-[#2c3446] rounded px-3 py-2 text-white focus:border-cyan-400 focus:outline-none placeholder-slate-600" />
+         </div>
+ 
+@@ -1366,5 +1445,5 @@
+         <p class="text-[11px] text-slate-400">
+           <i data-lucide="info" class="w-3.5 h-3.5 inline mr-1 text-amber-400"></i>
+-          Thao tác này sẽ được ghi nhận vào <strong>Audit Log</strong> của hệ thống và không thể hoàn tác.
++          Thao tác này không thể hoàn tác.
+         </p>
+ 
+@@ -1383,12 +1462,33 @@
+ 
+   <!-- ========================================================================= -->
++  <!-- MODAL: CHI TIẾT CẢNH BÁO -->
++  <!-- ========================================================================= -->
++  <div id="modal-alert-detail" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
++    <div class="bg-ncs-card border border-ncs-border rounded-lg w-full max-w-lg shadow-2xl overflow-hidden animate-fadeIn">
++      <div class="p-4 bg-ncs-topbar border-b border-ncs-border flex items-center justify-between">
++        <h3 class="font-semibold text-white text-sm flex items-center gap-2">
++          <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
++          Chi tiết cảnh báo
++        </h3>
++        <button onclick="closeModal('modal-alert-detail')" class="text-ncs-muted hover:text-white">
++          <i data-lucide="x" class="w-4 h-4"></i>
++        </button>
++      </div>
++      <div id="alert-detail-body" class="p-4 space-y-2 text-xs"></div>
++      <div class="p-3 bg-ncs-topbar border-t border-ncs-border flex justify-end">
++        <button type="button" onclick="closeModal('modal-alert-detail')" class="px-4 py-2 rounded bg-ncs-input hover:bg-ncs-cardHover border border-ncs-border text-white text-xs">Đóng</button>
++      </div>
++    </div>
++  </div>
++
++  <!-- ========================================================================= -->
+   <!-- 7. MODAL: CHIA SẺ DỮ LIỆU -->
+   <!-- ========================================================================= -->
+   <div id="modal-share-a05" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
+-    <div class="bg-ncs-card border border-ncs-border rounded-lg w-full max-w-lg shadow-2xl overflow-hidden animate-fadeIn">
++    <div class="bg-ncs-card border border-ncs-border rounded-lg w-full max-w-xl shadow-2xl overflow-hidden animate-fadeIn max-h-[90vh] flex flex-col">
+       <div class="p-4 bg-ncs-topbar border-b border-ncs-border flex items-center justify-between">
+         <h3 class="font-semibold text-white text-sm flex items-center gap-2">
+           <i data-lucide="send" class="w-4 h-4 text-cyan-400"></i>
+-          Chia sẻ Dữ liệu
++          Gửi tới Trung tâm An ninh mạng
+         </h3>
+         <button onclick="closeModal('modal-share-a05')" class="text-ncs-muted hover:text-white">
+@@ -1397,17 +1497,13 @@
+       </div>
+ 
+-      <div class="p-4 space-y-3.5 text-xs">
++      <div class="p-4 space-y-3.5 text-xs overflow-y-auto">
+         <div class="p-3 rounded bg-ncs-input border border-ncs-border space-y-1.5">
+           <div class="flex justify-between text-ncs-muted">
+-            <span>Cổng tiếp nhận:</span>
+-            <span class="font-mono text-cyan-300">https://monitor.soc.gov.vn</span>
++            <span>Đơn vị gửi:</span>
++            <span id="modal-share-from" class="text-white font-semibold">Sở TT&amp;TT ABC (000.01.12.H28)</span>
+           </div>
+           <div class="flex justify-between text-ncs-muted">
+-            <span>Đơn vị gửi báo cáo:</span>
+-            <span class="text-white font-semibold">Sở TT&TT ABC (000.01.12.H28)</span>
+-          </div>
+-          <div class="flex justify-between text-ncs-muted">
+-            <span>Chứng thư số ký gói tin:</span>
+-            <span class="text-emerald-400 font-mono">cert_auth_sttt_abc_2026.pfx</span>
++            <span>Chứng thư số:</span>
++            <span id="modal-share-cert" class="text-emerald-400">STTT ABC</span>
+           </div>
+         </div>
+@@ -1415,18 +1511,19 @@
+         <div class="p-3 rounded bg-blue-950/40 border border-cyan-800/40 space-y-2">
+           <div class="font-semibold text-cyan-300 flex items-center justify-between">
+-            <span>Tổng số IOC được chọn:</span>
+-            <span id="modal-share-total-count" class="text-sm font-bold text-white">0 bản ghi</span>
+-          </div>
+-          <div id="modal-batch-split-info" class="text-[11px] text-ncs-muted leading-relaxed">
+-          </div>
+-        </div>
+-
+-        <p class="text-[11px] text-ncs-dim">
+-          Hệ thống sẽ đóng gói danh sách IOC theo định dạng chuẩn <strong>SOAP edXML</strong>, thực hiện ký số điện tử XML-DSig và truyền tải qua giao thức HTTPS có ràng buộc IP tĩnh.
+-        </p>
++            <span>Bản ghi đang chọn:</span>
++            <span id="modal-share-total-count" class="text-sm font-bold text-white">0</span>
++          </div>
++          <div id="modal-share-mapping" class="text-[11px] text-ncs-muted leading-relaxed space-y-0.5"></div>
++          <div id="modal-batch-split-info" class="text-[11px] text-ncs-muted leading-relaxed"></div>
++        </div>
++
++        <div id="modal-share-skipped-wrap" class="hidden p-3 rounded bg-amber-950/30 border border-amber-800/50 space-y-1.5 max-h-40 overflow-y-auto">
++          <div class="font-semibold text-amber-300">Bản ghi sẽ bỏ qua</div>
++          <div id="modal-share-skipped" class="text-[11px] text-amber-100/90 leading-relaxed space-y-0.5"></div>
++        </div>
+ 
+         <div id="share-progress-container" class="hidden space-y-1.5 pt-2">
+           <div class="flex justify-between text-[11px]">
+-            <span id="share-progress-status" class="text-cyan-300">Đang đóng gói XML & Ký số...</span>
++            <span id="share-progress-status" class="text-cyan-300">Đang gửi...</span>
+             <span id="share-progress-percent" class="font-mono text-white">45%</span>
+           </div>
+@@ -1438,9 +1535,9 @@
+         <div class="pt-3 border-t border-ncs-border flex justify-end space-x-2">
+           <button type="button" onclick="closeModal('modal-share-a05')" class="px-4 py-2 rounded bg-ncs-input hover:bg-ncs-cardHover border border-ncs-border text-white text-xs">
+-            Hủy bỏ
++            Hủy
+           </button>
+           <button id="btn-confirm-share" type="button" onclick="executeSharingProcess()" class="px-4 py-2 rounded bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white font-medium shadow text-xs flex items-center gap-1.5">
+-            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+-            Xác nhận Ký số & Gửi ngay
++            <i data-lucide="send" class="w-3.5 h-3.5"></i>
++            Gửi
+           </button>
+         </div>
+@@ -1457,5 +1554,5 @@
+         <h3 class="font-semibold text-white text-sm flex items-center gap-2">
+           <i data-lucide="upload" class="w-4 h-4 text-emerald-400"></i>
+-          Import Danh sách IOC vào Hệ thống
++          Import danh sách IOC
+         </h3>
+         <button onclick="closeModal('modal-import')" class="text-ncs-muted hover:text-white">
+@@ -1468,15 +1565,15 @@
+           <i data-lucide="file-up" class="w-8 h-8 text-ncs-muted mx-auto mb-2"></i>
+           <div class="font-medium text-white">Kéo thả file vào đây hoặc <span class="text-cyan-400 underline">chọn từ máy tính</span></div>
+-          <div class="text-[11px] text-ncs-dim mt-1">Hỗ trợ định dạng: .CSV, .XLSX (Excel), .JSON, .STIX 2.1 (Tối đa 25MB)</div>
++          <div class="text-[11px] text-ncs-dim mt-1">Hỗ trợ định dạng: .CSV, .XLSX (Excel), .JSON, .STIX 2.1 (Tối đa 25MB). Bản demo chưa đọc file thật.</div>
+         </div>
+ 
+         <div>
+-          <label class="block text-ncs-dim text-[11px] mb-1.5 font-semibold">Chính sách xử lý khi gặp bản ghi trùng lặp (Deduplication Policy):</label>
++          <label class="block text-ncs-dim text-[11px] mb-1.5 font-semibold">Khi gặp bản ghi trùng:</label>
+           <div class="space-y-1.5">
+             <label class="flex items-center space-x-2 p-2 bg-ncs-input rounded border border-ncs-border cursor-pointer">
+               <input type="radio" name="dup-policy" value="update_last_seen" checked class="text-cyan-400" />
+               <div>
+-                <strong class="text-white">Cập nhật Last Seen & Bổ sung Tags (Khuyến nghị)</strong>
+-                <span class="block text-[10px] text-ncs-dim">Giữ nguyên First Seen, tăng số lần bắt gặp (Hit count) và thêm tags mới</span>
++                <strong class="text-white">Cập nhật lần thấy gần nhất và bổ sung nhãn (khuyến nghị)</strong>
++                <span class="block text-[10px] text-ncs-dim">Giữ lần thấy đầu, tăng số lần xuất hiện, thêm nhãn mới</span>
+               </div>
+             </label>
+@@ -1484,6 +1581,13 @@
+               <input type="radio" name="dup-policy" value="skip" class="text-cyan-400" />
+               <div>
+-                <strong class="text-white">Bỏ qua bản ghi trùng (Skip)</strong>
+-                <span class="block text-[10px] text-ncs-dim">Chỉ thêm vào các IOC mới chưa từng có trong hệ thống</span>
++                <strong class="text-white">Bỏ qua bản ghi trùng</strong>
++                <span class="block text-[10px] text-ncs-dim">Chỉ thêm IOC chưa có trong hệ thống</span>
++              </div>
++            </label>
++            <label class="flex items-center space-x-2 p-2 bg-ncs-input rounded border border-ncs-border cursor-pointer">
++              <input type="radio" name="dup-policy" value="overwrite" class="text-cyan-400" />
++              <div>
++                <strong class="text-white">Ghi đè thông tin mới</strong>
++                <span class="block text-[10px] text-ncs-dim">Ghi đè tên mã độc, nhãn, mô tả. Giữ lần thấy đầu.</span>
+               </div>
+             </label>
+@@ -1504,71 +1608,4 @@
+           <button type="button" onclick="simulateImport()" class="px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-medium shadow text-xs flex items-center gap-1">
+             <i data-lucide="upload" class="w-3.5 h-3.5"></i> Tiến hành Import
+-          </button>
+-        </div>
+-      </div>
+-    </div>
+-  </div>
+-
+-  <!-- ========================================================================= -->
+-  <!-- MODAL: SIMULATE ALERT INGESTION (TRÍCH XUẤT DATA.IOCS & DEDUPLICATION) -->
+-  <!-- ========================================================================= -->
+-  <div id="modal-simulate-alert" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+-    <div class="bg-[#1e2330] border border-[#2c3446] rounded-lg w-full max-w-2xl shadow-2xl overflow-hidden animate-fadeIn my-8">
+-      
+-      <div class="px-5 py-4 border-b border-[#2c3446] flex items-center justify-between bg-purple-950/40">
+-        <h3 class="text-base font-semibold text-purple-300 flex items-center gap-2">
+-          <i data-lucide="zap" class="w-5 h-5 text-purple-400"></i>
+-          Mô phỏng Trích xuất IOC từ Alert (alert.data.iocs)
+-        </h3>
+-        <button onclick="closeModal('modal-simulate-alert')" class="text-ncs-muted hover:text-white transition">
+-          <i data-lucide="x" class="w-5 h-5"></i>
+-        </button>
+-      </div>
+-
+-      <div class="p-5 space-y-4 text-xs">
+-        
+-        <!-- Workflow explanation -->
+-        <div class="p-3 rounded bg-[#151922] border border-purple-900/40 space-y-1.5 font-mono text-[11px]">
+-          <div class="text-cyan-300 font-bold flex items-center gap-1.5">
+-            <i data-lucide="workflow" class="w-3.5 h-3.5 text-cyan-400"></i>
+-            Luồng xử lý tự động khi Alert về EDR:
+-          </div>
+-          <div class="text-slate-300 text-[10px] space-y-0.5 pl-2 border-l border-cyan-800">
+-            <div>Alert được tạo ➔ Extract <span class="text-purple-300">data.iocs</span> ➔ Đối chiếu IOC Repository</div>
+-            <div>├─ <strong>Chưa tồn tại:</strong> CREATE IOC (Điểm tin cậy = alert.confidence, created_by = SYSTEM)</div>
+-            <div>└─ <strong>Đã tồn tại:</strong> <span class="text-amber-400 font-bold">KHÔNG UPDATE ĐIỂM TIN CẬY</span>, chỉ update Last seen & danh sách Alert liên quan</div>
+-          </div>
+-        </div>
+-
+-        <!-- Preset test cases -->
+-        <div>
+-          <label class="block text-ncs-muted text-[11px] mb-1.5 font-semibold">Chọn Kịch bản thử nghiệm nhanh:</label>
+-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+-            <button type="button" onclick="loadAlertPreset(1)" class="p-2 rounded bg-[#151922] hover:bg-slate-800 border border-[#2c3446] hover:border-purple-500 text-left transition">
+-              <div class="font-semibold text-purple-300 text-xs">⚡ Kịch bản 1: Alert chứa 2 IOC mới</div>
+-              <div class="text-[10px] text-slate-400 mt-0.5">Sẽ tạo mới cả 2 IOCs với Điểm tin cậy 98 và 85</div>
+-            </button>
+-            <button type="button" onclick="loadAlertPreset(2)" class="p-2 rounded bg-[#151922] hover:bg-slate-800 border border-[#2c3446] hover:border-purple-500 text-left transition">
+-              <div class="font-semibold text-cyan-300 text-xs">🔄 Kịch bản 2: Alert chứa 1 IOC đã có + 1 IOC mới</div>
+-              <div class="text-[10px] text-slate-400 mt-0.5">IOC cũ giữ nguyên Điểm tin cậy & update Last seen, IOC mới được tạo</div>
+-            </button>
+-          </div>
+-        </div>
+-
+-        <!-- Alert JSON Input Area -->
+-        <div>
+-          <div class="flex justify-between items-center mb-1">
+-            <label class="text-ncs-muted text-[11px] font-semibold">Gói tin JSON của Alert (chứa parameter data.iocs):</label>
+-            <span class="text-[10px] text-cyan-400 font-mono">Format: alert.data.iocs[]</span>
+-          </div>
+-          <textarea id="simulate-alert-json" rows="11" class="w-full bg-[#151922] border border-[#2c3446] rounded p-3 text-cyan-300 font-mono text-[11px] leading-relaxed focus:border-purple-400 focus:outline-none"></textarea>
+-        </div>
+-
+-        <div class="pt-3 border-t border-[#2c3446] flex items-center justify-between">
+-          <button type="button" onclick="closeModal('modal-simulate-alert')" class="px-5 py-2 rounded-full border border-[#2c3446] text-ncs-muted hover:text-white transition text-xs">
+-            Đóng
+-          </button>
+-          <button type="button" onclick="executeSimulateAlertIngestion()" class="px-6 py-2 rounded-full bg-purple-600 hover:bg-purple-500 text-white font-semibold shadow-lg shadow-purple-900/30 transition text-xs flex items-center gap-1.5">
+-            <i data-lucide="play" class="w-3.5 h-3.5"></i> Kích hoạt Nhận Alert & Trích xuất IOC
+           </button>
+         </div>
+@@ -1585,5 +1622,5 @@
+         <h3 class="font-semibold text-white text-sm flex items-center gap-2">
+           <i data-lucide="download" class="w-4 h-4 text-amber-400"></i>
+-          Export Dữ liệu IOC
++          Xuất danh sách IOC
+         </h3>
+         <button onclick="closeModal('modal-export')" class="text-ncs-muted hover:text-white">
+@@ -1613,5 +1650,5 @@
+               <input type="radio" name="export-format" value="csv" checked class="text-cyan-400" />
+               <div>
+-                <strong class="text-white block">CSV File</strong>
++                <strong class="text-white block">CSV</strong>
+                 <span class="text-[10px] text-ncs-dim">Phổ biến, nhẹ</span>
+               </div>
+@@ -1627,6 +1664,6 @@
+               <input type="radio" name="export-format" value="json" class="text-cyan-400" />
+               <div>
+-                <strong class="text-white block">JSON Raw</strong>
+-                <span class="text-[10px] text-ncs-dim">API format</span>
++                <strong class="text-white block">JSON</strong>
++                <span class="text-[10px] text-ncs-dim">Phục vụ tích hợp</span>
+               </div>
+             </label>
+@@ -1661,5 +1698,5 @@
+         <h3 class="font-semibold text-white text-sm flex items-center gap-2">
+           <i data-lucide="code" class="w-4 h-4 text-cyan-400"></i>
+-          Gói tin SOAP edXML Đã ký số
++          Nội dung đã gửi
+         </h3>
+         <button onclick="closeModal('modal-view-xml')" class="text-ncs-muted hover:text-white">
+@@ -1669,70 +1706,14 @@
+ 
+       <div class="p-4 flex-1 overflow-y-auto bg-ncs-input font-mono text-[11px] text-cyan-300 leading-relaxed select-all">
+-        <pre><code id="xml-code-content">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+-&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:edXML="http://edxml.gov.vn/schema"&gt;
+-    &lt;soapenv:Header&gt;
+-        &lt;edXML:MessageHeader&gt;
+-            &lt;edXML:From&gt;
+-                &lt;edXML:OrganId&gt;000.01.12.H28&lt;/edXML:OrganId&gt;
+-                &lt;edXML:OrganizationInCharge&gt;UBND Tỉnh ABC&lt;/edXML:OrganizationInCharge&gt;
+-                &lt;edXML:OrganName&gt;Sở Thông tin và Truyền thông ABC&lt;/edXML:OrganName&gt;
+-                &lt;edXML:OrganAdd&gt;Số 10 Đường Hùng Vương, TP ABC&lt;/edXML:OrganAdd&gt;
+-                &lt;edXML:Email&gt;soc@sttt.abc.gov.vn&lt;/edXML:Email&gt;
+-                &lt;edXML:Telephone&gt;0243.888.9999&lt;/edXML:Telephone&gt;
+-            &lt;/edXML:From&gt;
+-            &lt;edXML:Subject&gt;Báo cáo chia sẻ dữ liệu mã độc và kết nối độc hại EDR&lt;/edXML:Subject&gt;
+-        &lt;/edXML:MessageHeader&gt;
+-        &lt;Signature xmlns="http://www.w3.org/2000/09/xmldsig#"&gt;
+-            &lt;SignedInfo&gt;
+-                &lt;CanonicalizationMethod Algorithm="http://www.w3.org/TR/xml-exc-c14n/"/&gt;
+-                &lt;SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/&gt;
+-                &lt;Reference URI=""&gt;
+-                    &lt;DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/&gt;
+-                    &lt;DigestValue&gt;X5kL9qZ1P0mRtVwXyZ8aB...&lt;/DigestValue&gt;
+-                &lt;/Reference&gt;
+-            &lt;/SignedInfo&gt;
+-            &lt;SignatureValue&gt;MEYCIQDxK3...DigitalSignatureBase64...==&lt;/SignatureValue&gt;
+-            &lt;KeyInfo&gt;
+-                &lt;X509Data&gt;
+-                    &lt;X509SubjectName&gt;CN=STTT ABC, O=UBND Tinh ABC, C=VN&lt;/X509SubjectName&gt;
+-                    &lt;X509Certificate&gt;MIIE8TCCAtmgAwIBAgIU...Certificate...==&lt;/X509Certificate&gt;
+-                &lt;/X509Data&gt;
+-            &lt;/KeyInfo&gt;
+-        &lt;/Signature&gt;
+-    &lt;/soapenv:Header&gt;
+-    &lt;soapenv:Body&gt;
+-        &lt;AVReport name="NCS Enterprise EDR"&gt;
+-            &lt;Datetime&gt;1724662800&lt;/Datetime&gt;
+-            &lt;Malware&gt;
+-                &lt;Machine ip="192.168.10.45" ippublic="113.160.25.10" name="WS-KETOAN-02"&gt;
+-                    &lt;MalwareInfo&gt;
+-                        &lt;MalwareName&gt;Trojan.Win32.AgentTesla&lt;/MalwareName&gt;
+-                        &lt;MalwareType&gt;Trojan&lt;/MalwareType&gt;
+-                        &lt;MalwareBehavior&gt;Keylogger&lt;/MalwareBehavior&gt;
+-                        &lt;TypeOfDevice&gt;SSD&lt;/TypeOfDevice&gt;
+-                        &lt;NumberFile&gt;2&lt;/NumberFile&gt;
+-                    &lt;/MalwareInfo&gt;
+-                &lt;/Machine&gt;
+-            &lt;/Malware&gt;
+-            &lt;Connection&gt;
+-                &lt;Machine ip="192.168.10.45" name="WS-KETOAN-02"&gt;
+-                    &lt;ConnectionInfo&gt;
+-                        &lt;Program&gt;svchost_update.exe&lt;/Program&gt;
+-                        &lt;TargetIP&gt;198.51.100.23&lt;/TargetIP&gt;
+-                    &lt;/ConnectionInfo&gt;
+-                &lt;/Machine&gt;
+-            &lt;/Connection&gt;
+-        &lt;/AVReport&gt;
+-    &lt;/soapenv:Body&gt;
+-&lt;/soapenv:Envelope&gt;</code></pre>
++        <pre><code id="xml-code-content">Đang tải...</code></pre>
+       </div>
+ 
+       <div class="p-3 bg-ncs-topbar border-t border-ncs-border flex justify-between items-center text-xs">
+         <span class="text-emerald-400 flex items-center gap-1">
+-          <i data-lucide="check" class="w-3.5 h-3.5"></i> Chữ ký số X.509 Hợp lệ
++          <i data-lucide="check" class="w-3.5 h-3.5"></i> Đã gửi thành công
+         </span>
+         <div class="flex space-x-2">
+           <button onclick="copyToClipboard(document.getElementById('xml-code-content').innerText)" class="px-3 py-1.5 rounded bg-ncs-card hover:bg-ncs-cardHover border border-ncs-border text-white text-xs flex items-center gap-1">
+-            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Sao chép XML
++            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Sao chép
+           </button>
+           <button onclick="closeModal('modal-view-xml')" class="px-3.5 py-1.5 rounded bg-cyan-600 hover:bg-cyan-500 text-white text-xs">
+@@ -2029,98 +2010,4 @@
+     ];
+ 
+-    // Mock Audit Logs Store
+-    let mockAuditLogs = [
+-      {
+-        id: "AUD-20260826-012",
+-        time: "2026-08-26 15:10:22",
+-        user: "admin_soc",
+-        action: "UPDATE",
+-        target: "[SHA256] 8f4b23c9a1c87...",
+-        detail: "Cập nhật Confidence từ 90% lên 95%, bổ sung tag #APT-Campaign",
+-        ip: "192.168.10.12"
+-      },
+-      {
+-        id: "AUD-20260826-011",
+-        time: "2026-08-26 14:50:05",
+-        user: "System (EDR Alert)",
+-        action: "CREATE",
+-        target: "[DOMAIN] cdn-telemetry-fakeupdate.net",
+-        detail: "Tự động trích xuất và tạo mới IOC từ Cảnh báo ALT-20260826-905",
+-        ip: "127.0.0.1"
+-      },
+-      {
+-        id: "AUD-20260826-010",
+-        time: "2026-08-26 11:20:15",
+-        user: "System (EDR Alert)",
+-        action: "CREATE",
+-        target: "[URL] https://secure-login-portal-auth.xyz...",
+-        detail: "Tự động trích xuất và tạo mới IOC từ Cảnh báo ALT-20260826-670",
+-        ip: "127.0.0.1"
+-      },
+-      {
+-        id: "AUD-20260826-009",
+-        time: "2026-08-26 09:30:00",
+-        user: "soc_analyst_01",
+-        action: "DELETE",
+-        target: "[IPV4] 104.244.42.1 (False Positive)",
+-        detail: "Xóa bản ghi IOC do xác định là False Positive của dịch vụ DNS",
+-        ip: "192.168.10.45"
+-      },
+-      {
+-        id: "AUD-20260826-008",
+-        time: "2026-08-26 08:00:18",
+-        user: "System Scheduler",
+-        action: "SHARE",
+-        target: "Batch BATCH-20260826-001_02 (420 IOCs)",
+-        detail: "Tự động đóng gói SOAP edXML và chia sẻ thành công 420 IOCs",
+-        ip: "127.0.0.1"
+-      },
+-      {
+-        id: "AUD-20260826-007",
+-        time: "2026-08-26 08:00:15",
+-        user: "System Scheduler",
+-        action: "SHARE",
+-        target: "Batch BATCH-20260826-001_01 (500 IOCs)",
+-        detail: "Tự động đóng gói SOAP edXML và chia sẻ thành công 500 IOCs",
+-        ip: "127.0.0.1"
+-      },
+-      {
+-        id: "AUD-20260825-006",
+-        time: "2026-08-25 16:30:22",
+-        user: "admin_soc",
+-        action: "SHARE",
+-        target: "Batch BATCH-20260825-004_01 (12 IOCs)",
+-        detail: "Thực hiện chia sẻ thủ công 12 IOCs (10 thành công, 2 lỗi)",
+-        ip: "192.168.10.12"
+-      },
+-      {
+-        id: "AUD-20260825-005",
+-        time: "2026-08-25 15:45:00",
+-        user: "admin_soc",
+-        action: "EXPORT",
+-        target: "1,420 IOCs",
+-        detail: "Xuất dữ liệu toàn bộ danh sách IOC ra file ioc_export_20260825.xlsx",
+-        ip: "192.168.10.12"
+-      },
+-      {
+-        id: "AUD-20260825-004",
+-        time: "2026-08-25 09:00:00",
+-        user: "soc_analyst_01",
+-        action: "IMPORT",
+-        target: "File cert_advisory_august.csv",
+-        detail: "Import thành công 118 IOCs mới và cập nhật 2 bản ghi trùng",
+-        ip: "192.168.10.45"
+-      },
+-      {
+-        id: "AUD-20260823-003",
+-        time: "2026-08-23 15:00:00",
+-        user: "admin_soc",
+-        action: "CREATE",
+-        target: "[IPV4] 203.0.113.195",
+-        detail: "Nhập thủ công IOC IP nghi ngờ từ sự kiện Firewall",
+-        ip: "192.168.10.12"
+-      }
+-    ];
+-
+     // Mock Sharing Batches History
+     const mockBatches = [
+@@ -2170,6 +2057,8 @@
+     let currentSelectedIOC = null;
+     let filteredIOCs = [...mockIOCs];
+-    let filteredAuditLogs = [...mockAuditLogs];
++    let filteredBatches = [...mockBatches];
+     let pendingDeleteTarget = null; // Single ID or "BULK"
++    let currentPage = 1;
++    let rowsPerPage = 10;
+ 
+     // ---------------------------------------------------------------------------
+@@ -2183,5 +2072,5 @@
+         tbody.innerHTML = `
+           <tr>
+-            <td colspan="11" class="text-center py-12 text-ncs-muted">
++            <td colspan="12" class="text-center py-12 text-ncs-muted">
+               <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-ncs-dim"></i>
+               Không tìm thấy bản ghi IOC nào phù hợp với bộ lọc.
+@@ -2189,9 +2078,22 @@
+           </tr>
+         `;
++        const dynamicCountEl = document.getElementById("dynamic-filter-count");
++        const dynamicTotalEl = document.getElementById("dynamic-total-count");
++        if (dynamicCountEl) dynamicCountEl.innerText = "0";
++        if (dynamicTotalEl) dynamicTotalEl.innerText = mockIOCs.length.toLocaleString();
++        document.getElementById("total-items-count").innerText = "0";
++        document.getElementById("page-item-range").innerText = "0 - 0";
++        renderIocPagination(1);
+         lucide.createIcons();
++        updateSelectionUI();
+         return;
+       }
+ 
+-      filteredIOCs.forEach((ioc) => {
++      const totalPages = Math.max(1, Math.ceil(filteredIOCs.length / rowsPerPage));
++      if (currentPage > totalPages) currentPage = totalPages;
++      const startIdx = (currentPage - 1) * rowsPerPage;
++      const pageItems = filteredIOCs.slice(startIdx, startIdx + rowsPerPage);
++
++      pageItems.forEach((ioc) => {
+         const isChecked = selectedIOCIds.has(ioc.id);
+         const tr = document.createElement("tr");
+@@ -2235,36 +2137,45 @@
+         if (ioc.source === "MANUAL") srcColor = "text-amber-400";
+ 
++        const tags = ioc.tags || [];
++        const shownTags = tags.slice(0, 2);
++        const extraTagCount = tags.length - shownTags.length;
++        const tagsHtml = shownTags.length
++          ? shownTags.map(t => `<button type="button" onclick="event.stopPropagation(); filterByTag('${t.replace(/'/g, "\\'")}')" class="px-1.5 py-0.5 rounded bg-slate-800 text-cyan-300 border border-slate-700 text-[10px] truncate max-w-[88px] hover:border-cyan-600" title="Lọc theo nhãn ${t}">#${t}</button>`).join("")
++            + (extraTagCount > 0 ? `<span class="text-[10px] text-ncs-dim">+${extraTagCount}</span>` : "")
++          : `<span class="text-ncs-dim text-[11px]">--</span>`;
++
+         tr.innerHTML = `
+-          <td class="p-3 text-center whitespace-nowrap" onclick="event.stopPropagation()">
++          <td class="p-2 text-center" onclick="event.stopPropagation()">
+             <input type="checkbox" ${isChecked ? "checked" : ""} onchange="toggleSelectRow('${ioc.id}', this)" />
+           </td>
+-          <td class="p-3 font-mono text-ncs-dim whitespace-nowrap">${ioc.id}</td>
+-          <td class="p-3 font-semibold text-white whitespace-nowrap">
+-            <span class="px-2 py-0.5 rounded bg-ncs-input border border-ncs-border text-[10px] text-cyan-300 uppercase">${ioc.type}</span>
++          <td class="p-2 font-mono text-ncs-dim truncate">${ioc.id}</td>
++          <td class="p-2">
++            <span class="px-1.5 py-0.5 rounded bg-ncs-input border border-ncs-border text-[10px] text-cyan-300 uppercase">${ioc.type}</span>
+           </td>
+-          <td class="p-3">
+-            <div class="font-mono text-white text-xs select-all truncate max-w-[360px]" title="${ioc.value}">
+-              ${ioc.value}
+-            </div>
++          <td class="p-2">
++            <div class="font-mono text-white text-xs select-all truncate" title="${ioc.value}">${ioc.value}</div>
+           </td>
+-          <td class="p-3 whitespace-nowrap">
+-            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded border text-[10px] font-bold ${confClass}">
++          <td class="p-2">
++            <div class="flex flex-wrap items-center gap-1">${tagsHtml}</div>
++          </td>
++          <td class="p-2">
++            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded border text-[10px] font-bold ${confClass}">
+               <span class="w-1.5 h-1.5 rounded-full ${ioc.confidence >= 80 ? 'bg-cyan-400' : (ioc.confidence >= 50 ? 'bg-yellow-400' : 'bg-slate-400')}"></span>
+               ${ioc.confidence}
+             </span>
+           </td>
+-          <td class="p-3 text-slate-300 text-xs font-medium whitespace-nowrap">${ioc.source}</td>
+-          <td class="p-3 text-center whitespace-nowrap">
++          <td class="p-2 text-slate-300 text-xs font-medium truncate" title="${ioc.source}">${ioc.source}</td>
++          <td class="p-2 text-center">
+             ${ioc.alerts.length > 0 
+-              ? `<span onclick="event.stopPropagation(); openIOCDrawer('${ioc.id}', 'alerts')" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-900/40 text-cyan-300 border border-cyan-700 hover:bg-cyan-600 hover:text-white transition cursor-pointer font-bold text-[10px]" title="Click xem ${ioc.alerts.length} alerts liên quan">
+-                  ${ioc.alerts.length} alerts
++              ? `<span onclick="event.stopPropagation(); openIOCDrawer('${ioc.id}', 'alerts')" class="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-900/40 text-cyan-300 border border-cyan-700 hover:bg-cyan-600 hover:text-white transition cursor-pointer font-bold text-[10px]" title="Xem ${ioc.alerts.length} cảnh báo liên quan">
++                  ${ioc.alerts.length}
+                 </span>`
+               : `<span class="text-ncs-dim text-[11px]">0</span>`
+             }
+           </td>
+-          <td class="p-3 whitespace-nowrap">${shareBadge}</td>
+-          <td class="p-3 font-mono text-[11px] text-ncs-muted whitespace-nowrap">${ioc.last_seen}</td>
+-          <td class="p-3 font-mono text-[11px] text-ncs-muted whitespace-nowrap">${ioc.last_shared}</td>
+-          <td class="p-3 text-center whitespace-nowrap" onclick="event.stopPropagation()">
++          <td class="p-2">${shareBadge}</td>
++          <td class="p-2 font-mono text-[11px] text-ncs-muted truncate" title="${ioc.last_seen}">${formatShortDt(ioc.last_seen)}</td>
++          <td class="p-2 font-mono text-[11px] text-ncs-muted truncate" title="${ioc.last_shared}">${formatShortDt(ioc.last_shared)}</td>
++          <td class="p-2 text-center" onclick="event.stopPropagation()">
+             <div class="flex items-center justify-center space-x-1.5 whitespace-nowrap">
+               <!-- View Detail -->
+@@ -2295,6 +2206,9 @@
+       if (dynamicTotalEl) dynamicTotalEl.innerText = mockIOCs.length.toLocaleString();
+ 
+-      document.getElementById("total-items-count").innerText = `${mockIOCs.length.toLocaleString()}`;
+-      document.getElementById("page-item-range").innerText = `1 - ${filteredIOCs.length}`;
++      const rangeStart = filteredIOCs.length === 0 ? 0 : startIdx + 1;
++      const rangeEnd = Math.min(startIdx + pageItems.length, filteredIOCs.length);
++      document.getElementById("total-items-count").innerText = `${filteredIOCs.length.toLocaleString()}`;
++      document.getElementById("page-item-range").innerText = `${rangeStart} - ${rangeEnd}`;
++      renderIocPagination(totalPages);
+ 
+       lucide.createIcons();
+@@ -2302,14 +2216,120 @@
+     }
+ 
+-    function renderAuditLogTable() {
+-      const tbody = document.getElementById("audit-log-table-body");
++    function renderIocPagination(totalPages) {
++      const container = document.getElementById("ioc-pagination");
++      if (!container) return;
++      const pages = Math.max(1, totalPages || 1);
++
++      const btnClass = (page, active) => active
++        ? "w-7 h-7 rounded-full bg-[#2094f3] text-white font-bold flex items-center justify-center text-xs shadow-md shadow-blue-500/20"
++        : "w-7 h-7 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center text-xs transition";
++
++      let pageButtons = "";
++      const maxButtons = 5;
++      let start = Math.max(1, currentPage - 2);
++      let end = Math.min(pages, start + maxButtons - 1);
++      start = Math.max(1, end - maxButtons + 1);
++
++      if (start > 1) {
++        pageButtons += `<button onclick="goToPage(1)" class="${btnClass(1, currentPage === 1)}">1</button>`;
++        if (start > 2) pageButtons += `<span class="px-1 text-slate-600">...</span>`;
++      }
++      for (let p = start; p <= end; p++) {
++        if (p === 1 && start > 1) continue;
++        pageButtons += `<button onclick="goToPage(${p})" class="${btnClass(p, p === currentPage)}">${p}</button>`;
++      }
++      if (end < pages) {
++        if (end < pages - 1) pageButtons += `<span class="px-1 text-slate-600">...</span>`;
++        pageButtons += `<button onclick="goToPage(${pages})" class="${btnClass(pages, currentPage === pages)}">${pages}</button>`;
++      }
++
++      container.innerHTML = `
++        <button onclick="prevPage()" class="p-1 rounded text-slate-500 hover:text-white transition disabled:opacity-30" id="btn-prev-page" ${currentPage <= 1 ? "disabled" : ""}>
++          <i data-lucide="chevron-left" class="w-4 h-4"></i>
++        </button>
++        ${pageButtons}
++        <button onclick="nextPage()" class="p-1 rounded text-slate-500 hover:text-white transition disabled:opacity-30" id="btn-next-page" ${currentPage >= pages ? "disabled" : ""}>
++          <i data-lucide="chevron-right" class="w-4 h-4"></i>
++        </button>
++      `;
++    }
++
++    function changeRowsPerPage(val) {
++      rowsPerPage = parseInt(val, 10) || 10;
++      if (rowsPerPage > 1000) rowsPerPage = 1000;
++      currentPage = 1;
++      renderIOCTable();
++    }
++
++    function goToPage(page) {
++      const totalPages = Math.max(1, Math.ceil(filteredIOCs.length / rowsPerPage));
++      currentPage = Math.min(Math.max(1, parseInt(page, 10) || 1), totalPages);
++      renderIOCTable();
++    }
++
++    function prevPage() {
++      goToPage(currentPage - 1);
++    }
++
++    function nextPage() {
++      goToPage(currentPage + 1);
++    }
++
++    function getAllIocTags() {
++      const set = new Set();
++      mockIOCs.forEach(ioc => (ioc.tags || []).forEach(t => set.add(t)));
++      return Array.from(set).sort((a, b) => a.localeCompare(b, "vi"));
++    }
++
++    function populateTagFilter() {
++      const sel = document.getElementById("filter-tag");
++      if (!sel) return;
++      const current = sel.value || "ALL";
++      sel.innerHTML = `<option value="ALL" class="bg-ncs-card text-white">Tất cả nhãn</option>`;
++      getAllIocTags().forEach(t => {
++        const opt = document.createElement("option");
++        opt.value = t;
++        opt.className = "bg-ncs-card text-white";
++        opt.innerText = t;
++        sel.appendChild(opt);
++      });
++      const exists = Array.from(sel.options).some(o => o.value === current);
++      sel.value = exists ? current : "ALL";
++    }
++
++    function filterByTag(tag) {
++      const sel = document.getElementById("filter-tag");
++      if (!sel) return;
++      populateTagFilter();
++      sel.value = tag;
++      applyFilters();
++    }
++
++
++    function renderBatchHistoryTable() {
++      const tbody = document.getElementById("batch-history-table-body");
++      if (!tbody) return;
+       tbody.innerHTML = "";
+ 
+-      if (filteredAuditLogs.length === 0) {
++      const countEl = document.getElementById("history-filter-count");
++      const totalEl = document.getElementById("history-total-count");
++      const pageInfo = document.getElementById("history-page-info");
++      if (countEl) countEl.innerText = String(filteredBatches.length);
++      if (totalEl) totalEl.innerText = String(mockBatches.length);
++      if (pageInfo) {
++        const shown = filteredBatches.length;
++        pageInfo.innerText = shown === 0
++          ? "Không có phiên phù hợp"
++          : `Hiển thị 1 - ${shown} trong ${shown} phiên`;
++      }
++
++      updateHistoryMetrics();
++
++      if (filteredBatches.length === 0) {
+         tbody.innerHTML = `
+           <tr>
+-            <td colspan="7" class="text-center py-10 text-ncs-muted">
+-              <i data-lucide="inbox" class="w-7 h-7 mx-auto mb-2 text-ncs-dim"></i>
+-              Không tìm thấy nhật ký hoạt động nào phù hợp với bộ lọc.
++            <td colspan="9" class="text-center py-12 text-ncs-muted">
++              <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-ncs-dim"></i>
++              Không tìm thấy phiên gửi nào phù hợp với bộ lọc.
+             </td>
+           </tr>
+@@ -2319,50 +2339,5 @@
+       }
+ 
+-      filteredAuditLogs.forEach(log => {
+-        const tr = document.createElement("tr");
+-        tr.className = "hover:bg-ncs-cardHover transition";
+-
+-        // Action badge
+-        let actionBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-950 text-blue-300 border border-blue-800">CẬP NHẬT</span>`;
+-        if (log.action === "CREATE") {
+-          actionBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">THÊM MỚI</span>`;
+-        } else if (log.action === "DELETE") {
+-          actionBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-950 text-red-300 border border-red-800">XÓA</span>`;
+-        } else if (log.action === "SHARE") {
+-          actionBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-800">CHIA SẺ</span>`;
+-        } else if (log.action === "IMPORT") {
+-          actionBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-950 text-purple-300 border border-purple-800">IMPORT</span>`;
+-        } else if (log.action === "EXPORT") {
+-          actionBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800">EXPORT</span>`;
+-        }
+-
+-        tr.innerHTML = `
+-          <td class="p-3 font-mono text-cyan-300 font-semibold text-xs whitespace-nowrap">${log.id}</td>
+-          <td class="p-3 font-mono text-[10px] text-ncs-muted whitespace-nowrap">${log.time}</td>
+-          <td class="p-3 text-slate-300 text-xs font-normal whitespace-nowrap">${log.user}</td>
+-          <td class="p-3">${actionBadge}</td>
+-          <td class="p-3 font-mono text-white text-[11px] select-all truncate max-w-[240px]" title="${log.target}">
+-            ${log.target}
+-          </td>
+-          <td class="p-3 text-slate-300 text-xs leading-relaxed">${log.detail}</td>
+-          <td class="p-3 font-mono text-[10px] text-slate-400 whitespace-nowrap">${log.ip}</td>
+-        `;
+-        tbody.appendChild(tr);
+-      });
+-
+-      const titleLabel = document.getElementById("audit-title-label");
+-      if (titleLabel) titleLabel.innerText = `Nhật ký thay đổi IOC (${filteredAuditLogs.length})`;
+-
+-      const auditPageInfo = document.getElementById("audit-page-info");
+-      if (auditPageInfo) auditPageInfo.innerText = `Hiển thị 1 - ${filteredAuditLogs.length} trong ${mockAuditLogs.length} nhật ký`;
+-
+-      lucide.createIcons();
+-    }
+-
+-    function renderBatchHistoryTable() {
+-      const tbody = document.getElementById("batch-history-table-body");
+-      tbody.innerHTML = "";
+-
+-      mockBatches.forEach((batch) => {
++      filteredBatches.forEach((batch) => {
+         const tr = document.createElement("tr");
+         tr.className = "hover:bg-ncs-cardHover transition";
+@@ -2376,20 +2351,20 @@
+ 
+         tr.innerHTML = `
+-          <td class="p-3 font-mono text-cyan-300 font-semibold text-xs whitespace-nowrap">${batch.id}</td>
+-          <td class="p-3 font-mono text-[11px] text-ncs-muted whitespace-nowrap">${batch.time}</td>
+-          <td class="p-3 font-medium text-white whitespace-nowrap">${batch.type}</td>
+-          <td class="p-3 text-slate-300 text-xs whitespace-nowrap">${batch.user}</td>
+-          <td class="p-3 text-center font-bold text-white whitespace-nowrap">${batch.total}</td>
+-          <td class="p-3 text-center font-bold text-emerald-400 whitespace-nowrap">${batch.success}</td>
+-          <td class="p-3 text-center font-bold ${batch.failed > 0 ? 'text-red-400' : 'text-ncs-dim'} whitespace-nowrap">${batch.failed}</td>
+-          <td class="p-3 whitespace-nowrap">${statusBadge}</td>
+-          <td class="p-3 text-center whitespace-nowrap">
+-            <div class="flex items-center justify-center space-x-2 whitespace-nowrap">
+-              <button onclick="openXMLViewer('${batch.id}')" class="px-2.5 py-1 rounded bg-ncs-input hover:bg-ncs-cardHover border border-cyan-800/60 hover:border-cyan-500 text-cyan-300 text-xs flex items-center gap-1.5 transition whitespace-nowrap">
+-                <i data-lucide="file-code" class="w-3.5 h-3.5 flex-shrink-0 text-cyan-400"></i> Xem XML
++          <td class="p-2 font-mono text-cyan-300 font-semibold text-xs truncate" title="${batch.id}">${batch.id}</td>
++          <td class="p-2 font-mono text-[11px] text-ncs-muted truncate" title="${batch.time}">${formatShortDt(batch.time)}</td>
++          <td class="p-2 font-medium text-white truncate">${batch.type}</td>
++          <td class="p-2 text-slate-300 text-xs truncate" title="${batch.user}">${batch.user}</td>
++          <td class="p-2 text-center font-bold text-white">${batch.total}</td>
++          <td class="p-2 text-center font-bold text-emerald-400">${batch.success}</td>
++          <td class="p-2 text-center font-bold ${batch.failed > 0 ? 'text-red-400' : 'text-ncs-dim'}">${batch.failed}</td>
++          <td class="p-2">${statusBadge}</td>
++          <td class="p-2 cell-actions">
++            <div class="flex flex-wrap items-center justify-start gap-1">
++              <button onclick="openXMLViewer('${batch.id}')" class="px-2 py-1 rounded bg-ncs-input hover:bg-ncs-cardHover border border-cyan-800/60 hover:border-cyan-500 text-cyan-300 text-[11px] inline-flex items-center gap-1 transition shrink-0" title="Xem nội dung đã gửi">
++                <i data-lucide="file-code" class="w-3.5 h-3.5 text-cyan-400"></i> Xem
+               </button>
+               ${batch.failed > 0 
+-                ? `<button onclick="retryFailedBatch('${batch.id}')" class="px-2.5 py-1 rounded bg-red-950 hover:bg-red-900 border border-red-800 text-red-300 text-xs flex items-center gap-1.5 transition whitespace-nowrap" title="Thử lại các bản ghi lỗi">
+-                    <i data-lucide="rotate-cw" class="w-3.5 h-3.5 flex-shrink-0 text-red-400"></i> Thử lại lỗi
++                ? `<button onclick="retryFailedBatch('${batch.id}')" class="px-2 py-1 rounded bg-red-950 hover:bg-red-900 border border-red-800 text-red-300 text-[11px] inline-flex items-center gap-1 transition shrink-0" title="Thử lại các bản ghi lỗi">
++                    <i data-lucide="rotate-cw" class="w-3.5 h-3.5 text-red-400"></i> Thử lại
+                    </button>` 
+                 : ""
+@@ -2404,19 +2379,54 @@
+     }
+ 
+-    // Helper: Add entry to Audit Log
+-    function addAuditLog(action, target, detail) {
+-      const nowStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
+-      const newLog = {
+-        id: `AUD-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${Math.floor(100 + Math.random()*900)}`,
+-        time: nowStr,
+-        user: "admin_soc",
+-        action: action,
+-        target: target,
+-        detail: detail,
+-        ip: "192.168.10.12"
+-      };
+-      mockAuditLogs.unshift(newLog);
+-      filteredAuditLogs = [...mockAuditLogs];
+-      renderAuditLogTable();
++    function normalizeHistoryTime(value, isEnd) {
++      if (!value) return "";
++      let s = String(value).trim().replace(" ", "T");
++      if (s.length === 16) s += isEnd ? ":59" : ":00";
++      return s;
++    }
++
++    function applyHistoryFilters() {
++      const searchEl = document.getElementById("history-search-input");
++      if (!searchEl) return;
++
++      const query = searchEl.value.toLowerCase().trim();
++      const typeFilter = document.getElementById("history-filter-type").value;
++      const statusFilter = document.getElementById("history-filter-status").value;
++      const userFilter = document.getElementById("history-filter-user").value;
++      const fromVal = normalizeHistoryTime(document.getElementById("history-time-from").value, false);
++      const toVal = normalizeHistoryTime(document.getElementById("history-time-to").value, true);
++
++      filteredBatches = mockBatches.filter((batch) => {
++        const matchesQuery = !query ||
++          (batch.id || "").toLowerCase().includes(query) ||
++          (batch.user || "").toLowerCase().includes(query) ||
++          (batch.type || "").toLowerCase().includes(query);
++
++        const isAuto = (batch.type || "").indexOf("Tự động") !== -1;
++        const matchesType = typeFilter === "ALL" ||
++          (typeFilter === "AUTO" && isAuto) ||
++          (typeFilter === "MANUAL" && !isAuto);
++
++        const matchesStatus = statusFilter === "ALL" || batch.status === statusFilter;
++        const matchesUser = userFilter === "ALL" || batch.user === userFilter;
++
++        const batchTime = normalizeHistoryTime(batch.time, false);
++        const matchesFrom = !fromVal || batchTime >= fromVal;
++        const matchesTo = !toVal || batchTime <= toVal;
++
++        return matchesQuery && matchesType && matchesStatus && matchesUser && matchesFrom && matchesTo;
++      });
++
++      renderBatchHistoryTable();
++    }
++
++    function resetHistoryFilters() {
++      document.getElementById("history-search-input").value = "";
++      document.getElementById("history-filter-type").value = "ALL";
++      document.getElementById("history-filter-status").value = "ALL";
++      document.getElementById("history-filter-user").value = "ALL";
++      document.getElementById("history-time-from").value = "";
++      document.getElementById("history-time-to").value = "";
++      renderBatchHistoryTable();
+     }
+ 
+@@ -2443,4 +2453,7 @@
+           valA = a.alerts ? a.alerts.length : 0;
+           valB = b.alerts ? b.alerts.length : 0;
++        } else if (col === 'tags') {
++          valA = (a.tags || []).join(', ').toLowerCase();
++          valB = (b.tags || []).join(', ').toLowerCase();
+         } else if (col === 'confidence') {
+           valA = typeof a.confidence === 'number' ? a.confidence : 0;
+@@ -2457,5 +2470,5 @@
+ 
+       // Update sort icons in header
+-      const cols = ['id', 'type', 'value', 'confidence', 'source', 'alerts', 'share_status', 'last_seen', 'last_shared'];
++      const cols = ['id', 'type', 'value', 'tags', 'confidence', 'source', 'alerts', 'share_status', 'last_seen', 'last_shared'];
+       cols.forEach(c => {
+         const iconEl = document.getElementById(`sort-icon-${c}`);
+@@ -2477,45 +2490,4 @@
+ 
+ 
+-    // ---------------------------------------------------------------------------
+-    // AUDIT LOG SORTING
+-    // ---------------------------------------------------------------------------
+-    let currentAuditSortCol = 'id';
+-    let currentAuditSortDir = 'desc';
+-
+-    function handleSortAuditTable(col) {
+-      if (currentAuditSortCol === col) {
+-        currentAuditSortDir = currentAuditSortDir === 'asc' ? 'desc' : 'asc';
+-      } else {
+-        currentAuditSortCol = col;
+-        currentAuditSortDir = 'asc';
+-      }
+-
+-      filteredAuditLogs.sort((a, b) => {
+-        let valA = (a[col] || '').toLowerCase();
+-        let valB = (b[col] || '').toLowerCase();
+-
+-        if (valA < valB) return currentAuditSortDir === 'asc' ? -1 : 1;
+-        if (valA > valB) return currentAuditSortDir === 'asc' ? 1 : -1;
+-        return 0;
+-      });
+-
+-      const cols = ['id', 'time', 'user', 'action', 'target', 'detail', 'ip'];
+-      cols.forEach(c => {
+-        const iconEl = document.getElementById(`audit-sort-${c}`);
+-        if (iconEl) {
+-          if (c === currentAuditSortCol) {
+-            iconEl.className = 'text-cyan-400';
+-            iconEl.innerHTML = currentAuditSortDir === 'asc' 
+-              ? `<i data-lucide="arrow-up" class="w-3 h-3"></i>` 
+-              : `<i data-lucide="arrow-down" class="w-3 h-3"></i>`;
+-          } else {
+-            iconEl.className = 'text-ncs-dim';
+-            iconEl.innerHTML = `<i data-lucide="arrow-up-down" class="w-3 h-3"></i>`;
+-          }
+-        }
+-      });
+-
+-      renderAuditLogTable();
+-    }
+ 
+     // ---------------------------------------------------------------------------
+@@ -2564,36 +2536,358 @@
+       });
+ 
+-      renderBatchHistoryTable();
++      applyHistoryFilters();
+     }
+ 
+     // ---------------------------------------------------------------------------
+-    // CERTIFICATE UPLOAD WITH FORMAT VALIDATION
++    // CERTIFICATE SELECTION (server-installed; no browser upload)
+     // ---------------------------------------------------------------------------
+-    function triggerCertFileInput() {
+-      document.getElementById('cert-file-input').click();
+-    }
+-
+-    function handleCertFileUpload(input) {
+-      if (!input.files || input.files.length === 0) return;
+-      const file = input.files[0];
+-      const validExtensions = ['.pfx', '.p12', '.pem', '.cer', '.crt'];
+-      const fileExt = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+-
+-      if (!validExtensions.includes(fileExt)) {
+-        showToast(`Định dạng file '${fileExt}' không hợp lệ! Vui lòng chọn file chứng thư số .pfx, .p12, .pem, .cer hoặc .crt.`, 'error');
+-        input.value = '';
++    let certStore = {
++      bound: true,
++      thumbprint: "thumb-sttt-abc",
++      label: "STTT ABC"
++    };
++
++    let gatewayProfileStore = {
++      selectedId: "gw-prod",
++      bound: true
++    };
++
++    const gatewayProfileCatalog = {
++      "gw-prod": {
++        name: "Trung tâm An ninh mạng — vận hành",
++        environment: "Vận hành",
++        endpoint: "https://monitor.soc.gov.vn",
++        outboundIp: "192.0.2.10",
++        username: "demo.sttt.abc",
++        authMethod: "Tài khoản và token",
++        updatedAt: "20/08/2026",
++        configured: true
++      },
++      "gw-test": {
++        name: "Trung tâm An ninh mạng — thử nghiệm",
++        environment: "Thử nghiệm",
++        endpoint: "https://monitor.soc.gov.vn",
++        outboundIp: "192.0.2.10",
++        username: "demo.sttt.test",
++        authMethod: "Tài khoản và mật khẩu",
++        updatedAt: "15/08/2026",
++        configured: true
++      }
++    };
++
++    const serverCertCatalog = {
++      "thumb-sttt-abc": {
++        displayName: "STTT ABC",
++        unit: "Sở Thông tin và Truyền thông ABC",
++        issuer: "CA Chính phủ",
++        expiry: "Hết hạn: 31/12/2027",
++        label: "STTT ABC"
++      }
++    };
++
++    const endpointInventory = {
++      "WS-KETOAN-02": { ip: "192.168.10.45", os: "Windows 10 Pro 22H2", lastUpdate: 1786492800, autoProtect: "On", firewall: "On" },
++      "WS-HANHCHINH-03": { ip: "192.168.10.60", os: "Windows 11 Enterprise", lastUpdate: 1786492800, autoProtect: "On", firewall: "Off" },
++      "SRV-DC-01": { ip: "192.168.1.10", os: "Windows Server 2022", lastUpdate: 1786492800, autoProtect: "On", firewall: "On" },
++      "NCSS_TEST_INSTALLER_TOOL_70D7_2": { ip: "192.168.10.88", os: "Windows 10 Pro 22H2", lastUpdate: 1786492800, autoProtect: "On", firewall: "On" }
++    };
++
++    function xmlEscape(value) {
++      return String(value || "")
++        .replace(/&/g, "&amp;")
++        .replace(/</g, "&lt;")
++        .replace(/>/g, "&gt;")
++        .replace(/"/g, "&quot;");
++    }
++
++    function cfgVal(id, fallback) {
++      const el = document.getElementById(id);
++      const v = el && el.value ? el.value.trim() : "";
++      return v || fallback;
++    }
++
++    function getSelectedGatewayProfile() {
++      return gatewayProfileCatalog[gatewayProfileStore.selectedId] || null;
++    }
++
++    function getOutboundIp() {
++      const profile = getSelectedGatewayProfile();
++      return (profile && profile.outboundIp) ? profile.outboundIp : "192.0.2.10";
++    }
++
++    function applyGatewayProfileToUi(profile) {
++      const badge = document.getElementById("gw-profile-badge");
++      const top = document.getElementById("topbar-static-ip");
++      if (!profile) {
++        gatewayProfileStore.bound = false;
++        document.getElementById("gw-profile-name").innerText = "Chưa chọn hồ sơ";
++        document.getElementById("gw-profile-env").innerText = "Môi trường: --";
++        document.getElementById("gw-profile-endpoint").innerText = "Cổng tiếp nhận: --";
++        document.getElementById("gw-profile-ip").innerText = "IP gửi đi: --";
++        document.getElementById("gw-profile-username").innerText = "Tài khoản: --";
++        document.getElementById("gw-profile-auth-method").innerText = "Phương thức: --";
++        document.getElementById("gw-profile-updated").innerText = "Cập nhật: --";
++        document.getElementById("gw-profile-auth").innerText = "Xác thực: Chưa cấu hình";
++        if (badge) {
++          badge.innerText = "Chưa chọn";
++          badge.className = "px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 text-[10px] font-semibold shrink-0";
++        }
+         return;
+       }
+-
+-      // Valid file upload
+-      document.getElementById('cert-filename-display').innerText = file.name;
+-      document.getElementById('cert-subject-display').innerText = `Subject: CN=${file.name.replace(fileExt, '').toUpperCase()}, O=NCS Security Node, C=VN`;
+-      document.getElementById('cert-expiry-display').innerText = `Hạn chứng thư: 31/12/2028 (Hợp lệ) | Thuật toán: RSA-SHA256 | Kích thước: ${(file.size / 1024).toFixed(1)} KB`;
+-      document.getElementById('cert-status-badge').innerText = 'Đã tải lên & Hợp lệ';
+-      document.getElementById('cert-status-badge').className = 'px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-semibold';
+-
+-      addAuditLog('UPDATE', `Chứng thư số: ${file.name}`, `Tải lên và xác thực thành công chứng thư số X.509 mới (${file.name})`);
+-      showToast(`Đã tải lên và xác thực chứng thư số '${file.name}' thành công!`, 'success');
+-      input.value = '';
++      gatewayProfileStore.bound = !!profile.configured;
++      document.getElementById("gw-profile-name").innerText = profile.name;
++      document.getElementById("gw-profile-env").innerText = "Môi trường: " + profile.environment;
++      document.getElementById("gw-profile-endpoint").innerText = "Cổng tiếp nhận: " + profile.endpoint;
++      document.getElementById("gw-profile-ip").innerText = "IP gửi đi: " + profile.outboundIp;
++      document.getElementById("gw-profile-username").innerText = "Tài khoản: " + (profile.username || "--");
++      document.getElementById("gw-profile-auth-method").innerText = "Phương thức: " + (profile.authMethod || "--");
++      document.getElementById("gw-profile-updated").innerText = "Cập nhật: " + (profile.updatedAt || "--");
++      document.getElementById("gw-profile-auth").innerText = profile.configured
++        ? "Xác thực: Đã cấu hình trên máy chủ"
++        : "Xác thực: Chưa cấu hình trên máy chủ";
++      if (top) top.innerText = profile.outboundIp;
++      if (badge) {
++        if (profile.configured) {
++          badge.innerText = "Đã cấu hình";
++          badge.className = "px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-semibold shrink-0";
++        } else {
++          badge.innerText = "Chưa cấu hình";
++          badge.className = "px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 text-[10px] font-semibold shrink-0";
++        }
++      }
++    }
++
++    function onGatewayProfileChange() {
++      const id = cfgVal("cfg-gateway-profile", "");
++      gatewayProfileStore.selectedId = id;
++      applyGatewayProfileToUi(getSelectedGatewayProfile());
++    }
++
++    function resolveEndpoint(alert) {
++      const name = alert.agent_name || alert.endpoint || "UNKNOWN-HOST";
++      const known = endpointInventory[name];
++      return {
++        name,
++        ip: alert.ip || (known ? known.ip : "0.0.0.0"),
++        os: known ? known.os : "Windows",
++        lastUpdate: known ? known.lastUpdate : 1786492800,
++        autoProtect: known ? known.autoProtect : "On",
++        firewall: known ? known.firewall : "On"
++      };
++    }
++
++    function buildAvReportPlan(iocList) {
++      const plan = {
++        malware: [],
++        connections: [],
++        vulns: [],
++        skipped: [],
++        machines: {}
++      };
++      const publicIp = getOutboundIp();
++
++      iocList.forEach((ioc) => {
++        const type = (ioc.type || "").toUpperCase();
++        if (type === "DOMAIN" || type === "URL") {
++          plan.skipped.push({ id: ioc.id, type, reason: "Không thuộc phạm vi gửi" });
++          return;
++        }
++        const alerts = Array.isArray(ioc.alerts) ? ioc.alerts : [];
++        if (alerts.length === 0 && (type === "SHA256" || type === "MD5" || type === "IPV4" || type === "CVE")) {
++          plan.skipped.push({ id: ioc.id, type, reason: "Chưa gắn cảnh báo với máy" });
++          return;
++        }
++
++        if (type === "SHA256" || type === "MD5") {
++          const ep = resolveEndpoint(alerts[0] || {});
++          plan.malware.push({
++            ip: ep.ip,
++            ippublic: publicIp,
++            name: ep.name,
++            malwareName: ioc.malware_name || "Unknown.Malware",
++            malwareType: ioc.malware_type || "Trojan",
++            malwareBehavior: ioc.malware_behavior || "Unknown",
++            typeOfDevice: "SSD",
++            numberFile: Math.max(1, ioc.hit_count || 1)
++          });
++          plan.machines[ep.name] = ep;
++        } else if (type === "IPV4") {
++          const ep = resolveEndpoint(alerts[0] || {});
++          plan.connections.push({
++            ip: ep.ip,
++            ippublic: publicIp,
++            name: ep.name,
++            program: (alerts[0] && (alerts[0].rule_description || alerts[0].name)) ? "unknown.exe" : "unknown.exe",
++            targetIp: ioc.value
++          });
++          if (alerts[0] && alerts[0].name) {
++            plan.connections[plan.connections.length - 1].program = "svchost_update.exe";
++          }
++          plan.machines[ep.name] = ep;
++        } else if (type === "CVE") {
++          const ep = resolveEndpoint(alerts[0] || {});
++          plan.vulns.push({
++            ip: ep.ip,
++            ippublic: publicIp,
++            name: ep.name,
++            cve: ioc.value,
++            osName: ep.os
++          });
++          plan.machines[ep.name] = ep;
++        } else {
++          plan.skipped.push({ id: ioc.id, type, reason: "Loại dữ liệu không gửi" });
++        }
++      });
++
++      return plan;
++    }
++
++    function buildEdXml(plan) {
++      const organId = xmlEscape(cfgVal("cfg-organ-id", "000.01.12.H28"));
++      const inCharge = xmlEscape(cfgVal("cfg-org-in-charge", ""));
++      const organName = xmlEscape(cfgVal("cfg-organ-name", ""));
++      const organAdd = xmlEscape(cfgVal("cfg-organ-add", ""));
++      const email = xmlEscape(cfgVal("cfg-email", ""));
++      const tel = xmlEscape(cfgVal("cfg-telephone", ""));
++      const fax = xmlEscape(cfgVal("cfg-fax", ""));
++      const website = xmlEscape(cfgVal("cfg-website", ""));
++      const subject = xmlEscape(cfgVal("cfg-subject", "Báo cáo chia sẻ dữ liệu mã độc và kết nối nghi ngờ EDR"));
++      const algo = cfgVal("cfg-sig-algo", "rsa-sha256");
++      const sigMethod = algo === "rsa-sha1"
++        ? "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
++        : "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
++      const unixNow = Math.floor(Date.now() / 1000);
++      const publicIp = xmlEscape(getOutboundIp());
++
++      const malwareXml = plan.malware.length
++        ? plan.malware.map((m) => `        <Machine ip="${xmlEscape(m.ip)}" ippublic="${xmlEscape(m.ippublic)}" name="${xmlEscape(m.name)}">
++          <MalwareInfo>
++            <MalwareName>${xmlEscape(m.malwareName)}</MalwareName>
++            <MalwareType>${xmlEscape(m.malwareType)}</MalwareType>
++            <MalwareBehavior>${xmlEscape(m.malwareBehavior)}</MalwareBehavior>
++            <TypeOfDevice>${xmlEscape(m.typeOfDevice)}</TypeOfDevice>
++            <NumberFile>${m.numberFile}</NumberFile>
++          </MalwareInfo>
++        </Machine>`).join("\n")
++        : "";
++
++      const connXml = plan.connections.length
++        ? plan.connections.map((c) => `        <Machine ip="${xmlEscape(c.ip)}" ippublic="${xmlEscape(c.ippublic)}" name="${xmlEscape(c.name)}">
++          <ConnectionInfo>
++            <Program>${xmlEscape(c.program)}</Program>
++            <TargetIP>${xmlEscape(c.targetIp)}</TargetIP>
++          </ConnectionInfo>
++        </Machine>`).join("\n")
++        : "";
++
++      const vulnXml = plan.vulns.length
++        ? plan.vulns.map((v) => `        <Machine ip="${xmlEscape(v.ip)}" ippublic="${xmlEscape(v.ippublic)}" name="${xmlEscape(v.name)}">
++          <VulnerabilityInfo>
++            <Name>${xmlEscape(v.cve)}</Name>
++            <OSName>${xmlEscape(v.osName)}</OSName>
++          </VulnerabilityInfo>
++        </Machine>`).join("\n")
++        : "";
++
++      const machines = Object.values(plan.machines);
++      const osXml = machines.map((ep) => `        <Machine ip="${xmlEscape(ep.ip)}" ippublic="${publicIp}" name="${xmlEscape(ep.name)}">
++          <OSName>${xmlEscape(ep.os)}</OSName>
++          <LastUpdate>${ep.lastUpdate}</LastUpdate>
++        </Machine>`).join("\n");
++
++      const qfXml = machines.map((ep) => `        <Machine ip="${xmlEscape(ep.ip)}" Name="${xmlEscape(ep.name)}">
++          <AutoProtect>${xmlEscape(ep.autoProtect)}</AutoProtect>
++          <EnableFirewall>${xmlEscape(ep.firewall)}</EnableFirewall>
++        </Machine>`).join("\n");
++
++      return `<?xml version="1.0" encoding="UTF-8"?>
++<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:edXML="http://www.mic.gov.vn/TBT/QCVN_102_2016">
++  <soapenv:Header>
++    <edXML:MessageHeader>
++      <edXML:From>
++        <edXML:OrganId>${organId}</edXML:OrganId>
++        <edXML:OrganizationInCharge>${inCharge}</edXML:OrganizationInCharge>
++        <edXML:OrganName>${organName}</edXML:OrganName>
++        <edXML:OrganAdd>${organAdd}</edXML:OrganAdd>
++        <edXML:Email>${email}</edXML:Email>
++        <edXML:Telephone>${tel}</edXML:Telephone>
++        <edXML:Fax>${fax}</edXML:Fax>
++        <edXML:Website>${website}</edXML:Website>
++      </edXML:From>
++      <edXML:Subject>${subject}</edXML:Subject>
++    </edXML:MessageHeader>
++    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
++      <SignedInfo>
++        <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
++        <SignatureMethod Algorithm="${sigMethod}"/>
++        <Reference URI="">
++          <Transforms>
++            <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
++            <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
++          </Transforms>
++          <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
++          <DigestValue>PLACEHOLDER_DIGESTVALUE_BASE64</DigestValue>
++        </Reference>
++      </SignedInfo>
++      <SignatureValue>PLACEHOLDER_SIGNATUREVALUE_BASE64</SignatureValue>
++      <KeyInfo>
++        <X509Data>
++          <X509SubjectName>CN=STTT ABC, O=UBND Tinh ABC, C=VN</X509SubjectName>
++          <X509Certificate>PLACEHOLDER_X509_CERTIFICATE_BASE64</X509Certificate>
++        </X509Data>
++      </KeyInfo>
++    </Signature>
++  </soapenv:Header>
++  <soapenv:Body>
++    <AVReport name="Enterprise EDR">
++      <Datetime>${unixNow}</Datetime>
++      <Malware>
++${malwareXml}
++      </Malware>
++      <Connection>
++${connXml}
++      </Connection>
++      <Vulnerability>
++${vulnXml}
++      </Vulnerability>
++      <OS>
++${osXml}
++      </OS>
++      <Update>
++        <NumberMachineNotUpdateOn15Day>3</NumberMachineNotUpdateOn15Day>
++      </Update>
++      <QualityFeature>
++${qfXml}
++      </QualityFeature>
++    </AVReport>
++  </soapenv:Body>
++</soapenv:Envelope>`;
++    }
++
++    function onServerCertChange() {
++      const thumb = cfgVal("cfg-server-cert", "");
++      const meta = serverCertCatalog[thumb];
++      const badge = document.getElementById("cert-status-badge");
++      if (!meta) {
++        certStore.bound = false;
++        certStore.thumbprint = "";
++        certStore.label = "";
++        document.getElementById("cert-filename-display").innerText = "Chưa chọn chứng thư";
++        document.getElementById("cert-subject-display").innerText = "Đơn vị: --";
++        document.getElementById("cert-issuer-display").innerText = "Người cấp: --";
++        document.getElementById("cert-expiry-display").innerText = "Vui lòng chọn chứng thư";
++        badge.innerText = "Chưa chọn";
++        badge.className = "px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 text-[10px] font-semibold";
++        return;
++      }
++      certStore.bound = true;
++      certStore.thumbprint = thumb;
++      certStore.label = meta.label;
++      document.getElementById("cert-filename-display").innerText = meta.displayName;
++      document.getElementById("cert-subject-display").innerText = "Đơn vị: " + meta.unit;
++      document.getElementById("cert-issuer-display").innerText = "Người cấp: " + meta.issuer;
++      document.getElementById("cert-expiry-display").innerText = meta.expiry;
++      badge.innerText = "Hợp lệ";
++      badge.className = "px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-semibold";
+     }
+ 
+@@ -2613,4 +2907,5 @@
+         fixedControls.classList.remove('opacity-60', 'pointer-events-none');
+       }
++      updateAutoSharePreview();
+     }
+ 
+@@ -2619,8 +2914,8 @@
+       if (isNaN(val) || val < 10) {
+         val = 10;
+-        showToast('Kích thước lô tối thiểu là 10 IOCs/Batch.', 'info');
++        showToast('Kích thước lô tối thiểu là 10 máy/lô.', 'info');
+       } else if (val > 1000) {
+         val = 1000;
+-        showToast('Kích thước lô tối đa được giới hạn là 1,000 IOCs/Batch.', 'error');
++        showToast('Kích thước lô tối đa được giới hạn là 1.000 máy/lô.', 'error');
+       }
+       input.value = val;
+@@ -2632,26 +2927,24 @@
+ 
+     function saveFlexibleSchedulerConfig() {
+-      const isInterval = document.getElementById('cron-mode-interval').checked;
+-      const batchSize = document.getElementById('cron-max-batch-size').value;
+-      const minConf = document.getElementById('cron-min-confidence').value;
+-
+       const selectedTypes = Array.from(document.querySelectorAll('.cron-ioc-type-cb:checked')).map(c => c.value);
+-      if (selectedTypes.length === 0) {
+-        showToast('Vui lòng chọn ít nhất 1 loại IOC gửi đi!', 'error');
++      const a05Types = selectedTypes.filter(t => t !== 'DOMAIN' && t !== 'URL');
++      if (a05Types.length === 0) {
++        showToast("Chọn ít nhất một loại dữ liệu: mã độc, kết nối hoặc lỗ hổng.", "error");
+         return;
+       }
+ 
+-      let freqDesc = '';
+-      if (isInterval) {
+-        const intVal = document.getElementById('cron-interval-value').value;
+-        const intUnit = document.getElementById('cron-interval-unit').value === 'm' ? 'phút' : (document.getElementById('cron-interval-unit').value === 'h' ? 'giờ' : 'ngày');
+-        freqDesc = `Mỗi ${intVal} ${intUnit}`;
+-      } else {
+-        const fixedTime = document.getElementById('cron-fixed-time').value;
+-        freqDesc = `Khung giờ ${fixedTime} hàng ngày`;
+-      }
+-
+-      addAuditLog('UPDATE', 'Cấu hình Lập lịch', `Lưu thiết lập Cron: ${freqDesc}, MaxBatch: ${batchSize}, MinConf: ${minConf}%, Types: [${selectedTypes.join(', ')}]`);
+-      showToast(`Đã lưu cấu hình Lập lịch thành công (${freqDesc}, Max ${batchSize} IOCs/Batch)!`, 'success');
++      const profile = getSelectedGatewayProfile();
++      if (!profile || !profile.configured) {
++        showToast("Chọn hồ sơ kết nối đã cấu hình trên máy chủ.", "error");
++        return;
++      }
++
++      const top = document.getElementById("topbar-static-ip");
++      if (top) top.innerText = profile.outboundIp;
++
++      const hint = document.getElementById("settings-save-hint");
++      if (hint) hint.innerText = "Đã lưu hồ sơ kết nối: " + profile.name;
++      updateAutoSharePreview();
++      showToast("Đã lưu cấu hình.", "success");
+     }
+ 
+@@ -2717,4 +3010,105 @@
+     // SEARCH & FILTER LOGIC
+     // ---------------------------------------------------------------------------
++    function formatShortDt(s) {
++      if (!s || s === "--") return "--";
++      const m = String(s).match(/(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/);
++      if (!m) return s;
++      return `${m[3]}/${m[2]} ${m[4]}:${m[5]}`;
++    }
++
++    function parseIocTime(s) {
++      if (!s || s === "--") return null;
++      const n = Date.parse(String(s).replace(" ", "T"));
++      return isNaN(n) ? null : n;
++    }
++
++    function parseTagInput(raw) {
++      return String(raw || "")
++        .split(",")
++        .map(t => t.trim())
++        .filter(Boolean);
++    }
++
++    function updateHistoryMetrics() {
++      const sessions = mockBatches.length;
++      const success = mockBatches.reduce((sum, b) => sum + (b.success || 0), 0);
++      const failed = mockBatches.reduce((sum, b) => sum + (b.failed || 0), 0);
++      const denom = success + failed;
++      const rate = denom === 0 ? 0 : (success / denom) * 100;
++      const setText = (id, val) => {
++        const el = document.getElementById(id);
++        if (el) el.innerText = val;
++      };
++      setText("hist-metric-sessions", String(sessions));
++      setText("hist-metric-success", success.toLocaleString());
++      setText("hist-metric-failed", failed.toLocaleString());
++      setText("hist-metric-rate", `${rate.toFixed(1)}%`);
++    }
++
++    function setConnectionBadge(state) {
++      const wrap = document.getElementById("topbar-conn-wrap");
++      const dot = document.getElementById("topbar-conn-dot");
++      const label = document.getElementById("topbar-conn-label");
++      if (!wrap || !dot || !label) return;
++      wrap.classList.remove("bg-emerald-950/40", "border-emerald-500/30", "text-emerald-400", "bg-red-950/40", "border-red-800", "text-red-300", "bg-slate-800/70", "border-slate-600", "text-slate-300");
++      dot.classList.remove("bg-emerald-400", "bg-red-400", "bg-slate-400", "status-pulse");
++      if (state === "ok") {
++        wrap.classList.add("bg-emerald-950/40", "border-emerald-500/30", "text-emerald-400");
++        dot.classList.add("bg-emerald-400", "status-pulse");
++        label.innerText = "Đã kết nối";
++      } else if (state === "fail") {
++        wrap.classList.add("bg-red-950/40", "border-red-800", "text-red-300");
++        dot.classList.add("bg-red-400");
++        label.innerText = "Mất kết nối";
++      } else {
++        wrap.classList.add("bg-slate-800/70", "border-slate-600", "text-slate-300");
++        dot.classList.add("bg-slate-400");
++        label.innerText = "Chưa kiểm tra";
++      }
++    }
++
++    function updateAutoSharePreview() {
++      const nextEl = document.getElementById("auto-share-next");
++      const countEl = document.getElementById("auto-share-count");
++      if (!nextEl || !countEl) return;
++
++      const enabled = document.getElementById("toggle-cron-active");
++      if (enabled && !enabled.checked) {
++        nextEl.innerText = "Đang tắt";
++        countEl.innerText = "0";
++        return;
++      }
++
++      const intervalMode = document.getElementById("cron-mode-interval");
++      if (intervalMode && intervalMode.checked) {
++        const n = document.getElementById("cron-interval-value")?.value || "15";
++        const unit = document.getElementById("cron-interval-unit")?.value || "m";
++        const unitLabel = unit === "h" ? "giờ" : (unit === "d" ? "ngày" : "phút");
++        nextEl.innerText = `sau ${n} ${unitLabel}`;
++      } else {
++        const t = document.getElementById("cron-fixed-time")?.value || "23:00";
++        nextEl.innerText = `hàng ngày ${t}`;
++      }
++
++      const types = Array.from(document.querySelectorAll(".cron-ioc-type-cb:checked")).map(c => c.value);
++      const srcs = Array.from(document.querySelectorAll(".cron-src-cb:checked")).map(c => c.value);
++      const minConf = parseInt(document.getElementById("cron-min-confidence")?.value, 10);
++      const confFloor = isNaN(minConf) ? 0 : minConf;
++      const statuses = [];
++      if (document.getElementById("sc-status-unshared")?.checked) statuses.push("UNSHARED");
++      if (document.getElementById("sc-status-failed")?.checked) statuses.push("SHARE_FAILED");
++      if (document.getElementById("sc-status-shared")?.checked) statuses.push("SHARED");
++
++      const eligible = mockIOCs.filter(ioc => {
++        if (!types.includes(ioc.type)) return false;
++        if (!srcs.includes(ioc.source)) return false;
++        if (ioc.confidence < confFloor) return false;
++        if (!statuses.includes(ioc.share_status)) return false;
++        const plan = buildAvReportPlan([ioc]);
++        return (plan.malware.length + plan.connections.length + plan.vulns.length) > 0;
++      }).length;
++      countEl.innerText = String(eligible);
++    }
++
+     function applyFilters() {
+       const query = document.getElementById("search-input").value.toLowerCase().trim();
+@@ -2723,4 +3117,8 @@
+       const confFilter = document.getElementById("filter-confidence").value;
+       const srcFilter = document.getElementById("filter-source").value;
++      const tagFilterEl = document.getElementById("filter-tag");
++      const tagFilter = tagFilterEl ? tagFilterEl.value : "ALL";
++      const fromTs = parseIocTime(normalizeHistoryTime(document.getElementById("filter-time-from")?.value, false));
++      const toTs = parseIocTime(normalizeHistoryTime(document.getElementById("filter-time-to")?.value, true));
+ 
+       filteredIOCs = mockIOCs.filter(ioc => {
+@@ -2729,9 +3127,10 @@
+           (ioc.malware_name && ioc.malware_name.toLowerCase().includes(query)) ||
+           (ioc.description && ioc.description.toLowerCase().includes(query)) ||
+-          ioc.tags.some(t => t.toLowerCase().includes(query));
++          (ioc.tags || []).some(t => t.toLowerCase().includes(query));
+ 
+         const matchesStatus = statusFilter === "ALL" || ioc.share_status === statusFilter;
+         const matchesType = typeFilter === "ALL" || ioc.type === typeFilter;
+         const matchesSrc = srcFilter === "ALL" || ioc.source === srcFilter;
++        const matchesTag = tagFilter === "ALL" || (ioc.tags || []).includes(tagFilter);
+ 
+         let matchesConf = true;
+@@ -2740,7 +3139,11 @@
+         else if (confFilter === "LOW") matchesConf = ioc.confidence < 50;
+ 
+-        return matchesQuery && matchesStatus && matchesType && matchesConf && matchesSrc;
++        const seen = parseIocTime(ioc.last_seen) || parseIocTime(ioc.first_seen);
++        const matchesTime = (!fromTs && !toTs) || (seen && (!fromTs || seen >= fromTs) && (!toTs || seen <= toTs));
++
++        return matchesQuery && matchesStatus && matchesType && matchesConf && matchesSrc && matchesTag && matchesTime;
+       });
+ 
++      currentPage = 1;
+       renderIOCTable();
+     }
+@@ -2756,30 +3159,14 @@
+       document.getElementById("filter-confidence").value = "ALL";
+       document.getElementById("filter-source").value = "ALL";
++      const tagEl = document.getElementById("filter-tag");
++      if (tagEl) tagEl.value = "ALL";
++      const fromEl = document.getElementById("filter-time-from");
++      const toEl = document.getElementById("filter-time-to");
++      if (fromEl) fromEl.value = "";
++      if (toEl) toEl.value = "";
+       applyFilters();
+       showToast("Đã thiết lập lại toàn bộ bộ lọc.", "info");
+     }
+ 
+-    function applyAuditFilters() {
+-      const query = document.getElementById("audit-search-input").value.toLowerCase().trim();
+-      const actionFilter = document.getElementById("audit-filter-action").value;
+-
+-      filteredAuditLogs = mockAuditLogs.filter(log => {
+-        const matchesQuery = !query ||
+-          log.user.toLowerCase().includes(query) ||
+-          log.target.toLowerCase().includes(query) ||
+-          log.detail.toLowerCase().includes(query);
+-
+-        const matchesAction = actionFilter === "ALL" || log.action === actionFilter;
+-        return matchesQuery && matchesAction;
+-      });
+-
+-      renderAuditLogTable();
+-    }
+-
+-    function resetAuditFilters() {
+-      document.getElementById("audit-search-input").value = "";
+-      document.getElementById("audit-filter-action").value = "ALL";
+-      applyAuditFilters();
+-    }
+ 
+     // ---------------------------------------------------------------------------
+@@ -2787,5 +3174,5 @@
+     // ---------------------------------------------------------------------------
+     function switchMainTab(tab) {
+-      const views = ["inventory", "history", "settings", "audit"];
++      const views = ["inventory", "history", "settings"];
+       views.forEach(v => {
+         const el = document.getElementById(`view-${v}`);
+@@ -2800,10 +3187,41 @@
+       });
+ 
+-      if (tab === "history") renderBatchHistoryTable();
+-      if (tab === "audit") renderAuditLogTable();
++      if (tab === "history") applyHistoryFilters();
++      if (tab === "settings") updateAutoSharePreview();
++
++      const pageTitle = document.getElementById("page-title");
++      const pageSubtitle = document.getElementById("page-subtitle");
++      if (pageTitle && pageSubtitle) {
++        if (tab === "history") {
++          pageTitle.innerText = "Lịch sử chia sẻ";
++          pageSubtitle.innerText = "Theo dõi các phiên gửi báo cáo tới Trung tâm An ninh mạng: thành công, lỗi một phần và thất bại.";
++        } else if (tab === "settings") {
++          pageTitle.innerText = "Cấu hình chia sẻ";
++          pageSubtitle.innerText = "Thiết lập thông tin đơn vị gửi, chứng thư số, hồ sơ kết nối và lịch chia sẻ tự động.";
++        } else {
++          pageTitle.innerText = "Quản lý IOC";
++          pageSubtitle.innerText = "Tập hợp và quản lý chỉ báo xâm nhập (IOC) từ cảnh báo EDR, Threat Intel, import và nhập tay. Chọn bản ghi để chia sẻ báo cáo tới Trung tâm An ninh mạng.";
++        }
++      }
++
++      const listActions = document.getElementById("ioc-list-actions");
++      if (listActions) {
++        if (tab === "inventory") listActions.classList.remove("hidden");
++        else listActions.classList.add("hidden");
++      }
++
++      const actionBar = document.getElementById("settings-action-bar");
++      if (actionBar) {
++        if (tab === "settings") {
++          actionBar.classList.remove("hidden");
++          lucide.createIcons();
++        } else {
++          actionBar.classList.add("hidden");
++        }
++      }
+     }
+ 
+     function switchDrawerTab(tab) {
+-      const dtabs = ["overview", "alerts", "sharing"];
++      const dtabs = ["overview", "intel", "alerts", "sharing"];
+       dtabs.forEach(t => {
+         const panel = document.getElementById(`dpanel-${t}`);
+@@ -2817,4 +3235,71 @@
+         }
+       });
++      if (typeof lucide !== "undefined") lucide.createIcons();
++    }
++
++    function getSeverityBadgeClass(severity) {
++      const sev = (severity || "").toUpperCase();
++      if (sev === "CRITICAL") return "px-2 py-0.5 rounded text-[10px] font-bold bg-red-950 text-red-400 border border-red-800";
++      if (sev === "HIGH") return "px-2 py-0.5 rounded text-[10px] font-bold bg-orange-950 text-orange-400 border border-orange-800";
++      if (sev === "MEDIUM") return "px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-400 border border-amber-800";
++      return "px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700";
++    }
++
++    function formatSeverityLabel(severity) {
++      const sev = (severity || "").toUpperCase();
++      if (sev === "CRITICAL") return "Critical";
++      if (sev === "HIGH") return "High";
++      if (sev === "MEDIUM") return "Medium";
++      if (sev === "LOW") return "Low";
++      return severity || "Unknown";
++    }
++
++    function bindThreatIntelPanel(ioc) {
++      const valueEl = document.getElementById("ti-ioc-value");
++      const sevEl = document.getElementById("ti-severity-badge");
++      const typeEl = document.getElementById("ti-type-badge");
++      const createdEl = document.getElementById("ti-created-at");
++      const relatedEl = document.getElementById("ti-related-status");
++      const nameEl = document.getElementById("ti-malware-name");
++      const typeMalEl = document.getElementById("ti-malware-type");
++      const behEl = document.getElementById("ti-malware-behavior");
++      const srcEl = document.getElementById("ti-source");
++      const tagsEl = document.getElementById("ti-tags");
++      if (!valueEl || !sevEl) return;
++
++      valueEl.innerText = ioc.value || "--";
++      sevEl.className = getSeverityBadgeClass(ioc.severity);
++      sevEl.innerText = formatSeverityLabel(ioc.severity);
++      typeEl.innerText = ioc.type || "--";
++      createdEl.innerText = ioc.first_seen || "--";
++
++      const relatedCount = (ioc.alerts && ioc.alerts.length) ? ioc.alerts.length : 0;
++      if (relatedCount === 0) {
++        relatedEl.innerHTML = '<i data-lucide="clock" class="w-3.5 h-3.5 text-ncs-dim inline"></i> Không có đối tượng liên quan';
++      } else {
++        relatedEl.innerHTML = `<i data-lucide="link-2" class="w-3.5 h-3.5 text-cyan-400 inline"></i> ${relatedCount} cảnh báo liên quan`;
++      }
++
++      nameEl.innerText = ioc.malware_name || "--";
++      typeMalEl.innerText = ioc.malware_type || "--";
++      behEl.innerText = ioc.malware_behavior || "--";
++      srcEl.innerText = ioc.source === "ALERT" ? "Alert" : (ioc.source === "TIP" ? "Threat Intel (TIP)" : (ioc.source || "--"));
++
++      tagsEl.innerHTML = "";
++      (ioc.tags || []).forEach(t => {
++        const span = document.createElement("span");
++        span.className = "px-2 py-0.5 rounded bg-slate-800 text-cyan-300 border border-slate-700 text-[10px]";
++        span.innerText = `#${t}`;
++        tagsEl.appendChild(span);
++      });
++    }
++
++    function openTipPlatform() {
++      const ioc = currentSelectedIOC;
++      if (!ioc) {
++        showToast("Chưa chọn IOC để mở TIP Platform.", "warning");
++        return;
++      }
++      showToast(`Mở TIP Platform cho ${ioc.type}: ${ioc.value.substring(0, 24)}... (prototype)`, "info");
+     }
+ 
+@@ -2857,4 +3342,6 @@
+       });
+ 
++      bindThreatIntelPanel(ioc);
++
+       // Share badge in drawer
+       const dShareBadge = document.getElementById("drawer-share-badge");
+@@ -2901,16 +3388,16 @@
+ 
+             tr.innerHTML = `
+-              <td class="p-3 font-mono text-slate-300 whitespace-nowrap text-xs">${alt.id}</td>
+-              <td class="p-3 font-mono text-[11px] text-ncs-muted whitespace-nowrap">${alt.time || 'Aug 27, 2026 @ 08:28:01'}</td>
+-              <td class="p-3 whitespace-nowrap"><a href="javascript:void(0)" class="text-cyan-400 hover:underline font-mono font-medium">${alt.agent_id || '560'}</a></td>
+-              <td class="p-3 font-mono text-white text-[11px] whitespace-nowrap font-medium">${alt.agent_name || alt.endpoint || 'NCSS_TEST_INSTALLER_TOOL_70D7_2'}</td>
+-              <td class="p-3 whitespace-nowrap"><a href="javascript:void(0)" class="text-cyan-400 hover:underline font-mono font-medium">${alt.rule_id || '100262'}</a></td>
+-              <td class="p-3 text-slate-300 text-xs max-w-[340px] truncate" title="${alt.rule_description || alt.name || 'Detection Rule'}">${alt.rule_description || alt.name || 'Detection Rule'}</td>
+-              <td class="p-3 text-center whitespace-nowrap">${levelBadge}</td>
+-              <td class="p-3 text-slate-300 text-xs whitespace-nowrap font-medium">${alt.status || 'Open'}</td>
+-              <td class="p-3 whitespace-nowrap">${mitreHtml}</td>
+-              <td class="p-3 text-slate-300 text-xs whitespace-nowrap">${alt.mitre_tactic || '-'}</td>
+-              <td class="p-3 text-center whitespace-nowrap">
+-                <button onclick="showToast('Xem chi tiết cảnh báo ${alt.id}', 'info')" class="p-1 text-cyan-400 hover:text-white hover:bg-slate-800 rounded transition" title="Xem chi tiết cảnh báo">
++              <td class="p-2 font-mono text-slate-300 truncate text-xs" title="${alt.id}">${alt.id}</td>
++              <td class="p-2 font-mono text-[11px] text-ncs-muted truncate">${alt.time || '--'}</td>
++              <td class="p-2 truncate"><a href="javascript:void(0)" class="text-cyan-400 hover:underline font-mono font-medium">${alt.agent_id || '--'}</a></td>
++              <td class="p-2 font-mono text-white text-[11px] truncate" title="${alt.agent_name || alt.endpoint || ''}">${alt.agent_name || alt.endpoint || '--'}</td>
++              <td class="p-2 truncate"><a href="javascript:void(0)" class="text-cyan-400 hover:underline font-mono font-medium">${alt.rule_id || '--'}</a></td>
++              <td class="p-2 text-slate-300 text-xs truncate" title="${alt.rule_description || alt.name || ''}">${alt.rule_description || alt.name || '--'}</td>
++              <td class="p-2 text-center">${levelBadge}</td>
++              <td class="p-2 text-slate-300 text-xs truncate">${alt.status || 'Open'}</td>
++              <td class="p-2 truncate">${mitreHtml}</td>
++              <td class="p-2 text-slate-300 text-xs truncate">${alt.mitre_tactic || '-'}</td>
++              <td class="p-2 text-center">
++                <button onclick="event.stopPropagation(); openAlertDetail('${ioc.id}', '${alt.id}')" class="p-1 text-cyan-400 hover:text-white hover:bg-slate-800 rounded transition" title="Xem chi tiết cảnh báo">
+                   <i data-lucide="eye" class="w-4 h-4"></i>
+                 </button>
+@@ -2927,14 +3414,24 @@
+       // Render Sharing History for this single IOC
+       const historyContainer = document.getElementById("drawer-sharing-history-list");
+-      historyContainer.innerHTML = `
+-        <div class="p-3 bg-ncs-input rounded border border-ncs-border space-y-1 text-xs">
+-          <div class="flex justify-between font-semibold">
+-            <span class="text-white">Hệ thống tiếp nhận dữ liệu chia sẻ</span>
+-            <span class="${ioc.share_status === 'SHARED' ? 'text-emerald-400' : 'text-amber-400'}">${ioc.share_status}</span>
+-          </div>
+-          <div class="text-ncs-muted text-[11px]">Thời gian chia sẻ gần nhất: <strong class="text-white">${ioc.last_shared}</strong></div>
+-          <div class="text-ncs-dim text-[10px]">Phương thức: SOAP edXML w/ XML-DSig Signature (X.509)</div>
+-        </div>
+-      `;
++      if (ioc.share_status === "UNSHARED" || !ioc.last_shared || ioc.last_shared === "--") {
++        historyContainer.innerHTML = `
++          <div class="p-3 bg-ncs-input rounded border border-ncs-border text-xs text-ncs-muted">
++            IOC này chưa có phiên gửi tới Trung tâm An ninh mạng.
++          </div>
++        `;
++      } else {
++        const statusLabel = ioc.share_status === "SHARED" ? "Thành công" : (ioc.share_status === "SHARE_FAILED" ? "Thất bại" : "Đang chờ");
++        const statusClass = ioc.share_status === "SHARED" ? "text-emerald-400" : "text-amber-400";
++        historyContainer.innerHTML = `
++          <div class="p-3 bg-ncs-input rounded border border-ncs-border space-y-1 text-xs">
++            <div class="flex justify-between font-semibold">
++              <span class="text-white">Phiên gửi gần nhất</span>
++              <span class="${statusClass}">${statusLabel}</span>
++            </div>
++            <div class="text-ncs-muted text-[11px]">Thời gian: <strong class="text-white">${ioc.last_shared}</strong></div>
++            <div class="text-ncs-muted text-[11px]">Đích: Trung tâm An ninh mạng</div>
++          </div>
++        `;
++      }
+ 
+       switchDrawerTab(initialTab);
+@@ -2949,4 +3446,31 @@
+       document.getElementById("ioc-detail-drawer").classList.add("translate-x-full");
+       document.getElementById("drawer-backdrop").classList.add("hidden");
++    }
++
++    function openAlertDetail(iocId, alertId) {
++      const ioc = mockIOCs.find(item => item.id === iocId) || currentSelectedIOC;
++      const alt = ioc && (ioc.alerts || []).find(a => a.id === alertId);
++      const body = document.getElementById("alert-detail-body");
++      if (!body) return;
++      if (!alt) {
++        body.innerHTML = `<p class="text-ncs-muted">Không tìm thấy cảnh báo.</p>`;
++      } else {
++        body.innerHTML = `
++          <div class="grid grid-cols-2 gap-2">
++            <div><span class="text-ncs-dim block text-[10px]">Mã cảnh báo</span><span class="font-mono text-white">${alt.id}</span></div>
++            <div><span class="text-ncs-dim block text-[10px]">Thời gian</span><span class="font-mono text-ncs-text">${alt.time || '--'}</span></div>
++            <div><span class="text-ncs-dim block text-[10px]">Agent</span><span class="font-mono text-cyan-300">${alt.agent_id || '--'}</span></div>
++            <div><span class="text-ncs-dim block text-[10px]">Máy</span><span class="text-white">${alt.agent_name || alt.endpoint || '--'}</span></div>
++            <div><span class="text-ncs-dim block text-[10px]">Rule</span><span class="font-mono text-cyan-300">${alt.rule_id || '--'}</span></div>
++            <div><span class="text-ncs-dim block text-[10px]">Mức</span><span class="text-white">${alt.rule_level || '--'}</span></div>
++            <div class="col-span-2"><span class="text-ncs-dim block text-[10px]">Mô tả</span><span class="text-ncs-text">${alt.rule_description || alt.name || '--'}</span></div>
++            <div><span class="text-ncs-dim block text-[10px]">Trạng thái</span><span class="text-white">${alt.status || '--'}</span></div>
++            <div><span class="text-ncs-dim block text-[10px]">MITRE</span><span class="font-mono text-ncs-text">${alt.mitre_id || '--'}</span></div>
++            <div class="col-span-2"><span class="text-ncs-dim block text-[10px]">Chiến thuật</span><span class="text-ncs-text">${alt.mitre_tactic || '--'}</span></div>
++          </div>
++        `;
++      }
++      openModal("modal-alert-detail");
++      lucide.createIcons();
+     }
+ 
+@@ -2967,4 +3491,5 @@
+       document.getElementById("edit-conf-val").innerText = ioc.confidence + "%";
+       document.getElementById("edit-ioc-desc").value = ioc.description || "";
++      document.getElementById("edit-ioc-tags").value = (ioc.tags || []).join(", ");
+ 
+       openModal("modal-edit-ioc");
+@@ -2984,7 +3509,4 @@
+       if (!ioc) return;
+ 
+-      const oldConf = ioc.confidence;
+-      const oldName = ioc.malware_name;
+-
+       ioc.malware_name = document.getElementById("edit-ioc-name").value;
+       ioc.value = document.getElementById("edit-ioc-value").value;
+@@ -2992,10 +3514,9 @@
+       ioc.confidence = parseInt(document.getElementById("edit-ioc-confidence").value, 10);
+       ioc.description = document.getElementById("edit-ioc-desc").value;
++      ioc.tags = parseTagInput(document.getElementById("edit-ioc-tags").value);
++      populateTagFilter();
+ 
+       closeModal("modal-edit-ioc");
+       showToast(`Đã cập nhật thông tin IOC ID ${id} thành công!`, "success");
+-      
+-      // Log to Audit
+-      addAuditLog("UPDATE", `[${ioc.type}] ${ioc.value.slice(0, 24)}...`, `Cập nhật thông tin IOC: Tên "${oldName}" -> "${ioc.malware_name}", Confidence: ${oldConf}% -> ${ioc.confidence}%`);
+       
+       applyFilters();
+@@ -3034,8 +3555,5 @@
+       if (pendingDeleteTarget === "BULK") {
+         const count = selectedIOCIds.size;
+-        const deletedIdsStr = Array.from(selectedIOCIds).join(', ');
+         mockIOCs = mockIOCs.filter(ioc => !selectedIOCIds.has(ioc.id));
+-        
+-        addAuditLog("DELETE", `${count} bản ghi IOC`, `Xóa hàng loạt các IOC có ID: ${deletedIdsStr}`);
+         clearSelection();
+         closeModal("modal-confirm-delete");
+@@ -3043,10 +3561,6 @@
+         applyFilters();
+       } else if (pendingDeleteTarget) {
+-        const ioc = mockIOCs.find(item => item.id === pendingDeleteTarget);
+-        const targetDesc = ioc ? `[${ioc.type}] ${ioc.value.slice(0, 24)}...` : `ID ${pendingDeleteTarget}`;
+         mockIOCs = mockIOCs.filter(item => item.id !== pendingDeleteTarget);
+         selectedIOCIds.delete(pendingDeleteTarget);
+-        
+-        addAuditLog("DELETE", targetDesc, `Xóa vĩnh viễn bản ghi IOC ID ${pendingDeleteTarget}`);
+         closeModal("modal-confirm-delete");
+         showToast(`Đã xóa bản ghi IOC ID ${pendingDeleteTarget} thành công!`, "success");
+@@ -3083,27 +3597,63 @@
+       const count = selectedIOCIds.size;
+       if (count === 0) {
+-        showToast("Vui lòng chọn ít nhất 1 bản ghi IOC để chia sẻ!", "error");
++        showToast("Chọn ít nhất một bản ghi để gửi.", "error");
+         return;
+       }
+ 
+-      document.getElementById("modal-share-total-count").innerText = `${count} bản ghi`;
+-      
++      const selected = mockIOCs.filter(i => selectedIOCIds.has(i.id));
++      window.lastSharePlan = buildAvReportPlan(selected);
++      const plan = window.lastSharePlan;
++      const mappable = plan.malware.length + plan.connections.length + plan.vulns.length;
++
++      document.getElementById("modal-share-total-count").innerText = `${count}`;
++      document.getElementById("modal-share-from").innerText =
++        `${cfgVal("cfg-organ-name", "Đơn vị")} (${cfgVal("cfg-organ-id", "--")})`;
++      document.getElementById("modal-share-cert").innerText = certStore.bound ? certStore.label : "Chưa chọn chứng thư";
++
++      const mapEl = document.getElementById("modal-share-mapping");
++      mapEl.innerHTML = `
++        <div>Mã độc: <strong class="text-white">${plan.malware.length}</strong></div>
++        <div>Kết nối nghi ngờ: <strong class="text-white">${plan.connections.length}</strong></div>
++        <div>Lỗ hổng: <strong class="text-white">${plan.vulns.length}</strong></div>
++        <div>Bỏ qua: <strong class="text-amber-300">${plan.skipped.length}</strong></div>
++      `;
++
+       const splitInfo = document.getElementById("modal-batch-split-info");
+-      const maxBatchSize = 500;
+-      if (count <= maxBatchSize) {
+-        splitInfo.innerHTML = `Số lượng <strong class="text-white">${count} IOCs</strong> nằm trong giới hạn cho phép (Max 500/batch). Hệ thống sẽ đóng gói thành <strong class="text-emerald-400">1 Batch duy nhất</strong>.`;
++      if (mappable === 0) {
++        splitInfo.innerHTML = `<span class="text-red-400">Không có bản ghi đủ thông tin để gửi. Cần mã độc, địa chỉ IP hoặc lỗ hổng đã gắn cảnh báo.</span>`;
+       } else {
+-        const numBatches = Math.ceil(count / maxBatchSize);
+-        splitInfo.innerHTML = `Số lượng <strong class="text-white">${count} IOCs</strong> vượt quá kích thước gói tin chuẩn. Hệ thống sẽ tự động phân chia thành <strong class="text-cyan-300">${numBatches} Batches</strong> độc lập và gửi tuần tự với khoảng trễ 1.5s để chống quá tải hệ thống tiếp nhận.`;
++        splitInfo.innerHTML = `Sẽ gửi ${mappable} mục tới Trung tâm An ninh mạng.`;
++      }
++
++      const skipWrap = document.getElementById("modal-share-skipped-wrap");
++      const skipEl = document.getElementById("modal-share-skipped");
++      if (skipWrap && skipEl) {
++        if (!plan.skipped.length) {
++          skipWrap.classList.add("hidden");
++          skipEl.innerHTML = "";
++        } else {
++          skipWrap.classList.remove("hidden");
++          skipEl.innerHTML = plan.skipped.map(s => {
++            const ioc = mockIOCs.find(i => i.id === s.id);
++            const val = ioc ? ioc.value : s.id;
++            const safeVal = String(val).replace(/</g, "&lt;");
++            return `<div class="truncate" title="${safeVal}">[${s.type}] ${safeVal} — ${s.reason}</div>`;
++          }).join("");
++        }
+       }
+ 
+       document.getElementById("share-progress-container").classList.add("hidden");
+-      document.getElementById("btn-confirm-share").disabled = false;
+-      document.getElementById("btn-confirm-share").innerHTML = `<i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Xác nhận Ký số & Gửi ngay`;
++      document.getElementById("btn-confirm-share").disabled = mappable === 0;
++      document.getElementById("btn-confirm-share").innerHTML = `<i data-lucide="send" class="w-3.5 h-3.5"></i> Gửi`;
+ 
+       openModal("modal-share-a05");
++      lucide.createIcons();
+     }
+ 
+     function openXMLViewer(batchId) {
++      const selected = mockIOCs.filter(i => selectedIOCIds.has(i.id));
++      const plan = window.lastSharePlan || buildAvReportPlan(selected.length ? selected : mockIOCs.filter(i => i.share_status === "SHARED").slice(0, 3));
++      const xml = buildEdXml(plan);
++      document.getElementById("xml-code-content").textContent = xml;
+       openModal("modal-view-xml");
+     }
+@@ -3113,8 +3663,23 @@
+     // ---------------------------------------------------------------------------
+     function executeSharingProcess() {
++      const plan = window.lastSharePlan;
++      const mappable = plan ? (plan.malware.length + plan.connections.length + plan.vulns.length) : 0;
++      if (!plan || mappable === 0) {
++        showToast("Không có dữ liệu đủ điều kiện để gửi.", "error");
++        return;
++      }
++      if (!certStore.bound) {
++        showToast("Chưa chọn chứng thư số.", "error");
++        return;
++      }
++      if (!gatewayProfileStore.bound) {
++        showToast("Chọn hồ sơ kết nối đã cấu hình trên máy chủ.", "error");
++        return;
++      }
++
+       const btn = document.getElementById("btn-confirm-share");
+       btn.disabled = true;
+-      btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> Đang truyền dữ liệu...`;
+-      
++      btn.innerHTML = `<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> Đang gửi...`;
++
+       const progressContainer = document.getElementById("share-progress-container");
+       const progressBar = document.getElementById("share-progress-bar");
+@@ -3123,26 +3688,33 @@
+ 
+       progressContainer.classList.remove("hidden");
+-      progressBar.style.width = "20%";
+-      progressPercent.innerText = "20%";
+-      progressStatus.innerText = "Đang ký số XML-DSig với chứng thư X.509...";
++      progressBar.style.width = "15%";
++      progressPercent.innerText = "15%";
++      progressStatus.innerText = "Đang chuẩn bị dữ liệu...";
+ 
+       setTimeout(() => {
+-        progressBar.style.width = "65%";
+-        progressPercent.innerText = "65%";
+-        progressStatus.innerText = "Đang gửi SOAP edXML sang hệ thống tiếp nhận...";
+-      }, 1000);
++        progressBar.style.width = "40%";
++        progressPercent.innerText = "40%";
++        progressStatus.innerText = "Đang gửi tới Trung tâm An ninh mạng...";
++      }, 700);
++
++      setTimeout(() => {
++        progressBar.style.width = "70%";
++        progressPercent.innerText = "70%";
++        progressStatus.innerText = "Đang chờ phản hồi...";
++      }, 1400);
+ 
+       setTimeout(() => {
+         progressBar.style.width = "100%";
+         progressPercent.innerText = "100%";
+-        progressStatus.innerText = "Hệ thống tiếp nhận phản hồi HTTP 200 OK (Thành công)!";
++        progressStatus.innerText = "Gửi thành công.";
+ 
+         setTimeout(() => {
++          const skipIds = new Set(plan.skipped.map(s => s.id));
+           selectedIOCIds.forEach(id => {
+             const ioc = mockIOCs.find(i => i.id === id);
+-            if (ioc) {
+-              ioc.share_status = "SHARED";
+-              ioc.last_shared = new Date().toISOString().replace('T', ' ').substring(0, 19);
+-            }
++            if (!ioc) return;
++            if (skipIds.has(id)) return;
++            ioc.share_status = "SHARED";
++            ioc.last_shared = new Date().toISOString().replace('T', ' ').substring(0, 19);
+           });
+ 
+@@ -3153,18 +3725,17 @@
+             type: "Thủ công",
+             user: "admin_soc",
+-            total: selectedIOCIds.size,
+-            success: selectedIOCIds.size,
+-            failed: 0,
+-            status: "SUCCESS"
++            total: mappable,
++            success: mappable,
++            failed: plan.skipped.length,
++            status: plan.skipped.length ? "PARTIAL" : "SUCCESS"
+           });
+-
+-          addAuditLog("SHARE", `${selectedIOCIds.size} IOCs (${batchCode})`, `Chia sẻ dữ liệu thành công ${selectedIOCIds.size} IOCs sang cổng tiếp nhận.`);
++          applyHistoryFilters();
+ 
+           closeModal("modal-share-a05");
+-          showToast(`Đã chia sẻ thành công ${selectedIOCIds.size} IOCs!`, "success");
++          showToast(`Đã gửi ${mappable} mục. Bỏ qua ${plan.skipped.length} bản ghi không đủ điều kiện.`, "success");
+           clearSelection();
+-          renderIOCTable();
+-        }, 600);
+-      }, 2200);
++          applyFilters();
++        }, 500);
++      }, 2800);
+     }
+ 
+@@ -3188,6 +3759,6 @@
+       const value = document.getElementById("ci-value").value;
+       const conf = parseInt(document.getElementById("ci-confidence").value, 10);
+-      const source = document.getElementById("ci-source").value;
+       const desc = document.getElementById("ci-desc").value;
++      const tags = parseTagInput(document.getElementById("ci-tags").value);
+ 
+       const newId = String(mockIOCs.length + 1).padStart(3, '0');
+@@ -3203,5 +3774,6 @@
+         severity: conf >= 80 ? "HIGH" : "MEDIUM",
+         confidence: conf,
+-        source: source || "MANUAL",
++        source: "MANUAL",
++        created_by: "admin_soc",
+         share_status: "UNSHARED",
+         first_seen: nowStr,
+@@ -3209,16 +3781,18 @@
+         last_shared: "--",
+         hit_count: 1,
+-        description: desc || "IOC tạo thủ công từ giao diện Quản lý IOC.",
+-        tags: ["CustomIndicator", "AdminCreated"],
++        description: desc || "IOC được thêm thủ công từ danh sách.",
++        tags: tags.length ? tags : ["Manual"],
+         alerts: []
+       };
+ 
+       mockIOCs.unshift(newIOC);
+-      addAuditLog("CREATE", `[${type}] ${(value || name).slice(0, 24)}...`, `Thêm mới thủ công IOC với Confidence ${conf}%`);
++      populateTagFilter();
+ 
+       closeModal("modal-create-ioc");
+-      showToast(`Đã thêm mới và đồng bộ thành công IOC [${type}] ${value || name}`, "success");
++      showToast(`Đã thêm IOC [${type}] vào danh sách.`, "success");
+       applyFilters();
+       e.target.reset();
++      const src = document.getElementById("ci-source");
++      if (src) src.value = "MANUAL";
+     }
+ 
+@@ -3227,6 +3801,5 @@
+       showToast("Đang xử lý import 120 dòng dữ liệu IOC...", "info");
+       setTimeout(() => {
+-        addAuditLog("IMPORT", "File ioc_data_batch.xlsx (120 IOCs)", "Import thành công 118 bản ghi mới/cập nhật, 2 bản ghi lỗi");
+-        showToast("Import thành công: 118 bản ghi mới/cập nhật, 2 bản ghi lỗi cú pháp đã được xuất log!", "success");
++      showToast("Import (demo): 118 bản ghi mới/cập nhật, 2 dòng lỗi cú pháp.", "success");
+       }, 1500);
+     }
+@@ -3236,14 +3809,38 @@
+       showToast("Đang chuẩn bị file xuất dữ liệu theo định dạng đã chọn...", "info");
+       setTimeout(() => {
+-        addAuditLog("EXPORT", "Xuất file dữ liệu", "Xuất thành công file ioc_export_20260826.xlsx");
+-        showToast("Đã tải xuống file ioc_export_20260826.xlsx thành công!", "success");
++        showToast("Export (demo): đã tạo file ioc_export_20260826.xlsx.", "success");
+       }, 1200);
+     }
+ 
+     function testConnectionA05() {
+-      showToast("Đang gửi bản tin kiểm tra kết nối HTTPS tới hệ thống tiếp nhận...", "info");
++      if (!certStore.bound) {
++        setConnectionBadge("fail");
++        showToast("Chưa chọn chứng thư số.", "error");
++        return;
++      }
++      const profile = getSelectedGatewayProfile();
++      if (!profile || !profile.configured) {
++        setConnectionBadge("fail");
++        showToast("Chọn hồ sơ kết nối đã cấu hình trên máy chủ.", "error");
++        return;
++      }
++      const top = document.getElementById("topbar-static-ip");
++      if (top) top.innerText = profile.outboundIp;
++      showToast("Đang kiểm tra kết nối...", "info");
+       setTimeout(() => {
+-        showToast("Kiểm tra kết nối thành công! Chứng thư số X.509 hợp lệ, IP 113.160.25.10 đã trong Whitelist.", "success");
+-      }, 1500);
++        setConnectionBadge("ok");
++        showToast("Kết nối Trung tâm An ninh mạng thành công.", "success");
++      }, 1200);
++    }
++
++    function refreshServerCertList() {
++      lucide.createIcons();
++      showToast("Đã làm mới danh sách chứng thư.", "success");
++    }
++
++    function refreshGatewayProfiles() {
++      onGatewayProfileChange();
++      lucide.createIcons();
++      showToast("Đã làm mới danh sách hồ sơ kết nối.", "success");
+     }
+ 
+@@ -3256,7 +3853,6 @@
+           batch.failed = 0;
+           batch.status = "SUCCESS";
+-          renderBatchHistoryTable();
++          applyHistoryFilters();
+         }
+-        addAuditLog("SHARE", `Thử lại Batch ${batchId}`, "Gửi lại thành công toàn bộ các bản ghi lỗi trước đó");
+         showToast(`Đã gửi lại thành công các bản ghi lỗi cho phiên ${batchId}!`, "success");
+       }, 1500);
+@@ -3268,5 +3864,5 @@
+       setTimeout(() => {
+         icon.classList.remove("animate-spin");
+-        renderIOCTable();
++        applyFilters();
+         showToast("Đã làm mới dữ liệu và danh sách IOC.", "info");
+       }, 600);
+@@ -3442,10 +4038,4 @@
+           };
+           mockIOCs.unshift(newIOC);
+-
+-          addAuditLog(
+-            "CREATE", 
+-            `[${iocType}] ${iocVal.slice(0, 24)}...`, 
+-            `SYSTEM trích xuất IOC mới từ Alert ${alertData.alert_id} với Confidence gốc = ${alertConf}%`
+-          );
+         } else {
+           // ==========================================
+@@ -3469,10 +4059,4 @@
+             });
+           }
+-
+-          addAuditLog(
+-            "UPDATE", 
+-            `[${existing.type}] ${existing.value.slice(0, 24)}...`, 
+-            `SYSTEM nhận Alert ${alertData.alert_id}: Phát hiện IOC trùng lặp ➔ Cập nhật Last seen & Alert liên quan, KHÔNG thay đổi Confidence (giữ nguyên ${existing.confidence}%)`
+-          );
+         }
+       });
+@@ -3486,7 +4070,14 @@
+     // ---------------------------------------------------------------------------
+     document.addEventListener("DOMContentLoaded", () => {
+-      renderIOCTable();
+-      renderBatchHistoryTable();
+-      renderAuditLogTable();
++      populateTagFilter();
++      applyFilters();
++      applyHistoryFilters();
++      onGatewayProfileChange();
++      setConnectionBadge("unchecked");
++      updateAutoSharePreview();
++      document.querySelectorAll(".cron-ioc-type-cb, .cron-src-cb, #sc-status-unshared, #sc-status-failed, #sc-status-shared, #cron-min-confidence, #cron-interval-value, #cron-interval-unit, #cron-fixed-time, #toggle-cron-active").forEach(el => {
++        if (el) el.addEventListener("change", updateAutoSharePreview);
++        if (el) el.addEventListener("input", updateAutoSharePreview);
++      });
+       lucide.createIcons();
+ 
+@@ -3497,6 +4088,4 @@
+       } else if (view === 'settings') {
+         switchMainTab('settings');
+-      } else if (view === 'audit') {
+-        switchMainTab('audit');
+       } else if (view === 'drawer') {
+         const iocId = urlParams.get('ioc') || '001';

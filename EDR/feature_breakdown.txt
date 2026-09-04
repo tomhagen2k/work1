@@ -1,0 +1,39 @@
+=== 1. TITLE & TOPBAR ===
+Title: NCS EDR - Quản lý IOC và chia sẻ dữ liệu
+Topbar connection indicator: ['\n        ', '', 'Chưa kiểm tra']
+
+=== 2. MAIN TABS ===
+Tab ID: tab-btn-inventory | Action: inventory | Text: Danh sách IOC
+Tab ID: tab-btn-history | Action: history | Text: Lịch sử chia sẻ
+Tab ID: tab-btn-settings | Action: settings | Text: Cấu hình chia sẻ
+
+=== 3. INVENTORY VIEW ===
+Search placeholder: Tìm hash, IP, CVE, tên mã độc...
+Time filter: ['id="filter-time-from"', 'id="filter-time-to"']
+Select: filter-share-status -> Options: ['Tất cả trạng thái', 'Chưa chia sẻ', 'Chia sẻ lỗi', 'Đã chia sẻ', 'Đang chờ gửi']
+Select: filter-ioc-type -> Options: ['Tất cả loại', 'SHA256 (File Hash)', 'MD5 (File Hash)', 'IPv4 (C2 / Network)', 'Domain / Hostname', 'URL Phishing / Dropper', 'CVE Vulnerability']
+Select: filter-confidence -> Options: ['Tất cả', 'Rất cao & Cao (≥ 80)', 'Trung bình (50 - 79)', 'Thấp (< 50)']
+Select: filter-source -> Options: ['Tất cả nguồn', 'Cảnh báo EDR', 'Threat Intel (TIP)', 'Import File', 'Nhập thủ công']
+Select: filter-tag -> Options: ['Tất cả nhãn']
+Inventory Table Columns: ['', 'ID', 'LOẠI', 'GIÁ TRỊ IOC', 'NHÃN', 'TIN CẬY', 'NGUỒN', 'CẢNH BÁO', 'TRẠNG THÁI', 'THẤY', 'GỬI', 'HÀNH ĐỘNG']
+
+=== 4. HISTORY VIEW ===
+History Table Columns: ['MÃ PHIÊN', 'THỜI GIAN', 'HÌNH THỨC', 'NGƯỜI GỬI', 'TỔNG', 'OK', 'LỖI', 'TRẠNG THÁI', 'THAO TÁC']
+
+=== 5. SETTINGS VIEW ===
+Settings Section: 1. Thông tin đơn vị gửi
+
+=== 6. DRAWER TABS & STRUCTURE ===
+Drawer Tab: dtab-overview -> Tổng quan
+Drawer Tab: dtab-intel -> Threat Intel
+Drawer Tab: dtab-alerts -> Cảnh báo liên quan ( 0 )
+Drawer Tab: dtab-sharing -> Lịch sử chia sẻ
+Drawer Panels: ['dpanel-overview', 'dpanel-intel', 'dpanel-alerts', 'dpanel-sharing']
+
+=== 7. MODALS ===
+Modal ID: modal-create-ioc | Title: Thêm mới IOC
+Modal ID: modal-alert-detail | Title: N/A
+Modal ID: modal-share-a05 | Title: N/A
+Modal ID: modal-import | Title: N/A
+Modal ID: modal-export | Title: N/A
+Modal ID: modal-view-xml | Title: N/A

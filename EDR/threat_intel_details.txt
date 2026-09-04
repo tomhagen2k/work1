@@ -1,0 +1,120 @@
+=== THREAT INTEL PANEL ===
+<div id="dpanel-intel" class="hidden space-y-3">
+        <div class="bg-ncs-input/80 rounded border border-ncs-border p-4 space-y-3">
+          <div class="min-w-0">
+            <div id="ti-ioc-value" class="font-mono text-sm text-white break-all select-all leading-relaxed">--</div>
+            <div class="flex flex-wrap items-center gap-2 mt-2">
+              <span id="ti-severity-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-950 text-red-400 border border-red-800">Critical</span>
+              <span id="ti-type-badge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-950 text-purple-300 border border-purple-800 uppercase">SHA256</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs pt-1 border-t border-ncs-border/60">
+            <div>
+              <span class="text-ncs-dim block text-[10px]">Thời điểm tạo</span>
+              <span id="ti-created-at" class="font-mono text-ncs-text">--</span>
+            </div>
+            <div>
+              <span class="text-ncs-dim block text-[10px]">Trạng thái</span>
+              <span id="ti-related-status" class="text-ncs-muted inline-flex items-center gap-1">Không có đối tượng liên quan</span>
+            </div>
+            <div>
+              <span class="text-ncs-dim block text-[10px]">Tên mối đe dọa</span>
+              <span id="ti-malware-name" class="text-white">--</span>
+            </div>
+            <div>
+              <span class="text-ncs-dim block text-[10px]">Phân loại</span>
+              <span id="ti-malware-type" class="text-white">--</span>
+            </div>
+            <div>
+              <span class="text-ncs-dim block text-[10px]">Hành vi</span>
+              <span id="ti-malware-behavior" class="text-white">--</span>
+            </div>
+            <div>
+              <span class="text-ncs-dim block text-[10px]">Nguồn intel</span>
+              <span id="ti-source" class="text-cyan-300">--</span>
+            </div>
+          </div>
+
+          <div>
+            <span class="text-ncs-dim block text-[10px] mb-1.5">Nhãn</span>
+            <div id="ti-tags" class="flex flex-wrap gap-1.5"></div>
+          </div>
+        </div>
+
+        <p class="text-[11px] text-ncs-dim leading-relaxed">Dữ liệu threat intelligence lưu trên hệ thống EDR. Chưa kết nối TIP.</p>
+        <button type="button" disabled class="w-full px-4 py-2.5 rounded bg-ncs-input border border-ncs-border text-ncs-dim text-xs font-medium flex items-center justify-center gap-2 cursor-not-allowed opacity-70">
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+          View In TIP Platform
+        </button>
+      </div>
+
+      <!-- TAB
+
+=== MODAL ALERT DETAIL ===
+<div id="modal-alert-detail" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-ncs-card border border-ncs-border rounded-lg w-full max-w-lg shadow-2xl overflow-hidden animate-fadeIn">
+      <div class="p-4 bg-ncs-topbar border-b border-ncs-border flex items-center justify-between">
+        <h3 class="font-semibold text-white text-sm flex items-center gap-2">
+          <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
+          Chi tiết cảnh báo
+        </h3>
+        <button onclick="closeModal('modal-alert-detail')" class="text-ncs-muted hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div id="alert-detail-body" class="p-4 space-y-2 text-xs"></div>
+      <div class="p-3 bg-ncs-topbar border-t border-ncs-border flex justify-end">
+        <button type="button" onclick="closeModal('modal-alert-detail')" class="px-4 py-2 rounded bg-ncs-input hover:bg-ncs-cardHover border border-ncs-border text-white text-xs">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+=== MODAL SHARE ===
+<div id="modal-share-a05" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-ncs-card border border-ncs-border rounded-lg w-full max-w-xl shadow-2xl overflow-hidden animate-fadeIn max-h-[90vh] flex flex-col">
+      <div class="p-4 bg-ncs-topbar border-b border-ncs-border flex items-center justify-between">
+        <h3 class="font-semibold text-white text-sm flex items-center gap-2">
+          <i data-lucide="send" class="w-4 h-4 text-cyan-400"></i>
+          Gửi tới Trung tâm An ninh mạng
+        </h3>
+        <button onclick="closeModal('modal-share-a05')" class="text-ncs-muted hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="p-4 space-y-3.5 text-xs overflow-y-auto">
+        <div class="p-3 rounded bg-ncs-input border border-ncs-border space-y-1.5">
+          <div class="flex justify-between text-ncs-muted">
+            <span>Đơn vị gửi:</span>
+            <span id="modal-share-from" class="text-white font-semibold">Sở TT&amp;TT ABC (000.01.12.H28)</span>
+          </div>
+          <div class="flex justify-between text-ncs-muted">
+            <span>Chứng thư số:</span>
+            <span id="modal-share-cert" class="text-emerald-400">STTT ABC</span>
+          </div>
+        </div>
+
+        <div class="p-3 rounded bg-blue-950/40 border border-cyan-800/40 space-y-2">
+          <div class="font-semibold text-cyan-300 flex items-center justify-between">
+            <span>Bản ghi đang chọn:</span>
+            <span id="modal-share-total-count" class="text-sm font-bold text-white">0</span>
+          </div>
+          <div id="modal-share-mapping" class="text-[11px] text-ncs-muted leading-relaxed space-y-0.5"></div>
+          <div id="modal-batch-split-info" class="text-[11px] text-ncs-muted leading-relaxed"></div>
+        </div>
+
+        <div id="modal-share-skipped-wrap" class="hidden p-3 rounded bg-amber-950/30 border border-amber-800/50 space-y-1.5 max-h-40 overflow-y-auto">
+          <div class="font-semibold text-amber-300">Bản ghi sẽ bỏ qua</div>
+          <div id="modal-share-skipped" class="text-[11px] text-amber-100/90 leading-relaxed space-y-0.5"></div>
+        </div>
+
+        <div id="share-progress-container" class="hidden space-y-1.5 pt-2">
+          <div class="flex justify-between text-[11px]">
+            <span id="share-progress-status" class="text-cyan-300">Đang gửi...</span>
+            <span id="share-progress-percent" class="font-mono text-white">45%</span>
+          </div>
+          <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+            <div id="share-progress-bar" class="bg-cyan-500 h-2 transition-all duration-300" style="width: 45%"></div>
+          </div>
+        </div>

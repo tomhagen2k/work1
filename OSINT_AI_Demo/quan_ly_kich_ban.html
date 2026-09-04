@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT - Quản Lý Tài Khoản & Kịch Bản AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark-sidebar: #090e17;
+            --bg-dark-sidebar-item: #131b2e;
+            --bg-main: #f4f6fa;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+            --accent-blue: #0066fe;
+            --accent-blue-hover: #0052cc;
+            --accent-blue-light: rgba(0, 102, 254, 0.08);
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --tag-purple: #8b5cf6;
+            --tag-purple-bg: rgba(139, 92, 246, 0.1);
+            --tag-green: #10b981;
+            --tag-green-bg: rgba(16, 185, 129, 0.1);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+
+        body { display: flex; height: 100vh; background-color: var(--bg-main); color: var(--text-primary); overflow: hidden; }
+
+        /* SIDEBAR (Left Dark Navigation) */
+        .sidebar {
+            width: 240px;
+            background-color: var(--bg-dark-sidebar);
+            color: #94a3b8;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-shrink: 0;
+            border-right: 1px solid #1e293b;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 22px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-brand span { color: var(--accent-blue); }
+
+        .sidebar-menu { list-style: none; padding: 0 12px; }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+            color: #94a3b8;
+        }
+
+        .sidebar-item:hover { background-color: var(--bg-dark-sidebar-item); color: #ffffff; }
+
+        .sidebar-item.active {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 102, 254, 0.3);
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px; height: 36px; border-radius: 50%; background-color: var(--accent-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;
+        }
+
+        .user-info { display: flex; flex-direction: column; }
+        .user-name { font-size: 13px; font-weight: 600; color: #f1f5f9; }
+        .user-role { font-size: 11px; color: #64748b; }
+
+        /* MAIN CONTAINER */
+        .main-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        .header {
+            height: 64px;
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            flex-shrink: 0;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .btn-ai-command {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-ai-command:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+
+        /* SCREEN 1: VIRTUAL ACCOUNTS SCREEN */
+        .screen-container {
+            display: none;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow: hidden;
+            background-color: var(--bg-main);
+            padding: 24px;
+        }
+
+        .screen-container.active { display: flex; }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+
+        .action-dropdown-wrapper { position: relative; }
+
+        .btn-action-trigger {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(0, 102, 254, 0.25);
+        }
+
+        .action-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 6px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            width: 220px;
+            display: none;
+            flex-direction: column;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .action-menu.show { display: flex; }
+
+        .action-menu-item {
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-menu-item:hover { background-color: #f0f7ff; color: var(--accent-blue); }
+
+        .card-table {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .datatable-wrapper { flex-grow: 1; overflow: auto; }
+
+        .accounts-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+        .accounts-table th {
+            background: #f8fafc;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .accounts-table td { padding: 14px 16px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+
+        .badge-status {
+            padding: 4px 10px; border-radius: 12px; font-size: 11.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;
+        }
+
+        .badge-active { background-color: rgba(16, 185, 129, 0.12); color: #10b981; }
+        .badge-inactive { background-color: rgba(239, 68, 68, 0.12); color: #ef4444; }
+
+        /* SCREEN 2: SCENARIOS WORKSPACE (3 COLUMNS) */
+        .workspace { display: flex; flex-grow: 1; overflow: hidden; }
+
+        .scenarios-panel {
+            width: 320px; background-color: #ffffff; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0;
+        }
+
+        .scenarios-header { padding: 16px; border-bottom: 1px solid var(--border-color); }
+        .scenarios-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .scenarios-count-label { font-size: 13px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.5px; text-transform: uppercase; }
+        .scenarios-count-badge { color: var(--accent-blue); font-weight: 800; font-size: 14px; }
+        .btn-create-scenario { width: 34px; height: 34px; border-radius: 50%; background-color: var(--accent-blue); color: white; border: none; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0, 102, 254, 0.3); }
+        .btn-create-scenario:hover { background-color: var(--accent-blue-hover); transform: scale(1.05); }
+
+        .search-box { position: relative; margin-bottom: 12px; }
+        .search-input { width: 100%; padding: 9px 12px 9px 36px; border-radius: 20px; border: 1px solid var(--border-color); font-size: 12.5px; outline: none; background-color: #f8fafc; }
+        .search-input:focus { border-color: var(--accent-blue); background-color: #ffffff; }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; fill: var(--text-muted); }
+
+        .filter-tabs { display: flex; background-color: #f1f5f9; padding: 3px; border-radius: 8px; gap: 2px; }
+        .filter-tab-btn { flex: 1; padding: 6px 0; text-align: center; font-size: 11.5px; font-weight: 600; color: var(--text-secondary); border: none; background: none; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .filter-tab-btn.active { background-color: #ffffff; color: var(--accent-blue); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+        .scenarios-list { flex-grow: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+
+        .scenario-card { padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); background-color: #ffffff; cursor: pointer; transition: all 0.2s; }
+        .scenario-card:hover { border-color: #cbd5e1; box-shadow: var(--shadow-sm); }
+        .scenario-card.active { border-color: var(--accent-blue); background-color: var(--accent-blue-light); box-shadow: 0 0 0 1px var(--accent-blue); }
+        .card-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+        .card-title { font-size: 13.5px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+        .card-meta { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--text-secondary); margin-top: 6px; }
+        .card-type-tag { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
+        .tag-recurring { background-color: var(--tag-green-bg); color: var(--tag-green); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .tag-roadmap { background-color: var(--tag-purple-bg); color: var(--tag-purple); border: 1px solid rgba(139, 92, 246, 0.3); }
+        .card-ai-badge { background-color: rgba(0, 102, 254, 0.1); color: var(--accent-blue); font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 4px; }
+        .card-actions { display: flex; align-items: center; gap: 4px; opacity: 0.6; }
+        .scenario-card:hover .card-actions { opacity: 1; }
+
+        .icon-btn { width: 24px; height: 24px; border-radius: 4px; border: none; background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); transition: all 0.15s; }
+        .icon-btn:hover { background-color: #e2e8f0; color: var(--text-primary); }
+        .icon-btn.delete:hover { background-color: #fee2e2; color: #ef4444; }
+
+        .days-submenu-panel { width: 250px; background-color: #f8fafc; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; flex-shrink: 0; }
+        .days-submenu-header { padding: 16px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; background-color: #ffffff; }
+        .days-submenu-title { font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .days-list { flex-grow: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+
+        .day-item-btn { padding: 10px 12px; border-radius: 8px; background: #ffffff; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--text-primary); cursor: pointer; transition: all 0.2s; position: relative; }
+        .day-item-btn:hover { border-color: var(--accent-blue); background-color: #f0f7ff; }
+        .day-item-btn.active { background-color: var(--accent-blue); border-color: var(--accent-blue); color: #ffffff; box-shadow: 0 2px 6px rgba(0,102,254,0.25); }
+        .day-item-btn.active .day-item-time { color: rgba(255,255,255,0.9); }
+        .day-item-btn.active .day-badge { background: rgba(255,255,255,0.2); color: white; }
+        .day-item-time { font-size: 11px; color: var(--text-secondary); font-weight: 500; margin-top: 2px; }
+        .day-badge { font-size: 10.5px; background: rgba(0,0,0,0.06); padding: 2px 6px; border-radius: 10px; }
+        .day-hover-actions { display: none; align-items: center; gap: 4px; }
+        .day-item-btn:hover .day-hover-actions { display: flex; }
+        .day-item-btn:hover .day-badge { display: none; }
+        .btn-add-day-sub { margin: 12px; padding: 10px; border-radius: 8px; border: 1.5px dashed var(--accent-blue); background-color: var(--accent-blue-light); color: var(--accent-blue); font-size: 12.5px; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.2s; }
+        .btn-add-day-sub:hover { background-color: rgba(0, 102, 254, 0.15); }
+
+        .detail-panel { flex-grow: 1; background-color: #ffffff; display: flex; flex-direction: column; overflow: hidden; }
+        .detail-header { padding: 16px 24px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+        .detail-header-left { display: flex; align-items: center; gap: 12px; }
+        .detail-header-icon { width: 34px; height: 34px; border-radius: 8px; background-color: var(--accent-blue-light); color: var(--accent-blue); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+        .detail-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+        .detail-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+        /* EXECUTION SLOT CARDS CONTAINER IN COLUMN 3 */
+        .slots-workspace-wrapper { flex-grow: 1; padding: 20px 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+
+        .slot-card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .slot-card-header {
+            background-color: #f8fafc;
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .slot-card-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .slot-time-badge {
+            background-color: var(--accent-blue-light);
+            color: var(--accent-blue);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .btn-add-action-slot {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn-add-action-slot:hover { background-color: var(--accent-blue-hover); }
+
+        .btn-add-slot-main {
+            border: 2px dashed var(--accent-blue);
+            background-color: var(--accent-blue-light);
+            color: var(--accent-blue);
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-add-slot-main:hover { background-color: rgba(0, 102, 254, 0.15); }
+
+        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .data-table th { text-align: left; padding: 10px 14px; border-bottom: 2px solid var(--border-color); color: var(--text-secondary); font-size: 12px; text-transform: uppercase; }
+        .data-table td { padding: 12px 14px; border-bottom: 1px solid var(--border-color); }
+        .empty-placeholder { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: var(--text-secondary); }
+
+        /* TOGGLE SWITCH STYLING */
+        .switch { position: relative; display: inline-block; width: 42px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent-blue); }
+        input:checked + .slider:before { transform: translateX(18px); }
+
+        /* ASSIGNED SCENARIOS MODAL LIST ITEM */
+        .assigned-scenario-card {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .assigned-info-left { display: flex; flex-direction: column; gap: 4px; }
+        .assigned-title { font-weight: 700; font-size: 14px; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+        .assigned-meta { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; }
+        .assigned-controls { display: flex; align-items: center; gap: 10px; }
+
+        /* MODALS COMMON */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-box { background-color: #ffffff; border-radius: 12px; width: 100%; max-width: 540px; box-shadow: var(--shadow-lg); overflow: hidden; }
+        .modal-header { padding: 18px 24px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
+        .modal-title { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+        .modal-close-btn { border: none; background: none; font-size: 18px; color: var(--text-muted); cursor: pointer; }
+        .modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; max-height: 75vh; overflow-y: auto; }
+        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px; background-color: #f8fafc; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-label { font-size: 12.5px; font-weight: 600; color: var(--text-primary); }
+        .form-control { width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 13px; outline: none; }
+        .action-categories-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; max-height: 500px; overflow-y: auto; }
+        .action-category-col { background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+        .category-col-header { font-size: 12.5px; font-weight: 700; color: var(--accent-blue); border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
+        .category-actions-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+        .category-action-item { font-size: 12px; padding: 6px 8px; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+        .category-action-item:hover { background-color: var(--accent-blue); color: white; }
+
+        .btn-secondary { padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border-color); background-color: white; color: var(--text-secondary); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+        .btn-primary { padding: 8px 18px; border-radius: 20px; border: none; background-color: var(--accent-blue); color: white; font-size: 12.5px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 6px rgba(0, 102, 254, 0.25); }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <div class="sidebar">
+        <div>
+            <div class="sidebar-brand">OSINT <span>AI</span></div>
+            <ul class="sidebar-menu">
+                <li class="sidebar-item" onclick="switchNav('accounts')">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    Dashboard
+                </li>
+                <li class="sidebar-item active" id="nav-accounts" onclick="switchNav('accounts')">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    Quản lý tài khoản ảo
+                </li>
+                <li class="sidebar-item" id="nav-scenarios" onclick="switchNav('scenarios')">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+                    Quản lý kịch bản
+                </li>
+                <li class="sidebar-item">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2zm0-4H7V7h10v2zm0 8H7v-2h10v2z"/></svg>
+                    Đấu tranh phản bác
+                </li>
+                <li class="sidebar-item">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    Đối tượng cần vô hiệu hóa
+                </li>
+            </ul>
+        </div>
+        <div class="sidebar-footer">
+            <div class="user-avatar">A</div>
+            <div class="user-info">
+                <span class="user-name">Admin OSINT</span>
+                <span class="user-role">Quản trị viên</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN WORKSPACE CONTAINER -->
+    <div class="main-wrapper">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-title" id="page-title">
+                <svg width="22" height="22" fill="var(--accent-blue)" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                Quản Lý Tài Khoản Ảo
+            </div>
+            <div class="header-right">
+                <button class="btn-ai-command">🤖 AI Command</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 1: VIRTUAL ACCOUNTS MANAGEMENT -->
+        <div class="screen-container active" id="screen-accounts">
+            <div class="toolbar">
+                <div class="action-dropdown-wrapper">
+                    <button class="btn-action-trigger" onclick="toggleActionMenu()">⚡ Hành động ▾</button>
+                    <div class="action-menu" id="action-menu">
+                        <div class="action-menu-item" onclick="openAssignModal()"><span>🎬</span> Gán kịch bản cho tài khoản</div>
+                        <div class="action-menu-item" onclick="alert('Tính năng Cập nhật Proxy')"><span>🌐</span> Cập nhật Proxy</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" class="search-input" style="width: 260px;" placeholder="Tìm kiếm theo UID, Email...">
+                    <button class="btn-secondary">📥 Nhập file</button>
+                    <button class="btn-primary">+ Tạo tài khoản ảo</button>
+                </div>
+            </div>
+
+            <div class="card-table">
+                <div class="datatable-wrapper">
+                    <table class="accounts-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;"><input type="checkbox" id="check-all-acc" onchange="toggleSelectAllAccounts(this)"></th>
+                                <th>STT</th>
+                                <th>Nền tảng</th>
+                                <th>UID</th>
+                                <th>Email</th>
+                                <th>Nghề nghiệp</th>
+                                <th>Loại Tài Khoản</th>
+                                <th>Trạng Thái</th>
+                                <th>Proxy</th>
+                                <th>Số KB Đã Gán</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accounts-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: SCENARIO MANAGEMENT (3 COLUMNS) -->
+        <div class="screen-container" id="screen-scenarios" style="padding: 0; height: calc(100vh - 64px);">
+            <div class="workspace">
+                <!-- COLUMN 1: SCENARIOS LIST -->
+                <div class="scenarios-panel">
+                    <div class="scenarios-header">
+                        <div class="scenarios-title-row">
+                            <div class="scenarios-count-label">Kịch bản <span class="scenarios-count-badge" id="scenarios-count">4</span></div>
+                            <button class="btn-create-scenario" onclick="openCreateModal()" title="Tạo mới kịch bản">+</button>
+                        </div>
+                        <div class="search-box">
+                            <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                            <input type="text" class="search-input" id="search-input" placeholder="Tìm kiếm tên kịch bản..." oninput="renderScenariosList()">
+                        </div>
+                        <div class="filter-tabs">
+                            <button class="filter-tab-btn active" onclick="setFilterTab('all', this)">Tất cả</button>
+                            <button class="filter-tab-btn" onclick="setFilterTab('recurring', this)">Kịch bản đơn</button>
+                            <button class="filter-tab-btn" onclick="setFilterTab('roadmap', this)">Lộ trình</button>
+                        </div>
+                    </div>
+                    <div class="scenarios-list" id="scenarios-list"></div>
+                </div>
+
+                <!-- COLUMN 2: SUB-MENU DAYS LIST -->
+                <div class="days-submenu-panel" id="days-submenu-panel"></div>
+
+                <!-- COLUMN 3: DETAILS & ACTIONS WORKSPACE (CONTAINING MULTIPLE SLOT CARDS) -->
+                <div class="detail-panel" id="detail-panel"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ASSIGNMENT 1: DANH SÁCH CHẠY KỊCH BẢN CHO TÀI KHOẢN -->
+    <div class="modal-overlay" id="modal-assigned-list">
+        <div class="modal-box" style="max-width: 650px;">
+            <div class="modal-header">
+                <span class="modal-title" id="assigned-modal-title">Danh sách chạy kịch bản cho tài khoản</span>
+                <button class="modal-close-btn" onclick="closeModal('modal-assigned-list')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-size: 13px; font-weight: 700; color: var(--text-secondary);">
+                        Tổng số kịch bản gán: <span id="assigned-count-badge" style="color: var(--accent-blue); font-size: 15px;">0</span>
+                    </div>
+                    <button class="btn-primary" onclick="openConfigScenarioModal('create')">+ Thêm kịch bản chạy</button>
+                </div>
+                <div id="assigned-scenarios-container" style="margin-top: 10px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="closeModal('modal-assigned-list')">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ASSIGNMENT 2: THÊM / CHỈNH SỬA KỊCH BẢN CHẠY -->
+    <div class="modal-overlay" id="modal-config-assignment">
+        <div class="modal-box" style="max-width: 540px;">
+            <div class="modal-header">
+                <span class="modal-title" id="config-assignment-title">Chỉnh sửa kịch bản chạy</span>
+                <button class="modal-close-btn" onclick="closeModal('modal-config-assignment')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Loại kịch bản *</label>
+                    <select class="form-control" id="config-scenario-type" onchange="onAssignTypeChanged()">
+                        <option value="">-- Chọn loại kịch bản --</option>
+                        <option value="recurring">🔄 Kịch bản đơn</option>
+                        <option value="roadmap">📅 Kịch bản lộ trình</option>
+                    </select>
+                    <span id="err-scenario-type" style="color: #ef4444; font-size: 11.5px; margin-top: 4px; display: none;">Vui lòng chọn loại kịch bản!</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Kịch bản cần chạy *</label>
+                    <select class="form-control" id="config-scenario-select">
+                        <option value="">-- Vui lòng chọn loại kịch bản trước --</option>
+                    </select>
+                    <span id="err-scenario-select" style="color: #ef4444; font-size: 11.5px; margin-top: 4px; display: none;">Vui lòng chọn kịch bản cần chạy!</span>
+                </div>
+
+                <div id="config-section-recurring" style="display: none; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <span style="font-size: 13px; font-weight: 700; color: var(--accent-blue);">🎬 Thiết lập lịch chạy lặp lại</span>
+                        <button class="btn-secondary" style="padding: 4px 10px; font-size: 11.5px;" onclick="addScheduleSlot()">+ Thêm khung giờ</button>
+                    </div>
+                    <div id="schedule-slots-container"></div>
+                    <span id="err-schedule-slots" style="color: #ef4444; font-size: 11.5px; margin-top: 4px; display: none;">Vui lòng thêm ít nhất 1 khung giờ chạy cho kịch bản!</span>
+                </div>
+
+                <div id="config-section-roadmap" style="display: none; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <div style="font-size: 13px; font-weight: 700; color: var(--accent-blue); margin-bottom: 12px;">📅 Thiết lập lộ trình đa ngày</div>
+                    <div class="form-group" style="margin-bottom: 14px;">
+                        <label class="form-label">Ngày bắt đầu chạy *</label>
+                        <input type="date" class="form-control" id="config-roadmap-startdate">
+                        <span style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">* Không được chọn ngày trong quá khứ</span>
+                        <span id="err-roadmap-startdate" style="color: #ef4444; font-size: 11.5px; margin-top: 4px; display: none;">Ngày bắt đầu chạy không được nhỏ hơn ngày hiện tại!</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Hành vi khi chạy hết lộ trình *</label>
+                        <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12.5px; margin-top: 4px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="roadmap-loop-opt" value="once" checked> 🛑 Dừng lại sau khi chạy hết lộ trình
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="roadmap-loop-opt" value="loop"> 🔄 Lặp lại chu kỳ từ đầu
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('modal-config-assignment')">Hủy</button>
+                <button class="btn-primary" onclick="saveAssignmentConfig()">Lưu cấu hình</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP: THÊM / SỬA KHUNG GIỜ LƯỢT CHẠY MỚI CÓ VALIDATE 30 PHÚT -->
+    <div class="modal-overlay" id="modal-slot-time">
+        <div class="modal-box" style="max-width: 420px;">
+            <div class="modal-header">
+                <span class="modal-title" id="slot-time-modal-title">Thêm lượt chạy mới</span>
+                <button class="modal-close-btn" onclick="closeModal('modal-slot-time')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Thời điểm chạy trong ngày (HH:mm) *</label>
+                    <input type="time" class="form-control" id="slot-time-input" style="font-size: 16px; font-weight: 700; color: var(--accent-blue);">
+                    <span style="font-size: 11.5px; color: var(--text-secondary); margin-top: 4px;">
+                        ⚠️ <strong>Ràng buộc hệ thống:</strong> Thời điểm của các lượt chạy trong cùng một ngày phải cách nhau tối thiểu <strong>30 phút</strong>.
+                    </span>
+                    <span id="err-slot-time" style="color: #ef4444; font-size: 11.5px; margin-top: 4px; display: none;">⚠️ Thời điểm giữa các lượt chạy trong cùng một ngày phải cách nhau tối thiểu 30 phút! Vui lòng chọn mốc giờ khác.</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('modal-slot-time')">Hủy</button>
+                <button class="btn-primary" onclick="saveSlotTime()">Lưu lượt chạy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ASSIGNMENT 3: POPUP KÍCH HOẠT LẠI KỊCH BẢN LỘ TRÌNH -->
+    <div class="modal-overlay" id="modal-resume-roadmap">
+        <div class="modal-box" style="max-width: 440px;">
+            <div class="modal-header">
+                <span class="modal-title">⚙️ Kích hoạt lại Kịch bản lộ trình</span>
+                <button class="modal-close-btn" onclick="cancelResumeRoadmap()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="font-size: 13px; color: var(--text-primary); line-height: 1.5;">
+                    Kịch bản này trước đó đã chạy đến <strong style="color: var(--accent-blue);" id="resume-day-badge">Ngày 5</strong>. Bạn muốn hệ thống xử lý tiếp tục như thế nào?
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 8px;">
+                    <label style="border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+                        <input type="radio" name="resume-opt" value="resume" checked style="margin-top: 2px;">
+                        <div>
+                            <strong style="font-size: 13px; color: var(--text-primary);">▶️ Tiếp tục chạy tiếp Ngày đang dở</strong>
+                            <div style="font-size: 11.5px; color: var(--text-secondary); margin-top: 2px;">Hệ thống sẽ thực thi tiếp tục từ ngày dừng trước đó.</div>
+                        </div>
+                    </label>
+                    <label style="border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+                        <input type="radio" name="resume-opt" value="restart" style="margin-top: 2px;">
+                        <div>
+                            <strong style="font-size: 13px; color: var(--text-primary);">🔄 Chạy lại từ Ngày 1</strong>
+                            <div style="font-size: 11.5px; color: var(--text-secondary); margin-top: 2px;">Đặt lại lộ trình nuôi nick về bắt đầu từ Ngày 1.</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="cancelResumeRoadmap()">Hủy</button>
+                <button class="btn-primary" onclick="confirmResumeRoadmap()">Xác nhận kích hoạt</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL SCENARIO CREATION / EDITING -->
+    <div class="modal-overlay" id="modal-create-scenario">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-scenario-title">Tạo mới kịch bản</span>
+                <button class="modal-close-btn" onclick="closeModal('modal-create-scenario')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Kênh nền tảng *</label>
+                    <select class="form-control" id="new-scenario-platform">
+                        <option value="Facebook">Facebook</option>
+                        <option value="Tiktok">Tiktok</option>
+                        <option value="Zalo">Zalo</option>
+                        <option value="Telegram">Telegram</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tên kịch bản *</label>
+                    <input type="text" class="form-control" id="new-scenario-name" placeholder="Nhập tên kịch bản...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Loại kịch bản *</label>
+                    <select class="form-control" id="new-scenario-type">
+                        <option value="recurring">🔄 Kịch bản đơn</option>
+                        <option value="roadmap">📅 Kịch bản lộ trình</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('modal-create-scenario')">Hủy</button>
+                <button class="btn-primary" onclick="saveNewScenario()">Lưu kịch bản</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHỌN HÀNH ĐỘNG -->
+    <div class="modal-overlay" id="modal-select-action">
+        <div class="modal-box" style="max-width: 1050px;">
+            <div class="modal-header">
+                <span class="modal-title" id="action-modal-title">Chọn hành động</span>
+                <button class="modal-close-btn" onclick="closeModal('modal-select-action')">✕</button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+                <div class="action-categories-grid">
+                    <div class="action-category-col">
+                        <div class="category-col-header">Tương tác</div>
+                        <ul class="category-actions-list">
+                            <li class="category-action-item" onclick="addActionToActive('Đọc thông báo', 'Tương tác')">Đọc thông báo</li>
+                            <li class="category-action-item" onclick="addActionToActive('Tương tác Newsfeed', 'Tương tác Newsfeed')">Tương tác Newsfeed</li>
+                            <li class="category-action-item" onclick="addActionToActive('Tương tác Bạn bè', 'Tương tác Bạn bè')">Tương tác Bạn bè</li>
+                        </ul>
+                    </div>
+                    <div class="action-category-col">
+                        <div class="category-col-header">Kết bạn / Nhóm</div>
+                        <ul class="category-actions-list">
+                            <li class="category-action-item" onclick="addActionToActive('Kết bạn theo gợi ý', 'Kết bạn')">Kết bạn theo gợi ý</li>
+                            <li class="category-action-item" onclick="addActionToActive('Tham gia nhóm từ khóa', 'Nhóm')">Tham gia nhóm từ khóa</li>
+                        </ul>
+                    </div>
+                    <div class="action-category-col">
+                        <div class="category-col-header">Đăng bài / Spam</div>
+                        <ul class="category-actions-list">
+                            <li class="category-action-item" onclick="addActionToActive('Đăng bài lên tường', 'Đăng bài')">Đăng bài lên tường</li>
+                            <li class="category-action-item" onclick="addActionToActive('Đăng Reel', 'Đăng bài')">Đăng Reel</li>
+                        </ul>
+                    </div>
+                    <div class="action-category-col">
+                        <div class="category-col-header">Seeding</div>
+                        <ul class="category-actions-list">
+                            <li class="category-action-item" onclick="addActionToActive('Buff Follow UID', 'Seeding')">Buff Follow UID</li>
+                        </ul>
+                    </div>
+                    <div class="action-category-col">
+                        <div class="category-col-header">Đổi thông tin</div>
+                        <ul class="category-actions-list">
+                            <li class="category-action-item" onclick="addActionToActive('Up Avatar', 'Hồ sơ')">Up Avatar</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('modal-select-action')">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT ENGINE -->
+    <script>
+        let virtualAccounts = [
+            { id: "acc-1", uid: "61587769679122", email: "rayyaquinbyak1029@hotmail.com", job: "IT Tech", type: "VIA", status: "Hoạt động", proxy: "", platform: "Facebook" },
+            { id: "acc-2", uid: "61563427362658", email: "verandashaocollinsotrz4rk@hotmail.com", job: "Marketing", type: "VIA", status: "Hoạt động", proxy: "", platform: "Facebook" },
+            { id: "acc-3", uid: "61563936980232", email: "raphaelwarzelpadillablcfv@hotmail.com", job: "Kế toán", type: "Cloned", status: "Hoạt động", proxy: "192.168.111.34:4008", platform: "Facebook" },
+            { id: "acc-4", uid: "61561375623862", email: "amanibrockcollinsb5nw4x@hotmail.com", job: "Bán hàng", type: "VIA", status: "Không hoạt động", proxy: "", platform: "Facebook" },
+            { id: "acc-5", uid: "61561700181172", email: "sykescorysparksyqqfg@hotmail.com", job: "Tự do", type: "Cloned", status: "Hoạt động", proxy: "", platform: "Facebook" }
+        ];
+
+        // DỮ LIỆU KỊCH BẢN LỘ TRÌNH ĐƯỢC CẤU TRÚC THEO NHIỀU KHUNG GIỜ / LƯỢT CHẠY MỖI NGÀY
+        let scenarios = [
+            { id: "sc-1", name: "Tương tác Newsfeed hàng ngày", platform: "Facebook", type: "recurring", isAI: false, actions: [{ name: "Tương tác Newsfeed", type: "Tương tác" }] },
+            { id: "sc-2", name: "Đăng bài seeding nhóm", platform: "Facebook", type: "recurring", isAI: true, actions: [{ name: "Đăng bài lên nhóm", type: "Đăng bài" }] },
+            { id: "sc-3", name: "Lộ trình AI Nuôi Nick 30 Ngày", platform: "Facebook", type: "roadmap", isAI: true, days: [
+                {
+                    dayIndex: 1, dayTitle: "Ngày 1",
+                    slots: [
+                        { slotId: "s-1-1", slotTitle: "Lượt 1", runTime: "09:12", actions: [{ name: "Đọc thông báo", type: "Tương tác" }, { name: "Tương tác Newsfeed", type: "Tương tác Newsfeed" }] },
+                        { slotId: "s-1-2", slotTitle: "Lượt 2", runTime: "15:04", actions: [{ name: "Kết bạn theo gợi ý", type: "Kết bạn" }] },
+                        { slotId: "s-1-3", slotTitle: "Lượt 3", runTime: "19:23", actions: [{ name: "Đăng bài lên tường", type: "Đăng bài" }] }
+                    ]
+                },
+                {
+                    dayIndex: 2, dayTitle: "Ngày 2",
+                    slots: [
+                        { slotId: "s-2-1", slotTitle: "Lượt 1", runTime: "10:00", actions: [{ name: "Tương tác Bạn bè", type: "Tương tác" }] },
+                        { slotId: "s-2-2", slotTitle: "Lượt 2", runTime: "16:30", actions: [{ name: "Xem Story", type: "Tương tác" }] }
+                    ]
+                },
+                {
+                    dayIndex: 3, dayTitle: "Ngày 3",
+                    slots: [
+                        { slotId: "s-3-1", slotTitle: "Lượt 1", runTime: "09:00", actions: [{ name: "Đăng bài lên tường", type: "Đăng bài" }] }
+                    ]
+                }
+            ]}
+        ];
+
+        let accountAssignments = {
+            "acc-2": [
+                { id: "asgn-1", scenarioId: "sc-1", active: true, schedules: [{ time: "08:00", days: [1, 3, 5] }] },
+                { id: "asgn-2", scenarioId: "sc-3", active: true, startDate: "2026-08-01", currentDay: 5, loopOpt: "once" }
+            ]
+        };
+
+        let selectedAccountIds = [];
+        let currentTargetAccountId = null;
+        let activeScenarioId = "sc-3";
+        let activeDayIndex = 1;
+        let targetSlotIdForAction = null;
+        let targetEditingSlotId = null;
+        let isSlotModalEditMode = false;
+        let currentFilterTab = "all";
+        let pendingToggleAssignmentId = null;
+        let currentEditingAssignmentId = null;
+        let editingScenarioTargetId = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderAccountsTable();
+            renderScenariosList();
+            renderDaysSubmenu();
+            renderScenarioDetail();
+        });
+
+        function switchNav(navKey) {
+            document.querySelectorAll(".sidebar-item").forEach(el => el.classList.remove("active"));
+            document.querySelectorAll(".screen-container").forEach(el => el.classList.remove("active"));
+
+            if (navKey === "accounts") {
+                document.getElementById("nav-accounts").classList.add("active");
+                document.getElementById("screen-accounts").classList.add("active");
+                document.getElementById("page-title").innerHTML = `
+                    <svg width="22" height="22" fill="var(--accent-blue)" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    Quản Lý Tài Khoản Ảo
+                `;
+            } else {
+                document.getElementById("nav-scenarios").classList.add("active");
+                document.getElementById("screen-scenarios").classList.add("active");
+                document.getElementById("page-title").innerHTML = `
+                    <svg width="22" height="22" fill="var(--accent-blue)" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+                    Quản Lý Kịch Bản
+                `;
+            }
+        }
+
+        function renderAccountsTable() {
+            const tbody = document.getElementById("accounts-table-body");
+            tbody.innerHTML = "";
+
+            virtualAccounts.forEach((acc, idx) => {
+                const assignedList = accountAssignments[acc.id] || [];
+                const isChecked = selectedAccountIds.includes(acc.id);
+                const tr = document.createElement("tr");
+
+                tr.innerHTML = `
+                    <td><input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleSelectAccount('${acc.id}', this.checked)"></td>
+                    <td>${idx + 1}</td>
+                    <td><strong>${acc.platform}</strong></td>
+                    <td><code>${acc.uid}</code></td>
+                    <td>${acc.email}</td>
+                    <td>${acc.job}</td>
+                    <td>${acc.type}</td>
+                    <td><span class="badge-status ${acc.status === 'Hoạt động' ? 'badge-active' : 'badge-inactive'}">${acc.status}</span></td>
+                    <td>${acc.proxy || '<span style="color:var(--text-muted);">Trống</span>'}</td>
+                    <td><strong style="color:var(--accent-blue);">${assignedList.length}</strong> kịch bản</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function toggleSelectAllAccounts(masterCb) {
+            selectedAccountIds = masterCb.checked ? virtualAccounts.map(a => a.id) : [];
+            renderAccountsTable();
+        }
+
+        function toggleSelectAccount(id, checked) {
+            if (checked) {
+                if (!selectedAccountIds.includes(id)) selectedAccountIds.push(id);
+            } else {
+                selectedAccountIds = selectedAccountIds.filter(x => x !== id);
+            }
+        }
+
+        function toggleActionMenu() {
+            document.getElementById("action-menu").classList.toggle("show");
+        }
+
+        function openAssignModal() {
+            document.getElementById("action-menu").classList.remove("show");
+            if (selectedAccountIds.length === 0) return alert("Vui lòng chọn ít nhất 1 tài khoản ảo!");
+
+            currentTargetAccountId = selectedAccountIds[0];
+            const acc = virtualAccounts.find(a => a.id === currentTargetAccountId);
+
+            document.getElementById("assigned-modal-title").innerText = `Danh sách kịch bản gán cho tài khoản [${acc.email}]`;
+            renderAssignedScenariosList();
+            document.getElementById("modal-assigned-list").classList.add("active");
+        }
+
+        function renderAssignedScenariosList() {
+            const container = document.getElementById("assigned-scenarios-container");
+            const list = accountAssignments[currentTargetAccountId] || [];
+            document.getElementById("assigned-count-badge").innerText = list.length;
+
+            if (list.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--text-muted);">Chưa gán kịch bản nào cho tài khoản này.</div>`;
+                return;
+            }
+
+            container.innerHTML = list.map(asgn => {
+                const sc = scenarios.find(s => s.id === asgn.scenarioId);
+                if (!sc) return '';
+
+                let typeTag = sc.type === "roadmap" ? `<span class="card-type-tag tag-roadmap">📅 Lộ trình</span>` : `<span class="card-type-tag tag-recurring">🔄 Kịch bản đơn</span>`;
+                let infoText = sc.type === "roadmap" ? `📅 Ngày bắt đầu: <strong>${asgn.startDate || 'Hôm nay'}</strong> | ⏱️ Tiến trình: <strong style="color:var(--accent-blue);">Ngày ${asgn.currentDay || 1}/${sc.days ? sc.days.length : 30}</strong>` : `⏰ Lịch chạy: ${asgn.schedules ? asgn.schedules.length : 1} khung giờ lặp định kỳ`;
+
+                return `
+                    <div class="assigned-scenario-card">
+                        <div class="assigned-info-left">
+                            <div class="assigned-title">${sc.name} ${typeTag}</div>
+                            <div class="assigned-meta">${infoText}</div>
+                        </div>
+                        <div class="assigned-controls">
+                            <button class="icon-btn" onclick="openConfigScenarioModal('edit', '${asgn.id}')" title="Sửa">✏️</button>
+                            <button class="icon-btn delete" onclick="deleteAssignment('${asgn.id}')" title="Xóa">
+                                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                            </button>
+                            <label class="switch">
+                                <input type="checkbox" ${asgn.active ? 'checked' : ''} onchange="handleToggleAssignment('${asgn.id}', this.checked)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function handleToggleAssignment(asgnId, isChecked) {
+            const list = accountAssignments[currentTargetAccountId] || [];
+            const asgn = list.find(a => a.id === asgnId);
+            if (!asgn) return;
+
+            const sc = scenarios.find(s => s.id === asgn.scenarioId);
+            if (isChecked && sc && sc.type === "roadmap" && (asgn.currentDay || 1) > 1) {
+                pendingToggleAssignmentId = asgnId;
+                document.getElementById("resume-day-badge").innerText = `Ngày ${asgn.currentDay}`;
+                document.getElementById("modal-resume-roadmap").classList.add("active");
+            } else {
+                asgn.active = isChecked;
+                renderAssignedScenariosList();
+                renderAccountsTable();
+            }
+        }
+
+        function confirmResumeRoadmap() {
+            const opt = document.querySelector('input[name="resume-opt"]:checked').value;
+            const list = accountAssignments[currentTargetAccountId] || [];
+            const asgn = list.find(a => a.id === pendingToggleAssignmentId);
+
+            if (asgn) {
+                asgn.active = true;
+                if (opt === "restart") {
+                    asgn.currentDay = 1;
+                    asgn.startDate = getTodayLocalDateStr();
+                }
+            }
+            closeModal("modal-resume-roadmap");
+            renderAssignedScenariosList();
+            renderAccountsTable();
+        }
+
+        function cancelResumeRoadmap() {
+            closeModal("modal-resume-roadmap");
+            renderAssignedScenariosList();
+        }
+
+        let tempScheduleSlots = [];
+
+        function resetAssignmentInlineErrors() {
+            document.getElementById("err-scenario-type").style.display = "none";
+            document.getElementById("err-scenario-select").style.display = "none";
+            document.getElementById("err-schedule-slots").style.display = "none";
+            document.getElementById("err-roadmap-startdate").style.display = "none";
+        }
+
+        function getTodayLocalDateStr() {
+            const d = new Date();
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function openConfigScenarioModal(mode, asgnId = null) {
+            currentEditingAssignmentId = asgnId;
+            resetAssignmentInlineErrors();
+            const typeSelect = document.getElementById("config-scenario-type");
+            const scSelect = document.getElementById("config-scenario-select");
+            const dateInput = document.getElementById("config-roadmap-startdate");
+
+            const todayStr = getTodayLocalDateStr();
+            dateInput.min = todayStr;
+
+            typeSelect.value = "";
+            typeSelect.disabled = false;
+            scSelect.disabled = false;
+            dateInput.disabled = false;
+
+            scSelect.innerHTML = `<option value="">-- Vui lòng chọn loại kịch bản trước --</option>`;
+            document.getElementById("config-section-recurring").style.display = "none";
+            document.getElementById("config-section-roadmap").style.display = "none";
+
+            tempScheduleSlots = [];
+
+            if (mode === "create") {
+                document.getElementById("config-assignment-title").innerText = "Thêm kịch bản chạy mới";
+            } else {
+                document.getElementById("config-assignment-title").innerText = "Chỉnh sửa kịch bản chạy";
+                const list = accountAssignments[currentTargetAccountId] || [];
+                const asgn = list.find(a => a.id === asgnId);
+                if (asgn) {
+                    const sc = scenarios.find(s => s.id === asgn.scenarioId);
+                    if (sc) {
+                        typeSelect.value = sc.type;
+                        typeSelect.disabled = true;
+                        scSelect.disabled = true;
+                        dateInput.disabled = true;
+
+                        onAssignTypeChanged(sc.id);
+                        if (sc.type === "recurring") {
+                            tempScheduleSlots = asgn.schedules ? JSON.parse(JSON.stringify(asgn.schedules)) : [{ time: "08:00", days: [1, 2, 3, 4, 5, 6, 7] }];
+                            renderScheduleSlots();
+                        } else if (sc.type === "roadmap") {
+                            dateInput.value = asgn.startDate || todayStr;
+                        }
+                    }
+                }
+            }
+            document.getElementById("modal-config-assignment").classList.add("active");
+        }
+
+        function onAssignTypeChanged(preselectId = null) {
+            resetAssignmentInlineErrors();
+            const selectedType = document.getElementById("config-scenario-type").value;
+            const scSelect = document.getElementById("config-scenario-select");
+            const recSection = document.getElementById("config-section-recurring");
+            const roadSection = document.getElementById("config-section-roadmap");
+
+            if (!selectedType) {
+                scSelect.innerHTML = `<option value="">-- Vui lòng chọn loại kịch bản trước --</option>`;
+                recSection.style.display = "none";
+                roadSection.style.display = "none";
+                return;
+            }
+
+            const existingAssignedList = accountAssignments[currentTargetAccountId] || [];
+            const assignedScIds = existingAssignedList.filter(a => a.id !== currentEditingAssignmentId).map(a => a.scenarioId);
+            const availableScenarios = scenarios.filter(s => s.type === selectedType && !assignedScIds.includes(s.id));
+
+            if (availableScenarios.length === 0) {
+                scSelect.innerHTML = `<option value="">⚠️ Không có kịch bản khả dụng (Đã gán hết)</option>`;
+            } else {
+                const promptOption = `<option value="">-- Chọn kịch bản cần chạy --</option>`;
+                const itemsOptions = availableScenarios.map(s => `<option value="${s.id}" ${s.id === preselectId ? 'selected' : ''}>${s.name} (${s.platform})</option>`).join("");
+                scSelect.innerHTML = promptOption + itemsOptions;
+            }
+
+            if (!preselectId) scSelect.value = "";
+
+            if (selectedType === "recurring") {
+                recSection.style.display = "block";
+                roadSection.style.display = "none";
+                if (tempScheduleSlots.length === 0) {
+                    tempScheduleSlots = [{ time: "08:00", days: [1, 2, 3, 4, 5, 6, 7] }];
+                }
+                renderScheduleSlots();
+            } else {
+                recSection.style.display = "none";
+                roadSection.style.display = "block";
+                if (!preselectId) document.getElementById("config-roadmap-startdate").value = getTodayLocalDateStr();
+            }
+        }
+
+        function addScheduleSlot() {
+            tempScheduleSlots.push({ time: "08:00", days: [1, 2, 3, 4, 5, 6, 7] });
+            renderScheduleSlots();
+            document.getElementById("err-schedule-slots").style.display = "none";
+        }
+
+        function removeScheduleSlot(idx) {
+            tempScheduleSlots.splice(idx, 1);
+            renderScheduleSlots();
+        }
+
+        function toggleScheduleDay(slotIdx, dayNum) {
+            const slot = tempScheduleSlots[slotIdx];
+            if (!slot) return;
+            if (!slot.days) slot.days = [];
+            if (slot.days.includes(dayNum)) {
+                slot.days = slot.days.filter(d => d !== dayNum);
+            } else {
+                slot.days.push(dayNum);
+            }
+            renderScheduleSlots();
+        }
+
+        function updateScheduleTime(slotIdx, timeVal) {
+            const slot = tempScheduleSlots[slotIdx];
+            if (slot) slot.time = timeVal;
+        }
+
+        function renderScheduleSlots() {
+            const container = document.getElementById("schedule-slots-container");
+            if (!container) return;
+
+            const dayLabels = [
+                { num: 1, label: "T2" }, { num: 2, label: "T3" }, { num: 3, label: "T4" },
+                { num: 4, label: "T5" }, { num: 5, label: "T6" }, { num: 6, label: "T7" }, { num: 7, label: "CN" }
+            ];
+
+            if (tempScheduleSlots.length === 0) {
+                container.innerHTML = `<div style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 10px;">Chưa có khung giờ nào. Bấm "+ Thêm khung giờ" để tạo.</div>`;
+                return;
+            }
+
+            container.innerHTML = tempScheduleSlots.map((slot, idx) => `
+                <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; margin-bottom: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 12px; font-weight: 700; color: var(--text-secondary);">Khung giờ ${idx + 1}:</span>
+                            <input type="time" class="form-control" style="width: 110px; padding: 4px 8px; font-size: 13px; font-weight: 700;" value="${slot.time || '08:00'}" onchange="updateScheduleTime(${idx}, this.value)">
+                        </div>
+                        <button class="icon-btn delete" onclick="removeScheduleSlot(${idx})" title="Xóa khung giờ">
+                            <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                        ${dayLabels.map(d => {
+                            const isSel = (slot.days || []).includes(d.num);
+                            return `
+                                <button type="button" style="padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid ${isSel ? 'var(--accent-blue)' : 'var(--border-color)'}; background: ${isSel ? 'var(--accent-blue)' : '#ffffff'}; color: ${isSel ? '#ffffff' : 'var(--text-secondary)'};" onclick="toggleScheduleDay(${idx}, ${d.num})">
+                                    ${d.label}
+                                </button>
+                            `;
+                        }).join("")}
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function saveAssignmentConfig() {
+            resetAssignmentInlineErrors();
+            let hasError = false;
+
+            const type = document.getElementById("config-scenario-type").value;
+            if (!type) {
+                document.getElementById("err-scenario-type").style.display = "block";
+                hasError = true;
+            }
+
+            const scId = document.getElementById("config-scenario-select").value;
+            if (!scId) {
+                document.getElementById("err-scenario-select").style.display = "block";
+                hasError = true;
+            }
+
+            let startDateVal = "";
+
+            if (type === "recurring") {
+                if (tempScheduleSlots.length === 0) {
+                    document.getElementById("err-schedule-slots").innerText = "Vui lòng thêm ít nhất 1 khung giờ chạy cho kịch bản!";
+                    document.getElementById("err-schedule-slots").style.display = "block";
+                    hasError = true;
+                } else {
+                    const hasEmptyDays = tempScheduleSlots.some(s => !s.days || s.days.length === 0);
+                    if (hasEmptyDays) {
+                        document.getElementById("err-schedule-slots").innerText = "Vui lòng chọn ít nhất 1 ngày trong tuần cho khung giờ chạy!";
+                        document.getElementById("err-schedule-slots").style.display = "block";
+                        hasError = true;
+                    }
+                }
+            }
+
+            if (type === "roadmap") {
+                startDateVal = document.getElementById("config-roadmap-startdate").value;
+                const todayStr = getTodayLocalDateStr();
+                if (!startDateVal) {
+                    document.getElementById("err-roadmap-startdate").innerText = "Vui lòng chọn ngày bắt đầu chạy!";
+                    document.getElementById("err-roadmap-startdate").style.display = "block";
+                    hasError = true;
+                } else if (!currentEditingAssignmentId && startDateVal < todayStr) {
+                    document.getElementById("err-roadmap-startdate").innerText = "Ngày bắt đầu chạy không được nhỏ hơn ngày hiện tại!";
+                    document.getElementById("err-roadmap-startdate").style.display = "block";
+                    hasError = true;
+                }
+            }
+
+            if (hasError) return;
+
+            if (type === "roadmap" && !currentEditingAssignmentId) {
+                const isFirstTime = !isScenarioAssignedToAnyAccount(scId);
+                if (isFirstTime) {
+                    const confirmAssign = confirm(
+                        "📢 XÁC NHẬN GÁN KỊCH BẢN LỘ TRÌNH:\n\nSau khi gán kịch bản lộ trình này cho tài khoản ảo, hệ thống sẽ KHÓA tính năng điều chỉnh thêm/xóa bớt ngày cho kịch bản ở màn Quản lý kịch bản.\n\nBạn có chắc chắn muốn tiếp tục gán không?"
+                    );
+                    if (!confirmAssign) return;
+                }
+            }
+
+            const loopOpt = document.querySelector('input[name="roadmap-loop-opt"]:checked')?.value || "once";
+            if (!accountAssignments[currentTargetAccountId]) accountAssignments[currentTargetAccountId] = [];
+            const list = accountAssignments[currentTargetAccountId];
+
+            if (currentEditingAssignmentId) {
+                const asgn = list.find(a => a.id === currentEditingAssignmentId);
+                if (asgn) {
+                    asgn.loopOpt = loopOpt;
+                    if (type === "recurring") asgn.schedules = JSON.parse(JSON.stringify(tempScheduleSlots));
+                    if (type === "roadmap") asgn.startDate = startDateVal;
+                }
+            } else {
+                list.push({
+                    id: "asgn-" + Date.now(), scenarioId: scId, active: true,
+                    schedules: type === "recurring" ? JSON.parse(JSON.stringify(tempScheduleSlots)) : null,
+                    startDate: type === "roadmap" ? startDateVal : null, currentDay: 1, loopOpt: loopOpt
+                });
+            }
+
+            closeModal("modal-config-assignment");
+            renderAssignedScenariosList();
+            renderAccountsTable();
+        }
+
+        function deleteAssignment(asgnId) {
+            if (confirm("Bạn có chắc chắn muốn gỡ kịch bản này khỏi tài khoản?")) {
+                accountAssignments[currentTargetAccountId] = accountAssignments[currentTargetAccountId].filter(a => a.id !== asgnId);
+                renderAssignedScenariosList();
+                renderAccountsTable();
+            }
+        }
+
+        // ==================== HÀM QUẢN LÝ LƯỢT CHẠY & VALIDATION 30 PHÚT ====================
+        function timeToMinutes(timeStr) {
+            if (!timeStr) return 0;
+            const [h, m] = timeStr.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function minutesToTime(mins) {
+            const h = Math.floor(mins / 60) % 24;
+            const m = mins % 60;
+            return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+        }
+
+        function isValidSlotTime(dayObj, newTimeStr, excludeSlotId = null) {
+            if (!dayObj || !dayObj.slots) return true;
+            const newMins = timeToMinutes(newTimeStr);
+
+            for (let slot of dayObj.slots) {
+                if (excludeSlotId && slot.slotId === excludeSlotId) continue;
+                const existMins = timeToMinutes(slot.runTime);
+                if (Math.abs(newMins - existMins) < 30) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function generateAutoSlotTime(dayObj) {
+            if (!dayObj || !dayObj.slots || dayObj.slots.length === 0) return "08:30";
+
+            const sortedMins = dayObj.slots.map(s => timeToMinutes(s.runTime)).sort((a, b) => a - b);
+            let lastMin = sortedMins[sortedMins.length - 1];
+            let targetMin = (lastMin + 180) % (24 * 60);
+
+            let tries = 0;
+            while (!isValidSlotTime(dayObj, minutesToTime(targetMin)) && tries < 48) {
+                targetMin = (targetMin + 30) % (24 * 60);
+                tries++;
+            }
+
+            return minutesToTime(targetMin);
+        }
+
+        function openAddSlotModal() {
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+            if (!sc || sc.type !== "roadmap") return;
+            const currentDay = sc.days.find(d => d.dayIndex === activeDayIndex);
+            if (!currentDay) return;
+
+            document.getElementById("err-slot-time").style.display = "none";
+            isSlotModalEditMode = false;
+            targetEditingSlotId = null;
+            document.getElementById("slot-time-modal-title").innerText = `Thêm lượt chạy mới cho [Ngày ${activeDayIndex}]`;
+            document.getElementById("slot-time-input").value = generateAutoSlotTime(currentDay);
+            document.getElementById("modal-slot-time").classList.add("active");
+        }
+
+        function openEditSlotModal(slotId, event) {
+            if (event) event.stopPropagation();
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+            if (!sc || sc.type !== "roadmap") return;
+            const currentDay = sc.days.find(d => d.dayIndex === activeDayIndex);
+            if (!currentDay) return;
+
+            const slot = currentDay.slots.find(s => s.slotId === slotId);
+            if (!slot) return;
+
+            document.getElementById("err-slot-time").style.display = "none";
+            isSlotModalEditMode = true;
+            targetEditingSlotId = slotId;
+            document.getElementById("slot-time-modal-title").innerText = `Sửa giờ [${slot.slotTitle}] cho Ngày ${activeDayIndex}`;
+            document.getElementById("slot-time-input").value = slot.runTime;
+            document.getElementById("modal-slot-time").classList.add("active");
+        }
+
+        function saveSlotTime() {
+            document.getElementById("err-slot-time").style.display = "none";
+            const newTime = document.getElementById("slot-time-input").value;
+            if (!newTime) {
+                document.getElementById("err-slot-time").innerText = "Vui lòng chọn mốc thời gian!";
+                document.getElementById("err-slot-time").style.display = "block";
+                return;
+            }
+
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+            if (!sc || sc.type !== "roadmap") return;
+            const currentDay = sc.days.find(d => d.dayIndex === activeDayIndex);
+            if (!currentDay) return;
+
+            // VALIDATION INLINE: PHẢI CÁCH CÁC LƯỢT KHÁC TRONG NGÀY TỐI THIỂU 30 PHÚT
+            if (!isValidSlotTime(currentDay, newTime, isSlotModalEditMode ? targetEditingSlotId : null)) {
+                document.getElementById("err-slot-time").innerText = "⚠️ Thời điểm giữa các lượt chạy trong cùng một ngày phải cách nhau tối thiểu 30 phút! Vui lòng chọn mốc giờ khác.";
+                document.getElementById("err-slot-time").style.display = "block";
+                return;
+            }
+
+            if (isSlotModalEditMode) {
+                const slot = currentDay.slots.find(s => s.slotId === targetEditingSlotId);
+                if (slot) slot.runTime = newTime;
+            } else {
+                const newSlotNum = currentDay.slots.length + 1;
+                currentDay.slots.push({
+                    slotId: "slot-" + Date.now(),
+                    slotTitle: `Lượt ${newSlotNum}`,
+                    runTime: newTime,
+                    actions: []
+                });
+            }
+
+            // Sắp xếp các Lượt chạy theo thứ tự thời gian tăng dần trong Ngày
+            currentDay.slots.sort((a, b) => timeToMinutes(a.runTime) - timeToMinutes(b.runTime));
+            currentDay.slots.forEach((s, idx) => s.slotTitle = `Lượt ${idx + 1}`);
+
+            closeModal("modal-slot-time");
+            renderDaysSubmenu();
+            renderScenarioDetail();
+        }
+
+        function deleteSlot(slotId, event) {
+            if (event) event.stopPropagation();
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+            if (!sc || sc.type !== "roadmap") return;
+            const currentDay = sc.days.find(d => d.dayIndex === activeDayIndex);
+            if (!currentDay) return;
+
+            if (currentDay.slots.length <= 1) {
+                return alert("⚠️ Mỗi Ngày phải giữ lại tối thiểu 1 lượt chạy!");
+            }
+
+            if (confirm("Bạn có chắc chắn muốn xóa lượt chạy này khỏi Ngày?")) {
+                currentDay.slots = currentDay.slots.filter(s => s.slotId !== slotId);
+                currentDay.slots.forEach((s, idx) => s.slotTitle = `Lượt ${idx + 1}`);
+                renderDaysSubmenu();
+                renderScenarioDetail();
+            }
+        }
+
+        // ==================== SCENARIOS MANAGEMENT 3-COLUMN LOGIC ====================
+        function setFilterTab(tab, btn) {
+            currentFilterTab = tab;
+            document.querySelectorAll(".filter-tab-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            renderScenariosList();
+        }
+
+        function renderScenariosList() {
+            const listContainer = document.getElementById("scenarios-list");
+            const query = document.getElementById("search-input").value.toLowerCase();
+            listContainer.innerHTML = "";
+
+            let filtered = scenarios.filter(sc => {
+                const matchSearch = sc.name.toLowerCase().includes(query);
+                const matchTab = currentFilterTab === "all" || sc.type === currentFilterTab;
+                return matchSearch && matchTab;
+            });
+
+            document.getElementById("scenarios-count").innerText = scenarios.length;
+
+            filtered.forEach(sc => {
+                const isActive = sc.id === activeScenarioId;
+                const card = document.createElement("div");
+                card.className = `scenario-card ${isActive ? 'active' : ''}`;
+                card.onclick = () => selectScenario(sc.id);
+
+                const typeTag = sc.type === "roadmap" 
+                    ? `<span class="card-type-tag tag-roadmap">📅 Lộ trình (${sc.days?.length || 0} ngày)</span>`
+                    : `<span class="card-type-tag tag-recurring">🔄 Kịch bản đơn</span>`;
+
+                const aiBadge = sc.isAI ? `<span class="card-ai-badge">🤖 AI</span>` : '';
+                
+                let totalActionCount = 0;
+                if (sc.type === "roadmap") {
+                    totalActionCount = sc.days.reduce((acc, d) => {
+                        const dayActs = d.slots ? d.slots.reduce((sAcc, s) => sAcc + s.actions.length, 0) : (d.actions ? d.actions.length : 0);
+                        return acc + dayActs;
+                    }, 0);
+                } else {
+                    totalActionCount = sc.actions.length;
+                }
+
+                card.innerHTML = `
+                    <div class="card-header-row">
+                        <div class="card-title">${sc.name} ${aiBadge}</div>
+                        <div class="card-actions">
+                            <button class="icon-btn" onclick="openEditScenarioModal('${sc.id}', event)" title="Chỉnh sửa kịch bản">✏️</button>
+                            <button class="icon-btn delete" onclick="deleteScenario('${sc.id}', event)" title="Xóa">
+                                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-meta">
+                        ${typeTag}
+                        <span>•</span>
+                        <span><strong style="color:var(--accent-blue);">${totalActionCount}</strong> hành động</span>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        function selectScenario(id) {
+            activeScenarioId = id;
+            activeDayIndex = 1;
+            renderScenariosList();
+            renderDaysSubmenu();
+            renderScenarioDetail();
+        }
+
+        // RENDER COLUMN 2: SUB-MENU DAYS LIST (SHOWS SLOTS SUMMARY & TIMES)
+        function renderDaysSubmenu() {
+            const submenuPanel = document.getElementById("days-submenu-panel");
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+
+            if (!sc || sc.type !== "roadmap") {
+                submenuPanel.style.display = "none";
+                return;
+            }
+
+            submenuPanel.style.display = "flex";
+            let headerHTML = `<div class="days-submenu-header"><span class="days-submenu-title">Danh sách Ngày (${sc.days.length})</span></div>`;
+
+            let dayItemsHTML = sc.days.map((d) => {
+                const isActive = d.dayIndex === activeDayIndex;
+                const slotCount = d.slots ? d.slots.length : 1;
+                const totalActs = d.slots ? d.slots.reduce((acc, s) => acc + s.actions.length, 0) : (d.actions ? d.actions.length : 0);
+                const timesStr = d.slots ? d.slots.map(s => s.runTime).join(", ") : (d.runTime || '08:00');
+
+                return `
+                    <div class="day-item-btn ${isActive ? 'active' : ''}" onclick="selectDay(${d.dayIndex})">
+                        <div>
+                            <span>${d.dayTitle}</span>
+                            <div class="day-item-time" style="max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">⏰ ${timesStr}</div>
+                        </div>
+
+                        <div class="day-hover-actions">
+                            <button class="icon-btn delete" onclick="deleteRoadmapDay(${d.dayIndex}, event)" title="Xóa Ngày">
+                                <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                            </button>
+                        </div>
+
+                        <span class="day-badge">${slotCount} lượt</span>
+                    </div>
+                `;
+            }).join("");
+
+            let addBtnHTML = `<button class="btn-add-day-sub" onclick="addNewRoadmapDay()">+ Thêm Ngày mới</button>`;
+            submenuPanel.innerHTML = headerHTML + `<div class="days-list">${dayItemsHTML}</div>` + addBtnHTML;
+        }
+
+        function selectDay(dayIndex) {
+            activeDayIndex = dayIndex;
+            renderDaysSubmenu();
+            renderScenarioDetail();
+        }
+
+        function isScenarioAssignedToAnyAccount(scenarioId) {
+            for (let accId in accountAssignments) {
+                const list = accountAssignments[accId];
+                if (list.some(a => a.scenarioId === scenarioId)) return true;
+            }
+            return false;
+        }
+
+        function addNewRoadmapDay() {
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+            if (!sc || sc.type !== "roadmap") return;
+
+            if (isScenarioAssignedToAnyAccount(sc.id)) {
+                alert("⚠️ RÀNG BUỘC SẢN PHẨM:\n\nKịch bản lộ trình này đang được gán cho tài khoản ảo. Bạn không thể thêm mới ngày để tránh xung đột tiến trình nuôi nick!");
+                return;
+            }
+
+            const newDayNum = sc.days.length + 1;
+            sc.days.push({
+                dayIndex: newDayNum,
+                dayTitle: `Ngày ${newDayNum}`,
+                slots: [
+                    { slotId: "s-" + newDayNum + "-1", slotTitle: "Lượt 1", runTime: "08:30", actions: [] }
+                ]
+            });
+            activeDayIndex = newDayNum;
+            renderScenariosList();
+            renderDaysSubmenu();
+            renderScenarioDetail();
+        }
+
+        function deleteRoadmapDay(dayIndex, event) {
+            if (event) event.stopPropagation();
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+            if (!sc || sc.type !== "roadmap") return;
+
+            if (isScenarioAssignedToAnyAccount(sc.id)) {
+                alert("⚠️ RÀNG BUỘC SẢN PHẨM:\n\nKịch bản lộ trình này đang được gán cho tài khoản ảo. Bạn không thể xóa bớt ngày của kịch bản đã gán!");
+                return;
+            }
+
+            if (confirm(`Bạn có chắc chắn muốn xóa Ngày ${dayIndex}?`)) {
+                sc.days = sc.days.filter(d => d.dayIndex !== dayIndex);
+                sc.days.forEach((d, idx) => { d.dayIndex = idx + 1; d.dayTitle = `Ngày ${idx + 1}`; });
+                if (activeDayIndex > sc.days.length) activeDayIndex = Math.max(1, sc.days.length);
+                renderScenariosList();
+                renderDaysSubmenu();
+                renderScenarioDetail();
+            }
+        }
+
+        // RENDER COLUMN 3: DETAILS WORKSPACE WITH EXECUTION SLOT CARDS FOR ROADMAP
+        function renderScenarioDetail() {
+            const detailPanel = document.getElementById("detail-panel");
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+
+            if (!sc) {
+                detailPanel.innerHTML = `<div class="empty-placeholder">Vui lòng chọn một kịch bản từ danh sách bên trái</div>`;
+                return;
+            }
+
+            if (sc.type === "roadmap") {
+                const currentDay = sc.days.find(d => d.dayIndex === activeDayIndex) || sc.days[0];
+                if (!currentDay.slots) {
+                    currentDay.slots = [{ slotId: "slot-default", slotTitle: "Lượt 1", runTime: currentDay.runTime || "08:30", actions: currentDay.actions || [] }];
+                }
+
+                const totalActsInDay = currentDay.slots.reduce((acc, s) => acc + s.actions.length, 0);
+
+                let headerHTML = `
+                    <div class="detail-header">
+                        <div class="detail-header-left">
+                            <div class="detail-header-icon">📅</div>
+                            <div>
+                                <div class="detail-title">${sc.name} ➔ <span style="color: var(--accent-blue);">Ngày ${activeDayIndex}</span></div>
+                                <div class="detail-subtitle">Kênh: <strong>${sc.platform}</strong> | Tổng lộ trình: <strong>${sc.days.length} ngày</strong> (${currentDay.slots.length} lượt chạy • ${totalActsInDay} hành động)</div>
+                            </div>
+                        </div>
+
+                        <button class="btn-add-action" onclick="openAddSlotModal()">
+                            ⏰ + Thêm lượt chạy
+                        </button>
+                    </div>
+                `;
+
+                let slotsCardsHTML = currentDay.slots.map((slot) => {
+                    let actionsRows = slot.actions.length === 0 ? `
+                        <tr><td colspan="4" style="text-align:center; padding: 24px; color: var(--text-muted);">Chưa có hành động nào trong lượt này. Bấm "+ Thêm hành động" ở trên để bổ sung.</td></tr>
+                    ` : slot.actions.map((act, index) => `
+                        <tr>
+                            <td style="width: 60px; font-weight: 600; color: var(--text-secondary);">${index + 1}</td>
+                            <td style="font-weight: 600; color: var(--accent-blue);">${act.name}</td>
+                            <td><span style="background-color: var(--accent-blue-light); color: var(--accent-blue); padding: 3px 8px; border-radius: 6px; font-weight: 600; font-size: 11.5px;">${act.type}</span></td>
+                            <td style="text-align: right; width: 80px;">
+                                <button class="icon-btn" title="Chỉnh sửa hành động">✏️</button>
+                                <button class="icon-btn delete" onclick="deleteActionInSlot('${slot.slotId}', ${index})" title="Xóa hành động">
+                                    <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join("");
+
+                    return `
+                        <div class="slot-card">
+                            <div class="slot-card-header">
+                                <div class="slot-card-title">
+                                    <span>⏰ ${slot.slotTitle}</span>
+                                    <span class="slot-time-badge">${slot.runTime}</span>
+                                    <button class="icon-btn" onclick="openEditSlotModal('${slot.slotId}', event)" title="Sửa giờ lượt chạy">✏️</button>
+                                </div>
+
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <button class="btn-add-action-slot" onclick="openSelectActionModalForSlot('${slot.slotId}')">
+                                        + Thêm hành động
+                                    </button>
+                                    <button class="icon-btn delete" onclick="deleteSlot('${slot.slotId}', event)" title="Xóa lượt chạy">
+                                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Tên Hành Động</th>
+                                        <th>Loại Tương Tác</th>
+                                        <th style="text-align: right;">Chức Năng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${actionsRows}</tbody>
+                            </table>
+                        </div>
+                    `;
+                }).join("");
+
+                detailPanel.innerHTML = headerHTML + `<div class="slots-workspace-wrapper">${slotsCardsHTML}</div>`;
+            } else {
+                let actionsList = sc.actions || [];
+                let headerHTML = `
+                    <div class="detail-header">
+                        <div class="detail-header-left">
+                            <div class="detail-header-icon">🔄</div>
+                            <div>
+                                <div class="detail-title">${sc.name}</div>
+                                <div class="detail-subtitle">Kênh: <strong>${sc.platform}</strong> | Loại: <strong>Kịch bản đơn</strong></div>
+                            </div>
+                        </div>
+                        <button class="btn-add-action" onclick="openSelectActionModalForSingle()">+ Thêm hành động</button>
+                    </div>
+                `;
+
+                let tableHTML = actionsList.length === 0 ? `
+                    <div class="empty-placeholder" style="padding: 60px 20px;">
+                        <div style="font-weight: 600; font-size: 14px; color: var(--text-muted);">Chưa có hành động nào</div>
+                    </div>
+                ` : `
+                    <div class="actions-table-wrapper">
+                        <table class="data-table">
+                            <thead><tr><th>STT</th><th>Tên Hành Động</th><th>Loại Tương Tác</th><th style="text-align: right;">Chức Năng</th></tr></thead>
+                            <tbody>
+                                ${actionsList.map((act, index) => `
+                                    <tr>
+                                        <td>${index + 1}</td>
+                                        <td style="font-weight: 600; color: var(--accent-blue);">${act.name}</td>
+                                        <td><span style="background-color: var(--accent-blue-light); color: var(--accent-blue); padding: 3px 8px; border-radius: 6px; font-weight: 600; font-size: 11.5px;">${act.type}</span></td>
+                                        <td style="text-align: right;">
+                                            <button class="icon-btn" title="Chỉnh sửa hành động">✏️</button>
+                                            <button class="icon-btn delete" onclick="deleteActionInSingle(${index})">
+                                                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `).join("")}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                detailPanel.innerHTML = headerHTML + tableHTML;
+            }
+        }
+
+        function openSelectActionModalForSlot(slotId) {
+            targetSlotIdForAction = slotId;
+            document.getElementById("action-modal-title").innerText = `Thêm hành động cho [Lượt chạy]`;
+            document.getElementById("modal-select-action").classList.add("active");
+        }
+
+        function openSelectActionModalForSingle() {
+            targetSlotIdForAction = null;
+            document.getElementById("action-modal-title").innerText = `Thêm hành động cho Kịch bản đơn`;
+            document.getElementById("modal-select-action").classList.add("active");
+        }
+
+        function addActionToActive(actionName, actionType) {
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+            if (!sc) return;
+
+            const newAct = { stt: Date.now(), name: actionName, type: actionType };
+
+            if (sc.type === "roadmap") {
+                const currentDay = sc.days.find(d => d.dayIndex === activeDayIndex);
+                if (currentDay && currentDay.slots) {
+                    const targetSlot = currentDay.slots.find(s => s.slotId === targetSlotIdForAction) || currentDay.slots[0];
+                    if (targetSlot) targetSlot.actions.push(newAct);
+                }
+            } else {
+                sc.actions.push(newAct);
+            }
+
+            closeModal("modal-select-action");
+            renderDaysSubmenu();
+            renderScenarioDetail();
+        }
+
+        function deleteActionInSlot(slotId, index) {
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+            if (!sc || sc.type !== "roadmap") return;
+            const currentDay = sc.days.find(d => d.dayIndex === activeDayIndex);
+            if (currentDay && currentDay.slots) {
+                const targetSlot = currentDay.slots.find(s => s.slotId === slotId);
+                if (targetSlot) targetSlot.actions.splice(index, 1);
+            }
+            renderDaysSubmenu();
+            renderScenarioDetail();
+        }
+
+        function deleteActionInSingle(index) {
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+            if (sc && sc.type === "recurring") {
+                sc.actions.splice(index, 1);
+                renderScenarioDetail();
+            }
+        }
+
+        function openCreateModal() {
+            editingScenarioTargetId = null;
+            document.getElementById("modal-scenario-title").innerText = "Tạo mới kịch bản";
+            document.getElementById("new-scenario-name").value = "";
+
+            const platformSelect = document.getElementById("new-scenario-platform");
+            platformSelect.value = "Facebook";
+            platformSelect.disabled = false;
+
+            const typeSelect = document.getElementById("new-scenario-type");
+            typeSelect.value = "recurring";
+            typeSelect.disabled = false;
+
+            document.getElementById("modal-create-scenario").classList.add("active");
+        }
+
+        function openEditScenarioModal(scId, event) {
+            if (event) event.stopPropagation();
+            const sc = scenarios.find(s => s.id === scId);
+            if (!sc) return;
+
+            editingScenarioTargetId = scId;
+            document.getElementById("modal-scenario-title").innerText = `Chỉnh sửa kịch bản [${sc.name}]`;
+            document.getElementById("new-scenario-name").value = sc.name;
+            document.getElementById("new-scenario-platform").value = sc.platform;
+
+            const typeSelect = document.getElementById("new-scenario-type");
+            typeSelect.value = sc.type;
+            typeSelect.disabled = true;
+
+            document.getElementById("modal-create-scenario").classList.add("active");
+        }
+
+        function saveNewScenario() {
+            const name = document.getElementById("new-scenario-name").value.trim();
+            const platform = document.getElementById("new-scenario-platform").value;
+            const type = document.getElementById("new-scenario-type").value;
+            if (!name) return alert("Vui lòng nhập tên kịch bản!");
+
+            if (editingScenarioTargetId) {
+                const sc = scenarios.find(s => s.id === editingScenarioTargetId);
+                if (sc) {
+                    sc.name = name;
+                    sc.platform = platform;
+                }
+            } else {
+                const newId = "sc-" + Date.now();
+                scenarios.unshift({
+                    id: newId, name: name, platform: platform, type: type, isAI: false, actions: [],
+                    days: type === 'roadmap' ? [
+                        {
+                            dayIndex: 1, dayTitle: "Ngày 1",
+                            slots: [{ slotId: "s-new-1", slotTitle: "Lượt 1", runTime: "08:30", actions: [] }]
+                        }
+                    ] : []
+                });
+                activeScenarioId = newId;
+                activeDayIndex = 1;
+            }
+
+            closeModal("modal-create-scenario");
+            renderScenariosList();
+            renderDaysSubmenu();
+            renderScenarioDetail();
+        }
+
+        function deleteScenario(id, event) {
+            event.stopPropagation();
+            if (isScenarioAssignedToAnyAccount(id)) {
+                alert("⚠️ KHÔNG THỂ XÓA:\n\nKịch bản này đang được gán cho tài khoản ảo! Vui lòng gỡ kịch bản khỏi tất cả tài khoản ảo trước khi xóa.");
+                return;
+            }
+
+            if (confirm("Bạn có chắc chắn muốn xóa kịch bản này?")) {
+                scenarios = scenarios.filter(s => s.id !== id);
+                if (activeScenarioId === id) activeScenarioId = scenarios[0]?.id || "";
+                renderScenariosList();
+                renderDaysSubmenu();
+                renderScenarioDetail();
+            }
+        }
+
+        function closeModal(id) { document.getElementById(id).classList.remove("active"); }
+    </script>
+</body>
+</html>

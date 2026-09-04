@@ -1,0 +1,146 @@
+PHỤ LỤC 2
+Hướng dẫn kết nối chia sẻ dữ liệu phòng chống mã độc với
+Trung tâm An ninh mạng quốc gia
+(Kèm công văn số 8676/A05-TT4, ngày 14 tháng 8 năm 2026)
+1. Phạm vi, đối tượng áp dụng
+Phạm vi: tài liệu này hướng dẫn triển khai hoạt động giám sát trong cơ quan, tổ chức nhà nước bao gồm các nội dung: hướng dẫn kết nối với hệ thống kỹ thuật của Trung tâm An ninh mạng quốc gia.
+Đối tượng áp dụng: tài liệu này áp dụng đối với cơ quan, tổ chức, cá nhân có liên quan đến hoạt động giám sát an ninh mạng, an toàn thông tin trong cơ quan nhà nước. 
+Trong trường hợp có nhiều cơ quan, tổ chức đang thực hiện cung cấp giải pháp phòng, chống mã độc tập trung cho đơn vị thì yêu cầu các cơ quan tổ chức này chuyển dữ liệu giám sát về A05
+2. Thông tin đăng kí
+Để kết nối chia sẻ thông tin, tổ chức cung cấp thông tin theo mẫu ở cuối phụ lục, Cục A05 sẽ cấp tài khoản xác thực. Trong quá trình thực hiện, nếu cần hỗ trợ có thể liên hệ đầu mối kỹ thuật của Cục 05 để được hướng dẫn kỹ thuật cụ thể theo thư điện tử: contact@nca.gov.vn; điện thoại: 0593 505 999.
+3. Hướng dẫn kết nối chia sẻ dữ liệu
+Địa chỉ hệ thống kỹ thuật tiếp nhận thông tin phòng chống mã độc tập trung: https://monitor.soc.gov.vn.
+Phương thức kết nối: Việc chia sẻ thông tin giữa hệ thống thông tin phòng chống mã độc tập trung của các đơn vị với Trung tâm an ninh mạng quốc gia được truyền qua Internet với giao thức mã hóa HTTPS.
+Định dạng dữ liệu: edXML
+Các đơn vị cần có IP public tĩnh để thực hiện chia sẻ dữ liệu
+Các trường thông tin yêu cầu tại mục 3
+4. Định dạng dữ liệu
+Việc kết nối, chia sẻ thông tin giữa các hệ thống kỹ thuật, các hệ thống cần thực hiện trên cơ sở áp dụng định dạng dữ liệu trong gói tin edXML. Mục này quy định các yêu cầu kỹ thuật đối với các trường thông tin của gói tin edXML, không quy định về quy cách đóng gói gói tin edXML. Việc xác định quy cách đóng gói gói tin do các doanh nghiệp cung cấp giải pháp quyết định dựa trên cơ sở đáp ứng được các yêu cầu do các cơ quan có nhu cầu khai thác, sử dụng đặt ra.
+Hình 1 mô tả cấu trúc cơ bản của một gói tin edXML gồm hai phần là thông tin cơ bản (edXMLHeader) và thông tin chính (edXMLBody).
+Mẫu thông tin đăng kí phục vụ kết nối, chia sẻ dữ liệu
+phòng chống mã độc
+PHIẾU ĐĂNG KÝ THÔNG TIN
+(Chỉ cung cấp cho Cục A05 để phục vụ kết nối, chia sẻ thông tin phòng chống mã độc với Trung tâm An ninh mạng quốc gia)
+1. Thông tin chung
+- Tên đơn vị: 
+- Địa chỉ: 
+- Số điện thoại: 
+- Email: 
+- Website (nếu có): 
+- Đơn vị đang giám sát: 
+- Đầu mối kỹ thuật giám sát của cơ quan/tổ chức:
+° Họ tên: 	
+° Email: 	
+° Số điện thoại: 	
+o Địa chỉ: 	
+2 Thông tin các điểm giám sát của đơn vị
+Ghi chú: Bản mềm gửi về hòm thư contact@nca.gov.vn
+
+--- TABLE ---
+Phần SOAP-ENV: HEADER | Phần SOAP-ENV: HEADER | Phần SOAP-ENV: HEADER | Phần SOAP-ENV: HEADER | Phần SOAP-ENV: HEADER | Phần SOAP-ENV: HEADER
+STT | Tên trường | Định dạng dữ liệu | Mô tả | Thuộc tính | Ghi chú
+1. | edXML:MessageHeader |  | Đây là thông tin phải có của phần đầu gói tin, lưu trữ các thông tin về phần mở đầu và phần kết thúc của một báo cáo. | Bắt buộc | 
+1.1 | edXML:From |  | Thông tin về đối tượng gửi báo cáo | Bắt buộc | 
+1.1.1 | edXML: Organld | Kiểu String
+Độ dài tối đa: 13 | ID của cơ quan, tổ chức gửi báo cáo | Bắt buộc | QCVN 102:2016/BTTTT
+1.1.2 | edXML: OrganizationInCharge | Kiểu String
+Độ dài tối đa: 200 | Tên cơ quan, tổ chức chủ quản trực tiếp (nếu có) | Tùy chọn | 
+1.1.3 | edXML:OrganName | Kiểu String
+Độ dài tối đa: 200 | Tên cơ quan, tổ chức gửi báo cáo | Bắt buộc | 
+1.1.4 | edXML: OrganAdd | Kiểu String
+Độ dài tối đa: 250 | Địa chỉ của cơ quan, tổ chức gửi báo cáo | Bắt buộc | 
+1.1.5 | edXML: Email | Kiểu String
+Độ dài tối đa: 100 | Thư điện tử liên lạc của cơ quan, tổ chức gửi báo cáo | Bắt buộc | 
+1.1.6 | edXML: Telephone | Kiểu String
+Độ dài tối đa: 20 | Số điện thoại của cơ quan, tổ chức gửi báo cáo | Bắt buộc | 
+1.1.7 | edXML: Fax | Kiểu String
+Độ dài tối đa: 20 | Số fax của cơ quan, tổ chức gửi báo cáo | Tùy chọn | 
+1.1.8 | edXML: Website | Kiểu String
+Độ dài tối đa: 100 | Trang/cổng thông tin điện tử của cơ quan, tổ chức gửi báo cáo | Tùy chọn | 
+1.2 | edXML: Subject | Kiểu String
+Độ dài tối đa: 500 | Trích yếu nội dung của báo cáo | Bắt buộc | 
+2 | Signature |  | Mô tả về chu kỳ số và thông tin ký số gói tin edXML | Bắt buộc | 
+2.1 | SignedInfo |  | Mô tả các thông tin được ký số | Bắt buộc | 
+2.1.1 | CanonicalizationMethod |  | Xác định thuật toán chuẩn hóa dữ liệu cần ký số | Bắt buộc | Là một thuộc tính của Canonicalization Method
+ | Algorithm | Kiểu String | Thuật toán chuẩn hóa dữ liệu: http://www.w3.org/TR/xml-exc-c14n/ |  | 
+2.1.2 | SignatureMethod |  | Xác định thuật toán để ký số thành phần SignedInfo đã được chuẩn hóa | Bắt buộc | 
+ | Algorithm | Kiểu String | Thuật toán ký số SignedInfo: http://www.w3.org/2000/09/xmldsig#rsa-sha1 |  | Là một thuộc tính của SignatureMethod
+2.1.3 | Reference |  | Tham chiếu đến các đối tượng dữ liệu cần ký và xác định phương thức băm và giá trị băm của các thành phần đối tượng dữ liệu trong gói tin edXML | Bắt buộc | 
+ | URI | Kiểu String | Tham chiếu đến đối tượng dữ liệu được băm. URI = "" tham chiếu đến SOAP-ENV:Envelope. URI = cid tham chiếu đến từng tệp dữ liệu đính kèm |  | Là một thuộc tính của Reference
+2.1.3.1 | Transforms |  | Danh sách phương thức biến đổi đối tượng dữ liệu định dạng XML được tham chiếu trước khi ký số | Bắt buộc | Chỉ sử dụng Transforms với đối tượng SOAP- ENV:Envelope (XML)
+ | Transform |  | Định nghĩa một phương thức biến đổi sẽ được áp dụng | Bắt buộc | 
+ | Algorithm | Kiểu String | Tên phương thức biến đổi được áp dụng. Có các loại sau:
+- Sử dụng Enveloped Signature: www.w3.org/2000/09/XMLDSig#enveloped-signature
+- Sử dụng thuật toán chuẩn hóa nội dung XML, XML-C14N: www.w3.org/TR/xml-exc-c14n/ |  | Là một thuộc tính của Transforms
+2.1.3.2 | DigestMethod |  | Xác định thuật toán băm dữ liệu http://www.w3.org/2001/04/xmlenc#sha256 | Bắt buộc | 
+ | Algorithm | Kiểu String | Thuật toán băm dữ liệu |  | Là một thuộc tính của DigestMethod
+2.1.3.3 | DigestValue | Kiểu String | Giá trị băm của đối tượng dữ liệu tham chiếu sử dụng thuật toán quy định tại DigestMethod | Bắt buộc | 
+2.2 | SignatureValue | Kiểu String | Giá trị chữ ký số của SignedInfo | Bắt buộc | 
+2.3 | Keylnfo |  | Mô tả khóa sử dụng để xác thực chữ ký số | Bắt buộc | 
+2.3.1 | X509Data |  | Dữ liệu về chứng thư số sử dụng để xác thực chữ ký số | Bắt buộc | 
+2.3.1.1 | X509SubjectName | Kiểu String | Tên cá nhân/tổ chức ký số | Bắt buộc | Tên cá nhân/tổ chức sở hữu chứng thư số ký
+2.3.1.2 | X509Certificate | Kiểu String | Chứng thư số sử dụng để xác thực chữ ký số | Bắt buộc | 
+PHẦN SOARP-ENV: BODY | PHẦN SOARP-ENV: BODY | PHẦN SOARP-ENV: BODY | PHẦN SOARP-ENV: BODY | PHẦN SOARP-ENV: BODY | PHẦN SOARP-ENV: BODY
+STT | Tên trường | Định dạng dữ liệu | Mô tả | Thuộc tính | Ghi chú
+1 | AVReport |  | Các thông tin báo cáo của Anti Virus | Bắt buộc | 
+ | name | Kiểu String | Tên của Anti Virus gửi báo cáo | Bắt buộc | 
+1.1 | Datetime | Kiểu string | Thời gian gửi báo cáo | Bắt buộc | Sử dụng Unix time
+1.2 | Malware |  | Báo cáo thông tin mã độc trên các máy | Bắt buộc | Nếu không có mã độc thì nội dung bỏ trống, nếu có thì bắt buộc phải có các thẻ bên trong.
+1.2.1 | Machine |  | Thông tin về mã độc trên từng máy | Bắt buộc | Bỏ qua nếu không có thông tin mã độc
+ | ip | Kiểu string | Địa chỉ IP của máy nhiễm mã độc | Bắt buộc | Bỏ qua nếu không có thông tin mã độc
+ | ippublic | Kiểu string | Địa chỉ IP public của máy tính bị nhiễm mã độc | Tùy chọn | Bỏ qua nếu không có thông tin mã độc
+ | name | Kiểu string | Tên máy nhiễm mã độc | Bắt buộc | Bỏ qua nếu không có thông tin mã độc
+1.2.1.1 | MalwareInfo |  | Các thông tin về mã độc trên máy | Bắt buộc | Bỏ qua nếu không có thông tin mã độc
+1.2.1.1.1 | MalwareName | Kiểu string | Tên mã độc | Bắt buộc | Bỏ qua nếu không có thông tin mã độc
+1.2.1.1.2 | MalwareType | Kiểu string | Loại mã độc (PE, Trojan, spyware, worm, ...) | Bắt buộc | Bỏ qua nếu không có thông tin mã độc
+1.2.1.1.3 | MalwareBehavior | Kiểu string | Hành vi của mã độc (Downloader, Dropper, CoinMiner, Keylogger, ...) | Bắt buộc | Bỏ qua nếu không có thông tin mã độc
+1.2.1.1.4 | TypeOfDevice | Kiểu string | Loại thiết bị nhiễm mã độc (USB, HDD, SDCard, SSD,...) | Bắt buộc | Bỏ qua nếu không có thông tin mã độc
+1.2.1.1.5 | NumberFile | Kiểu integer | Số lượng tập tin bị nhiễm mã độc | Bắt buộc | Bỏ qua nếu không có thông tin mã độc
+1.3 | Connection |  | Thông tin kết nối nghi ngờ. | Bắt buộc | Nếu không có connection lạ thì các trường bên trong bỏ trống. Nếu có thông tin Connection thì các trường bên trong bắt buộc phải có.
+1.3.1 | Machine |  | Thông tin kết nối nghi ngờ trên từng máy | Bắt buộc | Bỏ qua nếu không có thông tin connection
+ | ip | Kiểu string | IP của máy có kết nối nghi ngờ | Bắt buộc | Bỏ qua nếu không có thông tin connection
+ | ippublic | Kiểu string | Địa chỉ IP public của máy tính bị nhiễm mã độc | Tùy chọn | 
+ | name | Kiểu string | Tên của máy có kết nối nghi ngờ. | Bắt buộc | Bỏ qua nếu không có thông tin connection
+1.3.1.1 | Connectionlnfo |  | Thông tin kết nối nghi ngờ | Bắt buộc | Bỏ qua nếu không có thông tin connection
+1.3.1.1.1 | Program | Kiểu string | Tên chương trình có kết nối nghi ngờ. | Bắt buộc | Bỏ qua nếu không có thông tin connection
+1.3.1.1.2 | TargetIP | Kiểu string | IP đích của kết nối nghi ngờ. | Tùy chọn | Bỏ qua nếu không có thông tin connection
+1.4 | Vulnerability |  | Thông tin lỗ hổng trên các máy | Bắt buộc | Nếu không có lỗ hổng nào trên các máy thì các trường bên trong bỏ trống. Nếu có lỗ hổng thì các trường bên trong bắt buộc phải có.
+1.4.1 | Machine |  | Thông tin lỗ hổng trên từng máy | Bắt buộc | Bỏ qua nếu không có thông tin lỗ hổng.
+ | ip | Kiểu string | Địa chỉ IP của máy có lỗ hổng | Bắt buộc | Bỏ qua nếu không có thông tin lỗ hổng.
+ | ippublic | Kiểu string | Địa chỉ IP public của máy tính có lỗ hổng | Tùy chọn | Bỏ qua nếu không có thông tin lỗ hổng
+ | name | Kiểu string | Tên của máy có lỗ hổng | Bắt buộc | Bỏ qua nếu không có thông tin lỗ hổng.
+1.4.1.1 | Vulnerabilitylnfo |  | Các thông tin về lỗ hổng | Bắt buộc | Bỏ qua nếu không có thông tin lỗ hổng.
+1.4.1.1.1 | Name | Kiểu string | Mã CVE của lỗ hổng | Bắt buộc | Bỏ qua nếu không có thông tin lỗ hổng.
+1.4.1.1.2 | OSName | Kiểu string | Tên hệ điều hành của máy có lỗ hổng | Tùy chọn | Bỏ qua nếu không có thông tin lỗ hổng.
+1.5 | OS |  | Thông tin hệ điều hành của các máy | Bắt buộc | 
+1.5.1 | Machine |  | Máy có báo cáo thông tin hệ điều hành | Bắt buộc | 
+ | ip | Kiểu string | IP của máy có báo cáo thông tin hệ điều hành | Bắt buộc | 
+ | ippublic | Kiểu string | Địa chỉ IP public của máy tính có báo cáo thông tin hệ điều hành | Tùy chọn | 
+ | name | Kiểu string | Tên của máy có báo cáo thông tin hệ điều hành | Bắt buộc | 
+1.5.1.1 | OSName | Kiểu string | Tên hệ điều hành | Bắt buộc | 
+1.5.1.2 | LastUpdate | Kiểu string | Thời gian cập nhật hệ điều hành mới nhất | Bắt buộc | Định dạng Unix time
+1.6 | Update |  | Thông tin tình hình cập nhật của các máy | Bắt buộc | 
+1.6.1 | NumberMachineNotUpdate On15Day | Kiểu Interger | Số máy không được cập nhật trong vòng 15 ngày. | Bắt buộc | Tất cả máy được update ≤ 15 ngày thì dữ liệu ghi 0.
+1.7 | QualityFeature |  | Thông tin trạng thái bật tắt của những tính năng quan trọng | Bắt buộc | 
+1.7.1 | Machine |  | Máy có báo có thông tin trạng thái bật tắt của những tính năng quan trọng |  | 
+ | ip | Kiểu string | IP của máy | Bắt buộc | 
+ | Name | Kiểu string | Tên máy | Bắt buộc | 
+1.7.1.1 | AutoProtect | Kiểu string | Trạng thái tính năng tự động bảo vệ thời gian thực (On, Off) | Bắt buộc | 
+1.7.1.2 | EnableFirewall | Kiểu string | Trạng thái của firewall (On, Off) | Bắt buộc | 
+
+--- TABLE ---
+TÊN ĐƠN VỊ
+------- | CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc 
+--------------- | CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Độc lập - Tự do - Hạnh phúc 
+---------------
+ |  | Hà Nội, ngày … tháng … năm …
+
+--- TABLE ---
+STT | Địa chỉ | Tên địa điểm chia sẻ thông tin mã độc | Đơn vị cung cấp giải pháp phòng chống mã độc | IP public tĩnh dùng để chia sẻ thông tin mã độc
+1 | VNPT IDC, Nam Thăng Long, Hà Nội | Cục A... | Viettel | 
+
+--- TABLE ---
+ | ĐẠI DIỆN LÃNH ĐẠO ĐƠN VỊ
+(Ghi rõ chức danh, họ tên, ký và đóng dấu)

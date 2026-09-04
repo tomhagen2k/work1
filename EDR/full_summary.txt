@@ -1,0 +1,24 @@
+=== ALL MODALS DETAILS ===
+- Modal ID: modal-create-ioc | Title: Thêm mới IOC
+- Modal ID: modal-alert-detail | Title: Chi tiết cảnh báo
+- Modal ID: modal-share-a05 | Title: Gửi tới Trung tâm An ninh mạng
+- Modal ID: modal-import | Title: Import danh sách IOC
+- Modal ID: modal-export | Title: Xuất danh sách IOC
+- Modal ID: modal-view-xml | Title: Nội dung đã gửi
+
+=== SETTINGS SECTIONS ===
+- 1. Thông tin đơn vị gửi
+- 2. Chứng thư số
+- 3. Chia sẻ tự động
+- Kết nối Trung tâm An ninh mạng
+
+=== DRAWER DETAILS ===
+Tabs in drawer:
+  * dtab-overview: Tổng quan
+  * dtab-intel: Threat Intel
+  * dtab-alerts: Cảnh báo liên quan ( 0 )
+  * dtab-sharing: Lịch sử chia sẻ
+
+Panels in drawer:
+  * dpanel-overview: Length 5125 chars
+  * dpanel-alerts: Length 2577 chars

@@ -1,0 +1,3853 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống OSINT - Quản lý tài khoản & AI Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-sidebar: #ffffff;
+            --bg-card: #f8fafc;
+            --bg-chat-user: #0066fe;
+            --bg-chat-bot: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --accent-blue: #0066fe;
+            --accent-blue-hover: #0052cc;
+            --border-color: #e2e8f0;
+            --green-success: #10b981;
+            --green-glow: rgba(16, 185, 129, 0.15);
+            --red-danger: #ef4444;
+            --yellow-warning: #f59e0b;
+            --blue-glow: rgba(0, 102, 254, 0.15);
+            --font-family: 'Plus Jakarta Sans', sans-serif;
+            --sidebar-width: 250px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar Navigation matching the screenshot */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            z-index: 10;
+        }
+
+        .sidebar-brand {
+            padding: 24px;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 16px 0;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .sidebar-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .sidebar-item:hover, .sidebar-item.active {
+            color: var(--accent-blue);
+            background-color: rgba(0, 102, 254, 0.05);
+        }
+
+        .sidebar-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: var(--accent-blue);
+            box-shadow: 0 0 10px var(--accent-blue);
+        }
+
+        .sidebar-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff007b, #9900ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px solid var(--border-color);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* Main Panel Layout */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .content-header {
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background-color: var(--bg-secondary);
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .notification-btn {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .notification-btn::after {
+            content: '5';
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background-color: var(--red-danger);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-primary);
+        }
+
+        .content-body {
+            padding: 32px;
+            flex-grow: 1;
+            display: none;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+
+        .content-body.active {
+            display: flex;
+        }
+
+        /* Screen 1: Dashboard View */
+        #screen-dashboard {
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .stat-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .stat-title {
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .stat-val {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .stat-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Screen 2: Quản lý kịch bản (Scenario Management) */
+        #screen-scenarios {
+            padding: 0;
+            display: flex;
+            width: 100%;
+            height: calc(100vh - 70px);
+            overflow: hidden;
+        }
+
+        .scenarios-left {
+            width: 380px;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-primary);
+            height: 100%;
+        }
+
+        .left-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .search-container {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px 10px 36px;
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            fill: var(--text-secondary);
+            width: 16px;
+            height: 16px;
+        }
+
+        .circle-add-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 0 10px var(--blue-glow);
+        }
+
+        .circle-add-btn:hover {
+            background-color: var(--accent-blue-hover);
+        }
+
+        .scenarios-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .scenario-item-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .scenario-item-card:hover {
+            border-color: rgba(0, 102, 254, 0.4);
+            background-color: rgba(13, 21, 39, 0.8);
+        }
+
+        .scenario-item-card.active {
+            border-color: var(--accent-blue);
+            background-color: rgba(0, 102, 254, 0.05);
+            box-shadow: inset 0 0 10px rgba(0, 102, 254, 0.1);
+        }
+
+        .scenario-item-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .scenario-item-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+
+        .platform-tag {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            color: #1877f2;
+        }
+
+        .scenario-item-actions {
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+
+        .action-icon-btn:hover {
+            opacity: 1;
+        }
+
+        .scenarios-right {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-primary);
+            height: 100%;
+        }
+
+        .right-header {
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .scenario-detail-title {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-badge {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .blue-btn {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px var(--blue-glow);
+        }
+
+        .blue-btn:hover {
+            background-color: var(--accent-blue-hover);
+        }
+
+        .table-container {
+            padding: 24px 32px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .data-table th {
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+        }
+
+        .data-table td {
+            font-size: 13px;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        /* Screen 3: Quản lý tài khoản ảo (Virtual Accounts) */
+        #screen-accounts {
+            flex-direction: column;
+            gap: 20px;
+            height: calc(100vh - 70px);
+            overflow: hidden;
+        }
+
+        .acc-filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--bg-secondary);
+            padding: 16px 24px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .acc-status-tag {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-active {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--green-success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-idle {
+            background-color: rgba(148, 163, 184, 0.15);
+            color: var(--text-secondary);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        .status-running {
+            background-color: rgba(0, 102, 254, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(0, 102, 254, 0.3);
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(0, 102, 254, 0.3); }
+            50% { border-color: rgba(0, 102, 254, 0.8); }
+        }
+
+        /* ROW ANIMATION - Flash green when updated by AI */
+        .row-update-flash {
+            animation: row-flash 2s ease-out;
+        }
+
+        @keyframes row-flash {
+            0% { background-color: rgba(16, 185, 129, 0.3); box-shadow: inset 0 0 15px rgba(16, 185, 129, 0.5); }
+            100% { background-color: transparent; }
+        }
+
+        /* COLLAPSIBLE RIGHT-SIDE AI DRAWER OVERLAY */
+        .ai-drawer {
+            position: fixed;
+            top: 0;
+            right: -460px;
+            width: 450px;
+            height: 100vh;
+            background-color: var(--bg-secondary);
+            border-left: 1.5px solid var(--border-color);
+            box-shadow: -10px 0 35px rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ai-drawer.active {
+            right: 0;
+        }
+
+        .chat-console-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-sidebar);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .bot-avatar-glowing {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            box-shadow: 0 0 12px var(--blue-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: robot-bounce 3s infinite ease-in-out;
+        }
+
+        @keyframes robot-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .bot-status-info {
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+            flex-grow: 1;
+        }
+
+        .bot-status-name {
+            font-size: 13.5px;
+            font-weight: 700;
+        }
+
+        .bot-status-indicator {
+            font-size: 10.5px;
+            color: var(--green-success);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .bot-status-indicator::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: var(--green-success);
+            box-shadow: 0 0 5px var(--green-success);
+        }
+
+        .drawer-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.2s;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .drawer-close-btn:hover {
+            color: var(--text-primary);
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .chat-console-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background-color: var(--bg-primary);
+        }
+
+        .chat-bubble {
+            max-width: 90%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            line-height: 1.5;
+            animation: bubble-fade-in 0.25s forwards;
+        }
+
+        @keyframes bubble-fade-in {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-bubble-bot {
+            background-color: var(--bg-chat-bot);
+            color: var(--text-primary);
+            border-top-left-radius: 2px;
+            align-self: flex-start;
+            border: 1px solid var(--border-color);
+        }
+
+        .chat-bubble-user {
+            background-color: var(--bg-chat-user);
+            color: white;
+            border-top-right-radius: 2px;
+            align-self: flex-end;
+            box-shadow: 0 4px 10px rgba(0, 102, 254, 0.15);
+        }
+
+        /* Preset suggestion chips */
+        .preset-chips-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .preset-chip {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 11.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .preset-chip:hover {
+            background-color: rgba(0, 102, 254, 0.06);
+            border-color: rgba(0, 102, 254, 0.25);
+            color: var(--text-primary);
+            transform: translateX(4px);
+        }
+
+        /* Dynamic forms in drawer chat */
+        .chat-form-card {
+            background-color: #0c1221;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-form-title {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        .form-group-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .form-control-chat {
+            flex-grow: 1;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 10px;
+            color: var(--text-primary);
+            font-size: 12px;
+            outline: none;
+            width: 100%;
+        }
+
+        .form-control-chat:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .form-control-chat-invalid {
+            border-color: var(--red-danger) !important;
+            box-shadow: 0 0 4px rgba(239, 68, 68, 0.4);
+        }
+
+        .chat-form-card label {
+            font-size: 10.5px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .chat-form-submit-btn {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .chat-form-submit-btn:hover {
+            background-color: var(--accent-blue-hover);
+        }
+
+        /* AI Proposal Card */
+        .proposal-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid rgba(0, 102, 254, 0.3);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 10px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+        }
+
+        .proposal-header {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .proposal-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .proposal-item {
+            font-size: 12px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .proposal-item svg {
+            fill: var(--green-success);
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+        }
+
+        .proposal-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .proposal-btn-execute {
+            flex-grow: 1;
+            background: linear-gradient(135deg, #0066fe, #0052cc);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 3px 8px rgba(0, 102, 254, 0.3);
+        }
+
+        .proposal-btn-execute:hover {
+            opacity: 0.9;
+        }
+
+        .proposal-btn-cancel {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .proposal-btn-cancel:hover {
+            border-color: var(--red-danger);
+            color: var(--red-danger);
+        }
+
+        /* Execution Progress Terminal */
+        .execution-terminal {
+            background-color: #060a12;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            font-family: monospace;
+        }
+
+        .progress-bar-container {
+            background-color: #1e293b;
+            height: 5px;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--accent-blue), var(--green-success));
+            height: 100%;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .terminal-logs {
+            max-height: 120px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .terminal-log-line {
+            font-size: 11px;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .success-banner {
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--green-success);
+            color: var(--green-success);
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 8px var(--green-glow);
+        }
+
+        /* Dynamic Timeline Accordion Embedded in Chat */
+        .timeline-accordion {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: rgba(6, 10, 18, 0.5);
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .timeline-accordion-trigger {
+            padding: 10px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            cursor: pointer;
+            background-color: var(--bg-sidebar);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .timeline-accordion-trigger:hover {
+            background-color: rgba(255,255,255,0.03);
+        }
+
+        .timeline-accordion-content {
+            padding: 14px;
+            display: none;
+            flex-direction: column;
+            border-top: 1px solid var(--border-color);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 4px;
+            bottom: 4px;
+            width: 1.5px;
+            background-color: var(--border-color);
+        }
+
+        .timeline-day-header {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin: 12px 0 6px -20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .timeline-day-header::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--accent-blue);
+            border: 3px solid var(--bg-secondary);
+            display: inline-block;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+        .timeline-node {
+            position: absolute;
+            left: -18px;
+            top: 3px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-blue);
+            border: 2.5px solid var(--bg-secondary);
+        }
+
+        .timeline-time {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .timeline-action {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Dynamic Post List Embedded in Chat (Demo 3) */
+        .inline-content-slider {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .inline-post-card {
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .post-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        .post-tags {
+            display: flex;
+            gap: 6px;
+        }
+
+        .post-day-tag {
+            background-color: rgba(0, 102, 254, 0.1);
+            color: var(--accent-blue);
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 3px;
+        }
+
+        .post-tone-tag {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--yellow-warning);
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 3px;
+        }
+
+        .post-card-body {
+            font-size: 12px;
+            line-height: 1.45;
+            color: var(--text-primary);
+            white-space: pre-line;
+        }
+
+        .post-card-hashtags {
+            color: var(--accent-blue);
+            font-weight: 600;
+            font-size: 11.5px;
+        }
+
+        .post-card-prompt-box {
+            background-color: #060a12;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .prompt-label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .prompt-text {
+            font-family: monospace;
+            color: #10b981;
+        }
+
+        .post-card-preview-img {
+            width: 100%;
+            max-height: 160px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin-top: 4px;
+        }
+
+        /* Drawer Input Bar */
+        .chat-console-input-bar {
+            padding: 14px;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-sidebar);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .chat-text-area {
+            flex-grow: 1;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-size: 12.5px;
+            outline: none;
+            resize: none;
+            height: 38px;
+            line-height: 1.4;
+            transition: border 0.2s;
+        }
+
+        .chat-text-area:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .chat-send-btn {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .chat-send-btn:hover {
+            background-color: var(--accent-blue-hover);
+        }
+
+        .chat-send-btn svg {
+            fill: white;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Floating AI Assistant Trigger Bubble */
+        .floating-ai-trigger {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            box-shadow: 0 4px 20px rgba(0, 102, 254, 0.4), 0 0 15px var(--blue-glow);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: trigger-pulse 2s infinite alternate;
+        }
+
+        .floating-ai-trigger:hover {
+            transform: scale(1.08) rotate(10deg);
+        }
+
+        .floating-ai-trigger::after {
+            content: 'AI Assistant';
+            position: absolute;
+            right: 70px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .floating-ai-trigger:hover::after {
+            opacity: 1;
+        }
+
+        @keyframes trigger-pulse {
+            from { box-shadow: 0 4px 20px rgba(0, 102, 254, 0.4), 0 0 12px var(--blue-glow); }
+            to { box-shadow: 0 4px 25px rgba(0, 102, 254, 0.6), 0 0 20px rgba(0, 102, 254, 0.7); }
+        }
+
+        .floating-ai-trigger svg {
+            fill: white;
+            width: 26px;
+            height: 26px;
+        }
+
+        /* MODALS DESIGN */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(6px);
+            z-index: 1100; /* Must sit above drawer */
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-box {
+            background-color: var(--bg-secondary);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+            width: 85%;
+            max-width: 900px;
+            max-height: 85vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.25s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0066fe;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 14px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background-color: var(--bg-sidebar);
+        }
+
+        .gray-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .gray-btn:hover {
+            border-color: white;
+            color: white;
+        }
+
+        /* Modal 1: Chọn Hành Động Grid (Screenshot 2) */
+        .actions-categories-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .action-category-col {
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category-col-header {
+            background: linear-gradient(135deg, #0052cc, #0066fe);
+            padding: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            text-align: center;
+            color: white;
+        }
+
+        .category-col-header svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .category-actions-list {
+            padding: 6px 3px;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 350px;
+        }
+
+        .category-action-item {
+            padding: 8px 10px;
+            font-size: 11.5px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .category-action-item:hover {
+            background-color: rgba(0, 102, 254, 0.05);
+            color: var(--accent-blue);
+            padding-left: 14px;
+        }
+
+        /* Modal 2: Cấu hình Đọc thông báo (Screenshot 3) */
+        .form-row {
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .form-row-label {
+            font-size: 12.5px;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .form-row-inputs {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-text-input {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-size: 12.5px;
+            outline: none;
+            width: 100%;
+        }
+
+        .modal-text-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .input-inline-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* Modal 3: Danh sách kịch bản chạy tài khoản (Screenshot 4) */
+        .mini-search-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            gap: 12px;
+        }
+
+        .total-running-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            font-weight: 600;
+        }
+
+        .total-running-badge svg {
+            fill: var(--accent-blue);
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Modal 4: Lên lịch chạy (Screenshot 5) */
+        .schedule-box {
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-sidebar);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+        }
+
+        .schedule-box-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .schedule-title-sub {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .schedule-title-sub svg {
+            fill: var(--accent-blue);
+            width: 14px;
+            height: 14px;
+        }
+
+        .weekdays-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .weekday-btn {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .weekday-btn:hover {
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .weekday-btn.active {
+            background-color: rgba(0, 102, 254, 0.1);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        /* Typing dots */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            padding: 3px 6px;
+        }
+
+        .typing-dots span {
+            width: 5px;
+            height: 5px;
+            background-color: var(--text-secondary);
+            border-radius: 50%;
+            display: inline-block;
+            animation: typing 1.4s infinite both;
+        }
+
+        .typing-dots span:nth-child(2) { animation-delay: .2s; }
+        .typing-dots span:nth-child(3) { animation-delay: .4s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Toast notification */
+        .toast-notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background-color: var(--bg-card);
+            border-left: 4px solid var(--green-success);
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 14px;
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1500;
+            transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast-notification.active {
+            transform: translateX(0);
+        }
+
+        .toast-title {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 2px;
+        }
+
+        .toast-desc {
+            font-size: 11.5px;
+            color: var(--text-secondary);
+        }
+
+        /* Claude-style clarify options styles */
+        .clarify-box {
+            background-color: #0c1221;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .clarify-q {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+        }
+        .clarify-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .clarify-opt-btn {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .clarify-opt-btn:hover {
+            color: white;
+            border-color: var(--accent-blue);
+        }
+        .clarify-opt-btn.active {
+            background-color: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: white;
+            box-shadow: 0 0 8px var(--blue-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation (Exact original menu, no extra AI Agent tab) -->
+    <div class="sidebar">
+        <div>
+            <div class="sidebar-brand">OSINT</div>
+            <ul class="sidebar-menu">
+                <li class="sidebar-item active" data-screen="dashboard">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                    Dashboard
+                </li>
+                <li class="sidebar-item" data-screen="accounts">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    Quản lý tài khoản ảo
+                </li>
+                <li class="sidebar-item" data-screen="scenarios">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+                    Quản lý kịch bản
+                </li>
+                <li class="sidebar-item">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2zm0-4H7V7h10v2zm0 8H7v-2h10v2z"/></svg>
+                    Đấu tranh phản bác
+                </li>
+                <li class="sidebar-item">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    Đối tượng cần vô hiệu hóa
+                </li>
+                <li class="sidebar-item" data-screen="devices">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2v-2h-2V9h2zm-4 10H4V5h14v14z"/></svg>
+                    Quản lý thiết bị
+                </li>
+                <li class="sidebar-item">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M16.5 12c1.38 0 2.49-1.1 2.49-2.5S17.88 7 16.5 7C15.12 7 14 8.1 14 9.5s1.12 2.5 2.5 2.5zM9 11c1.66 0 2.99-1.34 2.99-3S10.66 5 9 5 6 6.34 6 8s1.34 3 3 3zm7.5 3c-1.83 0-5.5.92-5.5 2.75V19h11v-2.25c0-1.83-3.67-2.75-5.5-2.75zM9 13c-2.33 0-7 1.17-7 3.5V19h7v-2.25c0-.85.35-2.5 3.25-3.67-.78-.05-1.57-.08-2.25-.08z"/></svg>
+                    Người dùng và vai trò
+                </li>
+                <li class="sidebar-item">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+                    Cấu hình
+                </li>
+            </ul>
+        </div>
+        <div class="sidebar-footer">
+            <div class="user-avatar">A</div>
+            <div class="user-info">
+                <span class="user-name">Admin OSINT</span>
+                <span class="user-role">Quản trị viên</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Workspace Area -->
+    <div class="main-content">
+        <!-- Content Header -->
+        <div class="content-header">
+            <div class="page-title" id="page-title-text">
+                <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                <span>OSINT Dashboard Overview</span>
+            </div>
+            <div class="header-actions">
+                <button class="blue-btn" style="padding: 8px 14px; font-size:12px;" onclick="toggleAIDrawer()">
+                    🤖 Chat với AI
+                </button>
+                <div class="notification-btn">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 4.36 6 6.92 6 10v5l-2 2v1h16v-1l-2-2z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 1: DASHBOARD VIEW (Active by default) -->
+        <div class="content-body active" id="screen-dashboard">
+            <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">Tổng quan hệ thống</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-title">Tổng số tài khoản ảo</span>
+                    <span class="stat-val" id="stat-total-accounts">50</span>
+                    <span class="stat-desc">Hoạt động đồng bộ</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-title">Chiến dịch AI đã tạo</span>
+                    <span class="stat-val" id="stat-total-campaigns">1</span>
+                    <span class="stat-desc">Được AI thiết lập và gán</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-title">Tổng số Kịch bản</span>
+                    <span class="stat-val" id="stat-total-scripts">4</span>
+                    <span class="stat-desc">Gồm kịch bản hệ thống và kịch bản AI</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-title">Tần suất hoạt động an toàn</span>
+                    <span class="stat-val">99.2%</span>
+                    <span class="stat-desc">Giãn cách tránh checkpoint</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 24px; background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+                <h3 style="font-size: 15px; font-weight: 700; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">Nhật ký Sự kiện OSINT (Live Logs)</h3>
+                <div style="display: flex; flex-direction: column; gap: 10px; font-family: monospace; font-size: 12.5px; color: var(--text-secondary);" id="system-logs-container">
+                    <div>[16:08:38] Hệ thống quản lý tài khoản OSINT khởi chạy ổn định.</div>
+                    <div>[16:08:42] Đồng bộ thành công 50 tài khoản ảo Facebook.</div>
+                    <div>[16:09:00] Hãy nhấn vào nút "Chat với AI" ở góc dưới bên phải hoặc trên thanh Header để ra lệnh cho AI Agent.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: QUẢN LÝ TÀI KHỎN ẢO (VIRTUAL ACCOUNTS) -->
+        <div class="content-body" id="screen-accounts">
+            <div class="acc-filter-bar" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="font-weight: 700; font-size: 15px; color: var(--text-primary);">
+                    Danh sách tài khoản ảo <span id="acc-count-title" style="color: var(--text-secondary); font-weight: 500;">17</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; flex-grow: 1; max-width: 320px; margin-left: 20px;">
+                    <div class="search-box-container" style="position: relative; width: 100%;">
+                        <input type="text" class="search-input" placeholder="Tìm kiếm theo UID, Email" style="padding-left: 36px;">
+                        <svg width="14" height="14" fill="var(--text-secondary)" viewBox="0 0 24 24" style="position: absolute; left: 12px; top: 12px;"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="blue-btn" style="background-color: #60a5fa; border-color: #60a5fa; padding: 8px 14px; font-size: 12.5px; display: inline-flex; align-items: center; gap: 4px;">
+                        <svg width="14" height="14" fill="white" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                        Hành động
+                    </button>
+                    <button class="blue-btn" style="background-color: #3b82f6; border-color: #3b82f6; padding: 8px 14px; font-size: 12.5px; display: inline-flex; align-items: center; gap: 4px;">
+                        <svg width="14" height="14" fill="white" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                        Nhập file
+                    </button>
+                    <button class="blue-btn" style="background-color: #0066fe; border-color: #0066fe; padding: 8px 14px; font-size: 12.5px; display: inline-flex; align-items: center; gap: 4px;">
+                        <svg width="14" height="14" fill="white" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        Tạo tài khoản ảo
+                    </button>
+                </div>
+            </div>
+            <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; flex-grow: 1; margin-top: 16px;">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">STT</th>
+                                <th style="width: 120px;">Nền Tảng</th>
+                                <th style="width: 140px;">UID</th>
+                                <th>Email</th>
+                                <th style="width: 110px;">Nghề Nghiệp</th>
+                                <th style="width: 120px;">Loại Tài Khoản</th>
+                                <th style="width: 160px;">Ngày Tạo</th>
+                                <th style="width: 120px;">Trạng Thái</th>
+                                <th style="width: 140px;">Tiến Trình Kịch Bản</th>
+                                <th style="width: 120px;">Proxy</th>
+                                <th style="width: 140px;">Gán AI Gần Nhất</th>
+                                <th style="text-align: right; width: 130px;">Chức Năng</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accounts-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: QUẢN LÝ KỊCH BẢN (SCENARIO MANAGEMENT) -->
+        <div class="content-body" id="screen-scenarios">
+            <!-- Left Panel: Scenarios list -->
+            <div class="scenarios-left" style="padding: 16px; box-sizing: border-box; display: flex; flex-direction: column;">
+                <div style="font-weight: 700; font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; color: var(--text-primary); padding: 0 4px;">
+                    <div>KỊCH BẢN <span id="scenarios-count-title" style="color: #3b82f6; font-weight: 800;">4</span></div>
+                </div>
+                <div class="left-header" style="padding: 0 0 16px 0; border-bottom: 1px solid var(--border-color); display: flex; gap: 12px; align-items: center;">
+                    <div class="search-container" style="position: relative; flex-grow: 1;">
+                        <svg class="search-icon" viewBox="0 0 24 24" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); fill: var(--text-secondary); width: 16px; height: 16px;"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        <input type="text" class="search-input" id="search-scenario-input" placeholder="Tìm kiếm theo Tên kịch bản" style="padding-left: 36px; width: 100%;">
+                    </div>
+                    <button class="circle-add-btn" id="btn-add-scenario-left" style="width: 36px; height: 36px; border-radius: 50%; background-color: var(--accent-blue); color: white; border: none; font-size: 20px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,102,254,0.2);">+</button>
+                </div>
+                <div class="scenarios-list" id="scenarios-list-container" style="flex-grow: 1; overflow-y: auto; padding: 12px 0; display: flex; flex-direction: column; gap: 10px;">
+                    <!-- Populated dynamically -->
+                </div>
+                <!-- Pagination -->
+                <div class="scenarios-pagination" style="display: flex; justify-content: center; align-items: center; gap: 8px; padding-top: 12px; border-top: 1px solid var(--border-color); background-color: var(--bg-primary);">
+                    <button class="action-icon-btn" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid var(--border-color); background: none; color: var(--text-secondary); cursor: pointer;">
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                    </button>
+                    <button class="blue-btn" style="width: 28px; height: 28px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; background-color: var(--accent-blue); color: white; border: none; box-shadow: none;">1</button>
+                    <button class="action-icon-btn" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid var(--border-color); background: none; color: var(--text-secondary); cursor: pointer;">
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Actions list inside scenario -->
+            <div class="scenarios-right" style="display: flex; flex-direction: column; background-color: var(--bg-primary); height: 100%; overflow: hidden;">
+                <div class="right-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding: 20px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 28px; height: 28px; border-radius: 50%; background-color: #3b82f6; display: flex; align-items: center; justify-content: center; color: white;">
+                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5S3.17 7.5 4 7.5 5.5 6.83 5.5 6 4.83 4.5 4 4.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-7v2h14V6H7z"/></svg>
+                        </div>
+                        <span style="font-weight: 700; font-size: 14.5px; color: var(--text-primary);">
+                            Danh sách hành động <span id="detail-action-count" style="color: var(--text-secondary); font-weight: 500;">0</span>
+                        </span>
+                    </div>
+                    <button class="blue-btn" id="btn-add-action-trigger" style="display: inline-flex; align-items: center; gap: 4px; padding: 8px 16px; font-size: 12.5px;">
+                        <svg width="14" height="14" fill="white" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                        Thêm hành động
+                    </button>
+                </div>
+                
+                <!-- Center placeholder when no scenario is selected -->
+                <div id="actions-placeholder" style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; text-align: center; color: var(--text-secondary); padding: 40px;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background-color: rgba(59, 130, 246, 0.08); display: flex; align-items: center; justify-content: center; color: #3b82f6; margin-bottom: 16px;">
+                        <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3h-14c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-14c0-1.1-.9-2-2-2zm-2 10h-10v-2h10v2zm3-4h-13v-2h13v2zm0-4h-13v-2h13v2z"/></svg>
+                    </div>
+                    <div style="font-weight: 600; font-size: 15px; margin-bottom: 8px; color: var(--text-primary);">Chưa chọn kịch bản</div>
+                    <div style="font-size: 12.5px; max-width: 320px; line-height: 1.5;">Vui lòng chọn một kịch bản từ danh sách bên trái để xem các hành động</div>
+                </div>
+
+                <!-- Table container (hidden by default) -->
+                <div class="table-container" id="actions-table-wrapper" style="display: none; padding: 16px; flex-grow: 1; overflow-y: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">STT</th>
+                                <th>Tên Hành Động</th>
+                                <th>Loại Tương Tác</th>
+                                <th style="text-align: right; width: 160px;">Chức Năng</th>
+                            </tr>
+                        </thead>
+                        <tbody id="actions-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: DANH SÁCH THIẾT BỊ (DEVICE LIST) -->
+        <div class="content-body" id="screen-devices" style="flex-direction: column; gap: 20px; height: calc(100vh - 70px); overflow: hidden;">
+            <div class="acc-filter-bar" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div style="font-weight: 700; font-size: 15px; color: var(--text-primary);">
+                    Danh sách thiết bị <span style="color: var(--text-secondary); font-weight: 500;">10</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; flex-grow: 1; max-width: 400px; margin-left: 20px;">
+                    <div class="search-box-container" style="position: relative; width: 100%;">
+                        <input type="text" class="search-input" placeholder="Tìm kiếm theo ID thiết bị, Tên thiết bị" style="padding-left: 36px; border-radius: 20px;">
+                        <svg width="14" height="14" fill="var(--text-secondary)" viewBox="0 0 24 24" style="position: absolute; left: 12px; top: 11px;"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="blue-btn" style="background-color: #0066fe; border-color: #0066fe; padding: 8px 16px; border-radius: 20px; font-size: 12.5px; display: inline-flex; align-items: center; gap: 6px;">
+                        <svg width="14" height="14" fill="white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                        Thay đổi lực lượng bảo vệ
+                    </button>
+                </div>
+            </div>
+            <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; flex-grow: 1; margin-top: 16px;">
+                <div class="table-container" style="height: 100%; padding: 0;">
+                    <table class="data-table" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px; text-align: center;"><input type="checkbox" style="cursor: pointer;"></th>
+                                <th style="width: 60px;">STT</th>
+                                <th>ID thiết bị</th>
+                                <th>OS</th>
+                                <th>Tên thiết bị</th>
+                                <th>Lực lượng bảo vệ</th>
+                                <th>Trạng thái</th>
+                                <th style="text-align: right; padding-right: 24px;">Chức năng</th>
+                            </tr>
+                        </thead>
+                        <tbody id="devices-table-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- COLLAPSIBLE RIGHT-SIDE AI ASSISTANT DRAWER PANEL -->
+    <div class="ai-drawer" id="ai-assistant-drawer">
+        <div class="chat-console-header">
+            <div style="display: flex; align-items: center;">
+                <div class="bot-avatar-glowing">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h4l3 3 3-3h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 15c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-8H9V7h6v2z"/></svg>
+                </div>
+                <div class="bot-status-info">
+                    <span class="bot-status-name">OSINT Smart Agent</span>
+                    <span class="bot-status-indicator">Trực tuyến (AI Active)</span>
+                </div>
+            </div>
+            <!-- Trash button to clear chat history -->
+            <button class="drawer-close-btn" style="margin-left: auto; margin-right: 8px;" onclick="clearChatHistory()" title="Xóa lịch sử trò chuyện">
+                <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            </button>
+            <button class="drawer-close-btn" onclick="toggleAIDrawer()">✕</button>
+        </div>
+
+        <!-- Chat messages view -->
+        <div class="chat-console-messages" id="chat-messages-container">
+            <!-- Will be populated dynamically on load via renderWelcomeMessage() -->
+        </div>
+
+        <!-- Input Bar at bottom of drawer -->
+        <div class="chat-console-input-bar">
+            <textarea class="chat-text-area" id="chat-text-input" placeholder="Nhập yêu cầu nuôi nick bằng tiếng Việt..."></textarea>
+            <button class="chat-send-btn" id="btn-chat-send">
+                <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- FLOATING AI TRIGGER BUBBLE (BOTTOM RIGHT) -->
+    <div class="floating-ai-trigger" id="floating-ai-btn" onclick="toggleAIDrawer()">
+        <svg viewBox="0 0 24 24"><path d="M19 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h4l3 3 3-3h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 15c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-8H9V7h6v2z"/></svg>
+    </div>
+
+    <!-- MODAL 1: CHỌN HÀNH ĐỘNG (Screenshot 2) -->
+    <div class="modal-overlay" id="modal-chon-hanh-dong">
+        <div class="modal-box" style="max-width: 1050px;">
+            <div class="modal-header">
+                <span class="modal-title">Chọn hành động</span>
+                <button class="modal-close-btn" onclick="closeModal('modal-chon-hanh-dong')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="actions-categories-grid">
+                    <!-- Column 1: Tương tác -->
+                    <div class="action-category-col">
+                        <div class="category-col-header">
+                            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                            Tương tác
+                        </div>
+                        <ul class="category-actions-list">
+                            <li class="category-action-item" onclick="openActionConfig('Đọc thông báo')">Đọc thông báo</li>
+                            <li class="category-action-item" onclick="openActionConfig('Tương tác Newsfeed')">Tương tác Newsfeed</li>
+                            <li class="category-action-item" onclick="openActionConfig('Tương tác Bạn bè')">Tương tác Bạn bè</li>
+                            <li class="category-action-item" onclick="openActionConfig('Tương tác nhóm')">Tương tác nhóm</li>
+                            <li class="category-action-item" onclick="openActionConfig('Tương tác Page')">Tương tác Page</li>
+                            <li class="category-action-item" onclick="openActionConfig('Tương tác Profile')">Tương tác Profile</li>
+                            <li class="category-action-item" onclick="openActionConfig('Tương tác Watch')">Tương tác Watch</li>
+                            <li class="category-action-item" onclick="openActionConfig('Tương tác Reel')">Tương tác Reel</li>
+                            <li class="category-action-item" onclick="openActionConfig('Tương tác Story')">Tương tác Story</li>
+                            <li class="category-action-item" onclick="openActionConfig('Nghỉ giải lao')">Nghỉ giải lao</li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 2: Kết bạn / Tham gia nhóm -->
+                    <div class="action-category-col">
+                        <div class="category-col-header">
+                            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                            Kết bạn / Nhóm
+                        </div>
+                        <ul class="category-actions-list">
+                            <li class="category-action-item">Kết bạn theo từ khóa</li>
+                            <li class="category-action-item">Kết bạn theo tệp UID</li>
+                            <li class="category-action-item">Kết bạn theo gợi ý</li>
+                            <li class="category-action-item">Xác nhận kết bạn</li>
+                            <li class="category-action-item">Hủy kết bạn</li>
+                            <li class="category-action-item">Hủy lời mời kết bạn</li>
+                            <li class="category-action-item">Kết bạn thành viên nhóm</li>
+                            <li class="category-action-item">Kết bạn user like post</li>
+                            <li class="category-action-item">Tham gia nhóm từ khóa</li>
+                            <li class="category-action-item">Tham gia nhóm chỉ định</li>
+                            <li class="category-action-item">Tham gia nhóm theo gợi ý</li>
+                            <li class="category-action-item">Rời nhóm</li>
+                            <li class="category-action-item">Tạo nhóm</li>
+                            <li class="category-action-item">Tạo page</li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 3: Đăng bài / Share bài-Spam -->
+                    <div class="action-category-col">
+                        <div class="category-col-header">
+                            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+                            Đăng bài / Spam
+                        </div>
+                        <ul class="category-actions-list">
+                            <li class="category-action-item">Đăng bài lên tường</li>
+                            <li class="category-action-item">Đăng bài lên nhóm</li>
+                            <li class="category-action-item">Đăng Reel</li>
+                            <li class="category-action-item">Đăng Story</li>
+                            <li class="category-action-item">Share bài nâng cao</li>
+                            <li class="category-action-item">Spam bài viết</li>
+                            <li class="category-action-item">Seedling Events</li>
+                            <li class="category-action-item">Xóa Reel</li>
+                            <li class="category-action-item">Xóa Page Profile</li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 4: Seeding -->
+                    <div class="action-category-col">
+                        <div class="category-col-header">
+                            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                            Seeding
+                        </div>
+                        <ul class="category-actions-list">
+                            <li class="category-action-item">Buff Like Page</li>
+                            <li class="category-action-item">Buff Follow UID</li>
+                            <li class="category-action-item">Tương tác bài chỉ định</li>
+                            <li class="category-action-item">Tương tác bài từ khóa</li>
+                            <li class="category-action-item">Tương tác video</li>
+                            <li class="category-action-item">Tương tác Reel chỉ định</li>
+                            <li class="category-action-item">Mời bạn bè like page</li>
+                            <li class="category-action-item">Mời bạn bè vào nhóm</li>
+                            <li class="category-action-item">Đồng bộ danh bạ</li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 5: Đổi thông tin -->
+                    <div class="action-category-col">
+                        <div class="category-col-header">
+                            <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c-.13-.22-.07-.49.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.12.22-.07.49.12.64l2.11 1.65z"/></svg>
+                            Đổi thông tin
+                        </div>
+                        <ul class="category-actions-list">
+                            <li class="category-action-item">Đổi mật khẩu</li>
+                            <li class="category-action-item">Up Avatar</li>
+                            <li class="category-action-item">Up Cover</li>
+                            <li class="category-action-item">Xóa SĐT</li>
+                            <li class="category-action-item">Bật - Tắt 2FA</li>
+                            <li class="category-action-item">Add mail</li>
+                            <li class="category-action-item">Đổi tên</li>
+                            <li class="category-action-item">Cập nhật thông tin</li>
+                            <li class="category-action-item">Đăng xuất thiết bị cũ</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="gray-btn" onclick="closeModal('modal-chon-hanh-dong')">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: CẤU HÌNH HÀNH ĐỘNG ĐỌC THÔNG BÁO (Screenshot 3) -->
+    <div class="modal-overlay" id="modal-cau-hinh-hanh-dong">
+        <div class="modal-box" style="max-width: 580px;">
+            <div class="modal-header">
+                <span class="modal-title" id="action-config-title">Cấu hình Đọc thông báo</span>
+                <button class="modal-close-btn" onclick="closeModal('modal-cau-hinh-hanh-dong')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <span class="form-row-label">Tên hành động *</span>
+                    <input type="text" class="modal-text-input" id="config-action-name" value="Đọc thông báo">
+                </div>
+                <div class="form-row">
+                    <span class="form-row-label">Số lượng thông báo từ</span>
+                    <div class="form-row-inputs">
+                        <input type="number" class="modal-text-input" style="width: 80px;" id="config-count-from" value="1">
+                        <span class="input-inline-desc">đến</span>
+                        <input type="number" class="modal-text-input" style="width: 80px;" id="config-count-to" value="5">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <span class="form-row-label">Giãn cách từ</span>
+                    <div class="form-row-inputs">
+                        <input type="number" class="modal-text-input" style="width: 80px;" id="config-delay-from" value="1">
+                        <span class="input-inline-desc">giây đến</span>
+                        <input type="number" class="modal-text-input" style="width: 80px;" id="config-delay-to" value="3">
+                        <span class="input-inline-desc">giây</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="gray-btn" onclick="closeModal('modal-cau-hinh-hanh-dong')">Hủy</button>
+                <button class="blue-btn" onclick="saveActionConfig()">Lưu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: DANH SÁCH CHẠY KỊCH BẢN CHO TÀI KHOẢN (Screenshot 4) -->
+    <div class="modal-overlay" id="modal-danh-sach-chay-kich-ban">
+        <div class="modal-box" style="max-width: 800px;">
+            <div class="modal-header">
+                <span class="modal-title">Danh sách chạy kịch bản cho tài khoản</span>
+                <button class="modal-close-btn" onclick="closeModal('modal-danh-sach-chay-kich-ban')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="mini-search-row">
+                    <div class="total-running-badge">
+                        <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+                        Tổng số kịch bản chạy: <span id="account-modal-running-count" style="color: #0066fe; font-weight: 700;">1</span>
+                    </div>
+                    <div class="search-container" style="width: 250px;">
+                        <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        <input type="text" class="search-input" placeholder="Tìm kiếm theo tên kịch bản">
+                    </div>
+                    <button class="blue-btn" id="btn-add-schedule-modal-trigger">+ Thêm kịch bản chạy</button>
+                </div>
+
+                <div style="background-color: var(--bg-sidebar); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;">
+                    <table class="data-table" style="font-size: 12.5px;">
+                        <thead>
+                            <tr>
+                                <th>Kịch Bản</th>
+                                <th>Lịch chạy</th>
+                                <th>Nền tảng</th>
+                                <th style="text-align: right;">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="account-modal-scenarios-body">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="gray-btn" onclick="closeModal('modal-danh-sach-chay-kich-ban')">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: THÊM KỊCH BẢN CHẠY & THIẾT LẬP LỊCH CHẠY (Screenshot 5) -->
+    <div class="modal-overlay" id="modal-them-kich-ban-chay">
+        <div class="modal-box" style="max-width: 620px;">
+            <div class="modal-header">
+                <span class="modal-title">Thêm kịch bản chạy</span>
+                <button class="modal-close-btn" onclick="closeModal('modal-them-kich-ban-chay')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row" style="margin-bottom: 20px;">
+                    <span class="form-row-label">Kịch bản cần chạy *</span>
+                    <select class="modal-text-input" id="select-modal-campaign-run">
+                        <!-- Filled dynamically -->
+                    </select>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                    <span class="schedule-title-sub">
+                        <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm3.3 14.3L11 12.75V7h1.5v4.96l3.24 1.92-.75 1.42z"/></svg>
+                        Thiết lập lịch chạy
+                    </span>
+                    <button class="blue-btn" style="padding: 6px 12px; font-size: 11.5px; background: none; border: 1px solid var(--accent-blue); color: var(--accent-blue); box-shadow: none;" id="btn-add-schedule-row-inside">+ Thêm lịch chạy</button>
+                </div>
+
+                <div class="schedule-box" id="modal-schedule-editor-box" style="display: none;">
+                    <button class="schedule-box-close" onclick="document.getElementById('modal-schedule-editor-box').style.display='none'">✕</button>
+                    <div class="form-row">
+                        <span class="form-row-label">Giờ thực hiện</span>
+                        <input type="time" class="modal-text-input" id="modal-schedule-time" value="08:00" style="width: 130px;">
+                    </div>
+                    <div class="form-row" style="align-items: flex-start;">
+                        <span class="form-row-label" style="margin-top: 6px;">Ngày thực hiện</span>
+                        <div class="weekdays-row">
+                            <button class="weekday-btn active" data-day="2">Thứ 2</button>
+                            <button class="weekday-btn active" data-day="3">Thứ 3</button>
+                            <button class="weekday-btn active" data-day="4">Thứ 4</button>
+                            <button class="weekday-btn active" data-day="5">Thứ 5</button>
+                            <button class="weekday-btn active" data-day="6">Thứ 6</button>
+                            <button class="weekday-btn active" data-day="7">Thứ 7</button>
+                            <button class="weekday-btn" data-day="8">Chủ nhật</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="gray-btn" onclick="closeModal('modal-them-kich-ban-chay')">Hủy</button>
+                <button class="blue-btn" onclick="saveNewScenarioAssignment()">Lưu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST SUCCESS NOTIFICATION -->
+    <div class="toast-notification" id="toast-success-notification">
+        <svg width="22" height="22" fill="var(--green-success)" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        <div>
+            <div class="toast-title" id="toast-title-text">Thành công</div>
+            <div class="toast-desc" id="toast-desc-text">Thao tác đã được hệ thống thực thi.</div>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIC ENGINE -->
+    <script>
+        // Database State Simulator
+        const DEFAULT_SCENARIOS = [
+            {
+                id: "sc-comment",
+                name: "comment bạn bè",
+                platform: "Facebook",
+                actionCount: 1,
+                accountCount: 1,
+                actions: [
+                    { stt: 1, name: "Cấu hình Tương tác bạn bè", type: "Tương tác bạn bè" }
+                ]
+            },
+            {
+                id: "sc-dangbai",
+                name: "Đăng bài",
+                platform: "Facebook",
+                actionCount: 1,
+                accountCount: 2,
+                actions: [
+                    { stt: 1, name: "Đăng bài lên tường", type: "Đăng bài" }
+                ]
+            },
+            {
+                id: "sc-readnoti",
+                name: "Read noti 1",
+                platform: "Facebook",
+                actionCount: 1,
+                accountCount: 1,
+                actions: [
+                    { stt: 1, name: "Đọc thông báo", type: "Tương tác" }
+                ]
+            },
+            {
+                id: "sc-tuongtac",
+                name: "Tương tác 1",
+                platform: "Facebook",
+                actionCount: 1,
+                accountCount: 1,
+                actions: [
+                    { stt: 1, name: "Tương tác Newsfeed", type: "Tương tác" }
+                ]
+            }
+        ];
+
+        const DEFAULT_ACCOUNTS = [
+            { stt: 1, platform: "Facebook", uid: "61561300237020", email: "philgrobestankare7ewka@hotmail.com", job: "IT", type: "Clone", createdDate: "16-07-2026 17:40:48", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 2, platform: "Facebook", uid: "61560486281283", email: "gennettalyndamelvinim79v@hotmail.com", job: "IT", type: "Clone", createdDate: "16-07-2026 15:27:58", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 3, platform: "Facebook", uid: "61561356904295", email: "emmitphilshirtstulb5go@hotmail.com", job: "IT", type: "Clone", createdDate: "16-07-2026 11:33:23", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 4, platform: "Tiktok", uid: "574846d6-66fd-4c79-b56f-d0710c2ad5cd", email: "Hyman3@gmail.com", job: "dev", type: "ADS", createdDate: "30-05-2026 17:17:00", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 5, platform: "Zalo", uid: "13d80874-74eb-4f7b-ad10-1dc5d57330cf", email: "Bradford87@hotmail.com", job: "lawer", type: "Clone VIA", createdDate: "01-05-2026 12:22:18", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 6, platform: "Zalo", uid: "f2cec934-a51d-4e98-84d9-320bbd793bbb", email: "Rosa32@hotmail.com", job: "lawer", type: "Clone VIA", createdDate: "26-02-2026 12:59:27", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 7, platform: "Tiktok", uid: "165dc55d-a2d6-4c31-9cb4-96210ed8023f", email: "Javonte_Gusikowski@gmail.com", job: "dev", type: "Clone VIA", createdDate: "21-01-2026 04:53:35", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 8, platform: "Zalo", uid: "20d6b2a0-2ee4-4a0e-9bde-0bad8dbcb591", email: "Leola_Mertz57@gmail.com", job: "engineer", type: "ADS", createdDate: "22-10-2025 07:42:06", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 9, platform: "Telegram", uid: "47237b9a-183d-468a-a79d-0bad8dbcb591", email: "Tiana_Hand35@yahoo.com", job: "dev", type: "ADS", createdDate: "29-07-2025 08:33:34", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 10, platform: "Facebook", uid: "61561499238120", email: "user_fb_10@gmail.com", job: "IT", type: "Clone", createdDate: "14-07-2026 09:15:00", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 11, platform: "Tiktok", uid: "tiktok_it_clone", email: "it_tiktok@gmail.com", job: "IT", type: "Clone", createdDate: "10-07-2026 14:00:00", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 12, platform: "Telegram", uid: "tele_it_clone_9", email: "it_tele@gmail.com", job: "IT", type: "Clone", createdDate: "08-07-2026 16:30:00", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 13, platform: "Zalo", uid: "0911223344", email: "it_zalo@gmail.com", job: "IT", type: "Clone", createdDate: "05-07-2026 11:20:00", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 14, platform: "Facebook", uid: "61561588123999", email: "user_fb_14@gmail.com", job: "dev", type: "Clone VIA", createdDate: "01-07-2026 08:00:00", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 15, platform: "Facebook", uid: "61561922384711", email: "user_fb_15@gmail.com", job: "dev", type: "Clone VIA", createdDate: "28-06-2026 17:45:00", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 16, platform: "Tiktok", uid: "tiktok_lawyer_clone", email: "lawyer_tiktok@gmail.com", job: "lawer", type: "Clone", createdDate: "20-06-2026 12:10:00", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 17, platform: "Zalo", uid: "0922334455", email: "lawyer_zalo@gmail.com", job: "lawer", type: "Clone", createdDate: "15-06-2026 09:00:00", status: "Không hoạt động", proxy: "", lastAIAssigned: "" },
+            { stt: 18, platform: "Facebook", uid: "61562088371900", email: "user_fb_18@gmail.com", job: "engineer", type: "Clone VIA", createdDate: "10-06-2026 11:15:00", status: "Không hoạt động", proxy: "", lastAIAssigned: "" }
+        ];
+
+        const DEFAULT_CAMPAIGNS = [
+            {
+                name: "Tương tác cơ bản Facebook",
+                platform: "Facebook",
+                accountsCount: 50,
+                scenariosCount: 4,
+                status: "Đang chạy"
+            }
+        ];
+
+        let scenarios = JSON.parse(localStorage.getItem('osint_scenarios'));
+        if (!scenarios || scenarios.length < 4 || !scenarios.some(s => s.id === "sc-readnoti" && s.accountCount === 3)) {
+            scenarios = DEFAULT_SCENARIOS;
+            localStorage.setItem('osint_scenarios', JSON.stringify(scenarios));
+        }
+
+        let accounts = JSON.parse(localStorage.getItem('osint_accounts'));
+        if (!accounts || accounts.length !== 18) {
+            accounts = DEFAULT_ACCOUNTS;
+            localStorage.setItem('osint_accounts', JSON.stringify(accounts));
+        }
+
+        let campaigns = JSON.parse(localStorage.getItem('osint_campaigns')) || DEFAULT_CAMPAIGNS;
+
+        let activeScenarioId = scenarios[0]?.id || "";
+        let editingActionStt = null;
+        let currentModalTargetAccountId = null;
+        let currentRunningDemo = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initNavigation();
+            initScenariosUI();
+            initAccountsUI();
+            initDevicesUI();
+            initAIChatConsole();
+            updateDashboardStats();
+            renderWelcomeMessage();
+
+            // Set up modals triggers
+            document.getElementById("btn-add-action-trigger").addEventListener("click", () => {
+                openModal('modal-chon-hanh-dong');
+            });
+            document.getElementById("btn-add-scenario-left").addEventListener("click", () => {
+                const name = prompt("Nhập tên kịch bản mới:");
+                if (name) {
+                    const id = "sc-" + Date.now();
+                    scenarios.push({
+                        id: id,
+                        name: name,
+                        platform: "Facebook",
+                        actionCount: 0,
+                        accountCount: 0,
+                        actions: []
+                    });
+                    saveToLocalStorage();
+                    initScenariosUI();
+                    selectScenario(id);
+                }
+            });
+            document.getElementById("btn-add-schedule-modal-trigger").addEventListener("click", () => {
+                openModal('modal-them-kich-ban-chay');
+                populateAddScenarioDropdown();
+            });
+
+            document.querySelectorAll(".weekday-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    btn.classList.toggle("active");
+                });
+            });
+
+            document.getElementById("btn-add-schedule-row-inside").addEventListener("click", () => {
+                document.getElementById("modal-schedule-editor-box").style.display = "block";
+            });
+
+            document.getElementById("btn-sync-accounts").addEventListener("click", () => {
+                showToast("Đồng bộ", "Đang đồng bộ lại toàn bộ trạng thái tài khoản nuôi...");
+            });
+        });
+
+        function saveToLocalStorage() {
+            localStorage.setItem('osint_scenarios', JSON.stringify(scenarios));
+            localStorage.setItem('osint_accounts', JSON.stringify(accounts));
+            localStorage.setItem('osint_campaigns', JSON.stringify(campaigns));
+        }
+
+        // Navigation Menu
+        let activeScreen = "dashboard";
+        let scenariosChatHistory = [];
+        let accountsChatHistory = [];
+
+        function initNavigation() {
+            document.querySelectorAll(".sidebar-item").forEach(item => {
+                item.addEventListener("click", () => {
+                    const targetScreen = item.getAttribute("data-screen");
+                    if (!targetScreen) return;
+
+                    activeScreen = targetScreen;
+
+                    document.querySelectorAll(".sidebar-item").forEach(i => i.classList.remove("active"));
+                    item.classList.add("active");
+
+                    document.querySelectorAll(".content-body").forEach(body => body.classList.remove("active"));
+                    document.getElementById(`screen-${targetScreen}`).classList.add("active");
+
+                    const titleText = item.innerText.trim();
+                    document.querySelector("#page-title-text span").innerText = `Hệ thống OSINT - ${titleText}`;
+
+                    // Toggle AI button display
+                    const aiBtn = document.getElementById("floating-ai-btn");
+                    if (aiBtn) {
+                        aiBtn.style.display = (activeScreen === 'scenarios' || activeScreen === 'accounts') ? 'flex' : 'none';
+                    }
+
+                    // Close AI drawer if switching to non-nurturing views
+                    if (activeScreen !== 'scenarios' && activeScreen !== 'accounts') {
+                        document.getElementById("ai-assistant-drawer").classList.remove("active");
+                    } else {
+                        updateAIChatContext();
+                    }
+                });
+            });
+        }
+
+        function updateDashboardStats() {
+            document.getElementById("stat-total-accounts").innerText = accounts.length;
+            document.getElementById("stat-total-campaigns").innerText = campaigns.length;
+            document.getElementById("stat-total-scripts").innerText = scenarios.length;
+        }
+
+        // Scenarios UI rendering
+        function initScenariosUI(updatedIdToFlash = null, query = "") {
+            const listContainer = document.getElementById("scenarios-list-container");
+            listContainer.innerHTML = "";
+            document.getElementById("scenarios-count-title").innerText = scenarios.length;
+
+            const filtered = query 
+                ? scenarios.filter(sc => sc.name.toLowerCase().includes(query.toLowerCase()))
+                : scenarios;
+
+            filtered.forEach(sc => {
+                const isActive = sc.id === activeScenarioId ? "active" : "";
+                const isFlash = sc.id === updatedIdToFlash ? "row-update-flash" : "";
+                const card = document.createElement("div");
+                card.className = `scenario-item-card ${isActive} ${isFlash}`;
+                card.onclick = () => selectScenario(sc.id);
+                const aiBadge = sc.isAI ? `<span class="badge-ai-tag" style="background-color: rgba(0, 102, 254, 0.1); color: #0066fe; border: 1.5px solid rgba(0, 102, 254, 0.3); font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 4px; display: inline-flex; align-items: center; gap: 2px; margin-left: 6px; vertical-align: middle;">🤖 AI</span>` : '';
+                card.innerHTML = `
+                    <div class="scenario-item-title" style="display: flex; align-items: center; flex-wrap: wrap;">
+                        ${sc.name}
+                        ${aiBadge}
+                    </div>
+                    <div class="scenario-item-meta">
+                        <span class="platform-tag">
+                            <svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            ${sc.platform}
+                        </span>
+                        <span>•</span>
+                        <span>${sc.actionCount} hành động</span>
+                        <span>•</span>
+                        <span>${sc.accountCount} nick</span>
+                    </div>
+                    <div class="scenario-item-actions">
+                        <button class="action-icon-btn" onclick="editScenarioName('${sc.id}', event)">
+                            <svg width="13" height="13" fill="var(--text-secondary)" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                        </button>
+                        <button class="action-icon-btn" onclick="deleteScenario('${sc.id}', event)">
+                            <svg width="13" height="13" fill="var(--text-secondary)" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        </button>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+
+            updateActionsTable();
+        }
+
+        function selectScenario(id) {
+            activeScenarioId = id;
+            document.querySelectorAll(".scenario-item-card").forEach(card => {
+                card.classList.remove("active");
+            });
+            initScenariosUI();
+        }
+
+        function editScenarioName(id, event) {
+            event.stopPropagation();
+            const sc = scenarios.find(s => s.id === id);
+            if (!sc) return;
+            const newName = prompt("Nhập tên mới cho kịch bản:", sc.name);
+            if (newName) {
+                sc.name = newName;
+                saveToLocalStorage();
+                initScenariosUI();
+            }
+        }
+
+        function deleteScenario(id, event) {
+            event.stopPropagation();
+            if (confirm("Bạn có chắc chắn muốn xóa kịch bản này?")) {
+                scenarios = scenarios.filter(s => s.id !== id);
+                if (activeScenarioId === id) {
+                    activeScenarioId = scenarios[0]?.id || "";
+                }
+                saveToLocalStorage();
+                initScenariosUI();
+                updateDashboardStats();
+            }
+        }
+
+        function updateActionsTable() {
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+            const tableBody = document.getElementById("actions-table-body");
+            const placeholder = document.getElementById("actions-placeholder");
+            const wrapper = document.getElementById("actions-table-wrapper");
+            
+            tableBody.innerHTML = "";
+
+            if (!sc) {
+                document.getElementById("detail-action-count").innerText = "0";
+                placeholder.style.display = "flex";
+                wrapper.style.display = "none";
+                return;
+            }
+
+            document.getElementById("detail-action-count").innerText = sc.actions.length;
+            placeholder.style.display = "none";
+            wrapper.style.display = "block";
+
+            if (sc.actions.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">Kịch bản này chưa có hành động nào. Vui lòng bấm "Thêm hành động".</td></tr>`;
+                return;
+            }
+
+            sc.actions.forEach(action => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td style="color: var(--text-secondary);">${action.stt}</td>
+                    <td style="font-weight: 600;">${action.name}</td>
+                    <td>${action.type}</td>
+                    <td style="text-align: right;">
+                        <button class="action-icon-btn" style="margin-right: 12px;" onclick="openActionConfigDirect('${action.name}', ${action.stt})">
+                            <svg width="13" height="13" fill="var(--text-secondary)" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                        </button>
+                        <button class="action-icon-btn" onclick="deleteAction(${action.stt})">
+                            <svg width="13" height="13" fill="var(--text-secondary)" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function deleteAction(stt) {
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+            if (!sc) return;
+            sc.actions = sc.actions.filter(a => a.stt !== stt);
+            sc.actions.forEach((a, idx) => {
+                a.stt = idx + 1;
+            });
+            sc.actionCount = sc.actions.length;
+            saveToLocalStorage();
+            initScenariosUI();
+        }
+
+        // Virtual Accounts list rendering
+        function initAccountsUI(updatedAccountsToFlash = false) {
+            const tableBody = document.getElementById("accounts-table-body");
+            tableBody.innerHTML = "";
+
+            accounts.forEach(acc => {
+                const tr = document.createElement("tr");
+                if (updatedAccountsToFlash) {
+                    tr.className = "row-update-flash";
+                }
+                
+                // Set platform logo matching the screenshot
+                let platformIcon = "";
+                if (acc.platform === "Facebook") {
+                    platformIcon = `<svg width="13" height="13" fill="#1877f2" viewBox="0 0 24 24" style="margin-right: 4px; vertical-align: middle;"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`;
+                } else if (acc.platform === "Tiktok") {
+                    platformIcon = `<svg width="13" height="13" fill="#000000" viewBox="0 0 24 24" style="margin-right: 4px; vertical-align: middle;"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.86-.74-3.99-1.72-.08-.07-.17-.17-.25-.25v6.07c-.02 1.95-.58 3.95-1.84 5.47-1.57 1.97-4.14 3.09-6.65 2.94-2.82-.12-5.59-1.92-6.72-4.55-1.32-2.97-.61-6.75 1.71-8.99 1.84-1.8 4.61-2.43 7.04-1.7v4.02c-1.4-.48-3.03-.13-4.1.84-1.19.98-1.59 2.73-1.01 4.17.52 1.4 1.89 2.37 3.39 2.45 1.5.12 3.06-.67 3.75-2.01.41-.77.51-1.67.49-2.54V.02z"/></svg>`;
+                } else if (acc.platform === "Zalo") {
+                    platformIcon = `<span style="background-color:#0068ff; color:white; font-size:9px; font-weight:800; padding:1px 3px; border-radius:3px; margin-right:4px;">Z</span>`;
+                } else if (acc.platform === "Telegram") {
+                    platformIcon = `<svg width="13" height="13" fill="#0088cc" viewBox="0 0 24 24" style="margin-right: 4px; vertical-align: middle;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.02-1.96 1.25-5.54 3.69-.52.36-1 .53-1.42.52-.47-.01-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.24.35-.49.96-.75 3.78-1.65 6.3-2.73 7.55-3.25 3.59-1.48 4.34-1.74 4.83-1.75.11 0 .35.03.5.16.13.11.17.27.18.39.01.07.01.22 0 .32z"/></svg>`;
+                }
+
+                // Status formatting
+                let statusClass = "status-inactive";
+                if (acc.status === "Hoạt động" || acc.status === "Running") {
+                    statusClass = "status-active";
+                }
+                
+                let isRunning = false;
+                if (acc.status === "Running" || (acc.assignedScenario && acc.status === "Hoạt động")) {
+                    isRunning = true;
+                }
+
+                tr.innerHTML = `
+                    <td>${acc.stt}</td>
+                    <td>${platformIcon} ${acc.platform}</td>
+                    <td style="font-family: monospace; font-size:12px;">${acc.uid}</td>
+                    <td>${acc.email}</td>
+                    <td>${acc.job}</td>
+                    <td>${acc.type}</td>
+                    <td>${acc.createdDate}</td>
+                    <td>
+                        <span class="acc-status-tag ${statusClass}" style="background-color: ${acc.status === 'Running' || acc.status === 'Hoạt động' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.1)'}; color: ${acc.status === 'Running' || acc.status === 'Hoạt động' ? 'var(--green-success)' : 'var(--red-danger)'}; padding: 3px 8px; border-radius: 12px; font-size:11px; font-weight:600;">
+                            ${acc.status === 'Running' ? 'Hoạt động' : acc.status}
+                        </span>
+                    </td>
+                    <td>
+                        <span style="font-size: 11.5px; font-weight: 600; color: ${isRunning ? 'var(--accent-blue)' : 'var(--text-muted)'}; display: inline-flex; align-items: center; gap: 4px;">
+                            ${isRunning ? '<span style="width: 6px; height: 6px; border-radius: 50%; background-color: var(--accent-blue); display: inline-block; box-shadow: 0 0 6px rgba(0,102,254,0.6);"></span> Đang chạy' : '<span style="width: 6px; height: 6px; border-radius: 50%; background-color: var(--text-muted); display: inline-block;"></span> Không chạy'}
+                        </span>
+                    </td>
+                    <td style="font-family: monospace; font-size:12px; color: var(--text-secondary);">${acc.proxy || "-"}</td>
+                    <td style="color: var(--text-secondary); font-family: monospace; font-size: 11.5px; font-weight: 500;">${acc.lastAIAssigned || "-"}</td>
+                    <td style="text-align: right;">
+                        <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                            <button class="action-icon-btn" onclick="${isRunning ? `viewDeviceScreen('${acc.uid}')` : ''}" style="${!isRunning ? 'opacity: 0.3; cursor: not-allowed;' : ''}" title="${isRunning ? 'Xem màn hình thiết bị đang chạy kịch bản' : 'Kịch bản không chạy'}">
+                                <svg width="15" height="15" fill="var(--accent-blue)" viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+                            </button>
+                            <button class="action-icon-btn" onclick="editAccount('${acc.stt}', event)">
+                                <svg width="13" height="13" fill="var(--text-secondary)" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                            </button>
+                            <button class="action-icon-btn" onclick="viewAccountHistory('${acc.stt}', event)">
+                                <svg width="13" height="13" fill="var(--text-secondary)" viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                            </button>
+                            <button class="action-icon-btn" onclick="deleteAccount('${acc.stt}', event)">
+                                <svg width="13" height="13" fill="var(--text-secondary)" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+            document.getElementById("acc-count-title").innerText = accounts.length;
+        }
+
+        function editAccount(stt, event) {
+            event.stopPropagation();
+            alert("Tính năng sửa tài khoản ảo số #" + stt);
+        }
+        function viewAccountHistory(stt, event) {
+            event.stopPropagation();
+            alert("Lịch sử hoạt động của tài khoản ảo số #" + stt);
+        }
+        function deleteAccount(stt, event) {
+            event.stopPropagation();
+            if (confirm("Bạn có chắc chắn muốn xóa tài khoản ảo này?")) {
+                accounts = accounts.filter(acc => acc.stt != stt);
+                saveToLocalStorage();
+                initAccountsUI();
+            }
+        }
+
+        // Devices list rendering
+        function initDevicesUI() {
+            const tableBody = document.getElementById("devices-table-body");
+            tableBody.innerHTML = "";
+            
+            const devices = [];
+            for (let i = 1; i <= 10; i++) {
+                devices.push({
+                    stt: i,
+                    id: "63ehej311er342342",
+                    os: "10",
+                    name: "MIN-1",
+                    force: "A05",
+                    status: "Show active",
+                    isActive: i !== 5 && i !== 8 // Just making some inactive to show disabled button
+                });
+            }
+
+            devices.forEach(dev => {
+                const tr = document.createElement("tr");
+                const disableBtn = !dev.isActive ? 'opacity: 0.3; cursor: not-allowed;' : '';
+                tr.innerHTML = `
+                    <td style="text-align: center;"><input type="checkbox" ${dev.stt === 4 ? 'checked' : ''} style="cursor: pointer;"></td>
+                    <td>${dev.stt}</td>
+                    <td>${dev.id}</td>
+                    <td>${dev.os}</td>
+                    <td>${dev.name}</td>
+                    <td>${dev.force} <svg width="12" height="12" fill="var(--text-secondary)" viewBox="0 0 24 24" style="margin-left:4px; vertical-align:middle;"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg></td>
+                    <td>${dev.status} <svg width="12" height="12" fill="var(--text-secondary)" viewBox="0 0 24 24" style="margin-left:4px; vertical-align:middle;"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg></td>
+                    <td style="text-align: right; padding-right: 24px;">
+                        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                            <button class="action-icon-btn" onclick="editDevice('${dev.stt}', event)">
+                                <svg width="14" height="14" fill="var(--text-secondary)" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function viewDeviceScreen(deviceName) {
+            // Open a popup window resembling a mobile screen
+            const width = 375;
+            const height = 812;
+            const left = (window.screen.width / 2) - (width / 2);
+            const top = (window.screen.height / 2) - (height / 2);
+            window.open('', 'DeviceScreen_' + deviceName, `width=${width},height=${height},top=${top},left=${left},toolbar=no,menubar=no,scrollbars=no,resizable=no`);
+            // In a real app, you would pass a URL to a stream here.
+        }
+
+        function editDevice(stt, event) {
+            event.stopPropagation();
+            alert("Sửa thiết bị #" + stt);
+        }
+
+        // Modals management
+        function openModal(id) {
+            document.getElementById(id).style.display = "flex";
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = "none";
+        }
+
+        // Action Config Popups
+        function openActionConfig(actionName) {
+            closeModal('modal-chon-hanh-dong');
+            openActionConfigDirect(actionName, null);
+        }
+
+        function openActionConfigDirect(actionName, stt) {
+            document.getElementById("action-config-title").innerText = `Cấu hình ${actionName}`;
+            document.getElementById("config-action-name").value = actionName;
+            editingActionStt = stt;
+
+            if (actionName.includes("Đọc")) {
+                document.getElementById("config-count-from").value = 1;
+                document.getElementById("config-count-to").value = 5;
+                document.getElementById("config-delay-from").value = 1;
+                document.getElementById("config-delay-to").value = 3;
+            } else if (actionName.includes("Like")) {
+                document.getElementById("config-count-from").value = 5;
+                document.getElementById("config-count-to").value = 10;
+                document.getElementById("config-delay-from").value = 3;
+                document.getElementById("config-delay-to").value = 5;
+            } else {
+                document.getElementById("config-count-from").value = 2;
+                document.getElementById("config-count-to").value = 4;
+                document.getElementById("config-delay-from").value = 2;
+                document.getElementById("config-delay-to").value = 6;
+            }
+
+            openModal('modal-cau-hinh-hanh-dong');
+        }
+
+        function saveActionConfig() {
+            const actionName = document.getElementById("config-action-name").value;
+            const sc = scenarios.find(s => s.id === activeScenarioId);
+            if (!sc) return;
+
+            if (editingActionStt !== null) {
+                const action = sc.actions.find(a => a.stt === editingActionStt);
+                if (action) action.name = actionName;
+            } else {
+                sc.actions.push({
+                    stt: sc.actions.length + 1,
+                    name: actionName,
+                    type: actionName.includes("Tương tác") || actionName.includes("Đọc") ? "Tương tác" : "Hành động"
+                });
+                sc.actionCount = sc.actions.length;
+            }
+
+            saveToLocalStorage();
+            initScenariosUI();
+            closeModal('modal-cau-hinh-hanh-dong');
+            showToast("Thành công", `Đã lưu cấu hình hành động "${actionName}"`);
+        }
+
+        // Account Scenario assignment popups
+        function openAccountScenarioModal(accStt) {
+            currentModalTargetAccountId = accStt;
+            const acc = accounts.find(a => a.stt === accStt);
+            if (!acc) return;
+
+            document.getElementById("account-modal-running-count").innerText = acc.assignedScenario ? 1 : 0;
+            const tbody = document.getElementById("account-modal-scenarios-body");
+            tbody.innerHTML = "";
+
+            if (acc.assignedScenario) {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td style="font-weight: 600; color: #0066fe;">${acc.assignedScenario}</td>
+                    <td>${acc.schedule}</td>
+                    <td>${acc.platform}</td>
+                    <td style="text-align: right;">
+                        <button class="action-icon-btn" onclick="removeScenarioFromAccount(${accStt})">
+                            <svg width="14" height="14" fill="var(--red-danger)" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            } else {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 20px;">Tài khoản này chưa có kịch bản chạy nào được gán.</td></tr>`;
+            }
+
+            openModal('modal-danh-sach-chay-kich-ban');
+        }
+
+        function removeScenarioFromAccount(accStt) {
+            const acc = accounts.find(a => a.stt === accStt);
+            if (acc) {
+                const oldScenario = acc.assignedScenario;
+                acc.assignedScenario = "";
+                acc.schedule = "";
+                acc.status = "Idle";
+
+                const sc = scenarios.find(s => s.name === oldScenario);
+                if (sc && sc.accountCount > 0) sc.accountCount--;
+
+                saveToLocalStorage();
+                initAccountsUI();
+                openAccountScenarioModal(accStt);
+                showToast("Đã gỡ kịch bản", `Đã gỡ kịch bản chạy khỏi tài khoản ${acc.name}`);
+            }
+        }
+
+        function populateAddScenarioDropdown() {
+            const select = document.getElementById("select-modal-campaign-run");
+            select.innerHTML = "";
+            scenarios.forEach(sc => {
+                const opt = document.createElement("option");
+                opt.value = sc.name;
+                opt.innerText = sc.name;
+                select.appendChild(opt);
+            });
+            document.getElementById("modal-schedule-editor-box").style.display = "none";
+        }
+
+        function saveNewScenarioAssignment() {
+            const scName = document.getElementById("select-modal-campaign-run").value;
+            const time = document.getElementById("modal-schedule-time").value;
+            
+            const days = [];
+            document.querySelectorAll(".weekday-btn.active").forEach(btn => {
+                days.push(btn.innerText);
+            });
+            const daysText = days.length === 7 ? "Hàng ngày" : (days.length > 0 ? days.join(", ") : "Một lần");
+
+            const acc = accounts.find(a => a.stt === currentModalTargetAccountId);
+            if (acc) {
+                acc.assignedScenario = scName;
+                acc.schedule = `${time} (${daysText})`;
+                acc.status = "Running";
+
+                const sc = scenarios.find(s => s.name === scName);
+                if (sc) sc.accountCount++;
+
+                saveToLocalStorage();
+                initAccountsUI(true); // Flash updated row green
+                closeModal('modal-them-kich-ban-chay');
+                openAccountScenarioModal(currentModalTargetAccountId);
+                showToast("Thành công", `Đã gán kịch bản "${scName}" cho tài khoản ${acc.name}`);
+            }
+        }
+
+        // Global Toast Success feedback
+        function showToast(title, desc) {
+            document.getElementById("toast-title-text").innerText = title;
+            document.getElementById("toast-desc-text").innerText = desc;
+            const toast = document.getElementById("toast-success-notification");
+            toast.classList.add("active");
+            setTimeout(() => {
+                toast.classList.remove("active");
+            }, 4000);
+        }
+
+        // Collapsible Drawer Toggler
+        function toggleAIDrawer() {
+            const drawer = document.getElementById("ai-assistant-drawer");
+            drawer.classList.toggle("active");
+        }
+
+        // Accordion toggle inside chat
+        function toggleAccordion(element) {
+            const content = element.nextElementSibling;
+            if (content.style.display === "flex") {
+                content.style.display = "none";
+                element.innerText = element.innerText.replace("▴", "▾");
+            } else {
+                content.style.display = "flex";
+                element.innerText = element.innerText.replace("▾", "▴");
+            }
+        }
+
+        // AI Chatbot NLP Logic
+        function initAIChatConsole() {
+            document.getElementById("btn-chat-send").addEventListener("click", () => {
+                handleUserChatMessage();
+            });
+
+            document.getElementById("chat-text-input").addEventListener("keypress", (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleUserChatMessage();
+                }
+            });
+        }
+
+        function handleUserChatMessage() {
+            const textInput = document.getElementById("chat-text-input");
+            const text = textInput.value.trim();
+            if (!text) return;
+
+            renderChatBubble(text, "user");
+            textInput.value = "";
+
+            showBotTypingIndicator();
+            setTimeout(() => {
+                removeBotTypingIndicator();
+                processNaturalLanguageInput(text);
+            }, 1000);
+        }
+
+        function renderChatBubble(content, sender, isHTML = false) {
+            const container = document.getElementById("chat-messages-container");
+            const bubble = document.createElement("div");
+            bubble.className = `chat-bubble chat-bubble-${sender}`;
+            if (isHTML) {
+                bubble.innerHTML = content;
+            } else {
+                bubble.innerText = content;
+            }
+            container.appendChild(bubble);
+            container.scrollTop = container.scrollHeight;
+            return bubble;
+        }
+
+        function showBotTypingIndicator() {
+            const container = document.getElementById("chat-messages-container");
+            const bubble = document.createElement("div");
+            bubble.className = "chat-bubble chat-bubble-bot";
+            bubble.id = "bot-typing-indicator";
+            bubble.innerHTML = `
+                <div class="typing-indicator">
+                    <span style="font-size:11px; color:var(--text-secondary); margin-right:6px;">AI đang phân tích</span>
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            `;
+            container.appendChild(bubble);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function removeBotTypingIndicator() {
+            const indicator = document.getElementById("bot-typing-indicator");
+            if (indicator) indicator.remove();
+        }
+
+        function renderWelcomeMessage(context = 'scenarios') {
+            const container = document.getElementById("chat-messages-container");
+            if (context === 'scenarios') {
+                container.innerHTML = `
+                    <div class="chat-bubble chat-bubble-bot">
+                        <strong>🤖 Trợ lý Kịch bản AI - Xin chào!</strong>
+                        <br><br>
+                        Tôi chuyên hỗ trợ phân tích và tự động thiết lập các **Kịch bản hành động nuôi nick** tối ưu hoàn toàn bằng tiếng Việt.
+                        <br><br>
+                        📚 <strong>HƯỚNG DẪN NHẬP PROMPT TẠO KỊCH BẢN:</strong>
+                        <br>
+                        Để AI thiết lập kịch bản nuôi nick chính xác nhất, bạn nên cung cấp:
+                        <ul style="margin-left: 16px; margin-top: 6px; display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: var(--text-secondary);">
+                            <li>• <strong>Mục đích/Nền tảng</strong> (Ví dụ: nuôi tài khoản Facebook mới, tạo bài viết seeding...)</li>
+                            <li>• <strong>Thời gian lộ trình kịch bản</strong> (Ví dụ: chạy trong 4 ngày, 7 ngày...)</li>
+                            <li>• <strong>Danh sách các hành động mong muốn</strong> (Ví dụ: xem bài viết, xem story, đăng bài, tương tác bài viết, kết bạn UID...)</li>
+                            <li>• <strong>Quy luật phân bổ hoặc giới hạn chạy</strong> (Ví dụ: 3 ngày đầu đọc feed nhẹ nhàng chống checkpoint, ngày thứ 4 kết bạn...)</li>
+                        </ul>
+                        <br>
+                        💡 <strong>Ví dụ câu lệnh (Prompt mẫu) tham khảo:</strong>
+                        <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; margin: 8px 0; font-size: 12px; color: var(--text-primary); line-height: 1.5; cursor: pointer; transition: background-color 0.2s;" onclick="copyPromptToInput(this)" onmouseover="this.style.backgroundColor='var(--border-color)'" onmouseout="this.style.backgroundColor='var(--bg-secondary)'">
+                            "Tạo kịch bản nuôi nick mới trong 4 ngày. Trong 3 ngày đầu chỉ đọc tin tức Newsfeed, thả tim 5 bài viết và comment dạo 2 bài. Đến ngày thứ 4 bắt đầu tự động gửi kết bạn theo tệp UID gợi ý."
+                        </div>
+                        <span style="font-size: 11px; color: var(--text-muted);">*(Nhấp vào khung prompt mẫu ở trên để tự động điền nhanh vào ô chat)*</span>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="chat-bubble chat-bubble-bot">
+                        <strong>🤖 Trợ lý Quản lý Nick AI - Xin chào!</strong>
+                        <br><br>
+                        Tôi chuyên hỗ trợ **Gán kịch bản** và **Thiết lập lịch chạy lặp lại** theo các ngày trong tuần cho các tài khoản ảo của bạn.
+                        <br><br>
+                        📚 <strong>HƯỚNG DẪN NHẬP PROMPT GÁN LỊCH CHẠY:</strong>
+                        <br>
+                        Hệ thống sẽ tự động nhận diện và xử lý 2 trường hợp:
+                        <ul style="margin-left: 16px; margin-top: 6px; display: flex; flex-direction: column; gap: 8px; font-size: 12px; color: var(--text-secondary);">
+                            <li>1️⃣ <strong>Gán kịch bản ĐÃ CÓ SẴN</strong>: Chỉ định tên kịch bản sẵn có và nhóm nick muốn gán.
+                                <div style="background-color: var(--bg-secondary); border: 1px dashed var(--border-color); border-radius: 6px; padding: 10px; margin: 4px 0; font-size: 11.5px; color: var(--text-primary); cursor: pointer; transition: background-color 0.2s;" onclick="copyPromptToInput(this)" onmouseover="this.style.backgroundColor='var(--border-color)'" onmouseout="this.style.backgroundColor='var(--bg-secondary)'">
+                                    "Chọn ra 5 nick Zalo và gán kịch bản có sẵn 'Tương tác 1', lên lịch chạy lặp lại vào lúc 10:30 các ngày Thứ 2, Thứ 5, Thứ 6 hàng tuần."
+                                </div>
+                            </li>
+                            <li>2️⃣ <strong>TẠO KỊCH BẢN MỚI & GÁN TỰ ĐỘNG</strong>: Mô tả yêu cầu nuôi chi tiết nếu kịch bản chưa có sẵn trên hệ thống. AI sẽ tự thiết kế kịch bản mới trước rồi gán lịch.
+                                <div style="background-color: var(--bg-secondary); border: 1px dashed var(--border-color); border-radius: 6px; padding: 10px; margin: 4px 0; font-size: 11.5px; color: var(--text-primary); cursor: pointer; transition: background-color 0.2s;" onclick="copyPromptToInput(this)" onmouseover="this.style.backgroundColor='var(--border-color)'" onmouseout="this.style.backgroundColor='var(--bg-secondary)'">
+                                    "Nuôi 50 tài khoản Facebook. Mỗi ngày đăng 2 bài về an toàn thông tin, bình luận khi có người hỏi và lặp lại hàng ngày, tránh đăng sau 23h."
+                                </div>
+                            </li>
+                        </ul>
+                        <span style="font-size: 11px; color: var(--text-muted);">*(Nhấp vào 1 trong 2 khung prompt mẫu ở trên để tự động điền nhanh)*</span>
+                    </div>
+                `;
+            }
+            container.scrollTop = 0;
+        }
+
+        function clearChatHistory() {
+            if (confirm("Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện ở màn hình này không?")) {
+                if (activeScreen === 'scenarios') {
+                    scenariosChatHistory = [];
+                } else if (activeScreen === 'accounts') {
+                    accountsChatHistory = [];
+                }
+                updateAIChatContext();
+                currentRunningDemo = null;
+                showToast("Đã xóa lịch sử", "Đã reset lại lịch sử hội thoại AI của màn hình này.");
+            }
+        }
+
+        function addChatMessage(sender, content, isHTML = false) {
+            const msgObj = { sender, content, isHTML };
+            if (activeScreen === 'scenarios') {
+                scenariosChatHistory.push(msgObj);
+            } else if (activeScreen === 'accounts') {
+                accountsChatHistory.push(msgObj);
+            }
+            return renderChatBubble(content, sender, isHTML);
+        }
+
+        function updateAIChatContext() {
+            const container = document.getElementById("chat-messages-container");
+            if (!container) return;
+            container.innerHTML = "";
+
+            const drawerTitle = document.querySelector(".bot-status-name");
+            const drawerIndicator = document.querySelector(".bot-status-indicator");
+            const chatInput = document.getElementById("chat-text-input");
+
+            if (activeScreen === 'scenarios') {
+                if (drawerTitle) drawerTitle.innerText = "🤖 Trợ lý Kịch bản AI";
+                if (drawerIndicator) drawerIndicator.innerText = "Xây dựng & Tối ưu kịch bản";
+                if (chatInput) chatInput.placeholder = "Nhập yêu cầu tạo kịch bản (ví dụ: Nuôi nick mới 7 ngày)...";
+
+                if (scenariosChatHistory.length === 0) {
+                    renderWelcomeMessage('scenarios');
+                } else {
+                    scenariosChatHistory.forEach(msg => {
+                        renderChatBubble(msg.content, msg.sender, msg.isHTML);
+                    });
+                }
+            } else if (activeScreen === 'accounts') {
+                if (drawerTitle) drawerTitle.innerText = "🤖 Trợ lý Quản lý Nick AI";
+                if (drawerIndicator) drawerIndicator.innerText = "Lập lịch & Điều phối tài khoản";
+                if (chatInput) chatInput.placeholder = "Nhập yêu cầu gán kịch bản hoặc thiết lập quy trình nuôi nick...";
+
+                if (accountsChatHistory.length === 0) {
+                    renderWelcomeMessage('accounts');
+                } else {
+                    accountsChatHistory.forEach(msg => {
+                        renderChatBubble(msg.content, msg.sender, msg.isHTML);
+                    });
+                }
+            }
+        }
+
+        function copyPromptToInput(element) {
+            const text = element.innerText.replace(/^"|"$/g, '');
+            const input = document.getElementById("chat-text-input");
+            if (input) {
+                input.value = text;
+                input.focus();
+            }
+        }
+
+        function triggerDemoPreset(presetId) {
+            let promptText = "";
+            if (presetId === 'scenarios-1') {
+                promptText = "Nuôi tài khoản mới. Trong 3 ngày đầu chỉ đọc tin tức Newsfeed, thả tim 5 bài viết và comment dạo 2 bài. Đến ngày thứ 4 bắt đầu tự động gửi lời mời kết bạn theo tệp UID gợi ý.";
+            } else if (presetId === 'scenarios-2') {
+                promptText = "Tạo kịch bản tự động đăng bài cảnh báo bảo mật, like bài viết chéo và kích hoạt tính năng tự động trả lời comment của khách hàng.";
+            } else if (presetId === 'scenarios-incomplete') {
+                promptText = "Tôi muốn tạo kịch bản tương tác nick.";
+            } else if (presetId === 'accounts-1') {
+                promptText = "Gán kịch bản 'AI - Đăng bài ATTT' cho 10 tài khoản Facebook IT, lên lịch chạy tự động trong 15 ngày.";
+            } else if (presetId === 'accounts-2') {
+                promptText = "Chọn ra 5 nick Zalo và thiết lập lịch chạy kịch bản 'Tương tác 1' vào lúc 10h30 các ngày thứ 2, thứ 5, thứ 6 hàng tuần.";
+            } else if (presetId === 'accounts-incomplete') {
+                promptText = "Tôi muốn gán lịch kịch bản cho nick Facebook.";
+            } else {
+                if (presetId === 1) promptText = "Nuôi 50 tài khoản Facebook trong 7 ngày. Mỗi ngày đăng 2 bài viết về chủ đề An toàn thông tin. Bình luận tự động trả lời khi có người hỏi. Hạn chế: Không hoạt động sau 23h đêm để bảo vệ tài khoản tránh checkpoint.";
+                else if (presetId === 2) promptText = "Nuôi tài khoản mới. Trong 3 ngày đầu chỉ đọc tin tức Newsfeed, thả tim 5 bài viết và comment dạo 2 bài. Đến ngày thứ 4 bắt đầu tự động gửi lời mời kết bạn theo tệp UID gợi ý.";
+                else if (presetId === 3) promptText = "Hãy tự động sinh nội dung bài đăng cho Chiến dịch truyền thông An toàn thông tin trong vòng 7 ngày tiếp theo bằng tiếng Việt có emoji sinh động, hashtags chuyên môn và kèm theo prompt tạo ảnh 3D.";
+                else if (presetId === 'incomplete') promptText = "Tôi muốn tự động đăng bài viết bảo mật.";
+            }
+
+            document.getElementById("chat-text-input").value = promptText;
+            handleUserChatMessage();
+        }
+
+        function processNaturalLanguageInput(text) {
+            const lower = text.toLowerCase();
+
+            if (activeScreen === 'scenarios') {
+                if ((lower.includes("kịch bản") || lower.includes("tương tác nick")) && !lower.includes("3 ngày") && !lower.includes("7 ngày") && !lower.includes("bảo mật") && !lower.includes("đăng bài")) {
+                    renderClaudeStyleClarifyingQuestions('scenarios');
+                    return;
+                }
+                
+                if (lower.includes("3 ngày đầu") || lower.includes("ngày thứ 4") || lower.includes("nuôi tài khoản mới") || lower.includes("7 ngày")) {
+                    currentRunningDemo = 2;
+                    renderDetailedDemo2Proposal("Facebook", 7);
+                } else if (lower.includes("đăng bài") || lower.includes("seeding") || lower.includes("bảo mật")) {
+                    currentRunningDemo = 1;
+                    renderDetailedDemo1Proposal("AI - Seeding Đăng Bài", "Facebook", 7, 10);
+                } else {
+                    currentRunningDemo = 2;
+                    renderDetailedDemo2Proposal("Facebook", 7);
+                }
+            } else if (activeScreen === 'accounts') {
+                if ((lower.includes("gán") || lower.includes("lịch")) && !lower.includes("10 nick") && !lower.includes("5 nick") && !lower.includes("tương tác 1") && !lower.includes("attt") && !lower.includes("nuôi 50") && !lower.includes("đăng 2 bài")) {
+                    renderClaudeStyleClarifyingQuestions('accounts');
+                    return;
+                }
+
+                if (lower.includes("nuôi 50") || lower.includes("đăng 2 bài") || lower.includes("không đăng sau 23h") || lower.includes("tạo kịch bản mới") || lower.includes("chưa có") || lower.includes("attt")) {
+                    currentRunningDemo = 5;
+                    renderDetailedAccountsHybridProposal();
+                } else if (lower.includes("thứ 2") || lower.includes("thứ 5") || lower.includes("thứ 6") || lower.includes("10h30") || lower.includes("tương tác 1") || lower.includes("có sẵn") || lower.includes("đã có")) {
+                    currentRunningDemo = 4;
+                    renderDetailedAccountsWeekdayProposal();
+                } else {
+                    currentRunningDemo = 5;
+                    renderDetailedAccountsHybridProposal();
+                }
+            }
+        }
+
+        function renderClaudeStyleClarifyingQuestions(context = 'scenarios') {
+            const clarifyHTML = `
+                <div class="chat-form-title">💡 Trợ lý AI cần làm rõ thông tin</div>
+                <div style="font-size: 12px; margin-bottom: 12px; color: var(--text-secondary); line-height: 1.45;">
+                    Tôi đã nhận được yêu cầu của bạn. Để thiết lập cấu hình tốt nhất, bạn vui lòng chọn nhanh các tùy chọn dưới đây:
+                </div>
+                <div class="clarify-box" data-context="${context}" style="margin-top: 8px;">
+                    <div class="clarify-q">1. Nền tảng hoạt động?</div>
+                    <div class="clarify-options" id="clarify-platform-opts">
+                        <button class="clarify-opt-btn active" onclick="selectClarifyOpt(this)">Facebook</button>
+                        <button class="clarify-opt-btn" onclick="selectClarifyOpt(this)">Zalo</button>
+                        <button class="clarify-opt-btn" onclick="selectClarifyOpt(this)">TikTok</button>
+                    </div>
+
+                    <div class="clarify-q">2. Thời gian chạy chiến dịch?</div>
+                    <div class="clarify-options" id="clarify-days-opts">
+                        <button class="clarify-opt-btn active" onclick="selectClarifyOpt(this)">7 ngày</button>
+                        <button class="clarify-opt-btn" onclick="selectClarifyOpt(this)">3 ngày</button>
+                        <button class="clarify-opt-btn" onclick="selectClarifyOpt(this)">15 ngày</button>
+                    </div>
+
+                    <div class="clarify-q">3. Số lượng tài khoản?</div>
+                    <div class="clarify-options" id="clarify-accs-opts">
+                        <button class="clarify-opt-btn active" onclick="selectClarifyOpt(this)">10 nick</button>
+                        <button class="clarify-opt-btn" onclick="selectClarifyOpt(this)">5 nick</button>
+                        <button class="clarify-opt-btn" onclick="selectClarifyOpt(this)">50 nick</button>
+                    </div>
+
+                    <button class="chat-form-submit-btn" style="width: 100%; margin-top: 8px;" onclick="confirmClarifyingQuestions(this)">Xác nhận lựa chọn</button>
+                </div>
+            `;
+            addChatMessage("bot", clarifyHTML, true);
+        }
+
+        function selectClarifyOpt(element) {
+            const siblings = element.parentNode.querySelectorAll('.clarify-opt-btn');
+            siblings.forEach(sibling => sibling.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function confirmClarifyingQuestions(submitBtn) {
+            const container = submitBtn.closest('.clarify-box');
+            const context = container.getAttribute('data-context') || 'scenarios';
+            const selectedPlatform = container.querySelector('#clarify-platform-opts .clarify-opt-btn.active').innerText;
+            const selectedDays = container.querySelector('#clarify-days-opts .clarify-opt-btn.active').innerText;
+            const selectedAccs = container.querySelector('#clarify-accs-opts .clarify-opt-btn.active').innerText;
+
+            addChatMessage("user", `Tôi chọn cấu hình: Nền tảng ${selectedPlatform}, thời gian ${selectedDays}, số lượng ${selectedAccs}.`, false);
+            
+            container.querySelectorAll('button').forEach(btn => {
+                btn.disabled = true;
+                btn.style.cursor = 'default';
+            });
+            submitBtn.style.display = 'none';
+
+            showBotTypingIndicator();
+            setTimeout(() => {
+                removeBotTypingIndicator();
+                const daysNum = parseInt(selectedDays) || 7;
+                const accsNum = parseInt(selectedAccs) || 10;
+
+                if (context === 'scenarios') {
+                    currentRunningDemo = 2;
+                    renderDetailedDemo2Proposal(selectedPlatform, daysNum);
+                } else {
+                    currentRunningDemo = 5;
+                    renderDetailedAccounts1Proposal(selectedPlatform, daysNum, accsNum);
+                }
+            }, 1000);
+        }
+
+        function renderDetailedDemo1Proposal(titleCustom = null, platformCustom = "Facebook", daysCustom = 7, accsCustom = 10) {
+            const title = titleCustom || "AI - Seeding Đăng Bài";
+            const platform = platformCustom;
+            const days = daysCustom;
+
+            const html = `
+                <div class="chat-bubble-bot-text" style="font-size:12.5px; line-height: 1.5; color: var(--text-primary);">
+                    Đề xuất tạo kịch bản seeding bài đăng bảo mật tự động:
+                    <br><br>
+                    <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background-color: var(--bg-secondary);">
+                        <div style="font-weight: 700; color: var(--accent-blue); margin-bottom: 4px;">AI - Seeding Đăng Bài (Nền tảng: ${platform})</div>
+                        <div style="font-size: 11.5px; color: var(--text-secondary); margin-bottom: 6px;">Hành động rút gọn: Mở ${platform} ➔ Đăng bài lên tường ➔ Like chéo ➔ Trả lời comment.</div>
+                        <div class="accordion-header" style="font-size: 11px; cursor: pointer; color: var(--accent-blue); font-weight: 600;" onclick="toggleAccordion(this)">Xem chi tiết thông số AI cấu hình ▾</div>
+                        <div class="accordion-content" style="display: none; flex-direction: column; gap: 4px; padding: 6px 0; margin-top: 6px; border-top: 1px dashed var(--border-color); font-family: monospace; font-size: 11px; color: var(--text-secondary);">
+                            <div>• Tần suất: Đăng 2 bài viết/ngày trong ${days} ngày</div>
+                            <div>• Chủ đề bài đăng: An toàn thông tin, an ninh mạng</div>
+                            <div>• Kịch bản tự trả lời: Kích hoạt AI Reply tự động</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="proposal-card" style="margin-top: 10px;">
+                    <div class="proposal-header">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="#0066fe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        Xác nhận tạo kịch bản seeding
+                    </div>
+                    <ul class="proposal-list">
+                        <li class="proposal-item">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            Tạo mới: Kịch bản ${title} (${platform})
+                        </li>
+                    </ul>
+                    <div class="proposal-actions">
+                        <button class="proposal-btn-cancel" onclick="cancelAIProposal(this)">Từ chối</button>
+                        <button class="proposal-btn-execute" onclick="executeAIProposal(this)">Execute</button>
+                    </div>
+                </div>
+            `;
+            addChatMessage("bot", html, true);
+        }
+
+        function renderDetailedDemo2Proposal(platformCustom = "Facebook", daysCustom = 7) {
+            const platform = platformCustom;
+            const days = daysCustom;
+
+            const html = `
+                <div class="chat-bubble-bot-text" style="font-size:12.5px; line-height: 1.5; color: var(--text-primary);">
+                    Tôi đã phân tích nhu cầu tạo kịch bản cho nick mới ${platform} chạy trong ${days} ngày.
+                    <br><br>
+                    <strong>🔍 Kế hoạch hành động chi tiết từ AI (Đề xuất tạo 3 kịch bản mới):</strong>
+                    
+                    <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 10px;">
+                        <!-- Kịch bản 1 -->
+                        <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background-color: var(--bg-secondary);">
+                            <div style="font-weight: 700; color: var(--accent-blue); margin-bottom: 4px;">1. AI - Tương tác Nick Mới (Nền tảng: ${platform})</div>
+                            <div style="font-size: 11.5px; color: var(--text-secondary); margin-bottom: 6px;">Hành động rút gọn: Mở ${platform} ➔ Đọc tin tức Newsfeed ➔ Thả tim 5 bài viết ➔ Bình luận dạo 2 bài.</div>
+                            <div class="accordion-header" style="font-size: 11px; cursor: pointer; color: var(--accent-blue); font-weight: 600;" onclick="toggleAccordion(this)">Xem chi tiết thông số AI cấu hình ▾</div>
+                            <div class="accordion-content" style="display: none; flex-direction: column; gap: 4px; padding: 6px 0; margin-top: 6px; border-top: 1px dashed var(--border-color); font-family: monospace; font-size: 11px; color: var(--text-secondary);">
+                                <div>• Tần suất: Chạy mỗi sáng từ 08:30</div>
+                                <div>• Độ trễ (Delay): 15-30 giây giữa các hành động</div>
+                                <div>• Nội dung comment dạo: Chọn ngẫu nhiên ("Rất hay", "Tuyệt vời", "Cảm ơn")</div>
+                            </div>
+                        </div>
+
+                        <!-- Kịch bản 2 -->
+                        <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background-color: var(--bg-secondary);">
+                            <div style="font-weight: 700; color: var(--accent-blue); margin-bottom: 4px;">2. AI - Seeding Đăng Bài (Nền tảng: ${platform})</div>
+                            <div style="font-size: 11.5px; color: var(--text-secondary); margin-bottom: 6px;">Hành động rút gọn: Mở ${platform} ➔ Đăng bài lên tường ➔ Like chéo ➔ Trả lời comment.</div>
+                            <div class="accordion-header" style="font-size: 11px; cursor: pointer; color: var(--accent-blue); font-weight: 600;" onclick="toggleAccordion(this)">Xem chi tiết thông số AI cấu hình ▾</div>
+                            <div class="accordion-content" style="display: none; flex-direction: column; gap: 4px; padding: 6px 0; margin-top: 6px; border-top: 1px dashed var(--border-color); font-family: monospace; font-size: 11px; color: var(--text-secondary);">
+                                <div>• Tần suất: Đăng 2 bài viết/ngày</div>
+                                <div>• Chủ đề bài đăng: An toàn thông tin, an ninh mạng</div>
+                                <div>• Kịch bản tự trả lời: Kích hoạt AI Reply tự động</div>
+                            </div>
+                        </div>
+
+                        <!-- Kịch bản 3 -->
+                        <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background-color: var(--bg-secondary);">
+                            <div style="font-weight: 700; color: var(--accent-blue); margin-bottom: 4px;">3. AI - Kết bạn Gợi ý (Nền tảng: ${platform})</div>
+                            <div style="font-size: 11.5px; color: var(--text-secondary); margin-bottom: 6px;">Hành động rút gọn: Mở ${platform} ➔ Gửi lời mời kết bạn theo tệp UID gợi ý.</div>
+                            <div class="accordion-header" style="font-size: 11px; cursor: pointer; color: var(--accent-blue); font-weight: 600;" onclick="toggleAccordion(this)">Xem chi tiết thông số AI cấu hình ▾</div>
+                            <div class="accordion-content" style="display: none; flex-direction: column; gap: 4px; padding: 6px 0; margin-top: 6px; border-top: 1px dashed var(--border-color); font-family: monospace; font-size: 11px; color: var(--text-secondary);">
+                                <div>• Giới hạn: Tối đa 20 nick/ngày</div>
+                                <div>• Đối tượng: Thành viên tích cực trong các nhóm IT</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="proposal-card" style="margin-top: 10px;">
+                    <div class="proposal-header">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="#0066fe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        Xác nhận khởi tạo kịch bản
+                    </div>
+                    <ul class="proposal-list">
+                        <li class="proposal-item">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            Tạo mới: 3 kịch bản AI (${platform})
+                        </li>
+                        <li class="proposal-item">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            Cấu hình hành động chi tiết theo accordion
+                        </li>
+                    </ul>
+                    <div class="proposal-actions">
+                        <button class="proposal-btn-cancel" onclick="cancelAIProposal(this)">Từ chối</button>
+                        <button class="proposal-btn-execute" onclick="executeAIProposal(this)">Execute</button>
+                    </div>
+                </div>
+            `;
+            addChatMessage("bot", html, true);
+        }
+
+        function renderDetailedAccounts1Proposal(platformCustom = "Facebook", daysCustom = 15, accsCustom = 10) {
+            const platform = platformCustom;
+            const days = daysCustom;
+            const accsCount = accsCustom;
+
+            const html = `
+                <div class="chat-bubble-bot-text" style="font-size:12.5px; line-height: 1.5; color: var(--text-primary);">
+                    Tôi đã lên kế hoạch gán kịch bản và lịch chạy tự động cho tài khoản:
+                    <br><br>
+                    <strong>📋 KẾ HOẠCH PHÂN BỔ VÀ LẬP LỊCH CHẠY:</strong>
+                    <ul style="margin-left: 16px; margin-top: 6px; display: flex; flex-direction: column; gap: 6px;">
+                        <li>👥 <strong>Tài khoản mục tiêu:</strong> Phân bổ cho ${accsCount} tài khoản ảo ${platform} (Nhóm IT Clone).</li>
+                        <li>⚙️ <strong>Kịch bản chỉ định:</strong> Gán kịch bản <code>AI - Đăng bài ATTT</code>.</li>
+                        <li>📅 <strong>Lịch trình vận hành:</strong> Chạy hàng ngày lúc 09:00 (Lặp lại hàng tuần liên tục).</li>
+                        <li>⚠️ <strong>Hạn chế:</strong> Dừng chạy tuyệt đối sau 23:00 đêm để tránh checkpoint.</li>
+                    </ul>
+                </div>
+                <div class="proposal-card" style="margin-top: 10px;">
+                    <div class="proposal-header">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="#0066fe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        Xác nhận gán lịch trình AI
+                    </div>
+                    <ul class="proposal-list">
+                        <li class="proposal-item">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            Gán kịch bản: AI - Đăng bài ATTT
+                        </li>
+                        <li class="proposal-item">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            Lịch chạy: Lúc 09:00 hàng ngày (Lặp lại liên tục)
+                        </li>
+                    </ul>
+                    <div class="proposal-actions">
+                        <button class="proposal-btn-cancel" onclick="cancelAIProposal(this)">Từ chối</button>
+                        <button class="proposal-btn-execute" onclick="executeAIProposal(this)">Execute</button>
+                    </div>
+                </div>
+            `;
+            addChatMessage("bot", html, true);
+        }
+
+        function renderDetailedAccountsWeekdayProposal() {
+            const html = `
+                <div class="chat-bubble-bot-text" style="font-size:12.5px; line-height: 1.5; color: var(--text-primary);">
+                    Tôi đã nhận diện kịch bản <code>Tương tác 1</code> là kịch bản <strong>ĐÃ CÓ SẴN</strong> trên hệ thống.
+                    <br><br>
+                    <strong>📋 KẾ HOẠCH GÁN KỊCH BẢN CÓ SẴN:</strong>
+                    <ul style="margin-left: 16px; margin-top: 6px; display: flex; flex-direction: column; gap: 6px;">
+                        <li>👥 <strong>Tài khoản:</strong> Chọn ra 5 tài khoản Zalo Clone/ADS (STT 4, 5, 6, 7, 8).</li>
+                        <li>⚙️ <strong>Kịch bản:</strong> Gán kịch bản sẵn có <code>Tương tác 1</code>.</li>
+                        <li>📅 <strong>Lịch trình:</strong> Chạy định kỳ vào <strong>Thứ 2, Thứ 5, Thứ 6 lúc 10h30</strong>.</li>
+                        <li>⏱️ <strong>Thời gian áp dụng:</strong> Chạy lặp lại liên tục vô hạn hàng tuần.</li>
+                    </ul>
+                </div>
+                <div class="proposal-card" style="margin-top: 10px;">
+                    <div class="proposal-header">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="#0066fe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        Xác nhận gán lịch chạy cụ thể
+                    </div>
+                    <ul class="proposal-list">
+                        <li class="proposal-item">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            Gán kịch bản: Tương tác 1 cho 5 tài khoản Zalo
+                        </li>
+                        <li class="proposal-item">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            Lịch chạy: Thứ 2, Thứ 5, Thứ 6 lúc 10h30 (Lặp lại hàng tuần)
+                        </li>
+                    </ul>
+                    <div class="proposal-actions">
+                        <button class="proposal-btn-cancel" onclick="cancelAIProposal(this)">Từ chối</button>
+                        <button class="proposal-btn-execute" onclick="executeAIProposal(this)">Execute</button>
+                    </div>
+                </div>
+            `;
+            addChatMessage("bot", html, true);
+        }
+
+        function renderDetailedAccountsHybridProposal() {
+            const html = `
+                <div class="chat-bubble-bot-text" style="font-size:12.5px; line-height: 1.5; color: var(--text-primary);">
+                    Tôi nhận thấy yêu cầu của bạn chứa mô tả kịch bản mới <strong>chưa tồn tại</strong> trên hệ thống.
+                    <br><br>
+                    🤖 <strong>ĐỀ XUẤT QUY TRÌNH TẠO MỚI & GÁN TỰ ĐỘNG (2 BƯỚC):</strong>
+                    <ul style="margin-left: 16px; margin-top: 6px; display: flex; flex-direction: column; gap: 6px;">
+                        <li>🔨 <strong>Bước 1 (Tạo mới):</strong> Thiết kế kịch bản <code>AI - Đăng bài ATTT</code> với 2 hành động: Đăng bài bảo mật & Tự động trả lời comment (tránh đăng sau 23h).</li>
+                        <li>👥 <strong>Bước 2 (Gán lịch):</strong> Phân bổ kịch bản mới này cho 50 tài khoản Facebook ảo, cài đặt giờ chạy tự động lúc 09:00 (Lặp lại hàng tuần liên tục).</li>
+                    </ul>
+                </div>
+                <div class="proposal-card" style="margin-top: 10px;">
+                    <div class="proposal-header">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="#0066fe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        Tạo mới & Gán kịch bản AI
+                    </div>
+                    <ul class="proposal-list">
+                        <li class="proposal-item">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            Tạo kịch bản: AI - Đăng bài ATTT (Mới)
+                        </li>
+                        <li class="proposal-item">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            Gán cho: 50 tài khoản Facebook
+                        </li>
+                        <li class="proposal-item">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            Lịch chạy: Hàng ngày lúc 09:00 (Lặp lại liên tục, tránh sau 23h)
+                        </li>
+                    </ul>
+                    <div class="proposal-actions">
+                        <button class="proposal-btn-cancel" onclick="cancelAIProposal(this)">Từ chối</button>
+                        <button class="proposal-btn-execute" onclick="executeAIProposal(this)">Execute</button>
+                    </div>
+                </div>
+            `;
+            addChatMessage("bot", html, true);
+        }
+
+        function getCurrentDateTimeString() {
+            const now = new Date();
+            const date = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            return `${date}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+        }
+
+        function renderProposalCard(data) {
+            const cardHTML = `
+                <div class="proposal-card">
+                    <div class="proposal-header">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="#0066fe"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        ${data.title}
+                    </div>
+                    <ul class="proposal-list">
+                        ${data.items.map(item => `
+                            <li class="proposal-item">
+                                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                ${item}
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <div class="proposal-actions">
+                        <button class="proposal-btn-cancel" onclick="cancelAIProposal(this)">Từ chối</button>
+                        <button class="proposal-btn-execute" onclick="executeAIProposal(this)">Execute</button>
+                    </div>
+                </div>
+            `;
+            addChatMessage("bot", cardHTML, true);
+        }
+
+        function cancelAIProposal() {
+            if (window.event && window.event.target) {
+                const btn = window.event.target;
+                const actionsDiv = btn.closest('.proposal-actions');
+                if (actionsDiv) {
+                    actionsDiv.style.display = 'none';
+                }
+            }
+            renderChatBubble("Tôi đã hủy yêu cầu thiết lập. Bạn có cần tôi hỗ trợ kịch bản khác không?", "bot");
+            currentRunningDemo = null;
+        }
+
+        // Live Execution Console in Chat drawer
+        function executeAIProposal() {
+            if (window.event && window.event.target) {
+                const btn = window.event.target;
+                const actionsDiv = btn.closest('.proposal-actions');
+                if (actionsDiv) {
+                    actionsDiv.style.display = 'none';
+                }
+            }
+            document.getElementById("chat-text-input").disabled = true;
+            document.getElementById("btn-chat-send").disabled = true;
+
+            const terminalHTML = `
+                <div class="execution-terminal">
+                    <div style="font-size: 10px; font-weight: 700; color: #94a3b8; margin-bottom: 6px; font-family: monospace;">
+                        SYSTEM INTEGRATION TERMINAL
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="exec-progress-bar"></div>
+                    </div>
+                    <div class="terminal-logs" id="exec-terminal-logs">
+                        <!-- Filled step-by-step -->
+                    </div>
+                </div>
+            `;
+            const terminalBubble = renderChatBubble(terminalHTML, "bot", true);
+
+            let logs = [];
+            if (currentRunningDemo === 1) {
+                logs = [
+                    { time: 500, text: "⚙️ Khởi tạo Chiến dịch \"Nuôi nick ATTT\"... [OK]" },
+                    { time: 1000, text: "⚙️ Đang cấu hình 50 nick Facebook ảo... [OK]" },
+                    { time: 1600, text: "⚙️ Thiết lập lịch biểu đăng bài (Tránh sau 23h)... [OK]" },
+                    { time: 2200, text: "⚙️ AI đang tự sinh 14 bài đăng chủ đề ATTT... [OK]" },
+                    { time: 2800, text: "⚙️ Thiết lập Kịch bản tự động bình luận trả lời... [OK]" },
+                    { time: 3400, text: "⚙️ Đồng bộ lưu cơ sở dữ liệu OSINT... [OK]" }
+                ];
+            } else if (currentRunningDemo === 2) {
+                logs = [
+                    { time: 600, text: "⚙️ Tạo kịch bản \"Tương tác tăng dần 4 ngày\"... [OK]" },
+                    { time: 1300, text: "⚙️ Cấu hình Ngày 1-3: Đọc Newsfeed, Like 5, Comment 2... [OK]" },
+                    { time: 2000, text: "⚙️ Cấu hình Ngày 4: Tự động gửi kết bạn... [OK]" },
+                    { time: 2800, text: "⚙️ Đồng bộ lưu kịch bản nuôi nick mới... [OK]" }
+                ];
+            } else if (currentRunningDemo === 4) {
+                logs = [
+                    { time: 500, text: "⚙️ Đang lọc 5 tài khoản Zalo Clone/VIA trong DB... [OK]" },
+                    { time: 1100, text: "⚙️ Phân tích kịch bản \"Tương tác 1\"... [OK]" },
+                    { time: 1800, text: "⚙️ Lên lịch chạy Thứ 2, Thứ 5, Thứ 6 lúc 10h30... [OK]" },
+                    { time: 2500, text: "⚙️ Ghi nhận thời gian gán AI gần nhất... [OK]" },
+                    { time: 3000, text: "⚙️ Đồng bộ cơ sở dữ liệu tài khoản OSINT... [OK]" }
+                ];
+            } else if (currentRunningDemo === 5) {
+                logs = [
+                    { time: 500, text: "⚙️ Phân tích mô tả kịch bản & thiết kế hành động... [OK]" },
+                    { time: 1000, text: "⚙️ Khởi tạo kịch bản mới \"AI - Đăng bài ATTT\" trong hệ thống... [OK]" },
+                    { time: 1600, text: "⚙️ Đang phân bổ kịch bản mới cho 50 tài khoản Facebook ảo... [OK]" },
+                    { time: 2200, text: "⚙️ Cài đặt lịch chạy: Lúc 09:00 hàng ngày (Lặp lại liên tục, tránh sau 23h)... [OK]" },
+                    { time: 2800, text: "⚙️ Ghi nhận thời gian gán AI gần nhất... [OK]" },
+                    { time: 3400, text: "⚙️ Đồng bộ cơ sở dữ liệu OSINT... [OK]" }
+                ];
+            } else {
+                logs = [
+                    { time: 500, text: "⚙️ Khởi tạo tiến trình tùy chỉnh... [OK]" },
+                    { time: 1500, text: "⚙️ Hoàn thành đồng bộ cấu hình... [OK]" }
+                ];
+            }
+
+            const logsContainer = document.getElementById("exec-terminal-logs");
+            const progressBar = document.getElementById("exec-progress-bar");
+
+            let currentLogIndex = 0;
+            const startTime = Date.now();
+            const totalDuration = logs[logs.length - 1].time + 600;
+
+            const interval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const percentage = Math.min((elapsed / totalDuration) * 100, 95);
+                progressBar.style.width = `${percentage}%`;
+
+                if (currentLogIndex < logs.length && elapsed >= logs[currentLogIndex].time) {
+                    const logLine = document.createElement("div");
+                    logLine.className = "terminal-log-line";
+                    logLine.innerText = logs[currentLogIndex].text;
+                    logsContainer.appendChild(logLine);
+                    logsContainer.scrollTop = logsContainer.scrollHeight;
+                    currentLogIndex++;
+                }
+
+                if (elapsed >= totalDuration) {
+                    clearInterval(interval);
+                    progressBar.style.width = "100%";
+                    
+                    const successDiv = document.createElement("div");
+                    successDiv.className = "success-banner";
+                    successDiv.innerHTML = `
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="var(--green-success)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                        Thực thi thành công! Dữ liệu đã được cập nhật.
+                    `;
+                    logsContainer.appendChild(successDiv);
+                    logsContainer.scrollTop = logsContainer.scrollHeight;
+
+                    // Apply actual updates to DB and trigger UI updates
+                    commitAIConfigurationsToDB();
+
+                    document.getElementById("chat-text-input").disabled = false;
+                    document.getElementById("btn-chat-send").disabled = false;
+                    
+                    showToast("Thực thi thành công", "Hệ thống OSINT đã lưu cấu hình và kích hoạt tiến trình.");
+                }
+            }, 100);
+        }
+
+        // Commit and trigger UI updates (with flashes!)
+        function commitAIConfigurationsToDB() {
+            const timeStamp = getCurrentDateTimeString();
+
+            if (currentRunningDemo === 1) {
+                const scenarioName = "AI - Seeding Đăng Bài";
+                if (!scenarios.some(s => s.name === scenarioName)) {
+                    scenarios.push({
+                        id: "sc-ai-seeding",
+                        name: scenarioName,
+                        platform: "Facebook",
+                        actionCount: 3,
+                        accountCount: 0,
+                        isAI: true,
+                        actions: [
+                            { stt: 1, name: "Đăng bài viết bảo mật", type: "Đăng bài" },
+                            { stt: 2, name: "Like bài viết chéo", type: "Seeding" },
+                            { stt: 3, name: "Tự động trả lời comment", type: "Seeding" }
+                        ]
+                    });
+                    saveToLocalStorage();
+                }
+                activeScenarioId = "sc-ai-seeding";
+                initScenariosUI("sc-ai-seeding");
+
+            } else if (currentRunningDemo === 2) {
+                let addedAny = false;
+                if (!scenarios.some(s => s.id === "sc-ai-tương-tác")) {
+                    scenarios.push({
+                        id: "sc-ai-tương-tác",
+                        name: "AI - Tương tác Nick Mới",
+                        platform: "Facebook",
+                        actionCount: 4,
+                        accountCount: 0,
+                        isAI: true,
+                        actions: [
+                            { stt: 1, name: "Mở Facebook", type: "Tương tác" },
+                            { stt: 2, name: "Đọc tin tức Newsfeed", type: "Tương tác" },
+                            { stt: 3, name: "Thả tim 5 bài viết", type: "Seeding" },
+                            { stt: 4, name: "Bình luận dạo 2 bài", type: "Seeding" }
+                        ]
+                    });
+                    addedAny = true;
+                }
+                if (!scenarios.some(s => s.id === "sc-ai-seeding")) {
+                    scenarios.push({
+                        id: "sc-ai-seeding",
+                        name: "AI - Seeding Đăng Bài",
+                        platform: "Facebook",
+                        actionCount: 3,
+                        accountCount: 0,
+                        isAI: true,
+                        actions: [
+                            { stt: 1, name: "Đăng bài viết bảo mật", type: "Đăng bài" },
+                            { stt: 2, name: "Like bài viết chéo", type: "Seeding" },
+                            { stt: 3, name: "Tự động trả lời comment", type: "Seeding" }
+                        ]
+                    });
+                    addedAny = true;
+                }
+                if (!scenarios.some(s => s.id === "sc-ai-kết-bạn")) {
+                    scenarios.push({
+                        id: "sc-ai-kết-bạn",
+                        name: "AI - Kết bạn Gợi ý",
+                        platform: "Facebook",
+                        actionCount: 2,
+                        accountCount: 0,
+                        isAI: true,
+                        actions: [
+                            { stt: 1, name: "Mở Facebook", type: "Tương tác" },
+                            { stt: 2, name: "Gửi lời mời kết bạn theo tệp UID", type: "Kết bạn" }
+                        ]
+                    });
+                    addedAny = true;
+                }
+                if (addedAny) saveToLocalStorage();
+
+                activeScenarioId = "sc-ai-tương-tác";
+                initScenariosUI("sc-ai-tương-tác");
+
+            } else if (currentRunningDemo === 4) {
+                let targetCount = 0;
+                accounts.forEach(acc => {
+                    if (acc.platform === "Zalo" && targetCount < 5) {
+                        acc.status = "Hoạt động";
+                        acc.assignedScenario = "Tương tác 1";
+                        acc.lastAIAssigned = timeStamp;
+                        acc.proxy = "192.168.10.50:8000";
+                        targetCount++;
+                    }
+                });
+                saveToLocalStorage();
+                initAccountsUI(true);
+
+            } else if (currentRunningDemo === 5) {
+                const scenarioName = "AI - Đăng bài ATTT";
+                if (!scenarios.some(s => s.name === scenarioName)) {
+                    scenarios.push({
+                        id: "sc-ai-attt",
+                        name: scenarioName,
+                        platform: "Facebook",
+                        actionCount: 2,
+                        accountCount: 50,
+                        isAI: true,
+                        actions: [
+                            { stt: 1, name: "Đăng bài lên tường (An toàn thông tin)", type: "Đăng bài" },
+                            { stt: 2, name: "Cấu hình Tự động trả lời bình luận", type: "Seeding" }
+                        ]
+                    });
+                }
+
+                let targetCount = 0;
+                accounts.forEach(acc => {
+                    if (acc.platform === "Facebook" && targetCount < 50) {
+                        acc.status = "Hoạt động";
+                        acc.assignedScenario = scenarioName;
+                        acc.lastAIAssigned = timeStamp;
+                        acc.schedule = "09:00 (Hàng ngày - Lặp lại liên tục, tránh sau 23h)";
+                        acc.proxy = "192.168.12.80:8080";
+                        targetCount++;
+                    }
+                });
+                saveToLocalStorage();
+                initAccountsUI(true);
+                initScenariosUI("sc-ai-attt");
+            }
+
+            updateDashboardStats();
+        }
+
+        // Demo 2: Timeline in Chat
+        function renderDemo2TimelineProposal() {
+            const proposalHTML = `
+                <div class="chat-bubble chat-bubble-bot">
+                    Tôi đã phân tích yêu cầu nuôi nick mới và tạo dòng thời gian kịch bản 4 ngày. Vui lòng bấm <strong>Execute</strong> để kích hoạt.
+                </div>
+                <div class="proposal-card">
+                    <div class="proposal-header">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="#0066fe"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm3.3 14.3L11 12.75V7h1.5v4.96l3.24 1.92-.75 1.42z"/></svg>
+                        Lịch trình nuôi nick mới (4 Ngày)
+                    </div>
+                    <ul class="proposal-list" style="font-size:12px;">
+                        <li>📅 **Ngày 1-3:** Lướt tin, Like 5 bài, Comment 2 bài.</li>
+                        <li>📅 **Ngày 4:** Kết bạn theo gợi ý (Friend Request).</li>
+                    </ul>
+                    <div class="proposal-actions">
+                        <button class="proposal-btn-cancel" onclick="cancelAIProposal()">Từ chối</button>
+                        <button class="proposal-btn-execute" onclick="executeAIProposal()">Execute</button>
+                    </div>
+                </div>
+            `;
+            renderChatBubble(proposalHTML, "bot", true);
+        }
+
+        function renderInlineTimelineAccordionBubble() {
+            const accordionHTML = `
+                Tôi đã lưu kịch bản vào DB. Dưới đây là dòng thời gian chi tiết được AI lập ra cho các tài khoản ảo:
+                
+                <div class="timeline-accordion">
+                    <div class="timeline-accordion-trigger" onclick="toggleAccordion(this)">
+                        Xem dòng thời gian chi tiết kịch bản ▾
+                    </div>
+                    <div class="timeline-accordion-content">
+                        <div class="timeline-container">
+                            <div class="timeline-day-header">Ngày 1 - Ngày 3 (Tương tác tăng trust)</div>
+                            <div class="timeline-item">
+                                <div class="timeline-node"></div>
+                                <div class="timeline-time">08:00</div>
+                                <div class="timeline-action">Mở Facebook (Open Facebook)</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-node"></div>
+                                <div class="timeline-time">08:05</div>
+                                <div class="timeline-action">Lướt Newsfeed (Scroll Newsfeed)</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-node"></div>
+                                <div class="timeline-time">08:07</div>
+                                <div class="timeline-action">Like 5 bài đăng ngẫu nhiên (Like posts)</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-node"></div>
+                                <div class="timeline-time">08:10</div>
+                                <div class="timeline-action">Comment 2 bài đăng ngẫu nhiên (Comment posts)</div>
+                            </div>
+
+                            <div class="timeline-day-header">Ngày 4 (Mở rộng kết bạn)</div>
+                            <div class="timeline-item">
+                                <div class="timeline-node"></div>
+                                <div class="timeline-time">09:00</div>
+                                <div class="timeline-action">Gửi lời mời kết bạn gợi ý (Friend Request)</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-node"></div>
+                                <div class="timeline-time">09:20</div>
+                                <div class="timeline-action">Nghỉ giải lao (Cool Down)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            renderChatBubble(accordionHTML, "bot", true);
+        }
+
+        // Demo 3: Content List in Chat
+        function renderDemo3ContentProposal() {
+            const proposalHTML = `
+                <div class="chat-bubble chat-bubble-bot">
+                    Tôi đã chuẩn bị sẵn kế hoạch nội dung truyền thông chủ đề **An toàn thông tin** cho chiến dịch 7 ngày của bạn.
+                </div>
+                <div class="proposal-card">
+                    <div class="proposal-header">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="#0066fe"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                        Chiến dịch Content ATTT (7 Ngày)
+                    </div>
+                    <ul class="proposal-list" style="font-size:12px;">
+                        <li>📝 **Nội dung:** 3 bài đăng mẫu Việt hóa sẵn kèm Emoji, Hashtags.</li>
+                        <li>🎨 **Ảnh Prompt:** Prompt chi tiết tạo ảnh 3D bằng AI.</li>
+                        <li>🤖 **Tone giọng:** Giáo dục, Cảnh báo bảo mật cao cấp.</li>
+                    </ul>
+                    <div class="proposal-actions">
+                        <button class="proposal-btn-cancel" onclick="cancelAIProposal()">Từ chối</button>
+                        <button class="proposal-btn-execute" onclick="executeAIProposal()">Execute</button>
+                    </div>
+                </div>
+            `;
+            renderChatBubble(proposalHTML, "bot", true);
+        }
+
+        function renderInlineContentSliderBubble() {
+            const contentHTML = `
+                Dưới đây là các bài đăng và hình ảnh minh họa do AI tạo ra sẵn sàng xuất bản:
+                
+                <div class="inline-content-slider">
+                    <!-- Post 1 -->
+                    <div class="inline-post-card">
+                        <div class="post-card-header">
+                            <div class="post-tags">
+                                <span class="post-day-tag">Ngày 1</span>
+                                <span class="post-tone-tag">Cảnh báo / Nghiêm túc</span>
+                            </div>
+                            <span style="color: var(--text-muted);">Sẵn sàng</span>
+                        </div>
+                        <div class="post-card-body">
+                            🔒 CẢNH BÁO BẢO MẬT: ĐỪNG ĐỂ LỘ THÔNG TIN CÁ NHÂN! 🔒
+                            
+                            Hôm nay chúng ta cùng nói về tầm quan trọng của việc bảo vệ mật khẩu cá nhân. Hãy đổi mật khẩu của bạn ngay hôm nay bằng cách kết hợp: chữ hoa, chữ thường, số và ký tự đặc biệt nhé!
+                        </div>
+                        <div class="post-card-hashtags">#AnToanThongTin #CyberSecurity #BaoMat</div>
+                        <div class="post-card-prompt-box">
+                            <span class="prompt-label">AI Image Prompt</span>
+                            <span class="prompt-text">A modern cybersecurity shield protecting a digital network database, dark blue background with neon locks, 3d render --ar 16:9</span>
+                        </div>
+                        <img src="./cyber_security_art.png" alt="Cyber Security Visual" class="post-card-preview-img" onerror="this.style.display='none'">
+                    </div>
+
+                    <!-- Post 2 -->
+                    <div class="inline-post-card">
+                        <div class="post-card-header">
+                            <div class="post-tags">
+                                <span class="post-day-tag">Ngày 2</span>
+                                <span class="post-tone-tag">Giáo dục</span>
+                            </div>
+                            <span style="color: var(--text-muted);">Sẵn sàng</span>
+                        </div>
+                        <div class="post-card-body">
+                            🛡️ BẬT XÁC THỰC 2 LỚP (2FA) - TẤM THƯƠNG CHO TÀI KHOẢN 🛡️
+                            
+                            Bật tính năng xác thực hai yếu tố (2FA) qua các ứng dụng như Google Authenticator sẽ giúp bạn chặn đứng các nỗ lực đăng nhập trái phép, bảo vệ bạn trước hacker.
+                        </div>
+                        <div class="post-card-hashtags">#XacThuc2Fa #BaoMatTaiKhoan #OSINT</div>
+                        <div class="post-card-prompt-box">
+                            <span class="prompt-label">AI Image Prompt</span>
+                            <span class="prompt-text">A digital padlock glowing in blue neon representing two factor authentication --ar 16:9</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            renderChatBubble(contentHTML, "bot", true);
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EDR Security - Cấu hình Chính sách Quét Mã độc Nâng cao</title>
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Custom Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            dark: {
+              bg: '#080B11',
+              header: '#0D111A',
+              card: '#121722',
+              cardHover: '#182030',
+              inner: '#0B0F17',
+              border: '#1E2638',
+              borderLight: '#2B374E',
+              text: '#E2E8F0',
+              muted: '#7E8B9F',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0B0F17; }
+    ::-webkit-scrollbar-thumb { background: #1E2638; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2B374E; }
+  </style>
+</head>
+<body class="bg-dark-bg text-dark-text min-h-screen flex flex-col font-sans antialiased selection:bg-blue-600 selection:text-white pb-16">
+
+  <!-- TOPBAR HEADER -->
+  <header class="bg-dark-header border-b border-dark-border sticky top-0 z-40 px-6 py-3.5 flex items-center justify-between shadow-lg">
+    <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-2 text-blue-500 font-bold tracking-wider text-lg">
+        <i data-lucide="shield-alert" class="w-6 h-6 text-blue-500"></i>
+        <span>NCS <span class="text-white font-extrabold">EDR</span></span>
+      </div>
+      <span class="text-dark-borderLight">|</span>
+      <!-- Breadcrumbs -->
+      <nav class="flex items-center space-x-2 text-sm">
+        <a href="#" class="text-dark-muted hover:text-dark-text transition">Quản lý Chính sách</a>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-dark-muted"></i>
+        <a href="#" class="text-dark-muted hover:text-dark-text transition">Chính sách Quét mã độc</a>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-dark-muted"></i>
+        <span class="text-blue-400 font-medium">Thêm mới chính sách (Advanced Threat Scan Policy)</span>
+      </nav>
+    </div>
+
+    <div class="flex items-center space-x-3">
+      <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        Hệ thống sẵn sàng
+      </span>
+      <div class="w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 text-sm font-semibold">
+        AD
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-6xl w-full mx-auto px-6 pt-6 flex-1">
+    
+    <!-- PAGE TITLE & ACTIONS -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-dark-border">
+      <div>
+        <div class="flex items-center gap-3">
+          <h1 class="text-2xl font-bold text-white tracking-tight">Thêm Mới Chính Sách Quét Mã Độc</h1>
+          <span class="px-2 py-0.5 text-xs font-medium rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            ID: POL_SCAN_01
+          </span>
+        </div>
+        <p class="text-sm text-dark-muted mt-1">
+          Thiết lập lịch quét tự động, phạm vi áp dụng, mức chiếm dụng tài nguyên CPU và các hành động xử lý mã độc đối với nhóm máy trạm.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="openCancelModal()" class="px-4 py-2 rounded-lg border border-dark-border hover:bg-dark-cardHover text-dark-muted hover:text-white text-sm font-medium transition flex items-center gap-2">
+          <i data-lucide="x" class="w-4 h-4"></i>
+          Hủy bỏ (Cancel)
+        </button>
+        <button type="button" onclick="submitPolicyForm()" id="btnSavePolicy" class="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold shadow-lg shadow-blue-600/20 hover:shadow-blue-500/30 transition flex items-center gap-2">
+          <i data-lucide="save" class="w-4 h-4"></i>
+          <span>Lưu chính sách (Save Policy)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- FORM BODY -->
+    <form id="scanPolicyForm" class="space-y-6">
+
+      <!-- CARD 1: THÔNG TIN CHUNG -->
+      <div class="bg-dark-card border border-dark-border rounded-xl p-6 shadow-sm">
+        <div class="flex items-center gap-2 mb-4 pb-3 border-b border-dark-border">
+          <i data-lucide="info" class="w-5 h-5 text-blue-400"></i>
+          <h2 class="text-base font-semibold text-white">1. Thông Tin Chung Chính Sách (General Information)</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Policy Name -->
+          <div class="space-y-1.5 md:col-span-2">
+            <label class="block text-sm font-medium text-slate-200">
+              Tên chính sách <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="policyName" value="Chính sách Quét Toàn Diện Máy Chủ Sản Xuất (Prod Servers)" maxlength="128"
+                   placeholder="Nhập tên chính sách quét mã độc..."
+                   class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white placeholder:text-dark-muted focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition" />
+            <div class="flex justify-between items-center text-xs text-dark-muted pt-0.5">
+              <span>Tên chính sách phải là duy nhất trên hệ thống</span>
+              <span><span id="nameCount">61</span>/128 ký tự</span>
+            </div>
+            <!-- Error message placeholder -->
+            <p id="errorPolicyName" class="text-xs text-rose-400 hidden mt-1 flex items-center gap-1">
+              <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Tên chính sách là bắt buộc! (Policy name is required!)
+            </p>
+          </div>
+
+          <!-- Description -->
+          <div class="space-y-1.5 md:col-span-2">
+            <label class="block text-sm font-medium text-slate-200">
+              Mô tả chính sách (Description)
+            </label>
+            <textarea rows="2" maxlength="500" placeholder="Mô tả mục đích áp dụng và các lưu ý nghiệp vụ của chính sách..."
+                      class="w-full px-3.5 py-2 bg-dark-inner border border-dark-border rounded-lg text-sm text-white placeholder:text-dark-muted focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">Thực hiện quét sâu định kỳ hàng tuần vào lúc nửa đêm cho toàn bộ cụm máy chủ cơ sở dữ liệu và ứng dụng trọng yếu. Tự động cách ly file nhiễm và hạn chế CPU tối đa 50%.</textarea>
+          </div>
+
+          <!-- Priority -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-200">
+              Mức độ ưu tiên chính sách (Priority) <span class="text-rose-500">*</span>
+            </label>
+            <select class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+              <option value="LOW">Thấp (Low)</option>
+              <option value="MEDIUM">Trung bình (Medium)</option>
+              <option value="HIGH" selected>Cao (High)</option>
+              <option value="CRITICAL">Khẩn cấp / Nghiêm trọng (Critical)</option>
+            </select>
+          </div>
+
+          <!-- Status Toggle -->
+          <div class="space-y-1.5 flex flex-col justify-center">
+            <label class="block text-sm font-medium text-slate-200 mb-2">Trạng thái kích hoạt</label>
+            <div class="flex items-center space-x-3">
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="policyStatusToggle" checked class="sr-only peer">
+                <div class="w-11 h-6 bg-dark-inner border border-dark-borderLight peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+              <span id="statusLabel" class="text-sm font-medium text-emerald-400">Đang hoạt động (Active)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2: PHẠM VI & MỤC TIÊU QUÉT -->
+      <div class="bg-dark-card border border-dark-border rounded-xl p-6 shadow-sm">
+        <div class="flex items-center gap-2 mb-4 pb-3 border-b border-dark-border">
+          <i data-lucide="target" class="w-5 h-5 text-indigo-400"></i>
+          <h2 class="text-base font-semibold text-white">2. Phạm Vi & Mục Tiêu Áp Dụng (Target Scope)</h2>
+        </div>
+
+        <!-- Target Type Radio -->
+        <div class="space-y-3 mb-6">
+          <label class="block text-sm font-medium text-slate-200">
+            Đối tượng áp dụng quét <span class="text-rose-500">*</span>
+          </label>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <label class="flex items-center gap-3 p-3.5 rounded-lg border border-dark-border bg-dark-inner/60 cursor-pointer hover:border-dark-borderLight transition" onclick="switchTargetType('ALL')">
+              <input type="radio" name="targetType" value="ALL" class="text-blue-600 focus:ring-blue-500 bg-dark-inner border-dark-border">
+              <div>
+                <div class="text-sm font-medium text-white">Tất cả máy trạm (All)</div>
+                <div class="text-xs text-dark-muted">Áp dụng cho toàn bộ thiết bị EDR</div>
+              </div>
+            </label>
+
+            <label class="flex items-center gap-3 p-3.5 rounded-lg border border-blue-500/40 bg-blue-500/5 cursor-pointer hover:border-blue-500 transition" onclick="switchTargetType('GROUP')">
+              <input type="radio" name="targetType" value="GROUP" checked class="text-blue-600 focus:ring-blue-500 bg-dark-inner border-dark-border">
+              <div>
+                <div class="text-sm font-medium text-white">Theo nhóm máy (Groups)</div>
+                <div class="text-xs text-dark-muted">Chọn các nhóm máy theo phòng ban</div>
+              </div>
+            </label>
+
+            <label class="flex items-center gap-3 p-3.5 rounded-lg border border-dark-border bg-dark-inner/60 cursor-pointer hover:border-dark-borderLight transition" onclick="switchTargetType('SUBNET')">
+              <input type="radio" name="targetType" value="SUBNET" class="text-blue-600 focus:ring-blue-500 bg-dark-inner border-dark-border">
+              <div>
+                <div class="text-sm font-medium text-white">Theo dải mạng (Subnets/IP)</div>
+                <div class="text-xs text-dark-muted">Chỉ định cụ thể dải IP / CIDR</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Dynamic Field: Endpoint Groups (Shown when GROUP) -->
+        <div id="fieldGroupSelect" class="space-y-2 mb-6">
+          <label class="block text-sm font-medium text-slate-200">
+            Chọn nhóm máy trạm (Endpoint Groups) <span class="text-rose-500">*</span>
+          </label>
+          <div class="p-2.5 bg-dark-inner border border-dark-border rounded-lg flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-medium">
+              <i data-lucide="server" class="w-3.5 h-3.5"></i>
+              <span>Nhóm Máy chủ Cơ sở Dữ liệu (Database Servers)</span>
+              <button type="button" class="hover:text-rose-400 transition"><i data-lucide="x" class="w-3 h-3"></i></button>
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-medium">
+              <i data-lucide="monitor" class="w-3.5 h-3.5"></i>
+              <span>Nhóm Máy chủ DMZ Web App</span>
+              <button type="button" class="hover:text-rose-400 transition"><i data-lucide="x" class="w-3 h-3"></i></button>
+            </span>
+            <input type="text" placeholder="Gõ tìm kiếm nhóm và nhấn Enter..." class="flex-1 min-w-[200px] bg-transparent text-sm text-white placeholder:text-dark-muted focus:outline-none px-2 py-0.5">
+          </div>
+        </div>
+
+        <!-- Dynamic Field: Subnet IP (Shown when SUBNET) -->
+        <div id="fieldSubnetInput" class="space-y-2 mb-6 hidden">
+          <label class="block text-sm font-medium text-slate-200">
+            Dải địa chỉ IP / Subnet (CIDR) <span class="text-rose-500">*</span>
+          </label>
+          <input type="text" placeholder="Nhập IP hoặc dải mạng CIDR phân cách bằng dấu phẩy. VD: 192.168.1.0/24, 10.10.2.50"
+                 class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white placeholder:text-dark-muted focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+        </div>
+
+        <!-- Path Exclusions (Tag Input) -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="block text-sm font-medium text-slate-200">
+              Đường dẫn loại trừ khỏi phiên quét (Path Exclusions)
+            </label>
+            <span class="text-xs text-dark-muted">Tối đa 20 đường dẫn</span>
+          </div>
+          <div class="p-2.5 bg-dark-inner border border-dark-border rounded-lg space-y-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700 font-mono text-xs">
+                <span>C:\Windows\SoftwareDistribution\*</span>
+                <button type="button" class="hover:text-rose-400 ml-1"><i data-lucide="x" class="w-3 h-3"></i></button>
+              </span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700 font-mono text-xs">
+                <span>/var/log/audit/*</span>
+                <button type="button" class="hover:text-rose-400 ml-1"><i data-lucide="x" class="w-3 h-3"></i></button>
+              </span>
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700 font-mono text-xs">
+                <span>D:\DataBackup\*.bak</span>
+                <button type="button" class="hover:text-rose-400 ml-1"><i data-lucide="x" class="w-3 h-3"></i></button>
+              </span>
+            </div>
+            <div class="flex items-center gap-2 pt-1">
+              <input type="text" placeholder="Nhập đường dẫn file/thư mục cần bỏ qua (hỗ trợ ký tự đại diện *) và nhấn Enter..." 
+                     class="flex-1 bg-dark-bg border border-dark-border rounded px-3 py-1.5 text-xs text-white placeholder:text-dark-muted focus:outline-none focus:border-blue-500">
+              <button type="button" class="px-3 py-1.5 bg-dark-cardHover hover:bg-dark-borderLight text-xs font-medium text-white rounded border border-dark-border transition">
+                + Thêm
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3: LỊCH QUÉT & HIỆU NĂNG HỆ THỐNG -->
+      <div class="bg-dark-card border border-dark-border rounded-xl p-6 shadow-sm">
+        <div class="flex items-center gap-2 mb-4 pb-3 border-b border-dark-border">
+          <i data-lucide="clock" class="w-5 h-5 text-amber-400"></i>
+          <h2 class="text-base font-semibold text-white">3. Cấu Hình Lịch Quét & Hiệu Năng (Schedule & Performance)</h2>
+        </div>
+
+        <div class="space-y-6">
+          <!-- Scan Trigger Mode -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-slate-200">Chế độ kích hoạt quét</label>
+            <div class="flex items-center space-x-6">
+              <label class="flex items-center space-x-2 text-sm text-slate-300 cursor-pointer" onclick="toggleScheduleSection(false)">
+                <input type="radio" name="scanTriggerMode" value="MANUAL" class="text-blue-600 focus:ring-blue-500 bg-dark-inner border-dark-border">
+                <span>Quét thủ công theo lệnh (On-Demand only)</span>
+              </label>
+              <label class="flex items-center space-x-2 text-sm text-slate-300 cursor-pointer" onclick="toggleScheduleSection(true)">
+                <input type="radio" name="scanTriggerMode" value="SCHEDULED" checked class="text-blue-600 focus:ring-blue-500 bg-dark-inner border-dark-border">
+                <span class="font-medium text-white">Quét tự động theo lịch (Scheduled Cron)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Dynamic Schedule Settings Block -->
+          <div id="scheduleDetailsBlock" class="p-4 bg-dark-inner border border-dark-border rounded-lg space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- Frequency -->
+              <div class="space-y-1.5">
+                <label class="block text-xs font-medium text-dark-muted">Tần suất chu kỳ</label>
+                <select class="w-full px-3 py-2 bg-dark-bg border border-dark-border rounded-lg text-sm text-white focus:outline-none focus:border-blue-500">
+                  <option value="DAILY">Hàng ngày (Daily)</option>
+                  <option value="WEEKLY" selected>Hàng tuần (Weekly)</option>
+                  <option value="MONTHLY">Hàng tháng (Monthly)</option>
+                </select>
+              </div>
+
+              <!-- Start Timepicker -->
+              <div class="space-y-1.5">
+                <label class="block text-xs font-medium text-dark-muted">Thời điểm kích hoạt quét</label>
+                <div class="relative">
+                  <input type="time" value="23:30" class="w-full px-3 py-2 bg-dark-bg border border-dark-border rounded-lg text-sm text-white focus:outline-none focus:border-blue-500">
+                </div>
+              </div>
+
+              <!-- Throttle Priority -->
+              <div class="space-y-1.5">
+                <label class="block text-xs font-medium text-dark-muted">Cập nhật mẫu chữ ký trước khi quét</label>
+                <label class="flex items-center space-x-2 mt-2 cursor-pointer">
+                  <input type="checkbox" checked class="rounded bg-dark-bg border-dark-border text-blue-600 focus:ring-blue-500">
+                  <span class="text-xs text-slate-200">Tự động tải cập nhật Antivirus Signature mới nhất</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Days of Week Selector (Shown when Weekly) -->
+            <div class="space-y-1.5 pt-2 border-t border-dark-border">
+              <label class="block text-xs font-medium text-dark-muted mb-1.5">Chọn các ngày trong tuần thực hiện quét:</label>
+              <div class="flex flex-wrap gap-2">
+                <button type="button" class="px-3 py-1 text-xs rounded border border-dark-border bg-dark-bg text-dark-muted hover:border-dark-borderLight">Thứ 2</button>
+                <button type="button" class="px-3 py-1 text-xs rounded border border-dark-border bg-dark-bg text-dark-muted hover:border-dark-borderLight">Thứ 3</button>
+                <button type="button" class="px-3 py-1 text-xs rounded border border-dark-border bg-dark-bg text-dark-muted hover:border-dark-borderLight">Thứ 4</button>
+                <button type="button" class="px-3 py-1 text-xs rounded border border-dark-border bg-dark-bg text-dark-muted hover:border-dark-borderLight">Thứ 5</button>
+                <button type="button" class="px-3 py-1 text-xs rounded border border-dark-border bg-dark-bg text-dark-muted hover:border-dark-borderLight">Thứ 6</button>
+                <button type="button" class="px-3 py-1 text-xs rounded border border-blue-500 bg-blue-500/20 text-blue-400 font-semibold">Thứ 7</button>
+                <button type="button" class="px-3 py-1 text-xs rounded border border-blue-500 bg-blue-500/20 text-blue-400 font-semibold">Chủ Nhật</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CPU Throttle Slider -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label class="block text-sm font-medium text-slate-200">
+                Giới hạn mức chiếm dụng CPU của Agent EDR (CPU Throttle Limit)
+              </label>
+              <span id="cpuPercentLabel" class="text-sm font-bold text-amber-400 font-mono">50% Max CPU</span>
+            </div>
+            <input type="range" id="cpuSlider" min="10" max="90" step="5" value="50" 
+                   oninput="document.getElementById('cpuPercentLabel').innerText = this.value + '% Max CPU'"
+                   class="w-full h-2 bg-dark-inner rounded-lg appearance-none cursor-pointer accent-amber-500">
+            <div class="flex justify-between text-[11px] text-dark-muted font-mono">
+              <span>10% (Tối thiểu / Chạy nền nhẹ)</span>
+              <span>50% (Cân bằng khuyến nghị)</span>
+              <span>90% (Quét nhanh tối đa)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4: HÀNH ĐỘNG XỬ LÝ MÃ ĐỘC TỰ ĐỘNG -->
+      <div class="bg-dark-card border border-dark-border rounded-xl p-6 shadow-sm">
+        <div class="flex items-center gap-2 mb-4 pb-3 border-b border-dark-border">
+          <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
+          <h2 class="text-base font-semibold text-white">4. Hành Động Tự Động Khi Phát Hiện Mã Độc (Remediation Actions)</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Main Action -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-200">
+              Hành vi xử lý tự động <span class="text-rose-500">*</span>
+            </label>
+            <select class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white focus:outline-none focus:border-blue-500">
+              <option value="QUARANTINE" selected>Cách ly tệp tin nhiễm (Quarantine - Khuyến nghị)</option>
+              <option value="DISINFECT">Diệt mã độc và giữ tệp (Disinfect)</option>
+              <option value="DELETE">Xóa vĩnh viễn tệp (Delete Immediately)</option>
+              <option value="ALERT_ONLY">Chỉ ghi nhận cảnh báo, không can thiệp (Alert Only)</option>
+            </select>
+          </div>
+
+          <!-- Quarantine Retention Days -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-200">
+              Thời gian lưu trữ cách ly (Retention Days)
+            </label>
+            <div class="relative">
+              <input type="number" value="30" min="1" max="365" class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white focus:outline-none focus:border-blue-500">
+              <span class="absolute right-3 top-2.5 text-xs text-dark-muted">Ngày</span>
+            </div>
+            <span class="text-[11px] text-dark-muted">Tự động dọn dẹp sau số ngày quy định</span>
+          </div>
+
+          <!-- Max Quarantine Size -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-200">
+              Dung lượng tối đa vùng cách ly
+            </label>
+            <div class="relative">
+              <input type="number" value="10" min="1" max="100" class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white focus:outline-none focus:border-blue-500">
+              <span class="absolute right-3 top-2.5 text-xs text-dark-muted">GB</span>
+            </div>
+            <span class="text-[11px] text-dark-muted">Giới hạn tránh làm tràn ổ cứng máy trạm</span>
+          </div>
+        </div>
+
+        <!-- Alert Notification Switch -->
+        <div class="pt-5 mt-5 border-t border-dark-border flex items-center justify-between">
+          <div>
+            <div class="text-sm font-medium text-white">Gửi thông báo khẩn cấp tới SIEM/SOAR</div>
+            <div class="text-xs text-dark-muted">Gửi ngay Webhook Syslog JSON khi phát hiện mã độc mức độ High/Critical</div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" checked class="sr-only peer">
+            <div class="w-11 h-6 bg-dark-inner border border-dark-borderLight peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+          </label>
+        </div>
+      </div>
+
+    </form>
+  </main>
+
+  <!-- CONFIRMATION MODAL: UNSAVED CHANGES (POPUP HỦY BỎ) -->
+  <div id="modalUnsavedChanges" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-dark-card border border-dark-border rounded-xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3 text-amber-400">
+        <div class="p-2 rounded-full bg-amber-500/10 border border-amber-500/20">
+          <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white">Thông tin chưa được lưu</h3>
+      </div>
+      <p class="text-sm text-slate-300 leading-relaxed">
+        Thông tin bạn vừa nhập vào chính sách quét chưa được lưu lại. Bạn có chắc chắn muốn thoát và hủy bỏ các thay đổi này không?
+      </p>
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button type="button" onclick="closeCancelModal()" class="px-4 py-2 rounded-lg border border-dark-border text-slate-300 hover:text-white hover:bg-dark-cardHover text-sm font-medium transition">
+          Giữ lại (Keep editing)
+        </button>
+        <button type="button" onclick="confirmDiscard()" class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-sm font-semibold transition">
+          Thoát không lưu (Exit)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 px-4 py-3 rounded-lg bg-dark-card border border-emerald-500/40 text-emerald-400 shadow-2xl">
+    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i>
+    <span class="text-sm font-medium text-white" id="toastMessage">Thêm chính sách quét mã độc thành công!</span>
+  </div>
+
+  <!-- SCRIPT TƯƠNG TÁC -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Word count listener
+    const policyNameInput = document.getElementById('policyName');
+    policyNameInput.addEventListener('input', function() {
+      document.getElementById('nameCount').innerText = this.value.length;
+      if (this.value.trim() !== '') {
+        document.getElementById('errorPolicyName').classList.add('hidden');
+        policyNameInput.classList.remove('border-rose-500');
+      }
+    });
+
+    // Dynamic Target Type
+    function switchTargetType(type) {
+      const groupField = document.getElementById('fieldGroupSelect');
+      const subnetField = document.getElementById('fieldSubnetInput');
+      
+      if (type === 'GROUP') {
+        groupField.classList.remove('hidden');
+        subnetField.classList.add('hidden');
+      } else if (type === 'SUBNET') {
+        groupField.classList.add('hidden');
+        subnetField.classList.remove('hidden');
+      } else {
+        groupField.classList.add('hidden');
+        subnetField.classList.add('hidden');
+      }
+    }
+
+    // Dynamic Schedule toggle
+    function toggleScheduleSection(isScheduled) {
+      const block = document.getElementById('scheduleDetailsBlock');
+      if (isScheduled) {
+        block.classList.remove('hidden');
+      } else {
+        block.classList.add('hidden');
+      }
+    }
+
+    // Modal Cancel
+    function openCancelModal() {
+      document.getElementById('modalUnsavedChanges').classList.remove('hidden');
+    }
+    function closeCancelModal() {
+      document.getElementById('modalUnsavedChanges').classList.add('hidden');
+    }
+    function confirmDiscard() {
+      closeCancelModal();
+      showToast('Đã hủy bỏ các thay đổi của chính sách!', 'text-amber-400', 'alert-circle');
+    }
+
+    // Form submit
+    function submitPolicyForm() {
+      const name = policyNameInput.value.trim();
+      if (!name) {
+        document.getElementById('errorPolicyName').classList.remove('hidden');
+        policyNameInput.classList.add('border-rose-500');
+        policyNameInput.focus();
+        return;
+      }
+
+      const btn = document.getElementById('btnSavePolicy');
+      btn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Đang lưu...';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i><span>Lưu chính sách (Save Policy)</span>';
+        btn.disabled = false;
+        lucide.createIcons();
+        showToast('Thêm chính sách quét mã độc thành công! (Policy added successfully!)', 'text-emerald-400', 'check-circle-2');
+      }, 1200);
+    }
+
+    // Toast
+    function showToast(msg, colorClass = 'text-emerald-400', iconName = 'check-circle-2') {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMessage').innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3500);
+    }
+  </script>
+</body>
+</html>

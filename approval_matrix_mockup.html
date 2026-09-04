@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enterprise ERP - Cấu hình Ma trận Phê duyệt Hạn mức Đa cấp</title>
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            dark: {
+              bg: '#0A0E17',
+              header: '#0F1523',
+              card: '#141C2E',
+              cardHover: '#1A243B',
+              inner: '#0C1220',
+              border: '#202C45',
+              borderLight: '#2C3D60',
+              text: '#E2E8F0',
+              muted: '#7E8DA6',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0C1220; }
+    ::-webkit-scrollbar-thumb { background: #202C45; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2C3D60; }
+  </style>
+</head>
+<body class="bg-dark-bg text-dark-text min-h-screen flex flex-col font-sans antialiased pb-16">
+
+  <!-- TOPBAR HEADER -->
+  <header class="bg-dark-header border-b border-dark-border sticky top-0 z-40 px-6 py-3.5 flex items-center justify-between shadow-lg">
+    <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-2 text-indigo-400 font-bold tracking-wider text-lg">
+        <i data-lucide="layers" class="w-6 h-6 text-indigo-500"></i>
+        <span>NCS <span class="text-white font-extrabold">FINANCE ERP</span></span>
+      </div>
+      <span class="text-dark-borderLight">|</span>
+      <!-- Breadcrumbs -->
+      <nav class="flex items-center space-x-2 text-sm">
+        <a href="#" class="text-dark-muted hover:text-dark-text transition">Quản lý Tài chính</a>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-dark-muted"></i>
+        <a href="#" class="text-dark-muted hover:text-dark-text transition">Quy trình Phê duyệt</a>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-dark-muted"></i>
+        <span class="text-indigo-400 font-medium">Thiết lập Ma trận Phê duyệt Đa cấp (Approval Matrix)</span>
+      </nav>
+    </div>
+
+    <div class="flex items-center space-x-3">
+      <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        Hệ thống duyệt tự động: Online
+      </span>
+      <div class="w-8 h-8 rounded-full bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-sm font-semibold">
+        CFO
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-6xl w-full mx-auto px-6 pt-6 flex-1">
+    
+    <!-- PAGE TITLE & ACTIONS -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-dark-border">
+      <div>
+        <div class="flex items-center gap-3">
+          <h1 class="text-2xl font-bold text-white tracking-tight">Cấu Hình Ma Trận Phê Duyệt Hạn Mức Đa Cấp</h1>
+          <span class="px-2 py-0.5 text-xs font-medium rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+            ID: FIN_APPR_MATRIX_02
+          </span>
+        </div>
+        <p class="text-sm text-dark-muted mt-1">
+          Thiết lập quy tắc phân cấp thẩm quyền phê duyệt đơn mua sắm, thanh toán và giải ngân dựa theo bậc thang hạn mức số tiền, phòng ban và thời hạn SLA.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="openCancelModal()" class="px-4 py-2 rounded-lg border border-dark-border hover:bg-dark-cardHover text-dark-muted hover:text-white text-sm font-medium transition flex items-center gap-2">
+          <i data-lucide="x" class="w-4 h-4"></i>
+          Hủy bỏ (Cancel)
+        </button>
+        <button type="button" onclick="submitMatrixForm()" id="btnSaveMatrix" class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold shadow-lg shadow-indigo-600/20 hover:shadow-indigo-500/30 transition flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          <span>Lưu ma trận (Save Matrix)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- FORM BODY -->
+    <form id="matrixForm" class="space-y-6">
+
+      <!-- CARD 1: THÔNG TIN CHUNG QUY TRÌNH -->
+      <div class="bg-dark-card border border-dark-border rounded-xl p-6 shadow-sm">
+        <div class="flex items-center gap-2 mb-4 pb-3 border-b border-dark-border">
+          <i data-lucide="file-text" class="w-5 h-5 text-indigo-400"></i>
+          <h2 class="text-base font-semibold text-white">1. Thông Tin Quy Trình Áp Dụng (Workflow General Info)</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Matrix Name -->
+          <div class="space-y-1.5 md:col-span-2">
+            <label class="block text-sm font-medium text-slate-200">
+              Tên ma trận phê duyệt <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="matrixName" value="Ma trận Phê duyệt Chi phí Mua sắm Thiết bị & Hạ tầng IT" maxlength="128"
+                   placeholder="Nhập tên ma trận phê duyệt..."
+                   class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white placeholder:text-dark-muted focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition" />
+            <p id="errorMatrixName" class="text-xs text-rose-400 hidden mt-1 flex items-center gap-1">
+              <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Tên ma trận là bắt buộc!
+            </p>
+          </div>
+
+          <!-- Expense Category -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-200">
+              Loại chi phí / Ngân sách <span class="text-rose-500">*</span>
+            </label>
+            <select class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500">
+              <option value="CAPEX" selected>Chi phí đầu tư tài sản cố định (CAPEX)</option>
+              <option value="OPEX">Chi phí vận hành thường xuyên (OPEX)</option>
+              <option value="PROJECT">Tạm ứng & Quyết toán dự án (Project Advance)</option>
+              <option value="HR_BENEFIT">Phúc lợi & Công tác phí (Travel & Benefits)</option>
+            </select>
+          </div>
+
+          <!-- Department Scope -->
+          <div class="space-y-1.5 md:col-span-2">
+            <label class="block text-sm font-medium text-slate-200">
+              Phòng ban / Đơn vị áp dụng <span class="text-rose-500">*</span>
+            </label>
+            <div class="p-2.5 bg-dark-inner border border-dark-border rounded-lg flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-medium">
+                <span>Khối Công nghệ Thông tin (IT Division)</span>
+                <button type="button" class="hover:text-rose-400"><i data-lucide="x" class="w-3 h-3"></i></button>
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-medium">
+                <span>Khối An ninh mạng (Cyber Security SOC)</span>
+                <button type="button" class="hover:text-rose-400"><i data-lucide="x" class="w-3 h-3"></i></button>
+              </span>
+              <input type="text" placeholder="Chọn thêm phòng ban..." class="flex-1 min-w-[150px] bg-transparent text-sm text-white placeholder:text-dark-muted focus:outline-none px-2">
+            </div>
+          </div>
+
+          <!-- Currency -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-200">Đơn vị tiền tệ tính toán</label>
+            <input type="text" value="VNĐ (Việt Nam Đồng)" readonly class="w-full px-3.5 py-2.5 bg-dark-inner/50 border border-dark-border text-dark-muted rounded-lg text-sm cursor-not-allowed">
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2: BẢNG MA TRẬN CẤP PHÊ DUYỆT ĐỘNG -->
+      <div class="bg-dark-card border border-dark-border rounded-xl p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-dark-border">
+          <div class="flex items-center gap-2">
+            <i data-lucide="git-merge" class="w-5 h-5 text-indigo-400"></i>
+            <div>
+              <h2 class="text-base font-semibold text-white">2. Bảng Thiết Lập Bậc Thang Cấp Duyệt (Approval Tiers)</h2>
+              <p class="text-xs text-dark-muted">Hạn mức của cấp sau phải bắt đầu liền kề với hạn mức của cấp trước (+1 VNĐ). Không được chồng lấn khoảng.</p>
+            </div>
+          </div>
+          <button type="button" onclick="addNewTierRow()" class="px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 border border-indigo-500/30 text-xs font-semibold transition flex items-center gap-1.5">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>+ Thêm cấp duyệt (Add Tier)</span>
+          </button>
+        </div>
+
+        <!-- DYNAMIC TABLE -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm" id="tiersTable">
+            <thead class="bg-dark-inner text-dark-muted font-medium text-xs uppercase tracking-wider border-b border-dark-border">
+              <tr>
+                <th class="py-3 px-3 w-16 text-center">Cấp</th>
+                <th class="py-3 px-3 w-44">Hạn mức từ (VNĐ)</th>
+                <th class="py-3 px-3 w-48">Hạn mức đến (VNĐ)</th>
+                <th class="py-3 px-3">Vai trò thẩm quyền phê duyệt</th>
+                <th class="py-3 px-3 w-28 text-center">SLA Duyệt</th>
+                <th class="py-3 px-3 w-48">Hành động quá hạn SLA</th>
+                <th class="py-3 px-2 w-12 text-center">Xóa</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-dark-border" id="tiersTableBody">
+              
+              <!-- TIER 1 -->
+              <tr class="hover:bg-dark-cardHover/50 transition" id="rowTier1">
+                <td class="py-3.5 px-3 text-center font-bold text-indigo-400 font-mono">1</td>
+                <td class="py-3.5 px-3">
+                  <input type="text" value="0" readonly class="w-full bg-dark-inner/50 border border-dark-border rounded px-2.5 py-1.5 text-xs text-dark-muted font-mono cursor-not-allowed">
+                </td>
+                <td class="py-3.5 px-3">
+                  <input type="text" value="50,000,000" class="w-full bg-dark-inner border border-dark-border rounded px-2.5 py-1.5 text-xs text-white font-mono focus:border-indigo-500 focus:outline-none">
+                </td>
+                <td class="py-3.5 px-3">
+                  <select class="w-full bg-dark-inner border border-dark-border rounded px-2.5 py-1.5 text-xs text-white focus:border-indigo-500 focus:outline-none">
+                    <option selected>Trưởng phòng trực tiếp (Department Head)</option>
+                    <option>Giám đốc Khối (Division Director)</option>
+                    <option>Giám đốc Tài chính (CFO)</option>
+                  </select>
+                </td>
+                <td class="py-3.5 px-3 text-center">
+                  <div class="inline-flex items-center gap-1">
+                    <input type="number" value="24" class="w-14 bg-dark-inner border border-dark-border rounded px-1.5 py-1 text-xs text-white text-center font-mono focus:border-indigo-500 focus:outline-none">
+                    <span class="text-xs text-dark-muted">Giờ</span>
+                  </div>
+                </td>
+                <td class="py-3.5 px-3">
+                  <select class="w-full bg-dark-inner border border-dark-border rounded px-2.5 py-1.5 text-xs text-white focus:border-indigo-500 focus:outline-none">
+                    <option selected>Gửi cảnh báo & Chuyển cấp trên (Escalate)</option>
+                    <option>Chỉ gửi email cảnh báo người duyệt</option>
+                    <option>Tự động từ chối đơn yêu cầu (Auto Reject)</option>
+                  </select>
+                </td>
+                <td class="py-3.5 px-2 text-center text-dark-muted">
+                  <button type="button" class="p-1 hover:text-dark-text opacity-40 cursor-not-allowed" title="Cấp 1 không được xóa"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </td>
+              </tr>
+
+              <!-- TIER 2 -->
+              <tr class="hover:bg-dark-cardHover/50 transition" id="rowTier2">
+                <td class="py-3.5 px-3 text-center font-bold text-indigo-400 font-mono">2</td>
+                <td class="py-3.5 px-3">
+                  <input type="text" value="50,000,001" readonly class="w-full bg-dark-inner/50 border border-dark-border rounded px-2.5 py-1.5 text-xs text-dark-muted font-mono cursor-not-allowed">
+                </td>
+                <td class="py-3.5 px-3">
+                  <input type="text" value="200,000,000" class="w-full bg-dark-inner border border-dark-border rounded px-2.5 py-1.5 text-xs text-white font-mono focus:border-indigo-500 focus:outline-none">
+                </td>
+                <td class="py-3.5 px-3">
+                  <select class="w-full bg-dark-inner border border-dark-border rounded px-2.5 py-1.5 text-xs text-white focus:border-indigo-500 focus:outline-none">
+                    <option>Trưởng phòng trực tiếp (Department Head)</option>
+                    <option selected>Giám đốc Khối nghiệp vụ (Division Director)</option>
+                    <option>Giám đốc Tài chính (CFO)</option>
+                  </select>
+                </td>
+                <td class="py-3.5 px-3 text-center">
+                  <div class="inline-flex items-center gap-1">
+                    <input type="number" value="48" class="w-14 bg-dark-inner border border-dark-border rounded px-1.5 py-1 text-xs text-white text-center font-mono focus:border-indigo-500 focus:outline-none">
+                    <span class="text-xs text-dark-muted">Giờ</span>
+                  </div>
+                </td>
+                <td class="py-3.5 px-3">
+                  <select class="w-full bg-dark-inner border border-dark-border rounded px-2.5 py-1.5 text-xs text-white focus:border-indigo-500 focus:outline-none">
+                    <option selected>Gửi cảnh báo & Chuyển cấp trên (Escalate)</option>
+                    <option>Chỉ gửi email cảnh báo người duyệt</option>
+                  </select>
+                </td>
+                <td class="py-3.5 px-2 text-center">
+                  <button type="button" onclick="deleteTierRow('rowTier2')" class="p-1 text-dark-muted hover:text-rose-400 transition" title="Xóa cấp này"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </td>
+              </tr>
+
+              <!-- TIER 3 -->
+              <tr class="hover:bg-dark-cardHover/50 transition" id="rowTier3">
+                <td class="py-3.5 px-3 text-center font-bold text-indigo-400 font-mono">3</td>
+                <td class="py-3.5 px-3">
+                  <input type="text" value="200,000,001" readonly class="w-full bg-dark-inner/50 border border-dark-border rounded px-2.5 py-1.5 text-xs text-dark-muted font-mono cursor-not-allowed">
+                </td>
+                <td class="py-3.5 px-3">
+                  <div class="flex items-center gap-1.5 px-2.5 py-1.5 bg-dark-inner border border-dark-border rounded text-xs text-amber-400 font-mono font-medium">
+                    <i data-lucide="infinity" class="w-3.5 h-3.5"></i>
+                    <span>Không giới hạn (Max)</span>
+                  </div>
+                </td>
+                <td class="py-3.5 px-3">
+                  <div class="space-y-1">
+                    <select class="w-full bg-dark-inner border border-dark-border rounded px-2.5 py-1.5 text-xs text-white focus:border-indigo-500 focus:outline-none">
+                      <option selected>Tổng Giám đốc (CEO) + Giám đốc Tài chính (CFO)</option>
+                      <option>Hội đồng Quản trị (Board of Directors)</option>
+                    </select>
+                    <span class="text-[11px] text-dark-muted block">Yêu cầu đồng thuận: 100% người duyệt đồng ý</span>
+                  </div>
+                </td>
+                <td class="py-3.5 px-3 text-center">
+                  <div class="inline-flex items-center gap-1">
+                    <input type="number" value="72" class="w-14 bg-dark-inner border border-dark-border rounded px-1.5 py-1 text-xs text-white text-center font-mono focus:border-indigo-500 focus:outline-none">
+                    <span class="text-xs text-dark-muted">Giờ</span>
+                  </div>
+                </td>
+                <td class="py-3.5 px-3">
+                  <select class="w-full bg-dark-inner border border-dark-border rounded px-2.5 py-1.5 text-xs text-white focus:border-indigo-500 focus:outline-none">
+                    <option selected>Chỉ gửi email cảnh báo người duyệt</option>
+                    <option>Gửi SMS khẩn cấp tới Hotline Ban Giám đốc</option>
+                  </select>
+                </td>
+                <td class="py-3.5 px-2 text-center">
+                  <button type="button" onclick="deleteTierRow('rowTier3')" class="p-1 text-dark-muted hover:text-rose-400 transition" title="Xóa cấp này"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CARD 3: QUY TẮC ỦY QUYỀN & RÀNG BUỘC PHỤ -->
+      <div class="bg-dark-card border border-dark-border rounded-xl p-6 shadow-sm">
+        <div class="flex items-center gap-2 mb-4 pb-3 border-b border-dark-border">
+          <i data-lucide="shield" class="w-5 h-5 text-emerald-400"></i>
+          <h2 class="text-base font-semibold text-white">3. Cơ Chế Ủy Quyền & Ràng Buộc Kiểm Soát Rủi Ro</h2>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Rule 1: Delegation Toggle -->
+          <div class="flex items-center justify-between p-3.5 rounded-lg bg-dark-inner border border-dark-border">
+            <div>
+              <div class="text-sm font-medium text-white">Cho phép cơ chế Ủy quyền phê duyệt khi vắng mặt (Delegation of Authority)</div>
+              <div class="text-xs text-dark-muted">Người duyệt có thể ủy quyền cho cấp phó duyệt thay trong khoảng thời gian đi công tác/nghỉ phép.</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" checked class="sr-only peer">
+              <div class="w-11 h-6 bg-dark-inner border border-dark-borderLight peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+            </label>
+          </div>
+
+          <!-- Rule 2: Quote Attachment Constraint -->
+          <div class="flex items-center justify-between p-3.5 rounded-lg bg-dark-inner border border-dark-border">
+            <div>
+              <div class="text-sm font-medium text-white">Bắt buộc đính kèm tối thiểu 03 Báo giá cạnh tranh từ Cấp 2 (> 50 triệu VNĐ)</div>
+              <div class="text-xs text-dark-muted">Hệ thống sẽ chặn không cho người lập đơn gửi duyệt nếu thiếu file đính kèm bảng so sánh giá.</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" checked class="sr-only peer">
+              <div class="w-11 h-6 bg-dark-inner border border-dark-borderLight peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+            </label>
+          </div>
+
+          <!-- Rule 3: Self-approval Prohibition -->
+          <div class="flex items-center justify-between p-3.5 rounded-lg bg-dark-inner border border-dark-border">
+            <div>
+              <div class="text-sm font-medium text-white">Quy tắc cấm Tự phê duyệt đơn của chính mình (Separation of Duties - SoD)</div>
+              <div class="text-xs text-dark-muted">Nếu người lập đơn chính là người có thẩm quyền duyệt cấp đó, đơn sẽ tự động chuyển thẳng lên cấp trên kế tiếp.</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" checked disabled class="sr-only peer">
+              <div class="w-11 h-6 bg-dark-inner border border-dark-borderLight peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600 opacity-80 cursor-not-allowed"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </main>
+
+  <!-- CONFIRMATION MODAL -->
+  <div id="modalCancel" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-dark-card border border-dark-border rounded-xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3 text-amber-400">
+        <div class="p-2 rounded-full bg-amber-500/10 border border-amber-500/20">
+          <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white">Hủy bỏ các thay đổi ma trận?</h3>
+      </div>
+      <p class="text-sm text-slate-300 leading-relaxed">
+        Các cấu hình phân cấp hạn mức và thời gian SLA vừa nhập sẽ không được lưu lại. Bạn có chắc chắn muốn thoát về danh sách ma trận không?
+      </p>
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button type="button" onclick="closeCancelModal()" class="px-4 py-2 rounded-lg border border-dark-border text-slate-300 hover:text-white hover:bg-dark-cardHover text-sm font-medium transition">
+          Giữ lại tiếp tục sửa
+        </button>
+        <button type="button" onclick="confirmDiscard()" class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-sm font-semibold transition">
+          Thoát không lưu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 px-4 py-3 rounded-lg bg-dark-card border border-emerald-500/40 text-emerald-400 shadow-2xl">
+    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i>
+    <span class="text-sm font-medium text-white" id="toastMessage">Lưu ma trận phê duyệt thành công!</span>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    lucide.createIcons();
+
+    function openCancelModal() { document.getElementById('modalCancel').classList.remove('hidden'); }
+    function closeCancelModal() { document.getElementById('modalCancel').classList.add('hidden'); }
+    function confirmDiscard() {
+      closeCancelModal();
+      showToast('Đã hủy bỏ các thay đổi của ma trận phê duyệt!', 'text-amber-400');
+    }
+
+    function deleteTierRow(rowId) {
+      const row = document.getElementById(rowId);
+      if (row) {
+        row.remove();
+        showToast('Đã xóa cấp duyệt khỏi ma trận!', 'text-amber-400');
+      }
+    }
+
+    function addNewTierRow() {
+      showToast('Đã thêm 01 cấp duyệt mới vào ma trận!', 'text-indigo-400');
+    }
+
+    function submitMatrixForm() {
+      const nameInput = document.getElementById('matrixName');
+      if (!nameInput.value.trim()) {
+        document.getElementById('errorMatrixName').classList.remove('hidden');
+        nameInput.classList.add('border-rose-500');
+        nameInput.focus();
+        return;
+      }
+
+      const btn = document.getElementById('btnSaveMatrix');
+      btn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Đang lưu ma trận...';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4"></i><span>Lưu ma trận (Save Matrix)</span>';
+        btn.disabled = false;
+        lucide.createIcons();
+        showToast('Cấu hình ma trận phê duyệt thành công! (Approval Matrix saved!)');
+      }, 1200);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMessage').innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3500);
+    }
+  </script>
+</body>
+</html>

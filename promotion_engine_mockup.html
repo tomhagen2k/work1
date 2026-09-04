@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-Commerce Platform - Cấu hình Khuyến Mãi & Mã Giảm Giá Nâng Cao</title>
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Custom Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            dark: {
+              bg: '#090D14',
+              header: '#0E131F',
+              card: '#131A2B',
+              cardHover: '#1A233A',
+              inner: '#0B0F1A',
+              border: '#1E2942',
+              borderLight: '#2B3B5E',
+              text: '#E2E8F0',
+              muted: '#7E8EA6',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0B0F1A; }
+    ::-webkit-scrollbar-thumb { background: #1E2942; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2B3B5E; }
+  </style>
+</head>
+<body class="bg-dark-bg text-dark-text min-h-screen flex flex-col font-sans antialiased pb-16">
+
+  <!-- TOPBAR HEADER -->
+  <header class="bg-dark-header border-b border-dark-border sticky top-0 z-40 px-6 py-3.5 flex items-center justify-between shadow-lg">
+    <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-2 text-rose-500 font-bold tracking-wider text-lg">
+        <i data-lucide="ticket-percent" class="w-6 h-6 text-rose-500"></i>
+        <span>NCS <span class="text-white font-extrabold">COMMERCE</span></span>
+      </div>
+      <span class="text-dark-borderLight">|</span>
+      <!-- Breadcrumbs -->
+      <nav class="flex items-center space-x-2 text-sm">
+        <a href="#" class="text-dark-muted hover:text-dark-text transition">Tiếp thị & Khuyến mãi</a>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-dark-muted"></i>
+        <a href="#" class="text-dark-muted hover:text-dark-text transition">Quản lý Voucher</a>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-dark-muted"></i>
+        <span class="text-rose-400 font-medium">Tạo Mã Giảm Giá & Khuyến Mãi Nâng Cao</span>
+      </nav>
+    </div>
+
+    <div class="flex items-center space-x-3">
+      <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+        Voucher Engine: Active
+      </span>
+      <div class="w-8 h-8 rounded-full bg-rose-600/20 border border-rose-500/30 flex items-center justify-center text-rose-400 text-sm font-semibold">
+        MKT
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-6xl w-full mx-auto px-6 pt-6 flex-1">
+    
+    <!-- PAGE TITLE & ACTIONS -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-dark-border">
+      <div>
+        <div class="flex items-center gap-3">
+          <h1 class="text-2xl font-bold text-white tracking-tight">Tạo Mã Khuyến Mãi & Giảm Giá Nâng Cao</h1>
+          <span class="px-2 py-0.5 text-xs font-medium rounded bg-rose-500/10 text-rose-400 border border-rose-500/20">
+            ID: MKT_VOUCHER_03
+          </span>
+        </div>
+        <p class="text-sm text-dark-muted mt-1">
+          Thiết lập chiến dịch giảm giá theo phần trăm có chặn trần, khung giờ vàng Flash Sale, ngân sách lượt dùng và phân loại theo hạng thành viên.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="openCancelModal()" class="px-4 py-2 rounded-lg border border-dark-border hover:bg-dark-cardHover text-dark-muted hover:text-white text-sm font-medium transition flex items-center gap-2">
+          <i data-lucide="x" class="w-4 h-4"></i>
+          Hủy bỏ (Cancel)
+        </button>
+        <button type="button" onclick="submitPromoForm()" id="btnSavePromo" class="px-5 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-sm font-semibold shadow-lg shadow-rose-600/20 hover:shadow-rose-500/30 transition flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          <span>Kích hoạt Khuyến mãi (Save & Launch)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- FORM BODY -->
+    <form id="promoForm" class="space-y-6">
+
+      <!-- CARD 1: THÔNG TIN CƠ BẢN -->
+      <div class="bg-dark-card border border-dark-border rounded-xl p-6 shadow-sm">
+        <div class="flex items-center gap-2 mb-4 pb-3 border-b border-dark-border">
+          <i data-lucide="tag" class="w-5 h-5 text-rose-400"></i>
+          <h2 class="text-base font-semibold text-white">1. Thông Tin Cơ Bản Chương Trình (Basic Information)</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Promo Name -->
+          <div class="space-y-1.5 md:col-span-2">
+            <label class="block text-sm font-medium text-slate-200">
+              Tên chương trình khuyến mãi <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="promoName" value="Siêu Hội Mua Sắm 9.9 - Giảm 20% Đơn Hàng Đầu Tiên" maxlength="128"
+                   placeholder="Nhập tên chương trình..."
+                   class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white placeholder:text-dark-muted focus:outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500 transition" />
+            <p id="errorPromoName" class="text-xs text-rose-400 hidden mt-1 flex items-center gap-1">
+              <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Tên chương trình là bắt buộc!
+            </p>
+          </div>
+
+          <!-- Voucher Code with Auto-gen button -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-200">
+              Mã Voucher (Code) <span class="text-rose-500">*</span>
+            </label>
+            <div class="relative flex items-center">
+              <input type="text" id="voucherCode" value="SIEUHOI99VIP" maxlength="16"
+                     class="w-full pl-3.5 pr-24 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-rose-400 font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-rose-500">
+              <button type="button" onclick="autoGenCode()" class="absolute right-1.5 px-2.5 py-1.5 rounded bg-dark-cardHover hover:bg-dark-borderLight text-xs font-semibold text-white border border-dark-border transition">
+                Tạo tự động
+              </button>
+            </div>
+            <span class="text-[11px] text-dark-muted">Tối đa 16 ký tự chữ hoa và số</span>
+          </div>
+
+          <!-- Description -->
+          <div class="space-y-1.5 md:col-span-2">
+            <label class="block text-sm font-medium text-slate-200">Mô tả điều khoản khuyến mãi</label>
+            <textarea rows="2" maxlength="300" class="w-full px-3.5 py-2 bg-dark-inner border border-dark-border rounded-lg text-sm text-white placeholder:text-dark-muted focus:outline-none focus:border-rose-500">Áp dụng cho khách hàng mua sắm trong sự kiện ngày 9.9. Mỗi khách hàng được sử dụng 1 lần duy nhất trong suốt thời gian diễn ra chiến dịch.</textarea>
+          </div>
+
+          <!-- Channel -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-200">Kênh bán hàng áp dụng <span class="text-rose-500">*</span></label>
+            <select class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white focus:outline-none focus:border-rose-500">
+              <option value="ALL" selected>Tất cả các kênh (Omni-channel)</option>
+              <option value="WEB">Chỉ trên Website E-Commerce</option>
+              <option value="APP">Chỉ trên Ứng dụng di động (Mobile App)</option>
+              <option value="POS">Chỉ tại Cửa hàng trực tiếp (POS)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2: LOẠI CHIẾT KHẤU & MỨC GIẢM -->
+      <div class="bg-dark-card border border-dark-border rounded-xl p-6 shadow-sm">
+        <div class="flex items-center gap-2 mb-4 pb-3 border-b border-dark-border">
+          <i data-lucide="percent" class="w-5 h-5 text-amber-400"></i>
+          <h2 class="text-base font-semibold text-white">2. Loại Chiết Khấu & Giá Trị Khuyến Mãi (Discount Value)</h2>
+        </div>
+
+        <div class="space-y-6">
+          <!-- Discount Type Radio -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-slate-200">Loại chiết khấu <span class="text-rose-500">*</span></label>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <label class="flex items-center gap-3 p-3.5 rounded-lg border border-rose-500/40 bg-rose-500/5 cursor-pointer hover:border-rose-500 transition" onclick="switchDiscountType('PERCENT')">
+                <input type="radio" name="discountType" value="PERCENT" checked class="text-rose-600 focus:ring-rose-500 bg-dark-inner border-dark-border">
+                <div>
+                  <div class="text-sm font-medium text-white">Giảm theo phần trăm (%)</div>
+                  <div class="text-xs text-dark-muted">Khấu trừ tỷ lệ % giá trị đơn hàng</div>
+                </div>
+              </label>
+
+              <label class="flex items-center gap-3 p-3.5 rounded-lg border border-dark-border bg-dark-inner/60 cursor-pointer hover:border-dark-borderLight transition" onclick="switchDiscountType('FIXED')">
+                <input type="radio" name="discountType" value="FIXED" class="text-rose-600 focus:ring-rose-500 bg-dark-inner border-dark-border">
+                <div>
+                  <div class="text-sm font-medium text-white">Giảm số tiền cố định (VNĐ)</div>
+                  <div class="text-xs text-dark-muted">Trừ trực tiếp số tiền cố định</div>
+                </div>
+              </label>
+
+              <label class="flex items-center gap-3 p-3.5 rounded-lg border border-dark-border bg-dark-inner/60 cursor-pointer hover:border-dark-borderLight transition" onclick="switchDiscountType('FREESHIP')">
+                <input type="radio" name="discountType" value="FREESHIP" class="text-rose-600 focus:ring-rose-500 bg-dark-inner border-dark-border">
+                <div>
+                  <div class="text-sm font-medium text-white">Miễn phí vận chuyển</div>
+                  <div class="text-xs text-dark-muted">Trợ giá phí ship toàn quốc</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Inputs -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Value -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-medium text-slate-200" id="labelDiscountVal">Mức giảm (%) <span class="text-rose-500">*</span></label>
+              <div class="relative">
+                <input type="number" id="inputDiscountVal" value="20" min="1" max="100" class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white font-mono focus:border-rose-500 focus:outline-none">
+                <span class="absolute right-3.5 top-2.5 text-sm text-dark-muted font-bold" id="unitDiscountVal">%</span>
+              </div>
+            </div>
+
+            <!-- Capped Discount (Dynamic) -->
+            <div class="space-y-1.5" id="fieldCappedDiscount">
+              <label class="block text-sm font-medium text-slate-200">Mức giảm tối đa (Capped at)</label>
+              <div class="relative">
+                <input type="text" value="150,000" class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white font-mono focus:border-rose-500 focus:outline-none">
+                <span class="absolute right-3.5 top-2.5 text-xs text-dark-muted font-medium">VNĐ</span>
+              </div>
+              <span class="text-[11px] text-dark-muted">Giới hạn số tiền giảm tối đa để tránh vượt ngân sách</span>
+            </div>
+
+            <!-- Min Spend -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-medium text-slate-200">Giá trị đơn hàng tối thiểu (Min Spend)</label>
+              <div class="relative">
+                <input type="text" value="300,000" class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white font-mono focus:border-rose-500 focus:outline-none">
+                <span class="absolute right-3.5 top-2.5 text-xs text-dark-muted font-medium">VNĐ</span>
+              </div>
+              <span class="text-[11px] text-dark-muted">Đơn hàng phải đạt từ mức này mới được áp mã</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3: THỜI GIAN & KHUNG GIỜ FLASH SALE -->
+      <div class="bg-dark-card border border-dark-border rounded-xl p-6 shadow-sm">
+        <div class="flex items-center gap-2 mb-4 pb-3 border-b border-dark-border">
+          <i data-lucide="calendar" class="w-5 h-5 text-blue-400"></i>
+          <h2 class="text-base font-semibold text-white">3. Thời Gian Áp Dụng & Khung Giờ Flash Sale (Schedule)</h2>
+        </div>
+
+        <div class="space-y-5">
+          <!-- Date Range -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-1.5">
+              <label class="block text-sm font-medium text-slate-200">Thời điểm bắt đầu (Start Date) <span class="text-rose-500">*</span></label>
+              <input type="datetime-local" value="2026-09-09T00:00" class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white focus:border-rose-500 focus:outline-none">
+            </div>
+            <div class="space-y-1.5">
+              <label class="block text-sm font-medium text-slate-200">Thời điểm kết thúc (End Date) <span class="text-rose-500">*</span></label>
+              <input type="datetime-local" value="2026-09-15T23:59" class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white focus:border-rose-500 focus:outline-none">
+            </div>
+          </div>
+
+          <!-- Flash Sale Toggle -->
+          <div class="p-4 bg-dark-inner border border-dark-border rounded-lg space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-sm font-medium text-white flex items-center gap-2">
+                  <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+                  <span>Kích hoạt Khung giờ vàng Flash Sale (Chỉ áp dụng giờ vàng trong ngày)</span>
+                </div>
+                <div class="text-xs text-dark-muted">Mã chỉ có hiệu lực vào các khung giờ cụ thể trong các ngày chiến dịch.</div>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="flashSaleToggle" checked onchange="toggleFlashSaleFields(this.checked)" class="sr-only peer">
+                <div class="w-11 h-6 bg-dark-inner border border-dark-borderLight peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+              </label>
+            </div>
+
+            <!-- Flash Sale hours -->
+            <div id="flashSaleDetails" class="pt-3 border-t border-dark-border grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label class="block text-xs font-medium text-dark-muted">Khung giờ buổi trưa</label>
+                <div class="flex items-center gap-2">
+                  <input type="time" value="12:00" class="px-2.5 py-1.5 bg-dark-bg border border-dark-border rounded text-xs text-white">
+                  <span class="text-dark-muted text-xs">đến</span>
+                  <input type="time" value="14:00" class="px-2.5 py-1.5 bg-dark-bg border border-dark-border rounded text-xs text-white">
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <label class="block text-xs font-medium text-dark-muted">Khung giờ buổi tối</label>
+                <div class="flex items-center gap-2">
+                  <input type="time" value="20:00" class="px-2.5 py-1.5 bg-dark-bg border border-dark-border rounded text-xs text-white">
+                  <span class="text-dark-muted text-xs">đến</span>
+                  <input type="time" value="22:00" class="px-2.5 py-1.5 bg-dark-bg border border-dark-border rounded text-xs text-white">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4: GIỚI HẠN LƯỢT DÙNG & ĐỐI TƯỢNG -->
+      <div class="bg-dark-card border border-dark-border rounded-xl p-6 shadow-sm">
+        <div class="flex items-center gap-2 mb-4 pb-3 border-b border-dark-border">
+          <i data-lucide="users" class="w-5 h-5 text-emerald-400"></i>
+          <h2 class="text-base font-semibold text-white">4. Giới Hạn Lượt Dùng & Khách Hàng (Usage Quota & Audience)</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Total Usage Limit -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-200">
+              Tổng số lượt dùng toàn hệ thống <span class="text-rose-500">*</span>
+            </label>
+            <div class="relative">
+              <input type="number" value="5000" min="1" class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white font-mono focus:border-rose-500 focus:outline-none">
+              <span class="absolute right-3.5 top-2.5 text-xs text-dark-muted">Lượt</span>
+            </div>
+            <span class="text-[11px] text-dark-muted">Hết lượt mã sẽ tự động chuyển sang trạng thái Hết hạn</span>
+          </div>
+
+          <!-- Per User Limit -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-200">
+              Lượt dùng tối đa trên mỗi khách hàng <span class="text-rose-500">*</span>
+            </label>
+            <div class="relative">
+              <input type="number" value="1" min="1" max="10" class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white font-mono focus:border-rose-500 focus:outline-none">
+              <span class="absolute right-3.5 top-2.5 text-xs text-dark-muted">Lượt/Người</span>
+            </div>
+            <span class="text-[11px] text-dark-muted">Dựa theo số điện thoại và User ID</span>
+          </div>
+
+          <!-- Customer Tier -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-200">Phân khúc khách hàng áp dụng</label>
+            <select class="w-full px-3.5 py-2.5 bg-dark-inner border border-dark-border rounded-lg text-sm text-white focus:outline-none focus:border-rose-500">
+              <option value="ALL">Tất cả khách hàng</option>
+              <option value="NEW">Chỉ khách hàng mới (Đơn đầu tiên)</option>
+              <option value="VIP" selected>Thành viên VIP (Vàng, Bạch Kim, Kim Cương)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </main>
+
+  <!-- CONFIRMATION MODAL -->
+  <div id="modalCancel" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-dark-card border border-dark-border rounded-xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center gap-3 text-amber-400">
+        <div class="p-2 rounded-full bg-amber-500/10 border border-amber-500/20">
+          <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white">Hủy bỏ tạo mã khuyến mãi?</h3>
+      </div>
+      <p class="text-sm text-slate-300 leading-relaxed">
+        Các thông tin ưu đãi và mức giảm giá vừa nhập sẽ không được lưu. Bạn có chắc chắn muốn thoát không?
+      </p>
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button type="button" onclick="closeCancelModal()" class="px-4 py-2 rounded-lg border border-dark-border text-slate-300 hover:text-white hover:bg-dark-cardHover text-sm font-medium transition">
+          Tiếp tục chỉnh sửa
+        </button>
+        <button type="button" onclick="confirmDiscard()" class="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-sm font-semibold transition">
+          Thoát không lưu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 px-4 py-3 rounded-lg bg-dark-card border border-rose-500/40 text-rose-400 shadow-2xl">
+    <i data-lucide="sparkles" class="w-5 h-5 text-rose-400"></i>
+    <span class="text-sm font-medium text-white" id="toastMessage">Tạo mã khuyến mãi thành công!</span>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    lucide.createIcons();
+
+    function autoGenCode() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let code = 'SALE';
+      for (let i = 0; i < 6; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById('voucherCode').value = code;
+    }
+
+    function switchDiscountType(type) {
+      const cappedField = document.getElementById('fieldCappedDiscount');
+      const labelVal = document.getElementById('labelDiscountVal');
+      const unitVal = document.getElementById('unitDiscountVal');
+      const inputVal = document.getElementById('inputDiscountVal');
+
+      if (type === 'PERCENT') {
+        cappedField.classList.remove('hidden');
+        labelVal.innerHTML = 'Mức giảm (%) <span class="text-rose-500">*</span>';
+        unitVal.innerText = '%';
+        inputVal.value = '20';
+        inputVal.max = '100';
+      } else if (type === 'FIXED') {
+        cappedField.classList.add('hidden');
+        labelVal.innerHTML = 'Số tiền giảm (VNĐ) <span class="text-rose-500">*</span>';
+        unitVal.innerText = 'VNĐ';
+        inputVal.value = '50000';
+        inputVal.removeAttribute('max');
+      } else {
+        cappedField.classList.add('hidden');
+        labelVal.innerHTML = 'Mức trợ giá vận chuyển (VNĐ) <span class="text-rose-500">*</span>';
+        unitVal.innerText = 'VNĐ';
+        inputVal.value = '30000';
+      }
+    }
+
+    function toggleFlashSaleFields(checked) {
+      const details = document.getElementById('flashSaleDetails');
+      if (checked) {
+        details.classList.remove('hidden');
+      } else {
+        details.classList.add('hidden');
+      }
+    }
+
+    function openCancelModal() { document.getElementById('modalCancel').classList.remove('hidden'); }
+    function closeCancelModal() { document.getElementById('modalCancel').classList.add('hidden'); }
+    function confirmDiscard() {
+      closeCancelModal();
+      showToast('Đã hủy bỏ thông tin khuyến mãi!', 'text-amber-400');
+    }
+
+    function submitPromoForm() {
+      const name = document.getElementById('promoName').value.trim();
+      if (!name) {
+        document.getElementById('errorPromoName').classList.remove('hidden');
+        return;
+      }
+
+      const btn = document.getElementById('btnSavePromo');
+      btn.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Đang kích hoạt...';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.innerHTML = '<i data-lucide="sparkles" class="w-4 h-4"></i><span>Kích hoạt Khuyến mãi (Save & Launch)</span>';
+        btn.disabled = false;
+        lucide.createIcons();
+        showToast('Kích hoạt mã khuyến mãi thành công! (Voucher launched!)');
+      }, 1200);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMessage').innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3500);
+    }
+  </script>
+</body>
+</html>
