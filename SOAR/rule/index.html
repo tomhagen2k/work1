@@ -1,0 +1,2162 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NCS SOAR - Chỉnh sửa quy tắc tương quan & Cấu hình Playbook</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-body: #080c16;
+            --bg-header: #0b1120;
+            --bg-sidebar: #090e1c;
+            --bg-modal: #0d1527;
+            --bg-card: #111a30;
+            --bg-card-inner: #0b1325;
+            --bg-input: #080e1c;
+            --border-main: #1c2c4c;
+            --border-subtle: #16243f;
+            --border-focus: #2563eb;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: rgba(37, 99, 235, 0.15);
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-amber: #f59e0b;
+            --text-title: #f1f5f9;
+            --text-body: #cbd5e1;
+            --text-muted: #64748b;
+            --text-dim: #475569;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-body);
+            font-size: 13px;
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-body); }
+        ::-webkit-scrollbar-thumb { background: #1e3056; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2563eb; }
+
+        /* HEADER */
+        .top-navbar {
+            height: 52px;
+            background-color: var(--bg-header);
+            border-bottom: 1px solid var(--border-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+        .brand-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: white;
+            font-weight: bold;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .nav-item {
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        .nav-item:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .nav-item.active {
+            color: #38bdf8;
+            background-color: rgba(56, 189, 248, 0.1);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .icon-btn-badge {
+            position: relative;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .icon-btn-badge:hover { color: #fff; background: rgba(255,255,255,0.06); }
+        .badge-count {
+            position: absolute;
+            top: 2px;
+            right: 0px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 10px;
+            line-height: 1;
+        }
+        .lang-select {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #cbd5e1;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .lang-select:hover { background: rgba(255,255,255,0.05); }
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* LAYOUT MAIN */
+        .app-container {
+            display: flex;
+            min-height: calc(100vh - 52px);
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-main);
+            padding: 12px 0;
+            flex-shrink: 0;
+        }
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            color: #94a3b8;
+            font-size: 12.5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .sidebar-item-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar-item svg {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+        .sidebar-item:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.04);
+        }
+        .sidebar-item.active {
+            color: #38bdf8;
+            background-color: rgba(56, 189, 248, 0.1);
+            border-left: 3px solid #38bdf8;
+            padding-left: 13px;
+        }
+
+        /* MAIN CONTENT (BG UNDER MODAL) */
+        .content-area {
+            flex: 1;
+            padding: 20px 24px;
+            background-color: var(--bg-body);
+        }
+        .content-top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .search-box {
+            position: relative;
+            width: 400px;
+        }
+        .search-box input {
+            width: 100%;
+            background: #0d1527;
+            border: 1px solid var(--border-main);
+            color: #e2e8f0;
+            padding: 8px 12px 8px 34px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+        }
+        .search-box svg {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+        .btn-primary {
+            background-color: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+        .btn-primary:hover { background-color: #1d4ed8; }
+
+        /* TABLE */
+        .rule-table-container {
+            border: 1px solid var(--border-main);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background: #0d1527;
+        }
+        .rule-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        .rule-table th {
+            background: #090e1c;
+            color: #94a3b8;
+            font-weight: 600;
+            padding: 10px 14px;
+            font-size: 12px;
+            border-bottom: 1px solid var(--border-main);
+        }
+        .rule-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: #cbd5e1;
+            font-size: 12.5px;
+        }
+        .group-row {
+            background-color: #0b1222;
+            color: #93c5fd;
+            font-weight: 600;
+            padding: 8px 14px;
+            cursor: pointer;
+        }
+
+        /* ========================================================== */
+        /* MODAL POPUP (Chỉnh sửa quy tắc) */
+        /* ========================================================== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(3, 7, 18, 0.78);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            animation: fadeIn 0.2s ease-out;
+        }
+        .modal-dialog {
+            width: 900px;
+            max-width: 95vw;
+            max-height: 92vh;
+            background-color: var(--bg-modal);
+            border: 1px solid #1e3158;
+            border-radius: 12px;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 35px rgba(37, 99, 235, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalScale 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; } to { opacity: 1; }
+        }
+        @keyframes modalScale {
+            from { transform: scale(0.96); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Modal Header */
+        .modal-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(90deg, #0e172e, #0b1224);
+        }
+        .modal-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.2px;
+        }
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.15s;
+        }
+        .modal-close-btn:hover { color: #fff; background: rgba(255,255,255,0.08); }
+
+        /* STEPPER */
+        .stepper-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 40px;
+            border-bottom: 1px solid var(--border-subtle);
+            background-color: #0b1222;
+        }
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .step-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11.5px;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .step-item.completed .step-circle {
+            background-color: #2563eb;
+            color: white;
+        }
+        .step-item.active .step-circle {
+            background-color: #2563eb;
+            color: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+        }
+        .step-item.inactive .step-circle {
+            background-color: #1e293b;
+            color: #64748b;
+            border: 1px solid #334155;
+        }
+        .step-label {
+            display: flex;
+            flex-direction: column;
+        }
+        .step-number {
+            font-size: 10.5px;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .step-name {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+        .step-item.active .step-name {
+            color: #38bdf8;
+        }
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background-color: #1e293b;
+            margin: 0 16px;
+            position: relative;
+        }
+        .step-line.filled {
+            background-color: #2563eb;
+        }
+
+        /* Modal Body */
+        .modal-body {
+            padding: 20px 24px;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* SECTION CARDS */
+        .config-section-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-main);
+            border-radius: var(--radius-lg);
+            padding: 16px 18px;
+            transition: border-color 0.2s;
+        }
+        .config-section-card:hover {
+            border-color: #23385d;
+        }
+        .section-header-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .section-header-desc {
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: normal;
+            margin-top: 2px;
+        }
+
+        /* Checkbox & Radio generic */
+        .custom-checkbox-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .custom-checkbox-row input[type="checkbox"] {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 1.5px solid #334f82;
+            border-radius: 4px;
+            background: #0a1122;
+            cursor: pointer;
+            margin-top: 2px;
+            position: relative;
+            flex-shrink: 0;
+            transition: all 0.15s;
+        }
+        .custom-checkbox-row input[type="checkbox"]:checked {
+            background-color: #2563eb;
+            border-color: #2563eb;
+        }
+        .custom-checkbox-row input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 2px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .checkbox-label-content {
+            display: flex;
+            flex-direction: column;
+        }
+        .checkbox-label-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+        .checkbox-label-desc {
+            font-size: 11.5px;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        /* Inner container in card */
+        .inner-subcard {
+            background-color: var(--bg-card-inner);
+            border: 1px solid #1a2a47;
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            margin-top: 10px;
+        }
+        .badge-default {
+            background: #0284c7;
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+        }
+        .form-label .req {
+            color: #ef4444;
+            margin-left: 2px;
+        }
+        .form-label-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .btn-link-action {
+            background: none;
+            border: none;
+            color: #38bdf8;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-link-action:hover {
+            color: #7dd3fc;
+            text-decoration: underline;
+        }
+
+        .input-control, .select-control, .textarea-control {
+            width: 100%;
+            background-color: var(--bg-input);
+            border: 1px solid #1e3056;
+            color: #f1f5f9;
+            border-radius: var(--radius-md);
+            padding: 8px 12px;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .input-control:focus, .select-control:focus, .textarea-control:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+        }
+        .form-hint {
+            font-size: 11.5px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+        .form-hint code {
+            background: #16243f;
+            color: #93c5fd;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Radio Options */
+        .radio-box-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .radio-box-item {
+            flex: 1;
+            background-color: #0b1325;
+            border: 1.5px solid #1a2947;
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        .radio-box-item:hover {
+            border-color: #29426f;
+        }
+        .radio-box-item.selected {
+            background-color: rgba(37, 99, 235, 0.08);
+            border-color: #2563eb;
+        }
+        .radio-box-item input[type="radio"] {
+            margin-top: 3px;
+            cursor: pointer;
+            accent-color: #2563eb;
+        }
+        .radio-box-text .radio-title {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+        .radio-box-text .radio-desc {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 2px;
+            line-height: 1.4;
+        }
+
+        /* Grid 2 cols */
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 16px;
+        }
+
+        /* Multi Tags container */
+        .tag-select-container {
+            min-height: 38px;
+            background-color: var(--bg-input);
+            border: 1px solid #1e3056;
+            border-radius: var(--radius-md);
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            cursor: text;
+        }
+        .tag-select-container:focus-within {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+        }
+        .tag-pill {
+            background-color: #1a2a4a;
+            border: 1px solid #233a66;
+            color: #cbd5e1;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            max-width: 260px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .tag-pill-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 13px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+        .tag-pill-close:hover { color: #f87171; }
+        .tag-input-ghost {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #f8fafc;
+            font-size: 12.5px;
+            min-width: 80px;
+            flex: 1;
+            padding: 4px 0;
+            font-family: inherit;
+        }
+
+        /* Textarea with variable insert icon */
+        .textarea-wrapper {
+            position: relative;
+        }
+        .textarea-wrapper textarea {
+            min-height: 64px;
+            resize: vertical;
+            padding-right: 32px;
+        }
+        .textarea-icon-btn {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.15s;
+        }
+        .textarea-icon-btn:hover { color: #38bdf8; background: rgba(255,255,255,0.06); }
+
+        /* ========================================================== */
+        /* MỤC MỚI: CẤU HÌNH TỰ ĐỘNG HÓA PLAYBOOK (SOAR PLAYBOOK SECTION) */
+        /* ========================================================== */
+        .playbook-section-card {
+            background: linear-gradient(180deg, #111a33, #0d162b);
+            border: 1px solid #1e3a68;
+            border-radius: var(--radius-lg);
+            padding: 16px 18px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .playbook-section-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #0ea5e9, #2563eb);
+            border-top-left-radius: var(--radius-lg);
+            border-bottom-left-radius: var(--radius-lg);
+        }
+        .playbook-header-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: rgba(14, 165, 233, 0.15);
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+
+        /* Playbook Dropdown Selection Menu */
+        .dropdown-menu-wrapper {
+            position: relative;
+        }
+        .playbook-dropdown-popup {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: #0d152a;
+            border: 1px solid #233b68;
+            border-radius: var(--radius-md);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7);
+            z-index: 60;
+            max-height: 290px;
+            overflow-y: auto;
+            display: none;
+        }
+        .playbook-dropdown-popup.open {
+            display: block;
+            animation: fadeIn 0.15s ease-out;
+        }
+        .playbook-search-filter {
+            padding: 8px 10px;
+            border-bottom: 1px solid #1c2c4c;
+            position: sticky;
+            top: 0;
+            background: #0a1122;
+        }
+        .playbook-search-filter input {
+            width: 100%;
+            background: #080d1a;
+            border: 1px solid #1d2d4d;
+            border-radius: 4px;
+            color: #fff;
+            padding: 6px 10px 6px 28px;
+            font-size: 12px;
+            outline: none;
+        }
+        .playbook-search-filter svg {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+        .playbook-item-option {
+            padding: 10px 12px;
+            border-bottom: 1px solid #131f38;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.15s;
+        }
+        .playbook-item-option:hover {
+            background-color: #132243;
+        }
+        .playbook-item-option.selected-in-list {
+            background-color: rgba(37, 99, 235, 0.12);
+        }
+        .playbook-item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .playbook-item-name {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .playbook-item-meta {
+            font-size: 11px;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .badge-steps {
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: 600;
+            background: rgba(56, 189, 248, 0.12);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            white-space: nowrap;
+        }
+
+        /* Selected Playbooks List Cards */
+        .selected-playbooks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .selected-pb-card {
+            background-color: #0b1426;
+            border: 1px solid #1c3057;
+            border-radius: var(--radius-md);
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+        .selected-pb-card:hover {
+            border-color: #29477e;
+            background-color: #0e1930;
+        }
+        .selected-pb-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pb-order-badge {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            background: #182849;
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pb-title-line {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .selected-pb-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-remove-pb {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            transition: color 0.15s;
+        }
+        .btn-remove-pb:hover { color: #ef4444; }
+
+        /* Step 3: Review styles */
+        .review-section {
+            margin-bottom: 18px;
+        }
+        .review-section:last-child {
+            margin-bottom: 0;
+        }
+        .review-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+        .review-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-main);
+            border-radius: var(--radius-lg);
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+        .review-row {
+            display: flex;
+            align-items: flex-start;
+            font-size: 12.5px;
+            line-height: 1.5;
+        }
+        .review-label {
+            width: 180px;
+            flex-shrink: 0;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        .review-value {
+            flex: 1;
+            color: #f1f5f9;
+            font-weight: 500;
+            word-break: break-word;
+        }
+        .review-value.status-active {
+            color: #22c55e;
+            font-weight: 600;
+        }
+        .review-pb-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            background: #080e1c;
+            border: 1px solid #1a2947;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+        .review-pb-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Modal Footer */
+        .modal-footer {
+            padding: 14px 24px;
+            border-top: 1px solid var(--border-main);
+            background-color: #0a1020;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        .btn-secondary {
+            background-color: #16223b;
+            border: 1px solid #23385d;
+            color: #cbd5e1;
+            padding: 7px 18px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover {
+            background-color: #1c2b4d;
+            color: #fff;
+        }
+        .btn-submit {
+            background-color: #2563eb;
+            border: 1px solid #2563eb;
+            color: #ffffff;
+            padding: 7px 22px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+            transition: all 0.2s;
+        }
+        .btn-submit:hover {
+            background-color: #1d4ed8;
+            border-color: #1d4ed8;
+        }
+
+        /* Toast feedback */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #102a45;
+            border: 1px solid #0284c7;
+            color: #e0f2fe;
+            padding: 10px 16px;
+            border-radius: 6px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            z-index: 200;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.25s ease;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVBAR -->
+    <header class="top-navbar">
+        <div class="nav-left">
+            <div class="brand-logo">
+                <div class="brand-icon">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                NCS
+            </div>
+            <nav class="nav-links">
+                <a class="nav-item">TRANG CHỦ</a>
+                <a class="nav-item">BẢNG ĐIỀU KHIỂN</a>
+                <a class="nav-item">BÁO CÁO</a>
+                <a class="nav-item">QUY TRÌNH</a>
+                <a class="nav-item">SỰ VIỆC</a>
+                <a class="nav-item">CÔNG VIỆC</a>
+                <a class="nav-item">CẢNH BÁO</a>
+                <a class="nav-item active">QUẢN TRỊ</a>
+            </nav>
+        </div>
+        <div class="nav-right">
+            <button class="icon-btn-badge" title="Thông báo">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                <span class="badge-count">99+</span>
+            </button>
+            <button class="icon-btn-badge" title="Nhiệm vụ">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                <span class="badge-count" style="background:#3b82f6;">7</span>
+            </button>
+            <div class="lang-select">
+                <span>Tiếng Việt</span>
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            <button class="icon-btn-badge" title="Chuyển chế độ sáng/tối">
+                <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            </button>
+            <div class="user-avatar" title="tamlv">T</div>
+        </div>
+    </header>
+
+    <!-- APP WRAPPER -->
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>Lực lượng bảo vệ</span>
+                </div>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <span>Bản quyền</span>
+                </div>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    <span>Phòng ban</span>
+                </div>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                    <span>Nhóm quyền</span>
+                </div>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span>Người dùng</span>
+                </div>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    <span>Khách hàng</span>
+                </div>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>SLA</span>
+                </div>
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    <span>Danh mục</span>
+                </div>
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <span>Quản lý Ca - Kíp</span>
+                </div>
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    <span>Mẫu công việc</span>
+                </div>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <span>Cấu hình hệ thống</span>
+                </div>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    <span>Nguồn tích hợp</span>
+                </div>
+            </div>
+            <div class="sidebar-item active">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                    <span>Quy tắc</span>
+                </div>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                    <span>Quy tắc loại trừ</span>
+                </div>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    <span>Báo cáo sự việc</span>
+                </div>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-item-left">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    <span>Nhật ký hoạt động</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN TABLE AREA (Background behind modal) -->
+        <main class="content-area">
+            <div class="content-top-bar">
+                <div class="search-box">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" placeholder="Tìm kiếm theo tên quy tắc, mô tả..." value="">
+                </div>
+                <div style="display:flex; gap: 8px;">
+                    <button class="btn-primary" onclick="openModal()">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        Tạo quy tắc
+                    </button>
+                </div>
+            </div>
+
+            <div class="rule-table-container">
+                <table class="rule-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">STT</th>
+                            <th>Tên quy tắc</th>
+                            <th style="width: 170px;">Lần cập nhật cuối</th>
+                            <th style="width: 140px;">Cập nhật bởi</th>
+                            <th style="width: 100px; text-align: right;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="group-row">
+                            <td colspan="5">
+                                <span>(-) Khách hàng: A06 (10 quy tắc)</span>
+                            </td>
+                        </tr>
+                        <tr style="cursor: pointer;" onclick="openModal()">
+                            <td>:: 1</td>
+                            <td style="color: #60a5fa; font-weight: 600;">Test Rule Cho A06 - Critical</td>
+                            <td>28/08/2026 09:31</td>
+                            <td>superadmin</td>
+                            <td style="text-align: right;">
+                                <button style="background:none;border:none;color:#94a3b8;cursor:pointer;margin-right:6px;" title="Chỉnh sửa">✏️</button>
+                                <button style="background:none;border:none;color:#94a3b8;cursor:pointer;margin-right:6px;" title="Sao chép">📋</button>
+                                <button style="background:none;border:none;color:#94a3b8;cursor:pointer;" title="Xóa">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>:: 2</td>
+                            <td>Brute Force SSH Detection & Auto Response</td>
+                            <td>07/09/2026 15:06</td>
+                            <td>admin3</td>
+                            <td style="text-align: right;">✏️ 📋 🗑️</td>
+                        </tr>
+                        <tr>
+                            <td>:: 3</td>
+                            <td>Rule test thong luong su v...</td>
+                            <td>07/09/2026 15:06</td>
+                            <td>admin3</td>
+                            <td style="text-align: right;">✏️ 📋 🗑️</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODAL POPUP: CHỈNH SỬA QUY TẮC -->
+    <!-- ========================================================================= -->
+    <div class="modal-overlay" id="ruleModal">
+        <div class="modal-dialog">
+            
+            <!-- HEADER -->
+            <div class="modal-header">
+                <div class="modal-title">Chỉnh sửa quy tắc: Test Rule Cho A06 - Critical</div>
+                <button class="modal-close-btn" onclick="closeModal()" title="Đóng">✕</button>
+            </div>
+
+            <!-- STEPPER -->
+            <div class="stepper-container" id="stepperContainer">
+                <!-- Bước 1 -->
+                <div class="step-item completed" id="stepIndicator1" onclick="switchStep(1)">
+                    <div class="step-circle">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="step-label">
+                        <span class="step-number">Bước 1</span>
+                        <span class="step-name">Điều kiện lọc</span>
+                    </div>
+                </div>
+
+                <div class="step-line filled" id="stepLine1"></div>
+
+                <!-- Bước 2 -->
+                <div class="step-item active" id="stepIndicator2" onclick="switchStep(2)">
+                    <div class="step-circle" id="stepCircle2">2</div>
+                    <div class="step-label">
+                        <span class="step-number">Bước 2</span>
+                        <span class="step-name">Thông tin xử lý</span>
+                    </div>
+                </div>
+
+                <div class="step-line" id="stepLine2"></div>
+
+                <!-- Bước 3 -->
+                <div class="step-item inactive" id="stepIndicator3" onclick="switchStep(3)">
+                    <div class="step-circle" id="stepCircle3">3</div>
+                    <div class="step-label">
+                        <span class="step-number">Bước 3</span>
+                        <span class="step-name">Xác nhận cấu hình</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL BODY: NỘI DUNG BƯỚC 2 (THÔNG TIN XỬ LÝ) -->
+            <div class="modal-body" id="modalScrollBody">
+
+                <!-- KHỐI 1: CẤU HÌNH GỘP SỰ VIỆC -->
+                <div class="config-section-card">
+                    <div class="section-header-title">Cấu hình gộp sự việc</div>
+
+                    <!-- Toggle gộp sự việc -->
+                    <label class="custom-checkbox-row">
+                        <input type="checkbox" id="chkEnableMerge" checked onchange="toggleMergeSection(this.checked)">
+                        <div class="checkbox-label-content">
+                            <span class="checkbox-label-title">Cho phép gộp sự việc</span>
+                            <span class="checkbox-label-desc">Quy định cách cảnh báo mới được gộp vào các sự việc đang mở</span>
+                        </div>
+                    </label>
+
+                    <div id="mergeSubSection" style="margin-top: 14px;">
+                        <div style="font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 8px;">
+                            Trạng thái sự việc áp dụng
+                        </div>
+
+                        <!-- Trạng thái đang mở -->
+                        <div class="inner-subcard">
+                            <div style="display: flex; align-items: center; margin-bottom: 4px;">
+                                <span style="font-size: 12.5px; font-weight: 600; color: #f1f5f9;">Trạng thái đang mở</span>
+                                <span class="badge-default">MẶC ĐỊNH</span>
+                            </div>
+                            <div style="font-size: 11.5px; color: #94a3b8; margin-bottom: 8px;">
+                                Luôn tìm và gộp vào sự việc ở trạng thái mở
+                            </div>
+                            <label class="custom-checkbox-row" style="margin-left: 4px;">
+                                <input type="checkbox" id="chkMergeOnlySla" checked>
+                                <div class="checkbox-label-content">
+                                    <span class="checkbox-label-title" style="font-size: 12.5px;">Chỉ gộp khi còn SLA</span>
+                                    <span class="checkbox-label-desc">Bỏ qua các sự việc đang mở nhưng đã hết hạn SLA</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Trạng thái đã đóng -->
+                        <div class="inner-subcard" style="margin-top: 10px;">
+                            <label class="custom-checkbox-row">
+                                <input type="checkbox" id="chkMergeClosed" checked onchange="toggleClosedSettings(this.checked)">
+                                <div class="checkbox-label-content">
+                                    <span class="checkbox-label-title">Trạng thái đã đóng</span>
+                                    <span class="checkbox-label-desc">Cho phép mở lại sự việc đã đóng để gộp</span>
+                                </div>
+                            </label>
+
+                            <div id="closedSettingsGroup" style="margin-top: 12px; padding-left: 26px;">
+                                <div class="form-group">
+                                    <label class="form-label">Thời gian tìm kiếm</label>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <input type="number" class="input-control" value="1" style="width: 200px;">
+                                        <select class="select-control" style="width: 110px;">
+                                            <option value="hour" selected>Giờ</option>
+                                            <option value="minute">Phút</option>
+                                            <option value="day">Ngày</option>
+                                        </select>
+                                        <span style="color: #94a3b8; font-size: 12px;">tính từ hiện tại</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Cấu hình SLA khi mở lại</label>
+                                    <div class="radio-box-group">
+                                        <div class="radio-box-item selected" id="radioSlaReset" onclick="selectSlaReset(true)">
+                                            <input type="radio" name="slaReopenOption" checked>
+                                            <div class="radio-box-text">
+                                                <div class="radio-title">Đặt lại SLA</div>
+                                                <div class="radio-desc">Tính lại thời gian SLA từ đầu.</div>
+                                            </div>
+                                        </div>
+                                        <div class="radio-box-item" id="radioSlaKeep" onclick="selectSlaReset(false)">
+                                            <input type="radio" name="slaReopenOption">
+                                            <div class="radio-box-text">
+                                                <div class="radio-title">Giữ SLA cũ</div>
+                                                <div class="radio-desc">Tiếp tục dùng deadline cũ của sự việc đó.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KHỐI 2: TÊN SỰ VIỆC -->
+                <div class="form-group">
+                    <label class="form-label">Tên sự việc <span class="req">*</span></label>
+                    <input type="text" class="input-control" id="caseNameInput" value="Test: {{srcAddr}} Xử lý ngay" style="font-weight: 500;">
+                    <div class="form-hint">
+                        Gõ ký tự <code>{</code> để gọi danh sách chèn biến động.
+                    </div>
+                </div>
+
+                <!-- KHỐI 3: CẤU HÌNH SỰ VIỆC TỰ ĐỘNG TẠO -->
+                <div class="config-section-card">
+                    <div class="section-header-title">Cấu hình sự việc tự động tạo</div>
+
+                    <!-- Loại chia việc -->
+                    <div class="form-group">
+                        <label class="form-label">Loại chia việc</label>
+                        <div class="radio-box-group">
+                            <div class="radio-box-item selected" id="radioAssignFixed" onclick="selectAssignType('fixed')">
+                                <input type="radio" name="assignType" checked>
+                                <div class="radio-box-text">
+                                    <div class="radio-title">Cố định người xử lý</div>
+                                    <div class="radio-desc">Luôn gán cho 1 người xử lý cấu hình sẵn bên dưới.</div>
+                                </div>
+                            </div>
+                            <div class="radio-box-item" id="radioAssignShift" onclick="selectAssignType('shift')">
+                                <input type="radio" name="assignType">
+                                <div class="radio-box-text">
+                                    <div class="radio-title">Theo ca kíp</div>
+                                    <div class="radio-desc">Tự động gán cho người đang trực. Nếu không có lịch trực hoặc không có người phù hợp, sẽ gán cho Người xử lý mặc định.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grid fields -->
+                    <div class="form-grid-2">
+                        <!-- Loại sự việc -->
+                        <div class="form-group">
+                            <label class="form-label">Loại sự việc <span class="req">*</span></label>
+                            <select class="select-control">
+                                <option value="case" selected>Sự việc</option>
+                                <option value="incident">Sự cố an ninh</option>
+                                <option value="request">Yêu cầu điều tra</option>
+                            </select>
+                        </div>
+
+                        <!-- Mức độ nguy hiểm -->
+                        <div class="form-group">
+                            <label class="form-label">Mức độ nguy hiểm <span class="req">*</span></label>
+                            <select class="select-control">
+                                <option value="critical" selected>Nghiêm trọng (Critical)</option>
+                                <option value="high">Cao (High)</option>
+                                <option value="medium">Trung bình (Medium)</option>
+                                <option value="low">Thấp (Low)</option>
+                            </select>
+                        </div>
+
+                        <!-- Độ ưu tiên -->
+                        <div class="form-group">
+                            <label class="form-label">Độ ưu tiên <span class="req">*</span></label>
+                            <select class="select-control">
+                                <option value="urgent">Khẩn cấp</option>
+                                <option value="high" selected>Cao</option>
+                                <option value="medium">Trung bình</option>
+                                <option value="low">Thấp</option>
+                            </select>
+                        </div>
+
+                        <!-- SLA -->
+                        <div class="form-group">
+                            <label class="form-label">SLA <span class="req">*</span></label>
+                            <select class="select-control">
+                                <option value="sla8h" selected>SLA 8h cho công việc</option>
+                                <option value="sla4h">SLA 4h xử lý khẩn cấp</option>
+                                <option value="sla24h">SLA 24h cảnh báo chuẩn</option>
+                            </select>
+                        </div>
+
+                        <!-- Người thực hiện / Người xử lý mặc định (Linh hoạt theo Loại chia việc) -->
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label class="form-label" id="assigneeLabel">Người thực hiện <span class="req">*</span></label>
+                            <select class="select-control" id="assigneeSelect">
+                                <option value="tamlv" selected>tamlv (Trần Văn Tâm - NCS)</option>
+                                <option value="superadmin">superadmin (Quản trị viên NCS)</option>
+                                <option value="admin3">admin3 (Nguyễn Văn A - NCS)</option>
+                            </select>
+                            <div class="form-hint" id="assigneeHint" style="display:none; color: #94a3b8; font-size: 11.5px; margin-top: 4px;">
+                                Gán dự phòng cho người này nếu tại thời điểm sinh sự việc không có lịch trực của phòng ban hoặc không có người phù hợp.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nhãn (Tags) -->
+                    <div class="form-group" style="margin-top: 14px;">
+                        <div class="form-label-row">
+                            <span class="form-label" style="margin-bottom: 0;">Nhãn</span>
+                            <button class="btn-link-action" type="button" onclick="addNewTagPrompt()">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                Tạo nhãn mới
+                            </button>
+                        </div>
+                        <div class="tag-select-container" id="caseTagsContainer">
+                            <div class="tag-pill">
+                                <span>Trở về màn hình Bước 1 ...</span>
+                                <button type="button" class="tag-pill-close" onclick="this.parentElement.remove()">✕</button>
+                            </div>
+                            <div class="tag-pill">
+                                <span>Nhấn vào sẽ kiểm tra cá...</span>
+                                <button type="button" class="tag-pill-close" onclick="this.parentElement.remove()">✕</button>
+                            </div>
+                            <input type="text" class="tag-input-ghost" placeholder="Nhập nhãn và nhấn Enter..." onkeydown="handleTagInput(event)">
+                        </div>
+                    </div>
+
+                    <!-- Mô tả -->
+                    <div class="form-group" style="margin-top: 14px;">
+                        <label class="form-label">Mô tả</label>
+                        <div class="textarea-wrapper">
+                            <textarea class="textarea-control" placeholder="Nhập mô tả sự việc...">SLA trống</textarea>
+                            <button type="button" class="textarea-icon-btn" title="Chèn biến động {{...}}">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin thêm -->
+                    <div class="form-group" style="margin-top: 14px;">
+                        <label class="form-label">Thông tin thêm</label>
+                        <div class="textarea-wrapper">
+                            <textarea class="textarea-control" placeholder="Nhập thông tin bổ sung...">SLA trống</textarea>
+                            <button type="button" class="textarea-icon-btn" title="Chèn biến động {{...}}">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================================================================= -->
+                <!-- [MỤC MỚI] KHỐI 4: CẤU HÌNH TỰ ĐỘNG HÓA PLAYBOOK (SOAR PLAYBOOK TRIGGER) -->
+                <!-- ================================================================= -->
+                <div class="playbook-section-card">
+                    <div class="section-header-title">
+                        <div style="display: flex; align-items: center;">
+                            <div class="playbook-header-icon">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            </div>
+                            <span>Playbook tự động kích hoạt</span>
+                        </div>
+                    </div>
+
+                    <!-- Checkbox bật/tắt kích hoạt playbook -->
+                    <label class="custom-checkbox-row" style="margin-bottom: 12px;">
+                        <input type="checkbox" id="chkEnablePlaybooks" checked onchange="togglePlaybookGroup(this.checked)">
+                        <div class="checkbox-label-content">
+                            <span class="checkbox-label-title">Kích hoạt Playbook tự động khi sự việc được tạo ra</span>
+                            <span class="checkbox-label-desc">Các playbook được chỉ định bên dưới sẽ tự động chạy song song ngay khi sự việc mới được sinh ra từ quy tắc tương quan này.</span>
+                        </div>
+                    </label>
+
+                    <!-- Nội dung danh sách chọn Playbook -->
+                    <div id="playbookConfigBody" style="padding-left: 26px;">
+                        
+                        <!-- Ô chọn nhiều Playbook (Searchable Multi-select) -->
+                        <div class="form-group dropdown-menu-wrapper">
+                            <label class="form-label">Danh sách Playbook áp dụng</label>
+                            
+                            <!-- Box hiển thị Dropdown Trigger -->
+                            <div class="tag-select-container" id="playbookPickerBox" onclick="togglePlaybookDropdown(event)">
+                                <span id="pbPlaceholder" style="color: #64748b; font-size: 12.5px; padding: 4px 6px;">
+                                    🔍 Nhấn để tìm kiếm và thêm Playbook...
+                                </span>
+                                <div style="margin-left: auto; display: flex; align-items: center; gap: 6px; color: #64748b;">
+                                    <span id="pbSelectedCountBadge" style="font-size: 11px; font-weight: 600; background: #1e3a68; color: #93c5fd; padding: 2px 6px; border-radius: 4px;">2 đã chọn</span>
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                                </div>
+                            </div>
+
+                            <!-- POPUP DROPDOWN DANH SÁCH PLAYBOOK -->
+                            <div class="playbook-dropdown-popup" id="playbookDropdown">
+                                <div class="playbook-search-filter" onclick="event.stopPropagation()">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                                    <input type="text" id="pbSearchInput" placeholder="Tìm theo mã hoặc tên playbook..." oninput="filterPlaybooks(this.value)">
+                                </div>
+
+                                <div id="playbookOptionsList">
+                                    <!-- Options rendered by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Danh sách các Playbook ĐÃ ĐƯỢC CHỌN (Visual Cards) -->
+                        <div class="form-group">
+                            <div style="font-size: 11.5px; font-weight: 600; color: #94a3b8; margin-bottom: 6px;">
+                                <span>Playbook sẽ thực thi cho sự việc này:</span>
+                            </div>
+
+                            <div class="selected-playbooks-list" id="selectedPlaybooksList">
+                                <!-- Rendered dynamically by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Cấu hình khi gộp sự việc -->
+                        <div class="inner-subcard" style="margin-top: 14px; background: rgba(14, 25, 48, 0.7);">
+                            <label class="custom-checkbox-row">
+                                <input type="checkbox" id="chkReTriggerOnMerge">
+                                <div class="checkbox-label-content">
+                                    <span class="checkbox-label-title" style="font-size: 12.5px;">Kích hoạt lại Playbook khi có cảnh báo mới được gộp vào sự việc đang mở</span>
+                                    <span class="checkbox-label-desc">Nếu bật, mỗi khi có cảnh báo mới rơi vào sự việc cũ, các playbook trên sẽ được tái kích hoạt</span>
+                                </div>
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- MODAL BODY: NỘI DUNG BƯỚC 3 (XÁC NHẬN CẤU HÌNH) -->
+            <div class="modal-body" id="step3Content" style="display: none;">
+                <div>
+                    <div style="font-size: 15px; font-weight: 700; color: #ffffff;">Xác nhận cấu hình</div>
+                    <div style="font-size: 12px; color: #94a3b8; margin-top: 2px; margin-bottom: 14px;">Xem lại toàn bộ cấu hình trước khi lưu</div>
+                </div>
+
+                <!-- Thông tin chung -->
+                <div class="review-section">
+                    <div class="review-section-title">Thông tin chung</div>
+                    <div class="review-card">
+                        <div class="review-row">
+                            <div class="review-label">Tên quy tắc:</div>
+                            <div class="review-value" id="revRuleName">Test Rule Cho A06 - Critical</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Mô tả:</div>
+                            <div class="review-value">Chọn khách hàng A06</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Trạng thái:</div>
+                            <div class="review-value status-active">Hoạt động</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Khách hàng:</div>
+                            <div class="review-value">A06</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Điều kiện lọc & Ngưỡng -->
+                <div class="review-section">
+                    <div class="review-section-title">Điều kiện lọc & Ngưỡng</div>
+                    <div class="review-card">
+                        <div class="review-row">
+                            <div class="review-label">Điều kiện lọc:</div>
+                            <div class="review-value" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #93c5fd;">
+                                (Mức độ == "Nghiêm trọng" AND Nguồn == "camunda3") OR (prod_smoke_src_ip == "10.20.30.40")
+                            </div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Trường gom nhóm cảnh báo:</div>
+                            <div class="review-value">IP nguồn PT</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Ngưỡng:</div>
+                            <div class="review-value">&gt; 0 sự việc trong khoảng 2 phút</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hành động & Mẫu sự việc -->
+                <div class="review-section">
+                    <div class="review-section-title">Hành động & Mẫu sự việc</div>
+                    <div class="review-card">
+                        <div class="review-row">
+                            <div class="review-label">Tên sự việc:</div>
+                            <div class="review-value" id="revCaseName">Test: {{srcAddr}} Xử lý ngay</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Mô tả:</div>
+                            <div class="review-value" id="revCaseDesc">SLA trống</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Thông tin thêm:</div>
+                            <div class="review-value" id="revCaseExtra">SLA trống</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Loại sự việc:</div>
+                            <div class="review-value" id="revCaseType">Sự việc</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Loại chia việc:</div>
+                            <div class="review-value" id="revAssignType">Cố định người xử lý</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label" id="revAssigneeLabel">Người thực hiện:</div>
+                            <div class="review-value" id="revAssigneeValue">tamlv</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Mức độ nguy hiểm:</div>
+                            <div class="review-value" id="revSeverity">Nghiêm trọng</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Độ ưu tiên:</div>
+                            <div class="review-value" id="revPriority">Cao</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">SLA:</div>
+                            <div class="review-value" id="revSla">SLA 8h cho công việc</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Nhãn:</div>
+                            <div class="review-value" id="revTags">Trở về màn hình Bước 1 để chỉnh sửa nếu phát hiện sai sót trong quá trình review.Trở về màn hình Bước 1 để chỉnh sửa nếu phát hiện sai sót trong quá trình review.Trở về màn hì, Nhấn vào sẽ kiểm tra các thông tin được nhập có bị lỗi không:Nhấn vào sẽ kiểm tra các thông tin được nhập có bị lỗi không;Nhấn vào sẽ kiểm tra các thông tin được nhập có bị lỗi không;Nhấn vào sẽ kiểm tra các thông tin được nhập có bị lỗi không;Nhấn vào sẽ</div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Cấu hình gộp sự việc:</div>
+                            <div class="review-value" id="revMergeConfig">Bật (còn SLA) + Đã đóng 1 giờ (Đặt lại SLA)</div>
+                        </div>
+                        <!-- Playbook tự động kích hoạt (Đồng bộ Bước 2) -->
+                        <div class="review-row" style="border-top: 1px solid #16243f; padding-top: 10px; margin-top: 2px;">
+                            <div class="review-label">Playbook tự động:</div>
+                            <div class="review-value" id="revPlaybookContainer">
+                                <!-- Populated dynamically by updateReviewStep3() -->
+                            </div>
+                        </div>
+                        <div class="review-row">
+                            <div class="review-label">Tái kích hoạt khi được<br>gộp cảnh báo mới:</div>
+                            <div class="review-value" id="revMergeReTrigger">Tắt</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL FOOTER -->
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="footerBtnLeft" onclick="prevStep()">Quay lại</button>
+                <button type="button" class="btn-submit" id="footerBtnRight" onclick="nextStep()">Tiếp tục</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast" id="systemToast">
+        <span id="toastIcon">✅</span>
+        <span id="toastMsg">Thao tác thành công!</span>
+    </div>
+
+    <!-- JS SCRIPT -->
+    <script>
+        // Dữ liệu mẫu danh mục Playbook SOAR (chỉ gồm Mã, Tên, Số bước)
+        const AVAILABLE_PLAYBOOKS = [
+            {
+                id: 'PB-001',
+                name: 'Thu thập & Làm giàu thông tin IOC (VirusTotal, AbuseIPDB)',
+                steps: 5
+            },
+            {
+                id: 'PB-002',
+                name: 'Cô lập Endpoint tình nghi nhiễm mã độc (EDR Host Isolation)',
+                steps: 3
+            },
+            {
+                id: 'PB-003',
+                name: 'Chặn IP độc hại trên Firewall FortiGate & Palo Alto',
+                steps: 4
+            },
+            {
+                id: 'PB-004',
+                name: 'Reset Mật khẩu & Thu hồi Token người dùng (AD/AzureAD)',
+                steps: 4
+            },
+            {
+                id: 'PB-005',
+                name: 'Gửi cảnh báo khẩn qua Telegram & Microsoft Teams SOC',
+                steps: 2
+            },
+            {
+                id: 'PB-006',
+                name: 'Thu thập File mẫu & Memory Dump phục vụ điều tra Forensics',
+                steps: 6
+            }
+        ];
+
+        // Trạng thái các Playbook được chọn cho sự việc này
+        let selectedPlaybookIds = ['PB-001', 'PB-002'];
+
+        // Khởi tạo hiển thị
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPlaybookOptions();
+            renderSelectedPlaybooks();
+            
+            // Bấm ra ngoài để đóng dropdown playbook
+            document.addEventListener('click', (e) => {
+                const pickerBox = document.getElementById('playbookPickerBox');
+                const dropdown = document.getElementById('playbookDropdown');
+                if (!pickerBox.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('open');
+                }
+            });
+        });
+
+        // Đóng mở modal
+        function openModal() {
+            document.getElementById('ruleModal').style.display = 'flex';
+        }
+        function closeModal() {
+            document.getElementById('ruleModal').style.display = 'none';
+        }
+
+        // Render các options trong Dropdown
+        function renderPlaybookOptions(filterKeyword = '') {
+            const listContainer = document.getElementById('playbookOptionsList');
+            const keyword = filterKeyword.toLowerCase().trim();
+
+            const filtered = AVAILABLE_PLAYBOOKS.filter(pb => 
+                pb.id.toLowerCase().includes(keyword) || 
+                pb.name.toLowerCase().includes(keyword)
+            );
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `<div style="padding: 16px; text-align: center; color: #64748b; font-size: 12px;">Không tìm thấy playbook phù hợp</div>`;
+                return;
+            }
+
+            listContainer.innerHTML = filtered.map(pb => {
+                const isSelected = selectedPlaybookIds.includes(pb.id);
+                return `
+                    <div class="playbook-item-option ${isSelected ? 'selected-in-list' : ''}" onclick="toggleSelectPlaybook('${pb.id}')">
+                        <div class="playbook-item-info">
+                            <div class="playbook-item-name">
+                                <input type="checkbox" ${isSelected ? 'checked' : ''} style="cursor:pointer; accent-color:#2563eb;" onclick="event.stopPropagation(); toggleSelectPlaybook('${pb.id}')">
+                                <span style="color:#93c5fd; font-family:'JetBrains Mono',monospace; font-size:12px;">[${pb.id}]</span>
+                                <span>${pb.name}</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="badge-steps">${pb.steps} bước</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render danh sách các Playbook đã chọn dưới dạng Cards
+        function renderSelectedPlaybooks() {
+            const container = document.getElementById('selectedPlaybooksList');
+            const countBadge = document.getElementById('pbSelectedCountBadge');
+
+            countBadge.innerText = `${selectedPlaybookIds.length} đã chọn`;
+
+            if (selectedPlaybookIds.length === 0) {
+                container.innerHTML = `
+                    <div style="padding: 14px; text-align: center; background: #0a1122; border: 1px dashed #1e3056; border-radius: 6px; color: #64748b; font-size: 12px;">
+                        Chưa chọn playbook nào. Vui lòng bấm vào ô bên trên để chọn playbook tự động chạy khi sự việc sinh ra.
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = selectedPlaybookIds.map((id, index) => {
+                const pb = AVAILABLE_PLAYBOOKS.find(item => item.id === id);
+                if (!pb) return '';
+                return `
+                    <div class="selected-pb-card">
+                        <div class="selected-pb-left">
+                            <div class="pb-order-badge">${index + 1}</div>
+                            <div class="pb-title-line">
+                                <span style="color:#93c5fd; font-family:'JetBrains Mono',monospace; font-size:12px;">[${pb.id}]</span>
+                                <span>${pb.name}</span>
+                                <span class="badge-steps">${pb.steps} bước</span>
+                            </div>
+                        </div>
+                        <div class="selected-pb-actions">
+                            <button type="button" class="btn-remove-pb" onclick="removePlaybook('${pb.id}')" title="Bỏ chọn">
+                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Đóng/Mở Dropdown Playbook
+        function togglePlaybookDropdown(e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById('playbookDropdown');
+            dropdown.classList.toggle('open');
+            if (dropdown.classList.contains('open')) {
+                document.getElementById('pbSearchInput').focus();
+            }
+        }
+
+        // Tìm kiếm playbook
+        function filterPlaybooks(val) {
+            renderPlaybookOptions(val);
+        }
+
+        // Chọn / Hủy chọn Playbook
+        function toggleSelectPlaybook(id) {
+            if (selectedPlaybookIds.includes(id)) {
+                selectedPlaybookIds = selectedPlaybookIds.filter(item => item !== id);
+                showToast(`Đã bỏ chọn playbook ${id}`);
+            } else {
+                selectedPlaybookIds.push(id);
+                showToast(`Đã thêm playbook ${id} vào cấu hình`);
+            }
+            renderPlaybookOptions(document.getElementById('pbSearchInput').value);
+            renderSelectedPlaybooks();
+        }
+
+        // Xóa Playbook từ nút xóa bên ngoài
+        function removePlaybook(id) {
+            selectedPlaybookIds = selectedPlaybookIds.filter(item => item !== id);
+            renderPlaybookOptions(document.getElementById('pbSearchInput').value);
+            renderSelectedPlaybooks();
+            showToast(`Đã gỡ playbook khỏi danh sách`);
+        }
+
+        // Toggle cả khối Playbook
+        function togglePlaybookGroup(enabled) {
+            const body = document.getElementById('playbookConfigBody');
+            body.style.opacity = enabled ? '1' : '0.4';
+            body.style.pointerEvents = enabled ? 'auto' : 'none';
+        }
+
+        // Toggle khối gộp sự việc
+        function toggleMergeSection(enabled) {
+            const section = document.getElementById('mergeSubSection');
+            section.style.display = enabled ? 'block' : 'none';
+        }
+
+        // Toggle trạng thái đã đóng
+        function toggleClosedSettings(enabled) {
+            const grp = document.getElementById('closedSettingsGroup');
+            grp.style.opacity = enabled ? '1' : '0.4';
+            grp.style.pointerEvents = enabled ? 'auto' : 'none';
+        }
+
+        // Radio SLA khi mở lại
+        function selectSlaReset(isReset) {
+            document.getElementById('radioSlaReset').classList.toggle('selected', isReset);
+            document.getElementById('radioSlaKeep').classList.toggle('selected', !isReset);
+            document.querySelectorAll('input[name="slaReopenOption"]')[0].checked = isReset;
+            document.querySelectorAll('input[name="slaReopenOption"]')[1].checked = !isReset;
+        }
+
+        // Radio loại chia việc
+        function selectAssignType(type) {
+            const isFixed = type === 'fixed';
+            document.getElementById('radioAssignFixed').classList.toggle('selected', isFixed);
+            document.getElementById('radioAssignShift').classList.toggle('selected', !isFixed);
+            document.querySelectorAll('input[name="assignType"]')[0].checked = isFixed;
+            document.querySelectorAll('input[name="assignType"]')[1].checked = !isFixed;
+
+            const label = document.getElementById('assigneeLabel');
+            const hint = document.getElementById('assigneeHint');
+            if (isFixed) {
+                label.innerHTML = 'Người thực hiện <span class="req">*</span>';
+                hint.style.display = 'none';
+            } else {
+                label.innerHTML = 'Người xử lý mặc định <span class="req">*</span>';
+                hint.style.display = 'block';
+            }
+        }
+
+        // Xử lý thêm Tag mới
+        function handleTagInput(e) {
+            if (e.key === 'Enter' && e.target.value.trim() !== '') {
+                e.preventDefault();
+                const tagText = e.target.value.trim();
+                const newTag = document.createElement('div');
+                newTag.className = 'tag-pill';
+                newTag.innerHTML = `<span>${tagText}</span><button type="button" class="tag-pill-close" onclick="this.parentElement.remove()">✕</button>`;
+                document.getElementById('caseTagsContainer').insertBefore(newTag, e.target);
+                e.target.value = '';
+                showToast(`Đã thêm nhãn "${tagText}"`);
+            }
+        }
+        function addNewTagPrompt() {
+            const val = prompt("Nhập tên nhãn mới:");
+            if (val && val.trim()) {
+                const input = document.querySelector('.tag-input-ghost');
+                const newTag = document.createElement('div');
+                newTag.className = 'tag-pill';
+                newTag.innerHTML = `<span>${val.trim()}</span><button type="button" class="tag-pill-close" onclick="this.parentElement.remove()">✕</button>`;
+                document.getElementById('caseTagsContainer').insertBefore(newTag, input);
+                showToast(`Đã tạo nhãn mới: ${val.trim()}`);
+            }
+        }
+
+        // Quản lý trạng thái Stepper và chuyển đổi giữa Bước 2 và Bước 3
+        let currentStep = 2;
+
+        function updateStepView() {
+            const step2El = document.getElementById('modalScrollBody');
+            const step3El = document.getElementById('step3Content');
+            const stepInd2 = document.getElementById('stepIndicator2');
+            const stepCircle2 = document.getElementById('stepCircle2');
+            const stepLine2 = document.getElementById('stepLine2');
+            const stepInd3 = document.getElementById('stepIndicator3');
+            const footerBtnRight = document.getElementById('footerBtnRight');
+
+            if (currentStep === 2) {
+                step2El.style.display = 'flex';
+                step3El.style.display = 'none';
+
+                stepInd2.className = 'step-item active';
+                stepCircle2.innerHTML = '2';
+                stepLine2.className = 'step-line';
+                stepInd3.className = 'step-item inactive';
+
+                footerBtnRight.className = 'btn-submit';
+                footerBtnRight.innerHTML = 'Tiếp tục';
+                footerBtnRight.onclick = nextStep;
+            } else if (currentStep === 3) {
+                updateReviewStep3();
+                step2El.style.display = 'none';
+                step3El.style.display = 'flex';
+
+                stepInd2.className = 'step-item completed';
+                stepCircle2.innerHTML = '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+                stepLine2.className = 'step-line filled';
+                stepInd3.className = 'step-item active';
+
+                footerBtnRight.className = 'btn-submit';
+                footerBtnRight.innerHTML = 'Lưu quy tắc';
+                footerBtnRight.onclick = saveRule;
+            }
+        }
+
+        // Cập nhật dữ liệu từ Bước 2 vào màn hình Xác nhận cấu hình (Bước 3)
+        function updateReviewStep3() {
+            // Tên sự việc
+            const caseName = document.getElementById('caseNameInput').value;
+            if (caseName) document.getElementById('revCaseName').innerText = caseName;
+
+            // Loại chia việc & Người xử lý
+            const isFixed = document.querySelectorAll('input[name="assignType"]')[0].checked;
+            const assigneeSelect = document.getElementById('assigneeSelect');
+            const assigneeText = assigneeSelect.options[assigneeSelect.selectedIndex].text.split(' (')[0];
+
+            if (isFixed) {
+                document.getElementById('revAssignType').innerText = 'Cố định người xử lý';
+                document.getElementById('revAssigneeLabel').innerText = 'Người thực hiện:';
+                document.getElementById('revAssigneeValue').innerText = assigneeText;
+            } else {
+                document.getElementById('revAssignType').innerText = 'Theo ca kíp';
+                document.getElementById('revAssigneeLabel').innerText = 'Người xử lý mặc định:';
+                document.getElementById('revAssigneeValue').innerText = `${assigneeText} (Khi không có người trực phù hợp)`;
+            }
+
+            // Nhãn
+            const tagEls = document.querySelectorAll('#caseTagsContainer .tag-pill span');
+            if (tagEls.length > 0) {
+                const tagNames = Array.from(tagEls).map(el => el.innerText.trim()).join(', ');
+                document.getElementById('revTags').innerText = tagNames;
+            }
+
+            // Cấu hình gộp
+            const chkMerge = document.getElementById('chkEnableMerge').checked;
+            if (chkMerge) {
+                const onlySla = document.getElementById('chkMergeOnlySla').checked ? ' (còn SLA)' : '';
+                const closed = document.getElementById('chkMergeClosed').checked ? ' + Đã đóng 1 giờ' : '';
+                document.getElementById('revMergeConfig').innerText = `Bật${onlySla}${closed}`;
+            } else {
+                document.getElementById('revMergeConfig').innerText = 'Tắt';
+            }
+
+            // Playbook tự động kích hoạt
+            const pbEnabled = document.getElementById('chkEnablePlaybooks').checked;
+            const pbContainer = document.getElementById('revPlaybookContainer');
+
+            if (!pbEnabled) {
+                pbContainer.innerHTML = '<span style="color: #94a3b8;">Tắt (Không tự động kích hoạt)</span>';
+            } else if (selectedPlaybookIds.length === 0) {
+                pbContainer.innerHTML = '<span style="color: #f59e0b;">Chưa cấu hình playbook nào</span>';
+            } else {
+                pbContainer.innerHTML = `
+                    <div style="color: #38bdf8; font-weight: 600; margin-bottom: 6px; font-size: 12px;">
+                        Bật (${selectedPlaybookIds.length} playbook - Kích hoạt khi sự việc sinh ra)
+                    </div>
+                    ${selectedPlaybookIds.map(id => {
+                        const pb = AVAILABLE_PLAYBOOKS.find(item => item.id === id);
+                        if (!pb) return '';
+                        return `
+                            <div class="review-pb-item">
+                                <span style="color:#93c5fd; font-family:'JetBrains Mono',monospace; font-size:12px;">[${pb.id}]</span>
+                                <span>${pb.name}</span>
+                                <span class="badge-steps" style="margin-left: auto;">${pb.steps} bước</span>
+                            </div>
+                        `;
+                    }).join('')}
+                `;
+            }
+
+            // Kích hoạt lại khi gộp cảnh báo
+            const reTrigger = document.getElementById('chkReTriggerOnMerge').checked;
+            document.getElementById('revMergeReTrigger').innerText = reTrigger ? 'Bật (Kích hoạt lại khi có cảnh báo mới gộp vào)' : 'Tắt';
+        }
+
+        // Stepper Navigation
+        function switchStep(stepNum) {
+            if (stepNum === 1) {
+                showToast("Đang ở Bước 1: Điều kiện lọc (Bấm 'Tiếp tục' để qua Bước 2)");
+            } else if (stepNum === 2) {
+                currentStep = 2;
+                updateStepView();
+            } else if (stepNum === 3) {
+                currentStep = 3;
+                updateStepView();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep === 3) {
+                currentStep = 2;
+                updateStepView();
+            } else {
+                showToast("Quay lại Bước 1: Điều kiện lọc");
+            }
+        }
+
+        function nextStep() {
+            if (currentStep === 2) {
+                currentStep = 3;
+                updateStepView();
+                showToast("Chuyển sang Bước 3: Xác nhận cấu hình");
+            }
+        }
+
+        function saveRule() {
+            showToast("Đã lưu cấu hình quy tắc thành công!");
+        }
+
+        // Toast helper
+        function showToast(msg) {
+            const toast = document.getElementById('systemToast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>

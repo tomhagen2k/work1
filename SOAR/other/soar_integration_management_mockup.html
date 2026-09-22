@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOAR - Activepieces Custom Piece Studio & Management</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-body: #090d16;
+            --bg-surface: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-header: #141d2f;
+            --bg-input: #0a0f1d;
+            --border-color: #27354f;
+            --border-highlight: #38bdf8;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            
+            --primary: #38bdf8;
+            --primary-hover: #0284c7;
+            --primary-bg: rgba(56, 189, 248, 0.12);
+            
+            --success: #10b981;
+            --success-bg: rgba(16, 185, 129, 0.15);
+            
+            --warning: #f59e0b;
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            
+            --danger: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.15);
+            
+            --purple: #a855f7;
+            --purple-bg: rgba(168, 85, 247, 0.15);
+            
+            --editor-bg: #070b14;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --radius-md: 8px;
+            --radius-sm: 6px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Header */
+        header {
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 52px;
+            flex-shrink: 0;
+            z-index: 50;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-badge {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #0284c7, #38bdf8);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .brand-title {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .badge-role {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: var(--purple-bg);
+            color: var(--purple);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Nav Bar */
+        .top-nav {
+            background: var(--bg-card-header);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 20px;
+            display: flex;
+            gap: 18px;
+            height: 40px;
+            flex-shrink: 0;
+        }
+
+        .nav-tab-btn {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 0 4px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            height: 100%;
+        }
+
+        .nav-tab-btn:hover { color: var(--text-main); }
+        .nav-tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 600;
+        }
+
+        .main-viewport {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .view-section {
+            width: 100%;
+            height: 100%;
+            display: none;
+            overflow-y: auto;
+            flex-direction: column;
+        }
+
+        .view-section.active { display: flex; }
+
+        .standard-container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .btn-primary { background: var(--primary); color: #0b1120; font-weight: 600; }
+        .btn-primary:hover { background: #7dd3fc; }
+        .btn-secondary { background: var(--bg-card); border-color: var(--border-color); color: var(--text-main); }
+        .btn-secondary:hover { background: #27354f; border-color: #475569; }
+        .btn-success { background: var(--success); color: #fff; font-weight: 600; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-sm { padding: 4px 8px; font-size: 11px; }
+
+        /* Accordion in Catalog */
+        .accordion-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            background: var(--bg-surface);
+        }
+
+        .accordion-body {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+            background: #090e1a;
+            display: none;
+        }
+
+        .accordion-item.open .accordion-body { display: block; }
+
+        .action-columns-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .action-col-title {
+            font-size: 11px;
+            font-weight: 700;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 6px;
+        }
+
+        .action-col.read .action-col-title { color: #60a5fa; }
+        .action-col.search .action-col-title { color: #a78bfa; }
+        .action-col.write .action-col-title { color: #f59e0b; }
+        .action-col.destructive .action-col-title { color: #f87171; }
+
+        .pill-badge {
+            padding: 2px 7px;
+            border-radius: 12px;
+            font-size: 10.5px;
+            font-weight: 600;
+        }
+
+        .pill-destructive { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .pill-normal { background: rgba(255, 255, 255, 0.08); color: var(--text-muted); }
+
+        /* =======================================================
+           FULL-SCREEN STUDIO (3 COLUMNS)
+           ======================================================= */
+        #view-studio {
+            background: var(--bg-body);
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #view-studio.active { display: flex; }
+
+        .studio-topbar {
+            height: 48px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .studio-workspace {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 350px 1fr 380px;
+            height: calc(100vh - 100px);
+            overflow: hidden;
+        }
+
+        /* COLUMN 1: LEFT CONFIG PANEL */
+        .studio-col-left {
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        /* Collapsible Section Header */
+        .section-header {
+            padding: 10px 14px;
+            background: var(--bg-card-header);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s;
+        }
+
+        .section-header:hover {
+            background: #19253d;
+            color: var(--text-main);
+        }
+
+        .section-header-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-icon {
+            transition: transform 0.2s;
+            color: var(--text-dim);
+        }
+
+        .collapsible-section.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .collapsible-section.collapsed .section-body {
+            display: none !important;
+        }
+
+        .section-body {
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .compact-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .compact-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .compact-label span.req { color: var(--danger); }
+
+        .compact-input, .compact-select, .compact-textarea {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 6px 9px;
+            color: var(--text-main);
+            font-size: 12px;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        .compact-input:focus, .compact-select:focus, .compact-textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .compact-textarea {
+            resize: vertical;
+            min-height: 46px;
+            font-family: inherit;
+        }
+
+        /* Action & Trigger Navigator */
+        .item-tab-bar {
+            display: flex;
+            background: #111827;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .item-tab-btn {
+            flex: 1;
+            padding: 8px 0;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .item-tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .items-list {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .list-entry {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px 10px;
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.15s;
+        }
+
+        .list-entry:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--border-color);
+        }
+
+        .list-entry.active {
+            background: rgba(56, 189, 248, 0.12);
+            border-color: rgba(56, 189, 248, 0.4);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* COLUMN 2: CENTER EDITOR */
+        .studio-col-center {
+            display: flex;
+            flex-direction: column;
+            background: var(--editor-bg);
+            overflow: hidden;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .action-meta-bar {
+            background: #111827;
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .param-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 3px 8px;
+            font-size: 11px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--font-mono);
+        }
+
+        .editor-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-textarea {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            color: #f1f5f9;
+            font-family: var(--font-mono);
+            font-size: 12.5px;
+            line-height: 1.55;
+            padding: 14px 16px;
+            border: none;
+            outline: none;
+            resize: none;
+            white-space: pre;
+            overflow: auto;
+        }
+
+        /* COLUMN 3: RIGHT TEST RUNNER */
+        .studio-col-right {
+            background: var(--bg-surface);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .test-runner-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .test-section-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .test-section-header {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .output-box {
+            flex: 1;
+            background: #060911;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: #cbd5e1;
+            overflow: auto;
+            min-height: 160px;
+            line-height: 1.4;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(3px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            width: 520px;
+            max-width: 92%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            overflow: hidden;
+            animation: modalIn 0.2s ease-out;
+        }
+
+        @keyframes modalIn {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-card-header {
+            background: var(--bg-card-header);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 13.5px;
+        }
+
+        .modal-card-body {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 75vh;
+            overflow-y: auto;
+        }
+
+        .modal-card-footer {
+            background: var(--bg-card-header);
+            border-top: 1px solid var(--border-color);
+            padding: 12px 18px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.25s;
+            z-index: 999;
+        }
+
+        #toast.show { transform: translateY(0); opacity: 1; }
+        #toast.success { border-color: var(--success); }
+        #toast.warning { border-color: var(--warning); }
+        #toast.info { border-color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="brand-section">
+            <div class="logo-badge">S</div>
+            <div>
+                <div class="brand-title">SOAR SECURITY PLATFORM</div>
+                <div class="brand-subtitle">Activepieces Custom Piece Studio</div>
+            </div>
+        </div>
+        <div class="header-actions">
+            <span class="badge-role"><i data-lucide="shield-check" style="width: 14px;"></i> SecOps Administrator</span>
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted);">
+                <i data-lucide="server" style="width: 14px; color: var(--success);"></i>
+                Activepieces Runner: <span style="color: var(--success); font-weight: 600;">Connected</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Top Nav -->
+    <div class="top-nav" id="mainNavBar">
+        <button class="nav-tab-btn active" onclick="switchMainTab('catalog')">
+            <i data-lucide="layers" style="width: 15px;"></i> Danh mục Pieces (Activepieces Catalog)
+        </button>
+        <button class="nav-tab-btn" onclick="switchMainTab('approval')">
+            <i data-lucide="check-square" style="width: 15px;"></i> Phê duyệt & Kiểm toán (Approval & Audit)
+            <span class="counter-badge warning" id="pendingBadge">1</span>
+        </button>
+        <button class="nav-tab-btn" onclick="openStudio('new')">
+            <i data-lucide="plus-circle" style="width: 15px; color: var(--primary);"></i> Tạo Piece Mới (Piece Studio)
+        </button>
+    </div>
+
+    <!-- Main Viewport -->
+    <div class="main-viewport">
+
+        <!-- ==================== VIEW 1: CATALOG ==================== -->
+        <div id="view-catalog" class="view-section active">
+            <div class="standard-container">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <div style="font-size: 14px; font-weight: 600;">Danh sách các Piece đã cài đặt & Tự phát triển:</div>
+                    <button class="btn btn-primary" onclick="openStudio('new')">
+                        <i data-lucide="plus" style="width: 14px;"></i> Build Custom Piece Mới
+                    </button>
+                </div>
+
+                <!-- Google Sheets -->
+                <div class="accordion-item open" id="piece-gsheets">
+                    <div class="accordion-header" onclick="toggleAccordion('piece-gsheets')">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 36px; height: 36px; background: rgba(16, 185, 129, 0.15); color: #34d399; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;">
+                                <i data-lucide="file-spreadsheet" style="width: 20px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size: 14px; font-weight: 600;">Google Sheets</div>
+                                <div style="font-size: 11.5px; color: var(--text-muted);">Create, edit, and collaborate on spreadsheets online</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span class="pill-badge pill-destructive">5 destructive</span>
+                            <span class="pill-badge pill-normal">27 actions</span>
+                            <i data-lucide="chevron-down" style="width: 16px; color: var(--text-muted);"></i>
+                        </div>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="action-columns-grid">
+                            <div class="action-col read">
+                                <div class="action-col-title">READ <span>4</span></div>
+                                <div style="font-size: 12px; display:flex; flex-direction:column; gap:4px;">
+                                    <div>Get Row by Number</div>
+                                    <div>Get Next Rows</div>
+                                    <div>Read Data Range</div>
+                                </div>
+                            </div>
+                            <div class="action-col search">
+                                <div class="action-col-title">SEARCH <span>4</span></div>
+                                <div style="font-size: 12px; display:flex; flex-direction:column; gap:4px;">
+                                    <div>Find Rows</div>
+                                    <div>Get All Rows</div>
+                                    <div>Find Spreadsheet(s)</div>
+                                </div>
+                            </div>
+                            <div class="action-col write">
+                                <div class="action-col-title">WRITE <span>14</span></div>
+                                <div style="font-size: 12px; display:flex; flex-direction:column; gap:4px;">
+                                    <div>Add Row</div>
+                                    <div>Update Row</div>
+                                    <div>Create Spreadsheet</div>
+                                </div>
+                            </div>
+                            <div class="action-col destructive">
+                                <div class="action-col-title">DESTRUCTIVE <span>5</span></div>
+                                <div style="font-size: 12px; display:flex; flex-direction:column; gap:4px; color: #fca5a5;">
+                                    <div>Delete Row</div>
+                                    <div>Delete Multiple Rows</div>
+                                    <div>Clear Sheet</div>
+                                    <div>Delete Worksheet</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FortiGate -->
+                <div class="accordion-item open" id="piece-fortigate">
+                    <div class="accordion-header" onclick="toggleAccordion('piece-fortigate')">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 36px; height: 36px; background: rgba(239, 68, 68, 0.15); color: #f87171; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center;">
+                                <i data-lucide="shield" style="width: 20px;"></i>
+                            </div>
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 14px; font-weight: 600;">FortiGate Firewall</span>
+                                    <span class="pill-badge pill-normal" style="color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3);">Custom Piece</span>
+                                    <span class="pill-badge pill-destructive" style="background: var(--warning-bg); color: var(--warning); border-color: rgba(245,158,11,0.3);">Chờ duyệt v1.2.0</span>
+                                </div>
+                                <div style="font-size: 11.5px; color: var(--text-muted);">Tường lửa Fortinet: Chặn IP, mở IP và kích hoạt luồng cảnh báo</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); openStudio('fortigate');">
+                                <i data-lucide="layout" style="width: 13px;"></i> Mở Studio
+                            </button>
+                            <span class="pill-badge pill-destructive">2 destructive</span>
+                            <span class="pill-badge pill-normal">4 actions • 1 trigger</span>
+                            <i data-lucide="chevron-down" style="width: 16px; color: var(--text-muted);"></i>
+                        </div>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="action-columns-grid">
+                            <div class="action-col read">
+                                <div class="action-col-title">READ <span>2</span></div>
+                                <div style="font-size: 12px; display:flex; flex-direction:column; gap:4px;">
+                                    <div>check_ip_status</div>
+                                    <div>get_address_groups</div>
+                                </div>
+                            </div>
+                            <div class="action-col search">
+                                <div class="action-col-title">SEARCH <span>1</span></div>
+                                <div style="font-size: 12px; display:flex; flex-direction:column; gap:4px;">
+                                    <div>find_policy_rule</div>
+                                </div>
+                            </div>
+                            <div class="action-col write">
+                                <div class="action-col-title">WRITE <span>1</span></div>
+                                <div style="font-size: 12px; display:flex; flex-direction:column; gap:4px;">
+                                    <div>add_address_object</div>
+                                </div>
+                            </div>
+                            <div class="action-col destructive">
+                                <div class="action-col-title">DESTRUCTIVE <span>2</span></div>
+                                <div style="font-size: 12px; display:flex; flex-direction:column; gap:4px; color: #fca5a5;">
+                                    <div>block_ip</div>
+                                    <div>unblock_ip</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ==================== VIEW 2: APPROVAL ==================== -->
+        <div id="view-approval" class="view-section">
+            <div class="standard-container">
+                <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 4px;">Kiểm duyệt An ninh Mã nguồn (Yêu cầu 5.3.1 e)</h3>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                    Đánh giá các thay đổi trong mã nguồn trước khi kích hoạt vào luồng vận hành của Playbook.
+                </p>
+
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                        <div>
+                            <h4 style="font-size: 14.5px; font-weight: 600;">FortiGate Firewall Custom (v1.2.0)</h4>
+                            <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 3px;">
+                                Người gửi: <strong>nguyen.van.a</strong> • Gửi lúc: <strong>10/09/2026 08:15</strong> • Lý do: <i>Bổ sung Action unblock_ip</i>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-secondary btn-sm" onclick="openStudio('fortigate')"><i data-lucide="external-link" style="width: 12px;"></i> Mở Studio</button>
+                            <button class="btn btn-success btn-sm" onclick="approveAndPublish()"><i data-lucide="check" style="width: 12px;"></i> Phê duyệt</button>
+                        </div>
+                    </div>
+                    <div style="border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden; background: #080d1a; font-family: var(--font-mono); font-size: 11.5px; padding: 8px 12px; line-height: 1.5;">
+                        <div style="color: #64748b;">42   export const unblockIp = createAction({</div>
+                        <div style="color: #6ee7b7; background: rgba(16, 185, 129, 0.15);">43 +   displayName: 'Unblock IP Address',</div>
+                        <div style="color: #6ee7b7; background: rgba(16, 185, 129, 0.15);">44 +   props: { ip_address: Property.ShortText({ displayName: 'IP Address', required: true }) },</div>
+                        <div style="color: #64748b;">45   });</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================================================
+             VIEW 3: STUDIO TOÀN MÀN HÌNH (CHUẨN 100% THEO TOÀN BỘ YÊU CẦU MỚI)
+             ====================================================================== -->
+        <div id="view-studio" class="view-section">
+            
+            <!-- Topbar -->
+            <div class="studio-topbar">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="btn btn-secondary btn-sm" onclick="closeStudio()">
+                        <i data-lucide="arrow-left" style="width: 13px;"></i> Quay lại Danh mục
+                    </button>
+                    <div style="height: 18px; width: 1px; background: var(--border-color);"></div>
+                    <div style="font-size: 13.5px; font-weight: 700; color: #fff;" id="topbarPieceTitle">Gelato Ice Cream Piece</div>
+                    <span class="pill-badge pill-normal" id="topbarPackageTag" style="font-family: var(--font-mono); font-size: 11px;">@activepieces/piece-gelato</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button class="btn btn-secondary btn-sm" onclick="showToast('Đã lưu bản nháp mã nguồn!', 'success')">
+                        <i data-lucide="save" style="width: 13px;"></i> Lưu nháp
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="submitStudio()">
+                        <i data-lucide="send" style="width: 13px;"></i> Gửi Phê duyệt
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3 Columns Workspace -->
+            <div class="studio-workspace">
+                
+                <!-- ================= CỘT 1: CẤU HÌNH GỐC & ACTION/TRIGGER ================= -->
+                <div class="studio-col-left">
+                    
+                    <!-- 1. createPiece Definition (Collapsible) -->
+                    <div class="collapsible-section" id="sec-piece-def">
+                        <div class="section-header" onclick="toggleSection('sec-piece-def')">
+                            <div class="section-header-title">
+                                <i data-lucide="box" style="width: 13px; color: var(--primary);"></i>
+                                <span>1. createPiece Definition</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="toggle-icon" style="width: 14px;"></i>
+                        </div>
+                        <div class="section-body">
+                            <div class="compact-field">
+                                <label class="compact-label">displayName (Tên hiển thị) <span class="req">*</span></label>
+                                <input type="text" class="compact-input" id="pieceDisplayNameInput" value="Gelato Ice Cream" oninput="document.getElementById('topbarPieceTitle').innerText = this.value">
+                            </div>
+                            <div class="compact-field">
+                                <label class="compact-label">Piece Name (Slug) <span class="req">*</span></label>
+                                <input type="text" class="compact-input" id="pieceSlugInput" value="gelato">
+                            </div>
+                            <div class="compact-field">
+                                <label class="compact-label">Package Name (npm)</label>
+                                <input type="text" class="compact-input" id="packageNameInput" value="@activepieces/piece-gelato">
+                            </div>
+                            <div class="compact-field">
+                                <label class="compact-label">Description (Mô tả Piece)</label>
+                                <textarea class="compact-textarea" id="pieceDescInput">Thành phần kết nối API Gelato để tra cứu hương vị kem và lắng nghe tạo mới.</textarea>
+                            </div>
+                            <div class="compact-field">
+                                <label class="compact-label">Logo URL</label>
+                                <input type="text" class="compact-input" value="https://cdn.activepieces.com/pieces/gelato.png">
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <div class="compact-field">
+                                    <label class="compact-label">Min Release</label>
+                                    <input type="text" class="compact-input" value="0.36.1">
+                                </div>
+                                <div class="compact-field">
+                                    <label class="compact-label">Piece Type</label>
+                                    <select class="compact-select">
+                                        <option selected>community</option>
+                                        <option>custom</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Piece Authentication (Collapsible & DYNAMIC FORM) -->
+                    <div class="collapsible-section" id="sec-piece-auth">
+                        <div class="section-header" onclick="toggleSection('sec-piece-auth')">
+                            <div class="section-header-title">
+                                <i data-lucide="key" style="width: 13px; color: var(--warning);"></i>
+                                <span>2. Piece Authentication</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="toggle-icon" style="width: 14px;"></i>
+                        </div>
+                        <div class="section-body">
+                            <div class="compact-field">
+                                <label class="compact-label">Auth Type (PieceAuth)</label>
+                                <select class="compact-select" id="authTypeDropdown" onchange="renderDynamicAuthForm()">
+                                    <option value="secret_text" selected>PieceAuth.SecretText (API Key / Token)</option>
+                                    <option value="basic">PieceAuth.BasicAuth (User / Password)</option>
+                                    <option value="custom">PieceAuth.CustomAuth (Tùy biến nhiều Props)</option>
+                                    <option value="none">PieceAuth.None (Không cần Auth)</option>
+                                    <option value="oauth2">PieceAuth.OAuth2</option>
+                                </select>
+                            </div>
+
+                            <!-- Vùng render form động theo Auth Type -->
+                            <div id="dynamicAuthFields" style="display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Render qua JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Action & Trigger (Collapsible) -->
+                    <div class="collapsible-section" id="sec-piece-components">
+                        <div class="section-header" onclick="toggleSection('sec-piece-components')">
+                            <div class="section-header-title">
+                                <i data-lucide="layers" style="width: 13px; color: var(--success);"></i>
+                                <span>3. Action & Trigger</span>
+                            </div>
+                            <i data-lucide="chevron-down" class="toggle-icon" style="width: 14px;"></i>
+                        </div>
+                        <div class="section-body" style="padding: 0;">
+                            
+                            <div class="item-tab-bar">
+                                <button class="item-tab-btn active" id="tabBtnActions" onclick="switchNavTab('actions')">
+                                    ACTIONS (<span id="actionCount">2</span>)
+                                </button>
+                                <button class="item-tab-btn" id="tabBtnTriggers" onclick="switchNavTab('triggers')">
+                                    TRIGGERS (<span id="triggerCount">1</span>)
+                                </button>
+                            </div>
+
+                            <!-- Danh sách Actions -->
+                            <div class="items-list" id="actionNavList">
+                                <div class="list-entry active" id="nav-item-get_icecream_flavor" onclick="selectComponent('action', 'get_icecream_flavor')">
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <i data-lucide="play" style="width: 12px; color: #38bdf8;"></i>
+                                        <span>get_icecream_flavor</span>
+                                    </div>
+                                    <span class="pill-badge pill-normal" style="font-size: 9.5px;">READ</span>
+                                </div>
+                                <div class="list-entry" id="nav-item-order_flavor" onclick="selectComponent('action', 'order_flavor')">
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <i data-lucide="play" style="width: 12px; color: #38bdf8;"></i>
+                                        <span>order_flavor</span>
+                                    </div>
+                                    <span class="pill-badge pill-normal" style="font-size: 9.5px; color:#f59e0b;">WRITE</span>
+                                </div>
+                                <!-- Nút Thêm Action (chỉ 1 dấu + icon) -->
+                                <button class="btn btn-secondary btn-sm" style="margin-top: 4px; justify-content: center;" onclick="openCreateActionModal()">
+                                    <i data-lucide="plus" style="width: 12px;"></i> Thêm Action
+                                </button>
+                            </div>
+
+                            <!-- Danh sách Triggers -->
+                            <div class="items-list" id="triggerNavList" style="display: none;">
+                                <div class="list-entry" id="nav-item-newFlavorCreated" onclick="selectComponent('trigger', 'newFlavorCreated')">
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <i data-lucide="zap" style="width: 12px; color: #f59e0b;"></i>
+                                        <span>newFlavorCreated</span>
+                                    </div>
+                                    <span class="pill-badge pill-normal" style="font-size: 9.5px; color:#f59e0b;">POLLING</span>
+                                </div>
+                                <!-- Nút Thêm Trigger (chỉ 1 dấu + icon) -->
+                                <button class="btn btn-secondary btn-sm" style="margin-top: 4px; justify-content: center;" onclick="openCreateTriggerModal()">
+                                    <i data-lucide="plus" style="width: 12px;"></i> Thêm Trigger
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ================= CỘT 2: TRÌNH SOẠN THẢO ACTION / TRIGGER ================= -->
+                <div class="studio-col-center">
+                    
+                    <div class="action-meta-bar">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="color: var(--text-muted); font-size: 11.5px;">Component:</span>
+                                <strong style="color: var(--primary); font-family: var(--font-mono); font-size: 13px;" id="currentCompName">get_icecream_flavor</strong>
+                                <span class="pill-badge pill-normal" id="currentCompBadge" style="font-size: 10px;">ACTION • READ</span>
+                            </div>
+                            <!-- Nút Thêm Property (chỉ 1 dấu + icon) -->
+                            <button class="btn btn-secondary btn-sm" onclick="openAddPropModal()">
+                                <i data-lucide="plus" style="width: 11px;"></i> Thêm Property
+                            </button>
+                        </div>
+                        
+                        <!-- Props Tags -->
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                            <span style="font-size: 11px; color: var(--text-muted);">props:</span>
+                            <div id="actionPropsContainer" style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                <!-- Props chips render qua JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Code Header -->
+                    <div style="height: 34px; background: #0c1220; border-bottom: 1px solid var(--border-color); padding: 0 16px; display: flex; align-items: center; justify-content: space-between; font-size: 11px;">
+                        <span style="color: var(--primary); font-family: var(--font-mono);" id="editorFilePath">packages/pieces/community/gelato/src/lib/actions/get-icecream-flavor.ts</span>
+                        <span style="color: var(--text-muted);">async run(context) logic execution</span>
+                    </div>
+
+                    <!-- Code Area -->
+                    <div class="editor-container">
+                        <textarea class="code-textarea" id="studioCodeArea" spellcheck="false"></textarea>
+                    </div>
+
+                </div>
+
+                <!-- ================= CỘT 3: TEST RUNNER ĐỘNG HOÀN TOÀN (CÓ URL ĐÍCH) ================= -->
+                <div class="studio-col-right">
+                    
+                    <div class="section-header" style="background: var(--bg-card-header); cursor: default;">
+                        <span style="color: var(--primary);"><i data-lucide="play" style="width: 13px; vertical-align:middle;"></i> Test Action (Activepieces Runner)</span>
+                        <span class="pill-badge pill-normal" style="color: var(--success); font-size: 9.5px;">Live Context</span>
+                    </div>
+
+                    <div class="test-runner-body">
+                        
+                        <!-- 1. Test Auth & Target Endpoint Box -->
+                        <div class="test-section-box">
+                            <div class="test-section-header">
+                                <span>1. context.auth & Target Endpoint URL</span>
+                                <i data-lucide="lock" style="width: 12px; color: var(--warning);"></i>
+                            </div>
+
+                            <!-- Ô URL ĐÍCH MỤC TIÊU (GIẢI QUYẾT YÊU CẦU 4) -->
+                            <div class="compact-field">
+                                <label class="compact-label">
+                                    <span>Target Server / API URL (URL gọi tới)</span>
+                                    <span style="color:var(--primary); font-size:10px;">Endpoint</span>
+                                </label>
+                                <input type="text" class="compact-input" id="testApiEndpointUrl" value="https://cloud.activepieces.com/api/v1/webhooks/RGjv57ex3RAHOgs0YK6Ja/sync" style="font-family: var(--font-mono); color:#38bdf8; font-size: 11px;">
+                                <span style="font-size: 9.5px; color: var(--text-dim); line-height: 1.3;">
+                                    • URL đích mà <code>httpClient.sendRequest</code> sẽ gửi request tới khi chạy. Bạn có thể sửa URL tại đây để test thực tế!
+                                </span>
+                            </div>
+
+                            <div id="testAuthInputsArea" style="display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Render động theo PieceAuth -->
+                            </div>
+                        </div>
+
+                        <!-- 2. Test Props Box (Tự động thích ứng theo Props của từng Action) -->
+                        <div class="test-section-box">
+                            <div class="test-section-header">
+                                <span>2. context.propsValue (Tham số đầu vào)</span>
+                                <i data-lucide="sliders" style="width: 12px; color: var(--primary);"></i>
+                            </div>
+                            <div id="testPropsInputsArea" style="display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Render động theo Props của Action đang chọn -->
+                            </div>
+                        </div>
+
+                        <!-- Nút Run Test -->
+                        <button class="btn btn-primary" style="justify-content: center; padding: 8px 0;" onclick="executeActionTest()">
+                            <i data-lucide="play" style="width: 14px;"></i> Chạy Thử Nghiệm (Test Action)
+                        </button>
+
+                        <!-- Response Output -->
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">Response Output:</span>
+                            <span id="testMetricsBadge" style="font-size: 10.5px; color: var(--success); font-family: var(--font-mono);"></span>
+                        </div>
+                        <div class="output-box" id="testOutputDisplay">
+                            Nhấn "Chạy Thử Nghiệm" để gọi hàm run(context) với các tham số trên...
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ==================== POPUP 1: MODAL TẠO ACTION MỚI ==================== -->
+    <div class="modal-overlay" id="createActionModal">
+        <div class="modal-card">
+            <div class="modal-card-header">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="plus-circle" style="width: 16px; color: var(--primary);"></i>
+                    <span>Tạo mới createAction</span>
+                </div>
+                <i data-lucide="x" style="width: 16px; cursor: pointer;" onclick="closeModal('createActionModal')"></i>
+            </div>
+            <div class="modal-card-body">
+                <div class="compact-field">
+                    <label class="compact-label">Action Name (Định danh kỹ thuật duy nhất) <span class="req">*</span></label>
+                    <input type="text" class="compact-input" id="newActionName" placeholder="ví dụ: block_ip, send_message">
+                    <span style="font-size: 10.5px; color: var(--text-dim);">Chữ thường, viết liền hoặc gạch dưới (snake_case)</span>
+                </div>
+                <div class="compact-field">
+                    <label class="compact-label">Display Name (Tên hiển thị) <span class="req">*</span></label>
+                    <input type="text" class="compact-input" id="newActionDisplayName" placeholder="ví dụ: Chặn địa chỉ IP">
+                </div>
+                <div class="compact-field">
+                    <label class="compact-label">Description (Mô tả chức năng) <span class="req">*</span></label>
+                    <textarea class="compact-textarea" id="newActionDesc" placeholder="Mô tả chi tiết hành động làm gì..."></textarea>
+                </div>
+                <div class="compact-field">
+                    <label class="compact-label">Mức độ tác động (Action Intent / Impact Type)</label>
+                    <select class="compact-select" id="newActionImpact">
+                        <option value="READ">READ (Chỉ đọc dữ liệu - An toàn)</option>
+                        <option value="SEARCH">SEARCH (Tìm kiếm bản ghi)</option>
+                        <option value="WRITE">WRITE (Tạo mới, cập nhật dữ liệu)</option>
+                        <option value="DESTRUCTIVE">DESTRUCTIVE (Nguy hiểm: Xóa, chặn, ngắt kết nối)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-card-footer">
+                <button class="btn btn-secondary btn-sm" onclick="closeModal('createActionModal')">Hủy</button>
+                <button class="btn btn-primary btn-sm" onclick="confirmCreateAction()">Khởi tạo Action</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== POPUP 2: MODAL THÊM PROPERTY CHO ACTION (YÊU CẦU 1) ==================== -->
+    <div class="modal-overlay" id="addPropModal">
+        <div class="modal-card">
+            <div class="modal-card-header">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="sliders" style="width: 16px; color: var(--primary);"></i>
+                    <span>Thêm Tham số đầu vào (Action Property)</span>
+                </div>
+                <i data-lucide="x" style="width: 16px; cursor: pointer;" onclick="closeModal('addPropModal')"></i>
+            </div>
+            <div class="modal-card-body">
+                <div class="compact-field">
+                    <label class="compact-label">Tên biến Property (Key) <span class="req">*</span></label>
+                    <input type="text" class="compact-input" id="newPropKey" placeholder="ví dụ: ip_address, duration_minutes, user_id">
+                    <span style="font-size: 10.5px; color: var(--text-dim);">Tên biến để truy xuất trong mã qua <code>context.propsValue[key]</code></span>
+                </div>
+                <div class="compact-field">
+                    <label class="compact-label">Tên hiển thị (displayName) <span class="req">*</span></label>
+                    <input type="text" class="compact-input" id="newPropDisplayName" placeholder="ví dụ: Địa chỉ IP cần xử lý">
+                </div>
+                <div class="compact-field">
+                    <label class="compact-label">Loại dữ liệu (Property Type) <span class="req">*</span></label>
+                    <select class="compact-select" id="newPropType">
+                        <option value="Property.ShortText">Property.ShortText (Văn bản ngắn - 1 dòng)</option>
+                        <option value="Property.LongText">Property.LongText (Văn bản dài - Nhiều dòng)</option>
+                        <option value="Property.Number">Property.Number (Số nguyên / Số thực)</option>
+                        <option value="Property.Checkbox">Property.Checkbox (Đúng / Sai - Boolean)</option>
+                        <option value="Property.StaticDropdown">Property.StaticDropdown (Danh sách chọn thả xuống)</option>
+                        <option value="Property.Json">Property.Json (Dữ liệu JSON / Object)</option>
+                        <option value="Property.File">Property.File (Tệp tin đính kèm)</option>
+                    </select>
+                </div>
+                <div class="compact-field">
+                    <label class="compact-label">Mô tả / Gợi ý (Description / Placeholder)</label>
+                    <input type="text" class="compact-input" id="newPropDesc" placeholder="ví dụ: Nhập địa chỉ IPv4 hợp lệ, vd: 192.168.1.1">
+                </div>
+                <div class="compact-field">
+                    <label class="compact-label">Giá trị mặc định (Default Value)</label>
+                    <input type="text" class="compact-input" id="newPropDefaultVal" placeholder="ví dụ: 10.10.1.1 hoặc true">
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin-top: 4px; padding: 6px 0;">
+                    <span style="color: var(--text-main); font-weight: 500;">Bắt buộc người dùng phải điền (required):</span>
+                    <input type="checkbox" id="newPropRequired" checked style="accent-color: var(--primary); transform: scale(1.2);">
+                </div>
+            </div>
+            <div class="modal-card-footer">
+                <button class="btn btn-secondary btn-sm" onclick="closeModal('addPropModal')">Hủy</button>
+                <button class="btn btn-primary btn-sm" onclick="confirmAddProp()">Thêm Property vào Action</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== POPUP 3: MODAL TẠO TRIGGER MỚI (YÊU CẦU 2) ==================== -->
+    <div class="modal-overlay" id="createTriggerModal">
+        <div class="modal-card">
+            <div class="modal-card-header">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="zap" style="width: 16px; color: var(--warning);"></i>
+                    <span>Tạo mới Bộ kích hoạt (createTrigger)</span>
+                </div>
+                <i data-lucide="x" style="width: 16px; cursor: pointer;" onclick="closeModal('createTriggerModal')"></i>
+            </div>
+            <div class="modal-card-body">
+                <div class="compact-field">
+                    <label class="compact-label">Trigger Name (Định danh duy nhất) <span class="req">*</span></label>
+                    <input type="text" class="compact-input" id="newTriggerName" placeholder="ví dụ: newIncidentAlert, flavorCreatedWebhook">
+                    <span style="font-size: 10.5px; color: var(--text-dim);">Tên kỹ thuật duy nhất cho trigger trong piece</span>
+                </div>
+                <div class="compact-field">
+                    <label class="compact-label">Display Name (Tên hiển thị) <span class="req">*</span></label>
+                    <input type="text" class="compact-input" id="newTriggerDisplayName" placeholder="ví dụ: Có cảnh báo sự cố mới">
+                </div>
+                <div class="compact-field">
+                    <label class="compact-label">Description (Mô tả sự kiện kích hoạt) <span class="req">*</span></label>
+                    <textarea class="compact-textarea" id="newTriggerDesc" placeholder="Kích hoạt Playbook khi hệ thống phát hiện có sự kiện mới phát sinh..."></textarea>
+                </div>
+                <div class="compact-field">
+                    <label class="compact-label">Kỹ thuật kích hoạt (Trigger Technique / Strategy) <span class="req">*</span></label>
+                    <select class="compact-select" id="newTriggerStrategy" onchange="onTriggerStrategyChange()">
+                        <option value="POLLING" selected>TriggerStrategy.POLLING (Quét API định kỳ - 5 phút/lần)</option>
+                        <option value="WEBHOOK">TriggerStrategy.WEBHOOK (Thời gian thực - Nhận Webhook HTTP POST)</option>
+                    </select>
+                </div>
+
+                <!-- Cấu hình riêng cho Polling -->
+                <div id="pollingConfigBlock" class="compact-field">
+                    <label class="compact-label">Chiến lược khử trùng lặp (DedupeStrategy)</label>
+                    <select class="compact-select" id="newTriggerDedupe">
+                        <option value="TIMEBASED" selected>DedupeStrategy.TIMEBASED (Theo mốc thời gian epochMilliSeconds)</option>
+                        <option value="LAST_ITEM">DedupeStrategy.LAST_ITEM (Theo ID bản ghi cuối cùng)</option>
+                    </select>
+                    <span style="font-size: 10.5px; color: var(--text-dim);">Giúp Playbook không bị chạy lặp lại các bản ghi cũ</span>
+                </div>
+
+                <div class="compact-field">
+                    <label class="compact-label">Dữ liệu mẫu trả về (sampleData JSON)</label>
+                    <textarea class="compact-textarea" id="newTriggerSampleData" style="font-family: var(--font-mono); font-size: 11px;">{
+  "id": "ALERT-1001",
+  "title": "Malware detected on endpoint",
+  "severity": "HIGH",
+  "source_ip": "192.168.1.50"
+}</textarea>
+                </div>
+            </div>
+            <div class="modal-card-footer">
+                <button class="btn btn-secondary btn-sm" onclick="closeModal('createTriggerModal')">Hủy</button>
+                <button class="btn btn-primary btn-sm" onclick="confirmCreateTrigger()">Khởi tạo Trigger</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast">
+        <i data-lucide="check-circle-2" style="width: 16px; color: var(--success);"></i>
+        <span id="toastMsg">Thông báo</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC ĐẦY ĐỦ VÀ PHẢN ỨNG ĐỘNG -->
+    <script>
+        lucide.createIcons();
+
+        // Data State for Components & Props
+        const state = {
+            currentAuthType: 'secret_text',
+            authDisplayName: 'API Key',
+            authDesc: 'Please use **test-key** as value for API Key',
+            currentCompType: 'action',
+            currentCompId: 'get_icecream_flavor',
+            actions: {
+                'get_icecream_flavor': {
+                    name: 'get_icecream_flavor',
+                    displayName: 'Get Icecream Flavor',
+                    description: 'Fetches random icecream flavor from API',
+                    impact: 'READ',
+                    endpointUrl: 'https://cloud.activepieces.com/api/v1/webhooks/RGjv57ex3RAHOgs0YK6Ja/sync',
+                    props: [
+                        { key: 'flavor_type', type: 'Property.ShortText', label: 'Loại kem', required: false, defaultVal: 'Chocolate' }
+                    ],
+                    code: `import { createAction, Property } from '@activepieces/pieces-framework';
+import { httpClient, HttpMethod } from '@activepieces/pieces-common';
+import { gelatoAuth } from '../..';
+
+export const getIcecreamFlavor = createAction({
+  name: 'get_icecream_flavor',
+  auth: gelatoAuth,
+  displayName: 'Get Icecream Flavor',
+  description: 'Fetches random icecream flavor from API',
+  props: {
+    flavor_type: Property.ShortText({
+      displayName: 'Loại kem',
+      required: false,
+    }),
+  },
+  async run(context) {
+    const res = await httpClient.sendRequest<string[]>({
+      method: HttpMethod.GET,
+      url: 'https://cloud.activepieces.com/api/v1/webhooks/RGjv57ex3RAHOgs0YK6Ja/sync',
+      headers: {
+        Authorization: context.auth.secret_text,
+      },
+      queryParams: {
+        type: context.propsValue.flavor_type || 'all'
+      }
+    });
+    return res.body;
+  },
+});`
+                },
+                'order_flavor': {
+                    name: 'order_flavor',
+                    displayName: 'Order Icecream Flavor',
+                    description: 'Places an order for specific flavor',
+                    impact: 'WRITE',
+                    endpointUrl: 'https://cloud.activepieces.com/api/v1/orders',
+                    props: [
+                        { key: 'customer_name', type: 'Property.ShortText', label: 'Tên khách hàng', required: true, defaultVal: 'Alice' },
+                        { key: 'quantity', type: 'Property.Number', label: 'Số lượng que', required: true, defaultVal: '3' },
+                        { key: 'is_gift', type: 'Property.Checkbox', label: 'Gói quà tặng', required: false, defaultVal: 'true' }
+                    ],
+                    code: `import { createAction, Property } from '@activepieces/pieces-framework';
+import { httpClient, HttpMethod } from '@activepieces/pieces-common';
+import { gelatoAuth } from '../..';
+
+export const orderFlavor = createAction({
+  name: 'order_flavor',
+  auth: gelatoAuth,
+  displayName: 'Order Icecream Flavor',
+  description: 'Places an order for specific flavor',
+  props: {
+    customer_name: Property.ShortText({ displayName: 'Tên khách hàng', required: true }),
+    quantity: Property.Number({ displayName: 'Số lượng que', required: true }),
+    is_gift: Property.Checkbox({ displayName: 'Gói quà tặng', required: false }),
+  },
+  async run(context) {
+    const res = await httpClient.sendRequest({
+      method: HttpMethod.POST,
+      url: 'https://cloud.activepieces.com/api/v1/orders',
+      headers: { Authorization: context.auth.secret_text },
+      body: {
+        customer: context.propsValue.customer_name,
+        qty: context.propsValue.quantity,
+        gift: context.propsValue.is_gift
+      }
+    });
+    return res.body;
+  },
+});`
+                }
+            },
+            triggers: {
+                'newFlavorCreated': {
+                    name: 'newFlavorCreated',
+                    displayName: 'New Flavor Created',
+                    description: 'Triggers when a new icecream flavor is created.',
+                    strategy: 'POLLING',
+                    dedupe: 'TIMEBASED',
+                    endpointUrl: 'https://cloud.activepieces.com/api/v1/webhooks/aHlEaNLc6vcF1nY2XJ2ed/sync',
+                    props: [
+                        { key: 'category_filter', type: 'Property.ShortText', label: 'Bộ lọc danh mục', required: false, defaultVal: 'Fruit' }
+                    ],
+                    code: `import { gelatoAuth } from '../../';
+import { DedupeStrategy, HttpMethod, Polling, httpClient, pollingHelper } from '@activepieces/pieces-common';
+import { TriggerStrategy, createTrigger } from '@activepieces/pieces-framework';
+import dayjs from 'dayjs';
+
+const polling: Polling = {
+  strategy: DedupeStrategy.TIMEBASED,
+  items: async ({ auth, propsValue, lastFetchEpochMS }) => {
+    const res = await httpClient.sendRequest({
+      method: HttpMethod.GET,
+      url: 'https://cloud.activepieces.com/api/v1/webhooks/aHlEaNLc6vcF1nY2XJ2ed/sync',
+      headers: { authorization: auth.secret_text },
+    });
+    return res.body['flavors'].map((f: string) => ({ epochMilliSeconds: dayjs().valueOf(), data: f }));
+  },
+};
+
+export const newFlavorCreated = createTrigger({
+  auth: gelatoAuth,
+  name: 'newFlavorCreated',
+  displayName: 'New Flavor Created',
+  description: 'Triggers when a new icecream flavor is created.',
+  props: {},
+  sampleData: {},
+  type: TriggerStrategy.POLLING,
+  async test(context) { return await pollingHelper.test(polling, context); },
+  async onEnable(context) { await pollingHelper.onEnable(polling, context); },
+  async onDisable(context) { await pollingHelper.onDisable(polling, context); },
+  async run(context) { return await pollingHelper.poll(polling, context); },
+});`
+                }
+            }
+        };
+
+        // RENDER FORM DYNAMIC CHO PIECE AUTHENTICATION
+        function renderDynamicAuthForm() {
+            const authType = document.getElementById('authTypeDropdown').value;
+            state.currentAuthType = authType;
+            const container = document.getElementById('dynamicAuthFields');
+            container.innerHTML = '';
+
+            if (authType === 'secret_text') {
+                container.innerHTML = `
+                    <div class="compact-field">
+                        <label class="compact-label">displayName (Nhãn hiển thị trong Connection)</label>
+                        <input type="text" class="compact-input" id="authDisplayNameInput" value="${state.authDisplayName}" oninput="state.authDisplayName=this.value; renderTestAuthPanel();">
+                        <span style="font-size: 10px; color: var(--text-dim);">Ví dụ: "API Key", "Bot Token", "Access Key"</span>
+                    </div>
+                    <div class="compact-field">
+                        <label class="compact-label">Description (Gợi ý cho người dùng)</label>
+                        <input type="text" class="compact-input" value="${state.authDesc}" oninput="state.authDesc=this.value;">
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; font-size: 11px;">
+                        <span style="color: var(--text-muted);">Bắt buộc nhập (required)</span>
+                        <input type="checkbox" checked style="accent-color: var(--primary);">
+                    </div>
+                `;
+            } else if (authType === 'basic') {
+                container.innerHTML = `
+                    <div class="compact-field">
+                        <label class="compact-label">Username Label (Tên trường)</label>
+                        <input type="text" class="compact-input" value="Username / Email">
+                    </div>
+                    <div class="compact-field">
+                        <label class="compact-label">Password Label</label>
+                        <input type="text" class="compact-input" value="Password">
+                    </div>
+                `;
+            } else if (authType === 'custom') {
+                container.innerHTML = `
+                    <div style="font-size: 11px; color: var(--text-dim); margin-bottom: 4px;">Định nghĩa các trường Props kết nối tùy biến:</div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;" id="customAuthPropsList">
+                        <div class="param-chip" style="justify-content: space-between;">
+                            <span>base_url: Property.ShortText (URL máy chủ)</span>
+                        </div>
+                        <div class="param-chip" style="justify-content: space-between;">
+                            <span>api_key: PieceAuth.SecretText (Khóa bí mật)</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" style="margin-top: 4px;" onclick="showToast('Thêm trường Auth tùy biến', 'info')">
+                        <i data-lucide="plus" style="width: 11px;"></i> Thêm trường Auth
+                    </button>
+                `;
+            } else if (authType === 'none') {
+                container.innerHTML = `
+                    <div style="padding: 8px; background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); border-radius: var(--radius-sm); font-size: 11.5px; color: var(--text-muted); text-align: center;">
+                        <i data-lucide="shield-off" style="width: 14px; display:inline; vertical-align:middle;"></i>
+                        PieceAuth.None(): Piece này hoạt động độc lập, không yêu cầu xác thực kết nối.
+                    </div>
+                `;
+            } else if (authType === 'oauth2') {
+                container.innerHTML = `
+                    <div class="compact-field"><label class="compact-label">authUrl</label><input type="text" class="compact-input" value="https://accounts.google.com/o/oauth2/auth"></div>
+                    <div class="compact-field"><label class="compact-label">tokenUrl</label><input type="text" class="compact-input" value="https://oauth2.googleapis.com/token"></div>
+                    <div class="compact-field"><label class="compact-label">scope (cách nhau dấu cách)</label><input type="text" class="compact-input" value="https://www.googleapis.com/auth/spreadsheets"></div>
+                `;
+            }
+            lucide.createIcons();
+            renderTestAuthPanel();
+        }
+
+        // ICON THU GỌN/MỞ RỘNG (COLLAPSIBLE SECTIONS)
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('collapsed');
+        }
+
+        // RENDER DYNAMIC TEST PANEL TƯƠNG ỨNG TỪNG ACTION, URL & AUTH
+        function renderTestAuthPanel() {
+            const area = document.getElementById('testAuthInputsArea');
+            area.innerHTML = '';
+
+            // Cập nhật endpoint URL tương ứng action/trigger đang chọn
+            const endpointInput = document.getElementById('testApiEndpointUrl');
+            if (endpointInput) {
+                if (state.currentCompType === 'action' && state.actions[state.currentCompId]) {
+                    endpointInput.value = state.actions[state.currentCompId].endpointUrl || 'https://cloud.activepieces.com/api/v1/resource';
+                } else if (state.currentCompType === 'trigger' && state.triggers[state.currentCompId]) {
+                    endpointInput.value = state.triggers[state.currentCompId].endpointUrl || 'https://cloud.activepieces.com/api/v1/webhooks/sync';
+                }
+            }
+
+            if (state.currentAuthType === 'secret_text') {
+                area.innerHTML = `
+                    <div class="compact-field">
+                        <label class="compact-label">${state.authDisplayName} (context.auth.secret_text)</label>
+                        <input type="text" class="compact-input" id="testSecretTextInput" value="test-key" style="font-family: var(--font-mono); color: var(--warning);">
+                        <span style="font-size: 10px; color: var(--text-dim);">${state.authDesc}</span>
+                    </div>
+                `;
+            } else if (state.currentAuthType === 'basic') {
+                area.innerHTML = `
+                    <div class="compact-field"><label class="compact-label">Username</label><input type="text" class="compact-input" value="admin"></div>
+                    <div class="compact-field"><label class="compact-label">Password</label><input type="password" class="compact-input" value="secret123"></div>
+                `;
+            } else if (state.currentAuthType === 'custom') {
+                area.innerHTML = `
+                    <div class="compact-field"><label class="compact-label">base_url (context.auth.base_url)</label><input type="text" class="compact-input" value="https://api.gelato.io"></div>
+                    <div class="compact-field"><label class="compact-label">api_key (context.auth.api_key)</label><input type="text" class="compact-input" value="test-key"></div>
+                `;
+            } else {
+                area.innerHTML = `<span style="font-size: 11px; color: var(--text-dim);">Không có tham số auth cần kiểm thử.</span>`;
+            }
+        }
+
+        function renderTestPropsPanel() {
+            const area = document.getElementById('testPropsInputsArea');
+            area.innerHTML = '';
+
+            let currentComp = null;
+            if (state.currentCompType === 'action') {
+                currentComp = state.actions[state.currentCompId];
+            } else {
+                currentComp = state.triggers[state.currentCompId];
+            }
+
+            if (!currentComp || !currentComp.props || currentComp.props.length === 0) {
+                area.innerHTML = `<span style="font-size: 11px; color: var(--text-dim);">Component này không yêu cầu props đầu vào nào (props: {}).</span>`;
+                return;
+            }
+
+            currentComp.props.forEach(prop => {
+                const field = document.createElement('div');
+                field.className = 'compact-field';
+                field.innerHTML = `
+                    <label class="compact-label">
+                        <span>${prop.key} <span style="color:var(--text-dim); font-size:10px;">(${prop.type.replace('Property.', '')})</span></span>
+                        ${prop.required ? '<span style="color:var(--danger); font-size:10px;">Bắt buộc</span>' : '<span style="color:var(--text-dim); font-size:10px;">Tùy chọn</span>'}
+                    </label>
+                    <input type="text" class="compact-input test-prop-val" data-key="${prop.key}" value="${prop.defaultVal || ''}">
+                `;
+                area.appendChild(field);
+            });
+        }
+
+        // Switch Action vs Trigger in Left Panel
+        function switchNavTab(tab) {
+            if (tab === 'actions') {
+                document.getElementById('tabBtnActions').classList.add('active');
+                document.getElementById('tabBtnTriggers').classList.remove('active');
+                document.getElementById('actionNavList').style.display = 'flex';
+                document.getElementById('triggerNavList').style.display = 'none';
+                selectComponent('action', 'get_icecream_flavor');
+            } else {
+                document.getElementById('tabBtnActions').classList.remove('active');
+                document.getElementById('tabBtnTriggers').classList.add('active');
+                document.getElementById('actionNavList').style.display = 'none';
+                document.getElementById('triggerNavList').style.display = 'flex';
+                selectComponent('trigger', 'newFlavorCreated');
+            }
+        }
+
+        // Select component to edit
+        function selectComponent(type, id) {
+            state.currentCompType = type;
+            state.currentCompId = id;
+
+            document.querySelectorAll('.list-entry').forEach(el => el.classList.remove('active'));
+            const activeEl = document.getElementById(`nav-item-${id}`);
+            if (activeEl) activeEl.classList.add('active');
+
+            const comp = type === 'action' ? state.actions[id] : state.triggers[id];
+            if (!comp) return;
+
+            document.getElementById('currentCompName').innerText = comp.name;
+            document.getElementById('currentCompBadge').innerText = type === 'action' ? `ACTION • ${comp.impact}` : `TRIGGER • ${comp.strategy}`;
+            document.getElementById('editorFilePath').innerText = `packages/pieces/community/gelato/src/lib/${type}s/${comp.name}.ts`;
+            document.getElementById('studioCodeArea').value = comp.code;
+
+            const propsArea = document.getElementById('actionPropsContainer');
+            propsArea.innerHTML = '';
+            if (comp.props && comp.props.length > 0) {
+                comp.props.forEach(p => {
+                    const chip = document.createElement('div');
+                    chip.className = 'param-chip';
+                    chip.innerHTML = `<span>${p.key}: ${p.type}</span><span style="color:${p.required ? 'var(--danger)' : 'var(--text-dim)'}; font-size:10px;">${p.required ? 'Req' : 'Opt'}</span>`;
+                    propsArea.appendChild(chip);
+                });
+            } else {
+                propsArea.innerHTML = `<span style="font-size: 11px; color: var(--text-dim);">Không có props</span>`;
+            }
+
+            renderTestAuthPanel();
+            renderTestPropsPanel();
+        }
+
+        // POPUP 1: MODAL TẠO ACTION
+        function openCreateActionModal() {
+            document.getElementById('createActionModal').classList.add('active');
+            document.getElementById('newActionName').value = '';
+            document.getElementById('newActionDisplayName').value = '';
+            document.getElementById('newActionDesc').value = '';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function confirmCreateAction() {
+            const name = document.getElementById('newActionName').value.trim();
+            const displayName = document.getElementById('newActionDisplayName').value.trim();
+            const desc = document.getElementById('newActionDesc').value.trim();
+            const impact = document.getElementById('newActionImpact').value;
+
+            if (!name || !displayName) {
+                alert("Vui lòng nhập đầy đủ Action Name và Display Name!");
+                return;
+            }
+
+            state.actions[name] = {
+                name: name,
+                displayName: displayName,
+                description: desc,
+                impact: impact,
+                endpointUrl: 'https://cloud.activepieces.com/api/v1/resource',
+                props: [
+                    { key: 'input_param', type: 'Property.ShortText', label: 'Tham số mẫu', required: true, defaultVal: 'sample_value' }
+                ],
+                code: `import { createAction, Property } from '@activepieces/pieces-framework';
+import { httpClient, HttpMethod } from '@activepieces/pieces-common';
+import { gelatoAuth } from '../..';
+
+export const ${name} = createAction({
+  name: '${name}',
+  auth: gelatoAuth,
+  displayName: '${displayName}',
+  description: '${desc}',
+  props: {
+    input_param: Property.ShortText({ displayName: 'Tham số mẫu', required: true }),
+  },
+  async run(context) {
+    const res = await httpClient.sendRequest({
+      method: HttpMethod.GET,
+      url: 'https://cloud.activepieces.com/api/v1/resource',
+      headers: { Authorization: context.auth.secret_text },
+      queryParams: { param: context.propsValue.input_param }
+    });
+    return res.body;
+  },
+});`
+            };
+
+            const list = document.getElementById('actionNavList');
+            const newEntry = document.createElement('div');
+            newEntry.className = 'list-entry';
+            newEntry.id = `nav-item-${name}`;
+            newEntry.onclick = () => selectComponent('action', name);
+            newEntry.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="play" style="width: 12px; color: #38bdf8;"></i>
+                    <span>${name}</span>
+                </div>
+                <span class="pill-badge pill-normal" style="font-size: 9.5px;">${impact}</span>
+            `;
+            list.insertBefore(newEntry, list.lastElementChild);
+            document.getElementById('actionCount').innerText = Object.keys(state.actions).length;
+            lucide.createIcons();
+
+            closeModal('createActionModal');
+            selectComponent('action', name);
+            showToast(`Đã tạo createAction '${name}' thành công!`, 'success');
+        }
+
+        // POPUP 2: MODAL THÊM PROPERTY (YÊU CẦU 1)
+        function openAddPropModal() {
+            document.getElementById('addPropModal').classList.add('active');
+            document.getElementById('newPropKey').value = '';
+            document.getElementById('newPropDisplayName').value = '';
+            document.getElementById('newPropDesc').value = '';
+            document.getElementById('newPropDefaultVal').value = '';
+            document.getElementById('newPropRequired').checked = true;
+        }
+
+        function confirmAddProp() {
+            const key = document.getElementById('newPropKey').value.trim();
+            const displayName = document.getElementById('newPropDisplayName').value.trim();
+            const type = document.getElementById('newPropType').value;
+            const desc = document.getElementById('newPropDesc').value.trim();
+            const defaultVal = document.getElementById('newPropDefaultVal').value.trim();
+            const required = document.getElementById('newPropRequired').checked;
+
+            if (!key || !displayName) {
+                alert("Vui lòng nhập Tên biến Property (Key) và Tên hiển thị!");
+                return;
+            }
+
+            const comp = state.actions[state.currentCompId];
+            if (!comp) return;
+
+            comp.props.push({
+                key: key,
+                type: type,
+                label: displayName,
+                description: desc,
+                required: required,
+                defaultVal: defaultVal
+            });
+
+            // Tự động sinh thêm prop vào code của action
+            const propCodeSnippet = `    ${key}: ${type}({\n      displayName: '${displayName}',\n      required: ${required},\n    }),\n`;
+            if (comp.code.includes('props: {')) {
+                comp.code = comp.code.replace('props: {', `props: {\n${propCodeSnippet}`);
+            }
+
+            closeModal('addPropModal');
+            selectComponent('action', state.currentCompId);
+            showToast(`Đã thêm Property '${key}' thành công! Cột Test đã được cập nhật.`, 'success');
+        }
+
+        // POPUP 3: MODAL TẠO TRIGGER (YÊU CẦU 2)
+        function openCreateTriggerModal() {
+            document.getElementById('createTriggerModal').classList.add('active');
+            document.getElementById('newTriggerName').value = '';
+            document.getElementById('newTriggerDisplayName').value = '';
+            document.getElementById('newTriggerDesc').value = '';
+            onTriggerStrategyChange();
+        }
+
+        function onTriggerStrategyChange() {
+            const strategy = document.getElementById('newTriggerStrategy').value;
+            const block = document.getElementById('pollingConfigBlock');
+            if (strategy === 'POLLING') {
+                block.style.display = 'flex';
+            } else {
+                block.style.display = 'none';
+            }
+        }
+
+        function confirmCreateTrigger() {
+            const name = document.getElementById('newTriggerName').value.trim();
+            const displayName = document.getElementById('newTriggerDisplayName').value.trim();
+            const desc = document.getElementById('newTriggerDesc').value.trim();
+            const strategy = document.getElementById('newTriggerStrategy').value;
+            const dedupe = document.getElementById('newTriggerDedupe').value;
+            const sampleData = document.getElementById('newTriggerSampleData').value;
+
+            if (!name || !displayName) {
+                alert("Vui lòng nhập đầy đủ Trigger Name và Display Name!");
+                return;
+            }
+
+            state.triggers[name] = {
+                name: name,
+                displayName: displayName,
+                description: desc,
+                strategy: strategy,
+                dedupe: dedupe,
+                endpointUrl: 'https://cloud.activepieces.com/api/v1/webhooks/sync',
+                props: [],
+                code: strategy === 'POLLING' ? `import { gelatoAuth } from '../../';
+import { DedupeStrategy, HttpMethod, Polling, httpClient, pollingHelper } from '@activepieces/pieces-common';
+import { TriggerStrategy, createTrigger } from '@activepieces/pieces-framework';
+import dayjs from 'dayjs';
+
+const polling: Polling = {
+  strategy: DedupeStrategy.${dedupe},
+  items: async ({ auth, propsValue, lastFetchEpochMS }) => {
+    const res = await httpClient.sendRequest({
+      method: HttpMethod.GET,
+      url: 'https://cloud.activepieces.com/api/v1/events',
+      headers: { authorization: auth.secret_text },
+    });
+    return res.body['items'].map((item: any) => ({ epochMilliSeconds: dayjs().valueOf(), data: item }));
+  },
+};
+
+export const ${name} = createTrigger({
+  auth: gelatoAuth,
+  name: '${name}',
+  displayName: '${displayName}',
+  description: '${desc}',
+  props: {},
+  sampleData: ${sampleData},
+  type: TriggerStrategy.POLLING,
+  async test(context) { return await pollingHelper.test(polling, context); },
+  async onEnable(context) { await pollingHelper.onEnable(polling, context); },
+  async onDisable(context) { await pollingHelper.onDisable(polling, context); },
+  async run(context) { return await pollingHelper.poll(polling, context); },
+});` : `import { gelatoAuth } from '../../';
+import { TriggerStrategy, createTrigger } from '@activepieces/pieces-framework';
+
+export const ${name} = createTrigger({
+  auth: gelatoAuth,
+  name: '${name}',
+  displayName: '${displayName}',
+  description: '${desc}',
+  props: {},
+  sampleData: ${sampleData},
+  type: TriggerStrategy.WEBHOOK,
+  async onEnable(context) {
+    // Đăng ký webhookUrl với hệ thống ngoài
+    const webhookUrl = context.webhookUrl;
+  },
+  async onDisable(context) {
+    // Hủy đăng ký webhookUrl
+  },
+  async run(context) {
+    // Nhận payload HTTP POST từ webhook
+    return [context.payload.body];
+  },
+});`
+            };
+
+            const list = document.getElementById('triggerNavList');
+            const newEntry = document.createElement('div');
+            newEntry.className = 'list-entry';
+            newEntry.id = `nav-item-${name}`;
+            newEntry.onclick = () => selectComponent('trigger', name);
+            newEntry.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    <i data-lucide="zap" style="width: 12px; color: #f59e0b;"></i>
+                    <span>${name}</span>
+                </div>
+                <span class="pill-badge pill-normal" style="font-size: 9.5px; color:#f59e0b;">${strategy}</span>
+            `;
+            list.insertBefore(newEntry, list.lastElementChild);
+            document.getElementById('triggerCount').innerText = Object.keys(state.triggers).length;
+            lucide.createIcons();
+
+            closeModal('createTriggerModal');
+            switchNavTab('triggers');
+            selectComponent('trigger', name);
+            showToast(`Đã tạo createTrigger '${name}' (${strategy}) thành công!`, 'success');
+        }
+
+        // Test Action Execution Simulator
+        function executeActionTest() {
+            const out = document.getElementById('testOutputDisplay');
+            const badge = document.getElementById('testMetricsBadge');
+            const targetUrl = document.getElementById('testApiEndpointUrl')?.value || 'https://api.service.com';
+            
+            const authPayload = {};
+            if (state.currentAuthType === 'secret_text') {
+                authPayload['secret_text'] = document.getElementById('testSecretTextInput')?.value || 'test-key';
+            }
+
+            const propsPayload = {};
+            document.querySelectorAll('.test-prop-val').forEach(input => {
+                propsPayload[input.getAttribute('data-key')] = input.value;
+            });
+
+            out.innerHTML = `<span style="color: #38bdf8;">[Runner] Calling ${targetUrl} via httpClient.sendRequest...</span>\n<span style="color: #64748b;">Context payload: ${JSON.stringify({ auth: authPayload, propsValue: propsPayload })}</span>`;
+            badge.innerText = 'Running...';
+
+            setTimeout(() => {
+                badge.innerText = 'Status: 200 OK • 128ms';
+                let mockResult = {};
+
+                if (state.currentCompId === 'get_icecream_flavor') {
+                    mockResult = {
+                        target_endpoint_called: targetUrl,
+                        flavors: ["Strawberry Mint", "Dark Chocolate Truffle", "Sicilian Pistachio"],
+                        filter_applied: propsPayload['flavor_type'] || 'all',
+                        authorized_with: authPayload['secret_text']
+                    };
+                } else if (state.currentCompId === 'order_flavor') {
+                    mockResult = {
+                        target_endpoint_called: targetUrl,
+                        order_id: "ORD-" + Math.floor(Math.random() * 89999 + 10000),
+                        status: "CONFIRMED",
+                        customer: propsPayload['customer_name'] || 'Alice',
+                        quantity: propsPayload['quantity'] || 1,
+                        gift_wrapped: propsPayload['is_gift'] === 'true'
+                    };
+                } else {
+                    mockResult = {
+                        component: state.currentCompId,
+                        target_url: targetUrl,
+                        status: "SUCCESS_COMPLETED",
+                        received_props: propsPayload
+                    };
+                }
+
+                out.innerHTML = `<span style="color: #10b981;">[Status: 200 OK]</span>\n` + JSON.stringify(mockResult, null, 2);
+                showToast('Chạy thử nghiệm thành công!', 'success');
+            }, 500);
+        }
+
+        // Navigation
+        function switchMainTab(tab) {
+            document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+
+            if (tab === 'catalog') {
+                document.querySelectorAll('.nav-tab-btn')[0].classList.add('active');
+                document.getElementById('view-catalog').classList.add('active');
+            } else if (tab === 'approval') {
+                document.querySelectorAll('.nav-tab-btn')[1].classList.add('active');
+                document.getElementById('view-approval').classList.add('active');
+            }
+        }
+
+        function toggleAccordion(id) {
+            document.getElementById(id).classList.toggle('open');
+        }
+
+        function openStudio(mode) {
+            document.getElementById('mainNavBar').style.display = 'none';
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-studio').classList.add('active');
+
+            renderDynamicAuthForm();
+            selectComponent('action', 'get_icecream_flavor');
+        }
+
+        function closeStudio() {
+            document.getElementById('mainNavBar').style.display = 'flex';
+            document.getElementById('view-studio').classList.remove('active');
+            switchMainTab('catalog');
+        }
+
+        function submitStudio() {
+            showToast('Đã gửi mã nguồn Piece lên hàng đợi phê duyệt!', 'success');
+            setTimeout(() => {
+                closeStudio();
+                switchMainTab('approval');
+            }, 600);
+        }
+
+        function approveAndPublish() {
+            showToast('Đã phê duyệt Piece! Đã đồng bộ vào Activepieces Engine.', 'success');
+            document.getElementById('pendingBadge').innerText = '0';
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.innerText = msg;
+            toast.className = `show ${type}`;
+            setTimeout(() => toast.className = '', 2500);
+        }
+
+        // Initialize dynamic forms on load
+        renderDynamicAuthForm();
+    </script>
+</body>
+</html>
