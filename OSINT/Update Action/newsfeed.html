@@ -1,0 +1,3508 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cấu hình Tương tác Newsfeed</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ====================================================================
+       MODERN SAAS DESIGN TOKENS (LINEAR / VERCEL STYLE)
+       ==================================================================== */
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-active: #1e40af;
+      --primary-soft: #eff6ff;
+      --primary-border: #bfdbfe;
+
+      --success: #16a34a;
+      --success-soft: #f0fdf4;
+      --success-border: #bbf7d0;
+
+      --danger: #dc2626;
+      --danger-hover: #b91c1c;
+      --danger-soft: #fef2f2;
+      --danger-border: #fecaca;
+
+      --text-heading: #0f172a;
+      --text-main: #1e293b;
+      --text-muted: #475569;
+      --text-dim: #64748b;
+      --text-subtle: #94a3b8;
+
+      --border-color: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --border-focus: #3b82f6;
+
+      --bg-body: #f1f5f9;
+      --bg-modal: #ffffff;
+      --bg-surface: #f8fafc;
+      --bg-surface-elevated: #ffffff;
+
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+      --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+      --shadow-dropdown: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --shadow-modal: 0 20px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
+
+      --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--bg-body);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      line-height: 1.5;
+      font-size: 13.5px;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    /* Modal Backdrop */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+
+    /* Main Modal Window */
+    .modal-window {
+      background: var(--bg-modal);
+      width: 100%;
+      max-width: 1260px;
+      height: 90vh;
+      max-height: 880px;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-modal);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ====================================================================
+       1. MODAL HEADER
+       ==================================================================== */
+    .modal-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-heading);
+      letter-spacing: -0.01em;
+    }
+
+    .btn-close {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-dim);
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-close:hover {
+      background: #f1f5f9;
+      color: var(--text-heading);
+    }
+
+    /* ====================================================================
+       2. MODAL BODY (FLEXBOX CHỐNG LỖI SCROLL)
+       ==================================================================== */
+    .modal-body {
+      display: flex;
+      flex: 1 1 0;
+      min-height: 0;
+      height: 0;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    /* CỘT TRÁI (NAV SIDEBAR) */
+    .nav-sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      height: 100%;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 12px 0;
+    }
+
+    .nav-group-title {
+      padding: 10px 20px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+    }
+
+    .nav-list {
+      list-style: none;
+      padding: 0 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      user-select: none;
+    }
+
+    .nav-item:hover {
+      background: #f1f5f9;
+      color: var(--text-heading);
+    }
+
+    .nav-item.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .nav-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .nav-index {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+      background: #e2e8f0;
+      padding: 1px 5px;
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+    }
+
+    .nav-item.active .nav-index {
+      background: #ffffff;
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+    }
+
+    .nav-label {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 1px 7px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+
+    .nav-badge.has-cond {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .nav-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 10px 16px;
+    }
+
+    /* CỘT PHẢI (MAIN WORKSPACE) */
+    .main-workspace {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #ffffff;
+    }
+
+    .screen-view {
+      display: none;
+      flex-direction: column;
+      flex: 1 1 0;
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .screen-view.active {
+      display: flex !important;
+    }
+
+    .workspace-header {
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      background: #ffffff;
+      min-height: 52px;
+    }
+
+    .workspace-title-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .workspace-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    .workspace-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Modern Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 32px;
+      padding: 4px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+      outline: none;
+      border: 1px solid transparent;
+    }
+
+    .btn-default {
+      background: #ffffff;
+      border-color: var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-default:hover {
+      background: #f8fafc;
+      border-color: var(--border-hover);
+      color: var(--text-heading);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+    }
+
+    /* VÙNG SCROLL NỘI DUNG CỘT PHẢI */
+    .workspace-scroll-area {
+      flex: 1 1 0;
+      min-height: 0;
+      height: 100%;
+      overflow-y: auto !important;
+      overflow-x: hidden;
+      padding: 16px 24px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Modern Switch */
+    .switch-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      user-select: none;
+    }
+
+    .switch-box {
+      position: relative;
+      display: inline-block;
+      width: 34px;
+      height: 20px;
+      background: #cbd5e1;
+      border-radius: 999px;
+      transition: background 0.2s ease;
+    }
+
+    .switch-box::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease;
+    }
+
+    .switch-input {
+      display: none;
+    }
+
+    .switch-input:checked+.switch-box {
+      background: var(--primary);
+    }
+
+    .switch-input:checked+.switch-box::after {
+      transform: translateX(14px);
+    }
+
+    /* ====================================================================
+       3. THẺ ĐIỀU KIỆN (MODERN CARD)
+       ==================================================================== */
+    .condition-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      flex-shrink: 0;
+      width: 100%;
+      position: relative;
+    }
+
+    .condition-card:hover {
+      border-color: #cbd5e1;
+      box-shadow: var(--shadow-card);
+    }
+
+    @keyframes highlightPulse {
+      0% {
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.45);
+        border-color: var(--primary);
+      }
+
+      60% {
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        border-color: var(--primary);
+      }
+
+      100% {
+        box-shadow: var(--shadow-sm);
+        border-color: var(--border-color);
+      }
+    }
+
+    .condition-card.highlight-new {
+      animation: highlightPulse 1.8s ease;
+    }
+
+    /* Thanh tùy chọn Quy tắc khớp điều kiện (Khớp điều kiện đầu tiên / tất cả) */
+    .match-rule-toolbar {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 9px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+
+    .match-rule-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .match-rule-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-heading);
+    }
+
+    .match-rule-options {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .match-rule-option {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-main);
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.15s ease;
+    }
+
+    .match-rule-option.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .match-rule-option input[type="radio"] {
+      cursor: pointer;
+      accent-color: var(--primary);
+      width: 15px;
+      height: 15px;
+    }
+
+    .card-header {
+      background: var(--bg-surface);
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .card-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .card-toggle-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .condition-card.collapsed .card-toggle-icon {
+      transform: rotate(-90deg);
+    }
+
+    .card-cond-tag {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-soft);
+      border: 1px solid var(--primary-border);
+      padding: 1px 8px;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .card-summary-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-heading);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+      padding-right: 12px;
+    }
+
+    .card-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .btn-icon-action {
+      position: relative;
+      background: transparent;
+      border: 1px solid transparent;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-icon-action:hover {
+      background: #ffffff;
+      border-color: var(--border-color);
+      color: var(--text-heading);
+    }
+
+    .btn-icon-action.btn-delete:hover {
+      background: var(--danger-soft);
+      border-color: var(--danger-border);
+      color: var(--danger);
+    }
+
+    /* Tooltip */
+    .tooltip-text {
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s, visibility 0.15s;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+
+    .tooltip-text::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 4px;
+      border-style: solid;
+      border-color: #0f172a transparent transparent transparent;
+    }
+
+    .btn-icon-action:hover .tooltip-text {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .condition-card.collapsed .card-body {
+      display: none;
+    }
+
+    /* Sub-section block */
+    .section-block {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      background: #ffffff;
+    }
+
+    .section-block-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* ====================================================================
+       KHỐI 1: PROMPT MÔ TẢ ĐIỀU KIỆN (SIÊU GỌN & THÔNG MINH)
+       ==================================================================== */
+    .prompt-toolbar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .btn-toggle-chips {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-toggle-chips:hover {
+      background: var(--primary-soft);
+      border-color: var(--primary-border);
+      color: var(--primary);
+    }
+
+    .info-hint-icon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      color: var(--text-dim);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 6px;
+      user-select: none;
+    }
+
+    .info-hint-icon:hover {
+      background: #e2e8f0;
+      color: var(--text-heading);
+    }
+
+    /* Popover hướng dẫn phím tắt */
+    .hint-popover {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-dropdown);
+      padding: 12px 14px;
+      width: 320px;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      z-index: 1000;
+      display: none;
+      cursor: default;
+    }
+
+    .info-hint-icon:hover .hint-popover,
+    .hint-popover.pinned {
+      display: block !important;
+    }
+
+    .hint-popover-title {
+      font-weight: 700;
+      color: var(--text-heading);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hint-kbd {
+      font-family: var(--font-mono);
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Thanh chèn nhanh gập mở (Compact Toolbar Bar) */
+    .chips-bar-collapsed {
+      display: none;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chips-bar-collapsed.open {
+      display: flex;
+    }
+
+    .dropdown-chip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .btn-dropdown-chip {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-dropdown-chip:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .dropdown-menu-list {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-dropdown);
+      padding: 4px;
+      min-width: 140px;
+      display: none;
+      z-index: 1000;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .dropdown-chip.open .dropdown-menu-list {
+      display: block;
+    }
+
+    .dropdown-item {
+      padding: 6px 10px;
+      font-size: 12px;
+      color: var(--text-main);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.12s ease;
+    }
+
+    .dropdown-item:hover {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* Textarea Prompt */
+    .prompt-textarea {
+      width: 100%;
+      min-height: 72px;
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-family: var(--font-family);
+      font-size: 13.5px;
+      color: var(--text-heading);
+      background: #ffffff;
+      resize: vertical;
+      line-height: 1.5;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .prompt-textarea:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+
+    /* ====================================================================
+       KHỐI 2: THAM SỐ THỰC THI TAY (MANUAL CONTROLS)
+       ==================================================================== */
+    .apply-mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .apply-mode-grid .radio-card {
+      margin-bottom: 0;
+      height: 100%;
+    }
+
+    @media (max-width: 640px) {
+      .apply-mode-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .radio-card {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: 8px;
+    }
+
+    .radio-card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .radio-card.selected {
+      border-color: var(--primary);
+      background: #fafcff;
+    }
+
+    .modern-radio {
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .radio-card.selected .modern-radio {
+      border-color: var(--primary);
+      background: var(--primary);
+    }
+
+    .radio-card.selected .modern-radio::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #ffffff;
+      border-radius: 50%;
+    }
+
+    .input-range-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .input-number {
+      width: 72px;
+      height: 30px;
+      padding: 2px 8px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-family: var(--font-family);
+      color: var(--text-heading);
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .input-number:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
+    }
+
+    .input-text {
+      height: 32px;
+      padding: 4px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-family: var(--font-family);
+      color: var(--text-heading);
+      background: #ffffff;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .input-text:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
+    }
+
+    /* Icon Emoji Bar - CHỈ HIỂN THỊ BIỂU TƯỢNG ĐỒ HỌA */
+    .emoji-picker-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .emoji-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+
+    .emoji-btn:hover {
+      background: #f1f5f9;
+      transform: scale(1.08);
+    }
+
+    .emoji-btn.selected {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+    }
+
+    /* Searchable Combobox & Sửa Prompt AI */
+    .searchable-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      width: 100%;
+    }
+
+    .custom-combobox {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .combobox-toggle {
+      height: 34px;
+      padding: 0 10px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--text-heading);
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+
+    .combobox-toggle:hover {
+      border-color: var(--border-hover);
+    }
+
+    .custom-combobox.open .combobox-toggle {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
+    }
+
+    .combobox-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500;
+      flex: 1;
+    }
+
+    .combobox-arrow {
+      color: var(--text-dim);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .custom-combobox.open .combobox-arrow {
+      transform: rotate(180deg);
+    }
+
+    .combobox-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-dropdown);
+      z-index: 1200;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalFadeIn 0.15s ease;
+    }
+
+    .custom-combobox.open .combobox-dropdown {
+      display: flex;
+    }
+
+    .combobox-search-box {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-surface);
+    }
+
+    .combobox-search-box svg {
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+
+    .combobox-search-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 12.5px;
+      color: var(--text-heading);
+      font-family: var(--font-family);
+    }
+
+    .combobox-options-list {
+      max-height: 180px;
+      overflow-y: auto;
+      padding: 4px 0;
+    }
+
+    .combobox-option {
+      padding: 7px 12px;
+      font-size: 12.5px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      transition: background 0.12s ease;
+    }
+
+    .combobox-option:hover {
+      background: #f1f5f9;
+    }
+
+    .combobox-option.selected {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .combobox-option-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .combobox-option-title {
+      font-weight: 600;
+      color: var(--text-heading);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .combobox-option.selected .combobox-option-title {
+      color: var(--primary);
+    }
+
+    .combobox-option-desc {
+      font-size: 11px;
+      color: var(--text-dim);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn-option-edit {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.12s ease;
+    }
+
+    .btn-option-edit:hover {
+      background: #ffffff;
+      border-color: var(--border-color);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-edit-prompt {
+      height: 34px;
+      padding: 0 12px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .btn-edit-prompt:hover {
+      background: var(--primary-soft);
+      border-color: var(--primary-border);
+      color: var(--primary);
+    }
+
+    /* Slash Menu Autocomplete */
+    .slash-menu-wrap {
+      position: relative;
+    }
+
+    .slash-popup-menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-dropdown);
+      width: 320px;
+      max-height: 220px;
+      overflow-y: auto;
+      z-index: 1100;
+      display: none;
+      flex-direction: column;
+      padding: 4px 0;
+    }
+
+    .slash-popup-menu.show {
+      display: flex;
+    }
+
+    .slash-item {
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--text-main);
+      transition: background 0.12s ease;
+    }
+
+    .slash-item:hover {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .slash-item-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: var(--primary);
+      border: 1px solid #cbd5e1;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    /* ====================================================================
+       4. MODAL POPUP CHỈNH SỬA PROMPT AI (MODAL CON)
+       ==================================================================== */
+    .submodal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 16px;
+    }
+
+    .submodal-window {
+      background: #ffffff;
+      width: 100%;
+      max-width: 640px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-modal);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalFadeIn 0.2s ease;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .submodal-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+    }
+
+    .submodal-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-heading);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .submodal-body {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #ffffff;
+    }
+
+    .submodal-footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      background: var(--bg-surface);
+    }
+
+    .var-badge {
+      display: inline-block;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Tabs ở Screen 08 */
+    .overview-tabs {
+      display: flex;
+      gap: 14px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 14px;
+    }
+
+    .overview-tab-btn {
+      padding: 8px 4px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s ease;
+    }
+
+    .overview-tab-btn.active {
+      color: var(--primary);
+      font-weight: 600;
+      border-bottom-color: var(--primary);
+    }
+
+    .json-box {
+      position: relative;
+      background: #0f172a;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .json-code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: #38bdf8;
+      line-height: 1.6;
+      max-height: 480px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .btn-copy-json {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #f1f5f9;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-copy-json:hover {
+      background: #334155;
+      color: #ffffff;
+    }
+
+    /* CSS Thẻ Điều kiện ở Tab Mô tả trực quan (Screen 08) - CÂN ĐỐI & THẨM MỸ */
+    .overview-cond-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 12px;
+      transition: all 0.15s ease;
+    }
+
+    .overview-cond-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .overview-cond-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .overview-cond-header {
+      background: #f8fafc;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .overview-cond-badge {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-soft);
+      border: 1px solid var(--primary-border);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .overview-cond-body {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .overview-section-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .overview-section-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .overview-prompt-box {
+      font-size: 13.5px;
+      color: var(--text-heading);
+      line-height: 1.55;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 16px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+    }
+
+    .overview-grid-item {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .overview-grid-item.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .overview-item-label {
+      color: var(--text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .overview-item-value {
+      color: var(--text-heading);
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .overview-emoji-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-size: 12.5px;
+      font-weight: 500;
+      margin-right: 6px;
+    }
+
+    /* Modal Footer */
+    .modal-footer {
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 9px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      box-shadow: var(--shadow-dropdown);
+      display: none;
+      align-items: center;
+      gap: 8px;
+      z-index: 3000;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="modal-backdrop">
+    <div class="modal-window">
+
+      <!-- 1. HEADER -->
+      <header class="modal-header">
+        <h2 class="header-title">Cấu hình Tương tác Newsfeed</h2>
+        <button class="btn-close" title="Đóng" onclick="alert('Đóng modal cấu hình')">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </header>
+
+      <!-- 2. BODY (2 CỘT) -->
+      <div class="modal-body">
+
+        <!-- CỘT TRÁI (NAV SIDEBAR) -->
+        <aside class="nav-sidebar">
+          <div class="nav-group-title">Cấu hình chung</div>
+          <ul class="nav-list">
+            <li class="nav-item active" data-target="screen-00" onclick="switchScreen('screen-00', this)">
+              <div class="nav-item-left">
+                <span class="nav-label">Thiết lập chung</span>
+              </div>
+            </li>
+          </ul>
+
+          <div class="nav-group-title">Danh mục hành động</div>
+          <ul class="nav-list">
+            <li class="nav-item" data-target="screen-01" onclick="switchScreen('screen-01', this)">
+              <div class="nav-item-left">
+                <span class="nav-label">Bày tỏ cảm xúc bài viết</span>
+              </div>
+              <span class="nav-badge has-cond" id="badge-01">2</span>
+            </li>
+            <li class="nav-item" data-target="screen-02" onclick="switchScreen('screen-02', this)">
+              <div class="nav-item-left">
+                <span class="nav-label">Xem đầy đủ bài viết</span>
+              </div>
+              <span class="nav-badge has-cond" id="badge-02">1</span>
+            </li>
+            <li class="nav-item" data-target="screen-03" onclick="switchScreen('screen-03', this)">
+              <div class="nav-item-left">
+                <span class="nav-label">Chia sẻ bài viết</span>
+              </div>
+              <span class="nav-badge" id="badge-03">0</span>
+            </li>
+            <li class="nav-item" data-target="screen-04" onclick="switchScreen('screen-04', this)">
+              <div class="nav-item-left">
+                <span class="nav-label">Bình luận văn bản</span>
+              </div>
+              <span class="nav-badge has-cond" id="badge-04">1</span>
+            </li>
+            <li class="nav-item" data-target="screen-05" onclick="switchScreen('screen-05', this)">
+              <div class="nav-item-left">
+                <span class="nav-label">Bình luận ảnh</span>
+              </div>
+              <span class="nav-badge" id="badge-05">0</span>
+            </li>
+            <li class="nav-item" data-target="screen-06" onclick="switchScreen('screen-06', this)">
+              <div class="nav-item-left">
+                <span class="nav-label">Tương tác với bình luận</span>
+              </div>
+              <span class="nav-badge has-cond" id="badge-06">2</span>
+            </li>
+            <li class="nav-item" data-target="screen-07" onclick="switchScreen('screen-07', this)">
+              <div class="nav-item-left">
+                <span class="nav-label">Báo cáo vi phạm</span>
+              </div>
+              <span class="nav-badge has-cond" id="badge-07">1</span>
+            </li>
+          </ul>
+
+          <div class="nav-divider"></div>
+
+          <div class="nav-group-title">Tổng kết</div>
+          <ul class="nav-list">
+            <li class="nav-item" data-target="screen-08" onclick="switchScreen('screen-08', this)">
+              <div class="nav-item-left">
+                <span class="nav-label" style="font-weight: 700; color: var(--primary);">Tổng quan cấu hình</span>
+              </div>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- CỘT PHẢI (MAIN WORKSPACE) -->
+        <main class="main-workspace">
+
+          <!-- SCREEN 00: THIẾT LẬP CHUNG -->
+          <div class="screen-view active" id="screen-00">
+            <div class="workspace-header">
+              <div class="workspace-title-box">
+                <h3 class="workspace-title">Thiết lập chung</h3>
+              </div>
+            </div>
+            <div class="workspace-scroll-area">
+              <div style="display: flex; flex-direction: column; gap: 16px; max-width: 780px;">
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label style="font-weight: 600; font-size: 13px;">Tên hành động kịch bản *</label>
+                  <input type="text" class="input-text" id="cfg-action-name" value="Tương tác newsfeed" disabled
+                    style="background: var(--bg-surface); color: var(--text-muted); cursor: not-allowed; opacity: 0.85;">
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label style="font-weight: 600; font-size: 13px;">Tùy chọn giới hạn phiên tương tác:</label>
+
+                  <div class="apply-mode-grid">
+                    <div class="radio-card selected" id="opt-limit-posts" onclick="toggleLimitMode('posts')">
+                      <span class="modern-radio"></span>
+                      <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 600; font-size: 13px; color: var(--text-heading);">Giới hạn theo số bài
+                          viết tương tác</div>
+                        <div class="input-range-row" style="margin-top: 4px;">
+                          Từ <input type="number" class="input-number" id="cfg-posts-from" value="3"> đến
+                          <input type="number" class="input-number" id="cfg-posts-to" value="5"> bài viết
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="radio-card" id="opt-limit-time" onclick="toggleLimitMode('time')">
+                      <span class="modern-radio"></span>
+                      <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 600; font-size: 13px; color: var(--text-heading);">Giới hạn theo thời
+                          gian tương tác</div>
+                        <div class="input-range-row" style="margin-top: 4px;">
+                          Từ <input type="number" class="input-number" id="cfg-time-from" value="120"> đến
+                          <input type="number" class="input-number" id="cfg-time-to" value="300"> giây
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  <label style="font-weight: 600; font-size: 13px;">Thời gian dừng đọc bài viết chung:</label>
+                  <div class="input-range-row">
+                    Từ <input type="number" class="input-number" id="cfg-delay-from" value="3"> đến
+                    <input type="number" class="input-number" id="cfg-delay-to" value="6"> giây
+                  </div>
+                  <span style="font-size: 12px; color: var(--text-dim);">Khoảng thời gian nick ảo dừng lại trên mỗi bài
+                    trước khi lướt tiếp.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SCREEN 01: BÀY TỎ CẢM XÚC BÀI VIẾT -->
+          <div class="screen-view" id="screen-01">
+            <div class="workspace-header">
+              <div class="workspace-title-box">
+                <h3 class="workspace-title">Bày tỏ cảm xúc bài viết</h3>
+                <label class="switch-wrap">
+                  <input type="checkbox" class="switch-input" checked id="toggle-act-01">
+                  <span class="switch-box"></span>
+                  <span>Kích hoạt</span>
+                </label>
+              </div>
+              <div class="workspace-actions">
+                <button class="btn btn-default" onclick="toggleAllCards('container-01')">
+                  <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                  <span>Thu gọn/Mở rộng</span>
+                </button>
+                <button class="btn btn-primary" onclick="addNewCondition('container-01', '01')">+ Thêm điều
+                  kiện</button>
+              </div>
+            </div>
+            <div class="workspace-scroll-area" id="container-01"></div>
+          </div>
+
+          <!-- SCREEN 02: XEM ĐẦY ĐỦ BÀI VIẾT -->
+          <div class="screen-view" id="screen-02">
+            <div class="workspace-header">
+              <div class="workspace-title-box">
+                <h3 class="workspace-title">Xem đầy đủ bài viết</h3>
+                <label class="switch-wrap">
+                  <input type="checkbox" class="switch-input" checked id="toggle-act-02">
+                  <span class="switch-box"></span>
+                  <span>Kích hoạt</span>
+                </label>
+              </div>
+              <div class="workspace-actions">
+                <button class="btn btn-default" onclick="toggleAllCards('container-02')">
+                  <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                  <span>Thu gọn/Mở rộng</span>
+                </button>
+                <button class="btn btn-primary" onclick="addNewCondition('container-02', '02')">+ Thêm điều
+                  kiện</button>
+              </div>
+            </div>
+            <div class="workspace-scroll-area" id="container-02"></div>
+          </div>
+
+          <!-- SCREEN 03: CHIA SẺ BÀI VIẾT -->
+          <div class="screen-view" id="screen-03">
+            <div class="workspace-header">
+              <div class="workspace-title-box">
+                <h3 class="workspace-title">Chia sẻ bài viết</h3>
+                <label class="switch-wrap">
+                  <input type="checkbox" class="switch-input" id="toggle-act-03">
+                  <span class="switch-box"></span>
+                  <span>Kích hoạt</span>
+                </label>
+              </div>
+              <div class="workspace-actions">
+                <button class="btn btn-default" onclick="toggleAllCards('container-03')">
+                  <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                  <span>Thu gọn/Mở rộng</span>
+                </button>
+                <button class="btn btn-primary" onclick="addNewCondition('container-03', '03')">+ Thêm điều
+                  kiện</button>
+              </div>
+            </div>
+            <div class="workspace-scroll-area" id="container-03"></div>
+          </div>
+
+          <!-- SCREEN 04: BÌNH LUẬN VĂN BẢN -->
+          <div class="screen-view" id="screen-04">
+            <div class="workspace-header">
+              <div class="workspace-title-box">
+                <h3 class="workspace-title">Bình luận văn bản</h3>
+                <label class="switch-wrap">
+                  <input type="checkbox" class="switch-input" checked id="toggle-act-04">
+                  <span class="switch-box"></span>
+                  <span>Kích hoạt</span>
+                </label>
+              </div>
+              <div class="workspace-actions">
+                <button class="btn btn-default" onclick="toggleAllCards('container-04')">
+                  <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                  <span>Thu gọn/Mở rộng</span>
+                </button>
+                <button class="btn btn-primary" onclick="addNewCondition('container-04', '04')">+ Thêm điều
+                  kiện</button>
+              </div>
+            </div>
+            <div class="workspace-scroll-area" id="container-04"></div>
+          </div>
+
+          <!-- SCREEN 05: BÌNH LUẬN ẢNH -->
+          <div class="screen-view" id="screen-05">
+            <div class="workspace-header">
+              <div class="workspace-title-box">
+                <h3 class="workspace-title">Bình luận ảnh</h3>
+                <label class="switch-wrap">
+                  <input type="checkbox" class="switch-input" id="toggle-act-05">
+                  <span class="switch-box"></span>
+                  <span>Kích hoạt</span>
+                </label>
+              </div>
+              <div class="workspace-actions">
+                <button class="btn btn-default" onclick="toggleAllCards('container-05')">
+                  <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                  <span>Thu gọn/Mở rộng</span>
+                </button>
+                <button class="btn btn-primary" onclick="addNewCondition('container-05', '05')">+ Thêm điều
+                  kiện</button>
+              </div>
+            </div>
+            <div class="workspace-scroll-area" id="container-05"></div>
+          </div>
+
+          <!-- SCREEN 06: TƯƠNG TÁC VỚI BÌNH LUẬN -->
+          <div class="screen-view" id="screen-06">
+            <div class="workspace-header">
+              <div class="workspace-title-box">
+                <h3 class="workspace-title">Tương tác với bình luận</h3>
+                <label class="switch-wrap">
+                  <input type="checkbox" class="switch-input" checked id="toggle-act-06">
+                  <span class="switch-box"></span>
+                  <span>Kích hoạt</span>
+                </label>
+              </div>
+              <div class="workspace-actions">
+                <button class="btn btn-default" onclick="toggleAllCards('container-06')">
+                  <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                  <span>Thu gọn/Mở rộng</span>
+                </button>
+                <button class="btn btn-primary" onclick="addNewCondition('container-06', '06')">+ Thêm điều
+                  kiện</button>
+              </div>
+            </div>
+            <div class="workspace-scroll-area" id="container-06"></div>
+          </div>
+
+          <!-- SCREEN 07: BÁO CÁO VI PHẠM -->
+          <div class="screen-view" id="screen-07">
+            <div class="workspace-header">
+              <div class="workspace-title-box">
+                <h3 class="workspace-title">Báo cáo vi phạm</h3>
+                <label class="switch-wrap">
+                  <input type="checkbox" class="switch-input" checked id="toggle-act-07">
+                  <span class="switch-box"></span>
+                  <span>Kích hoạt</span>
+                </label>
+              </div>
+              <div class="workspace-actions">
+                <button class="btn btn-default" onclick="toggleAllCards('container-07')">
+                  <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                  <span>Thu gọn/Mở rộng</span>
+                </button>
+                <button class="btn btn-primary" onclick="addNewCondition('container-07', '07')">+ Thêm điều
+                  kiện</button>
+              </div>
+            </div>
+            <div class="workspace-scroll-area" id="container-07"></div>
+          </div>
+
+          <!-- SCREEN 08: TỔNG QUAN CẤU HÌNH -->
+          <div class="screen-view" id="screen-08">
+            <div class="workspace-header">
+              <div class="workspace-title-box">
+                <h3 class="workspace-title">Tổng quan cấu hình</h3>
+              </div>
+            </div>
+            <div class="workspace-scroll-area">
+              <div class="overview-tabs">
+                <div class="overview-tab-btn active" onclick="switchOverviewTab('visual', this)">Mô tả trực quan</div>
+                <div class="overview-tab-btn" onclick="switchOverviewTab('json', this)">Xem mã JSON</div>
+              </div>
+
+              <!-- Tab Mô tả trực quan -->
+              <div id="overview-visual-view" style="display: flex; flex-direction: column; gap: 10px;">
+                <div id="visual-summary-content"></div>
+              </div>
+
+              <!-- Tab JSON Code -->
+              <div id="overview-json-view" style="display: none;">
+                <div class="json-box">
+                  <button class="btn-copy-json" onclick="copyJsonPayload()">
+                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <span>Sao chép JSON</span>
+                  </button>
+                  <pre class="json-code" id="json-code-box">{}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </main>
+      </div>
+
+      <!-- 3. FOOTER -->
+      <footer class="modal-footer">
+        <div style="font-size: 13px; color: var(--text-dim);" id="footer-summary-text">
+          Tổng số điều kiện đã thiết lập: 7 điều kiện
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-default" onclick="alert('Đã hủy các thay đổi.')">Hủy</button>
+          <button class="btn btn-primary" onclick="saveConfiguration()">Lưu cấu hình</button>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       4. SUB-MODAL: CHỈNH SỬA / TẠO PROMPT AI (POPUP CHỈNH SỬA TẠI CHỖ)
+       ==================================================================== -->
+  <div class="submodal-backdrop" id="edit-prompt-modal">
+    <div class="submodal-window">
+      <div class="submodal-header">
+        <h3 class="submodal-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+          <span id="edit-prompt-modal-title-text">Chỉnh sửa Prompt AI</span>
+        </h3>
+        <button class="btn-close" onclick="closeEditPromptModal()">&times;</button>
+      </div>
+      <div class="submodal-body">
+        <input type="hidden" id="edit-prompt-id">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-weight: 600; font-size: 12px; color: var(--text-muted);">Tên Prompt / Nhãn gợi nhớ
+            *</label>
+          <input type="text" class="input-text" id="edit-prompt-name" placeholder="Ví dụ: Khen ngợi và cổ vũ thành tựu">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-weight: 600; font-size: 12px; color: var(--text-muted);">Nội dung prompt *</label>
+          <textarea class="prompt-textarea" id="edit-prompt-content" style="min-height: 120px;"
+            placeholder="Nhập câu lệnh chi tiết chỉ đạo AI viết nội dung..."></textarea>
+          <div style="font-size: 12px; color: var(--text-dim); margin-top: 4px;">
+            📌 Nhấn để chèn biến ngữ cảnh:
+            <span class="var-badge" onclick="insertVarToPrompt('{post_title}')">{post_title}</span>
+            <span class="var-badge" onclick="insertVarToPrompt('{post_content}')">{post_content}</span>
+            <span class="var-badge" onclick="insertVarToPrompt('{author}')">{author}</span>
+            <span class="var-badge" onclick="insertVarToPrompt('{target_comment}')">{target_comment}</span>
+          </div>
+        </div>
+      </div>
+      <div class="submodal-footer">
+        <button class="btn btn-default" onclick="closeEditPromptModal()">Hủy bỏ</button>
+        <button class="btn btn-primary" id="btn-save-prompt-modal" onclick="savePromptModal()">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-msg" id="toast">Thông báo</div>
+
+  <script>
+    /* ====================================================================
+       DATA STORE: Dữ liệu cấu hình & Thư viện Prompt AI
+       ==================================================================== */
+    const promptLibrary = [
+      { id: "p1", name: "Khen ngợi & Cổ vũ thành tựu", content: "Hãy đóng vai một người dân địa phương, đọc bài viết và viết một bình luận ngắn 1-2 câu bày tỏ sự phấn khởi và tự hào về thành tựu này. Giọng văn chân thành, mộc mạc." },
+      { id: "p2", name: "Phản bác luận điệu xuyên tạc", content: "Hãy đóng vai một người am hiểu pháp luật, phản biện lại ý kiến sai lệch một cách lịch sự, đanh thép, viện dẫn số liệu thực tế rõ ràng." },
+      { id: "p3", name: "Lan tỏa thông điệp chính thống", content: "Viết lời bình ngắn gọn 1 câu khi chia sẻ bài viết, nhấn mạnh ý nghĩa xã hội và kêu gọi mọi người cùng cảnh giác/lan tỏa." },
+      { id: "p4", name: "Đặt câu hỏi gợi mở thảo luận", content: "Đặt một câu hỏi mở ngắn gọn, lịch sự xoay quanh vấn đề bài viết đề cập để khuyến khích cộng đồng vào bình luận tích cực." }
+    ];
+
+    const state = {
+      global: {
+        actionName: "Tương tác newsfeed",
+        limitMode: "posts",
+        postLimit: { from: 3, to: 5 },
+        timeLimit: { from: 120, to: 300 },
+        postDelay: { from: 3, to: 6 }
+      },
+      actions: {
+        "01": {
+          enabled: true,
+          matchMode: "first",
+          title: "Bày tỏ cảm xúc bài viết",
+          conditions: [
+            {
+              id: 1,
+              prompt: "Bài viết thuộc chủ đề chính trị hoặc kinh tế, có nội dung tích cực ủng hộ Đảng và Nhà nước, đăng bởi trang báo tích xanh, có tương tác cao trên 200 like",
+              applyMode: "percent",
+              percent: 90,
+              quantity: { from: 2, to: 4 },
+              reactions: ["like", "love"],
+              delay: { from: 3, to: 8 },
+              chipsOpen: false
+            },
+            {
+              id: 2,
+              prompt: "Bài viết có lập trường bôi nhọ, xuyên tạc lực lượng công an hoặc chính quyền địa phương, mang sắc thái công kích thù địch",
+              applyMode: "percent",
+              percent: 100,
+              quantity: { from: 1, to: 2 },
+              reactions: ["angry"],
+              delay: { from: 2, to: 5 },
+              chipsOpen: false
+            }
+          ]
+        },
+        "02": {
+          enabled: true,
+          matchMode: "first",
+          title: "Xem đầy đủ bài viết",
+          conditions: [
+            {
+              id: 1,
+              prompt: "Bài viết thuộc chủ đề pháp luật hoặc vụ án kinh tế có nội dung phân tích dài trên 200 từ từ các trang tin lớn",
+              applyMode: "percent",
+              percent: 80,
+              quantity: { from: 2, to: 3 },
+              readDuration: { from: 5, to: 12 },
+              chipsOpen: false
+            }
+          ]
+        },
+        "03": {
+          enabled: false,
+          matchMode: "first",
+          title: "Chia sẻ bài viết",
+          conditions: []
+        },
+        "04": {
+          enabled: true,
+          matchMode: "first",
+          title: "Bình luận văn bản",
+          conditions: [
+            {
+              id: 1,
+              prompt: "Bài viết tích cực biểu dương lực lượng vũ trang hoặc thành tựu phát triển đất nước từ báo chính thống",
+              applyMode: "quantity",
+              percent: 50,
+              quantity: { from: 1, to: 2 },
+              quota: { from: 1, to: 2 },
+              contentType: "ai", // 'manual' | 'ai'
+              manualText: "{Tuyệt vời quá|Rất tự hào|Chúc mừng các đồng chí!}",
+              autoDelete: true,
+              withSticker: true,
+              aiPromptId: "p1",
+              delay: { from: 5, to: 15 },
+              chipsOpen: false
+            }
+          ]
+        },
+        "05": {
+          enabled: false,
+          matchMode: "first",
+          title: "Bình luận ảnh",
+          conditions: []
+        },
+        "06": {
+          enabled: true,
+          matchMode: "first",
+          title: "Tương tác với bình luận",
+          conditions: [
+            {
+              id: 1,
+              prompt: "Bình luận con có sắc thái tích cực, đồng tình ủng hộ bài viết và quan điểm chính sách",
+              applyMode: "percent",
+              percent: 85,
+              quantity: { from: 2, to: 3 },
+              scanQuota: { from: 5, to: 20 },
+              interactQuota: { from: 1, to: 2 },
+              delay: { from: 5, to: 20 },
+              enableReaction: true,
+              reactions: ["love"],
+              enableReply: false,
+              replyContentType: "manual",
+              replyManualText: "Hoàn toàn đồng ý với ý kiến của bạn!",
+              replyAutoDelete: true,
+              replyWithSticker: false,
+              replyAiPromptId: "p1",
+              chipsOpen: false
+            },
+            {
+              id: 2,
+              prompt: "Bình luận bôi nhọ xuyên tạc sự thật, dùng lời lẽ công kích cán bộ cơ quan nhà nước",
+              applyMode: "quantity",
+              percent: 100,
+              quantity: { from: 1, to: 2 },
+              scanQuota: { from: 5, to: 15 },
+              interactQuota: { from: 1, to: 1 },
+              delay: { from: 10, to: 30 },
+              enableReaction: true,
+              reactions: ["angry"],
+              enableReply: true,
+              replyContentType: "ai",
+              replyManualText: "",
+              replyAutoDelete: true,
+              replyWithSticker: false,
+              replyAiPromptId: "p2",
+              chipsOpen: false
+            }
+          ]
+        },
+        "07": {
+          enabled: true,
+          matchMode: "first",
+          title: "Báo cáo vi phạm",
+          conditions: [
+            {
+              id: 1,
+              prompt: "Bình luận hoặc bài viết chứa ngôn từ thù ghét, thóa mạ nhân phẩm cá nhân hoặc phân biệt vùng miền nặng nề",
+              applyMode: "percent",
+              percent: 95,
+              quantity: { from: 1, to: 2 },
+              reportTarget: "comment", // 'post' | 'comment'
+              reportReasons: ["hate_speech", "false_info"],
+              rotateReasons: true,
+              delay: { from: 10, to: 20 },
+              chipsOpen: false
+            }
+          ]
+        }
+      }
+    };
+
+    /* Từ điển 7 chiều tham số */
+    const suggestionDict = {
+      category: {
+        label: "Chủ đề",
+        items: [
+          { name: "Chính trị", phrase: "thuộc chủ đề chính trị" },
+          { name: "Pháp luật", phrase: "thuộc chủ đề pháp luật" },
+          { name: "Kinh tế", phrase: "thuộc chủ đề kinh tế" },
+          { name: "Xã hội", phrase: "thuộc chủ đề đời sống, xã hội" },
+          { name: "Thể thao", phrase: "thuộc chủ đề thể thao" },
+          { name: "An ninh", phrase: "thuộc chủ đề an ninh, trật tự" }
+        ]
+      },
+      entity: {
+        label: "Thực thể",
+        items: [
+          { name: "Đảng, Nhà nước", phrase: "nhắc đến Đảng, Nhà nước" },
+          { name: "Bộ Công an", phrase: "nhắc đến lực lượng Công an, Bộ Công an" },
+          { name: "Chính phủ", phrase: "nhắc đến Chính phủ, cơ quan quản lý" },
+          { name: "Lãnh đạo cấp cao", phrase: "đề cập đến lãnh đạo cấp cao" },
+          { name: "Đối tượng phản động", phrase: "nhắc đến các đối tượng phản động, chống phá" }
+        ]
+      },
+      sentiment: {
+        label: "Sắc thái",
+        items: [
+          { name: "Tích cực, khen ngợi", phrase: "mang sắc thái tích cực, khen ngợi" },
+          { name: "Tiêu cực, chê bai", phrase: "mang sắc thái tiêu cực, chê bai" },
+          { name: "Trung lập", phrase: "mang sắc thái trung lập, khách quan" },
+          { name: "Châm biếm mỉa mai", phrase: "mang giọng điệu châm biếm, mỉa mai" }
+        ]
+      },
+      stance: {
+        label: "Lập trường",
+        items: [
+          { name: "Ủng hộ chính sách", phrase: "có lập trường ủng hộ đường lối, chính sách" },
+          { name: "Bôi nhọ, xuyên tạc", phrase: "có lập trường bôi nhọ, xuyên tạc sự thật" },
+          { name: "Kích động chống đối", phrase: "có lập trường kích động, chống đối" }
+        ]
+      },
+      author: {
+        label: "Tác giả",
+        items: [
+          { name: "Báo tích xanh", phrase: "được đăng bởi trang báo có tích xanh" },
+          { name: "Báo chính thống", phrase: "được đăng bởi các cơ quan báo chí chính thống" },
+          { name: "Hội nhóm công khai", phrase: "được đăng trong các hội nhóm công khai" },
+          { name: "Người lạ / Cá nhân", phrase: "được đăng bởi người dùng lạ / tài khoản cá nhân" }
+        ]
+      },
+      engagement: {
+        label: "Tương tác",
+        items: [
+          { name: "Tương tác cao >200 like", phrase: "có lượng tương tác cao (trên 200 lượt thích)" },
+          { name: "Đang tranh cãi gay gắt", phrase: "đang có nhiều bình luận tranh cãi gay gắt" },
+          { name: "Vừa mới đăng", phrase: "vừa mới được đăng tải gần đây" }
+        ]
+      },
+      toxicity: {
+        label: "Độ độc hại",
+        items: [
+          { name: "Ngôn từ thù ghét", phrase: "chứa ngôn từ thù ghét, thóa mạ" },
+          { name: "Tin giả bịa đặt", phrase: "chứa thông tin sai sự thật, tin giả bịa đặt" },
+          { name: "Xúc phạm thô tục", phrase: "chứa lời lẽ xúc phạm, thô tục" }
+        ]
+      }
+    };
+
+    const presetTemplates = [
+      { key: "khen_chinh_sach", label: "Khen ngợi chủ trương, chính sách", text: "Bài viết thuộc chủ đề chính trị hoặc kinh tế, có nội dung tích cực ủng hộ Đảng và Nhà nước, đăng bởi trang báo tích xanh, có tương tác cao trên 200 like" },
+      { key: "chong_xuyen_tac", label: "Phản đối bôi nhọ, xuyên tạc", text: "Bài viết có lập trường bôi nhọ, xuyên tạc cơ quan công quyền, sắc thái tiêu cực công kích thù địch" },
+      { key: "the_thao", label: "Cổ vũ thể thao Việt Nam", text: "Bài viết thuộc chủ đề thể thao về bóng đá Việt Nam hoặc vận động viên Việt Nam đạt huy chương vàng" },
+      { key: "tin_gia", label: "Cảnh báo tin giả, độc hại", text: "Bài viết hoặc bình luận chứa thông tin giả mạo sai sự thật về tình hình an ninh trật tự gây hoang mang dư luận" }
+    ];
+
+    /* ====================================================================
+       ĐIỀU HƯỚNG MÀN HÌNH (NAVIGATION)
+       ==================================================================== */
+    function switchScreen(screenId, element) {
+      document.querySelectorAll('.screen-view').forEach(sc => sc.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+
+      const target = document.getElementById(screenId);
+      if (target) {
+        target.classList.add('active');
+        const scrollArea = target.querySelector('.workspace-scroll-area');
+        if (scrollArea) scrollArea.scrollTop = 0;
+      }
+
+      if (element) element.classList.add('active');
+
+      if (screenId === 'screen-08') {
+        renderOverviewVisual();
+        renderOverviewJson();
+      }
+    }
+
+    function toggleLimitMode(mode) {
+      state.global.limitMode = mode;
+      const optPosts = document.getElementById('opt-limit-posts');
+      const optTime = document.getElementById('opt-limit-time');
+
+      if (mode === 'posts') {
+        optPosts.classList.add('selected');
+        optTime.classList.remove('selected');
+      } else {
+        optTime.classList.add('selected');
+        optPosts.classList.remove('selected');
+      }
+    }
+
+    /* ====================================================================
+       RENDER THẺ ĐIỀU KIỆN (MODERN SAAS CARDS)
+       ==================================================================== */
+    function renderConditions(actKey) {
+      const containerId = `container-${actKey}`;
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      const actData = state.actions[actKey];
+      const conditions = actData.conditions;
+
+      // Cập nhật badge
+      const badge = document.getElementById(`badge-${actKey}`);
+      if (badge) {
+        badge.innerText = conditions.length;
+        if (conditions.length > 0) badge.classList.add('has-cond');
+        else badge.classList.remove('has-cond');
+      }
+
+      // Toolbar tùy chọn quy tắc khớp điều kiện (Áp dụng cho cả 7 hành động)
+      const matchToolbar = `
+        <div class="match-rule-toolbar">
+          <div class="match-rule-left">
+            <span class="match-rule-label">Quy tắc khớp điều kiện:</span>
+          </div>
+          <div class="match-rule-options">
+            <label class="match-rule-option ${actData.matchMode !== 'all' ? 'active' : ''}">
+              <input type="radio" name="match-mode-${actKey}" value="first" ${actData.matchMode !== 'all' ? 'checked' : ''} onchange="setActionMatchMode('${actKey}', 'first')">
+              <span>Chỉ áp dụng điều kiện đầu tiên thỏa mãn</span>
+            </label>
+            <label class="match-rule-option ${actData.matchMode === 'all' ? 'active' : ''}">
+              <input type="radio" name="match-mode-${actKey}" value="all" ${actData.matchMode === 'all' ? 'checked' : ''} onchange="setActionMatchMode('${actKey}', 'all')">
+              <span>Áp dụng tất cả các điều kiện thỏa mãn</span>
+            </label>
+          </div>
+        </div>
+      `;
+
+      if (conditions.length === 0) {
+        container.innerHTML = `
+          ${matchToolbar}
+          <div style="padding: 40px 20px; text-align: center; color: var(--text-dim); border: 1px dashed var(--border-color); border-radius: var(--radius-lg); background: var(--bg-surface);">
+            <p style="font-size: 14px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px;">Chưa có điều kiện nào cho hành động này</p>
+            <p style="font-size: 13px; margin-bottom: 14px;">Nhấn nút bên dưới để tạo điều kiện kích hoạt đầu tiên.</p>
+            <button class="btn btn-primary" onclick="addNewCondition('${containerId}', '${actKey}')">+ Thêm điều kiện mới</button>
+          </div>
+        `;
+        updateTotalCount();
+        return;
+      }
+
+      let html = matchToolbar;
+      conditions.forEach((cond, index) => {
+        const condIndex = index + 1;
+        const isCollapsed = cond.collapsed !== false; // Mặc định khi mới mở giao diện là thu gọn (collapsed)
+        html += `
+          <div class="condition-card ${isCollapsed ? 'collapsed' : ''}" id="card-${actKey}-${cond.id}">
+            <!-- CARD HEADER -->
+            <div class="card-header" onclick="toggleCard('${actKey}', ${cond.id})">
+              <div class="card-header-left">
+                <span class="card-toggle-icon">
+                  <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+                <span class="card-cond-tag">Điều kiện ${condIndex}</span>
+                <span class="card-summary-text">${cond.prompt || "Chưa nhập nội dung prompt mô tả điều kiện..."}</span>
+              </div>
+              <div class="card-header-actions" onclick="event.stopPropagation()">
+                <button class="btn-icon-action" onclick="duplicateCondition('${actKey}', ${cond.id})">
+                  <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  <span class="tooltip-text">Nhân bản điều kiện</span>
+                </button>
+                <button class="btn-icon-action btn-delete" onclick="deleteCondition('${actKey}', ${cond.id})">
+                  <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  <span class="tooltip-text">Xóa điều kiện</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- CARD BODY -->
+            <div class="card-body">
+              <!-- KHỐI 1: PROMPT MÔ TẢ ĐIỀU KIỆN (SIÊU GỌN GÀNG) -->
+              <div class="section-block">
+                <div class="prompt-toolbar-header">
+                  <div style="font-size: 13px; font-weight: 700; color: var(--text-heading); letter-spacing: -0.01em;">
+                    Prompt mô tả điều kiện
+                  </div>
+                  <div style="display: flex; align-items: center;">
+                    <button class="btn-toggle-chips" onclick="toggleChipsBar('${actKey}', ${cond.id})">
+                      <span>💡 Gợi ý</span>
+                      <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Textarea nhập Prompt -->
+                <textarea class="prompt-textarea" placeholder="Nhập mô tả bài viết/bình luận cần tương tác (ví dụ: Bài viết thuộc chủ đề chính trị, nhắc đến Chính phủ, có sắc thái tích cực ủng hộ... Hoặc bấm 'Gợi ý' để chèn nhanh)" oninput="updatePromptValue('${actKey}', ${cond.id}, this.value)" id="prompt-input-${actKey}-${cond.id}">${cond.prompt}</textarea>
+
+                <!-- Thanh công cụ gợi ý nhỏ gọn (Có thể ẩn/mở) -->
+                <div class="chips-bar-collapsed ${cond.chipsOpen ? 'open' : ''}" id="chips-bar-${actKey}-${cond.id}">
+                  <span style="font-size: 11px; font-weight: 700; color: var(--text-dim); margin-right: 4px;">⚡ Chèn nhanh:</span>
+                  ${Object.keys(suggestionDict).map(k => {
+          const group = suggestionDict[k];
+          return `
+                      <div class="dropdown-chip" id="drop-${actKey}-${cond.id}-${k}">
+                        <button class="btn-dropdown-chip" onclick="toggleDropdownMenu(event, 'drop-${actKey}-${cond.id}-${k}')">
+                          <span>${group.label}</span>
+                          <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div class="dropdown-menu-list">
+                          ${group.items.map(item => `
+                            <div class="dropdown-item" onclick="insertPromptPhrase('${actKey}', ${cond.id}, '${item.phrase}')">+ ${item.name}</div>
+                          `).join('')}
+                        </div>
+                      </div>
+                    `;
+        }).join('')}
+                </div>
+              </div>
+
+              <!-- CẤU HÌNH HÀNH ĐỘNG THỰC THI -->
+              <div class="section-block">
+                <div class="section-block-title">
+                  <span>Cấu hình hành động thực thi</span>
+                  <span style="font-size: 11px; text-transform: none; color: var(--text-dim); font-weight: 500;">Chọn 1 trong 2 cơ chế áp dụng</span>
+                </div>
+
+                <!-- 1. CHỌN ÁP DỤNG: THEO % HOẶC THEO SỐ LƯỢNG (RADIO TRÊN CÙNG 1 DÒNG: TRÁI - PHẢI) -->
+                <div class="apply-mode-grid">
+                  <div class="radio-card ${cond.applyMode === 'percent' ? 'selected' : ''}" onclick="setApplyMode('${actKey}', ${cond.id}, 'percent')">
+                    <span class="modern-radio"></span>
+                    <div style="flex: 1; min-width: 0;">
+                      <div style="font-weight: 600; font-size: 13px; color: var(--text-heading);">Áp dụng theo Tỷ lệ thực hiện (%)</div>
+                      <div class="input-range-row" style="margin-top: 4px;">
+                        Tỷ lệ: <input type="number" class="input-number" value="${cond.percent}" min="1" max="100" oninput="updateCondField('${actKey}', ${cond.id}, 'percent', this.value)"> %
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="radio-card ${cond.applyMode === 'quantity' ? 'selected' : ''}" onclick="setApplyMode('${actKey}', ${cond.id}, 'quantity')">
+                    <span class="modern-radio"></span>
+                    <div style="flex: 1; min-width: 0;">
+                      <div style="font-weight: 600; font-size: 13px; color: var(--text-heading);">Áp dụng theo Số lượng bài tương tác</div>
+                      <div class="input-range-row" style="margin-top: 4px;">
+                        Từ <input type="number" class="input-number" value="${cond.quantity ? cond.quantity.from : 1}" min="1" oninput="updateCondQuantity('${actKey}', ${cond.id}, 'from', this.value)"> đến 
+                        <input type="number" class="input-number" value="${cond.quantity ? cond.quantity.to : 3}" min="1" oninput="updateCondQuantity('${actKey}', ${cond.id}, 'to', this.value)"> bài
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. THAM SỐ ĐẶC THÙ CHO TỪNG HÀNH ĐỘNG -->
+                ${renderActionSpecificControls(actKey, cond)}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      updateTotalCount();
+    }
+
+    /* Render tham số đặc thù từng hành động */
+    function renderActionSpecificControls(actKey, cond) {
+      if (actKey === '01') {
+        // Bày tỏ cảm xúc: CHỈ HIỂN THỊ BIỂU TƯỢNG (KHÔNG CÓ CHỮ)
+        const emoList = [
+          { key: 'like', icon: '👍' },
+          { key: 'love', icon: '❤️' },
+          { key: 'care', icon: '🥰' },
+          { key: 'haha', icon: '😆' },
+          { key: 'wow', icon: '😮' },
+          { key: 'sad', icon: '😢' },
+          { key: 'angry', icon: '😡' }
+        ];
+        return `
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div>
+              <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Biểu tượng cảm xúc (Chọn các icon được phép thả):</label>
+              <div class="emoji-picker-bar">
+                ${emoList.map(e => `
+                  <button type="button" class="emoji-btn ${cond.reactions && cond.reactions.includes(e.key) ? 'selected' : ''}" onclick="toggleReactionEmoji('${actKey}', ${cond.id}, '${e.key}')">
+                    ${e.icon}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+            <div>
+              <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Thời gian dừng đọc bài trước khi bấm:</label>
+              <div class="input-range-row">
+                Từ <input type="number" class="input-number" value="${cond.delay ? cond.delay.from : 3}" oninput="updateCondDelay('${actKey}', ${cond.id}, 'from', this.value)"> đến 
+                <input type="number" class="input-number" value="${cond.delay ? cond.delay.to : 8}" oninput="updateCondDelay('${actKey}', ${cond.id}, 'to', this.value)"> giây
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (actKey === '02') {
+        // Xem đầy đủ bài viết
+        return `
+          <div>
+            <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Thời gian dừng đọc sau khi mở "Xem thêm":</label>
+            <div class="input-range-row">
+              Từ <input type="number" class="input-number" value="${cond.readDuration ? cond.readDuration.from : 5}"> đến 
+              <input type="number" class="input-number" value="${cond.readDuration ? cond.readDuration.to : 12}"> giây
+            </div>
+          </div>
+        `;
+      } else if (actKey === '03' || actKey === '04' || actKey === '06') {
+        // Chia sẻ bài viết (03), Bình luận văn bản (04) & Reply bình luận (06) DÙNG CHUNG MODULE NỘI DUNG CHUẨN HÓA
+        const isShare = actKey === '03';
+        const isComment = actKey === '04';
+        const isReply = actKey === '06';
+
+        // Lấy dữ liệu tương ứng
+        const contentType = isReply ? (cond.replyContentType || 'manual') : (cond.contentType || 'manual');
+        const manualText = isReply ? (cond.replyManualText || '') : (cond.manualText || '');
+        const autoDelete = isReply ? cond.replyAutoDelete : cond.autoDelete;
+        const withSticker = isReply ? cond.replyWithSticker : cond.withSticker;
+        const currentPromptId = isReply ? (cond.replyAiPromptId || 'p1') : (cond.aiPromptId || 'p1');
+
+        return `
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            ${isShare ? `
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div>
+                  <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Vị trí chia sẻ:</label>
+                  <select class="input-text" style="width: 100%;">
+                    <option value="wall">Lên tường cá nhân</option>
+                    <option value="groups">Vào các nhóm</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Hình thức:</label>
+                  <select class="input-text" style="width: 100%;">
+                    <option value="caption">Chia sẻ kèm nội dung</option>
+                    <option value="share_now">Chia sẻ ngay (Không kèm nội dung)</option>
+                  </select>
+                </div>
+              </div>
+            ` : ''}
+
+
+
+            ${isReply ? `
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
+                <div>
+                  <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Số bình luận quét / bài:</label>
+                  <div class="input-range-row">
+                    Từ <input type="number" class="input-number" value="${cond.scanQuota ? cond.scanQuota.from : 5}"> đến 
+                    <input type="number" class="input-number" value="${cond.scanQuota ? cond.scanQuota.to : 20}"> comment
+                  </div>
+                </div>
+                <div>
+                  <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Tương tác tối đa / bài:</label>
+                  <div class="input-range-row">
+                    Từ <input type="number" class="input-number" value="${cond.interactQuota ? cond.interactQuota.from : 1}"> đến 
+                    <input type="number" class="input-number" value="${cond.interactQuota ? cond.interactQuota.to : 2}"> comment
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tạm thời comment ẩn phần Bày tỏ cảm xúc bình luận:
+              <div style="border-bottom: 1px dashed var(--border-color); padding-bottom: 12px;">
+                <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: flex; align-items: center; gap: 6px; margin-bottom: 6px; cursor: pointer;">
+                  <input type="checkbox" ${cond.enableReaction !== false ? 'checked' : ''}>
+                  <span>Bày tỏ cảm xúc bình luận</span>
+                </label>
+                <div class="emoji-picker-bar">
+                  ${[
+              { key: 'like', icon: '👍' },
+              { key: 'love', icon: '❤️' },
+              { key: 'care', icon: '🥰' },
+              { key: 'haha', icon: '😆' },
+              { key: 'wow', icon: '😮' },
+              { key: 'sad', icon: '😢' },
+              { key: 'angry', icon: '😡' }
+            ].map(e => `
+                    <button type="button" class="emoji-btn ${cond.reactions && cond.reactions.includes(e.key) ? 'selected' : ''}" onclick="toggleReactionEmoji('${actKey}', ${cond.id}, '${e.key}')">
+                      ${e.icon}
+                    </button>
+                  `).join('')}
+                </div>
+              </div>
+              -->
+            ` : ''}
+
+            <!-- MODULE TÙY CHỌN NỘI DUNG (THỦ CÔNG / AI) -->
+            <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 14px;">
+              <div style="display: flex; align-items: center; gap: 18px; margin-bottom: 10px;">
+                <span style="font-weight: 600; font-size: 13px;">${isReply ? 'Trả lời bình luận:' : (isShare ? 'Nội dung chia sẻ:' : 'Nội dung bình luận:')}</span>
+                <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
+                  <input type="radio" name="content-mode-${actKey}-${cond.id}" ${contentType === 'manual' ? 'checked' : ''} onchange="setContentMode('${actKey}', ${cond.id}, 'manual')">
+                  <span>Tạo nội dung thủ công</span>
+                </label>
+                <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
+                  <input type="radio" name="content-mode-${actKey}-${cond.id}" ${contentType === 'ai' ? 'checked' : ''} onchange="setContentMode('${actKey}', ${cond.id}, 'ai')">
+                  <span>Tạo nội dung bằng AI</span>
+                </label>
+              </div>
+
+              <!-- CHẾ ĐỘ THỦ CÔNG -->
+              <div id="manual-block-${actKey}-${cond.id}" style="${contentType === 'manual' ? 'display: flex;' : 'display: none;'} flex-direction: column; gap: 8px;">
+                <div>
+                  <textarea class="prompt-textarea" style="min-height: 80px;" placeholder="Nhập nội dung (Có thể nhập nhiều nội dung. Ngăn cách mỗi nội dung bằng một dòng chỉ chứa ký tự |)" oninput="updateManualText('${actKey}', ${cond.id}, this.value)">${manualText}</textarea>
+                  <div style="font-size: 11px; color: var(--danger); margin-top: 3px;">
+                    * Có thể nhập nhiều nội dung. Ngăn cách mỗi nội dung bằng một dòng chỉ chứa ký tự | (Hỗ trợ định dạng trộn nội dung {A|B|C})
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 18px; font-size: 12.5px;">
+                  <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                    <input type="checkbox" ${autoDelete !== false ? 'checked' : ''}>
+                    <span>Tự động xoá nội dung đã sử dụng</span>
+                  </label>
+                  <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                    <input type="checkbox" ${withSticker !== false ? 'checked' : ''}>
+                    <span>Bình luận bằng sticker ngẫu nhiên</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- CHẾ ĐỘ AI (SEARCHABLE SELECT + SỬA PROMPT QUA POPUP) -->
+              <div id="ai-block-${actKey}-${cond.id}" style="${contentType === 'ai' ? 'display: flex;' : 'display: none;'} flex-direction: column; gap: 8px;">
+                <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">Chọn Prompt AI từ thư viện kịch bản:</label>
+                <div class="searchable-select-wrap">
+                  <div class="custom-combobox" id="combobox-${actKey}-${cond.id}">
+                    <div class="combobox-toggle" onclick="toggleCombobox('${actKey}', ${cond.id})">
+                      <span class="combobox-text" id="combobox-text-${actKey}-${cond.id}">${getPromptName(currentPromptId)}</span>
+                      <svg class="combobox-arrow" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="combobox-dropdown" id="combobox-dropdown-${actKey}-${cond.id}">
+                      <div class="combobox-search-box">
+                        <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" class="combobox-search-input" placeholder="Tìm kiếm Prompt theo từ khóa..." oninput="filterComboboxPrompts('${actKey}', ${cond.id}, this.value)" onclick="event.stopPropagation()">
+                      </div>
+                      <div class="combobox-options-list" id="combobox-options-${actKey}-${cond.id}">
+                        ${renderComboboxOptions(actKey, cond.id, currentPromptId)}
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Nút tạo prompt mới -->
+                  <button type="button" class="btn-edit-prompt" onclick="openCreatePromptModal('${actKey}', ${cond.id})">
+                    <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Tạo Prompt</span>
+                  </button>
+                </div>
+                <div style="font-size: 12px; color: var(--text-dim); background: #ffffff; border: 1px solid var(--border-color); border-radius: 4px; padding: 6px 10px;" id="ai-preview-text-${actKey}-${cond.id}">
+                  <strong>Nội dung:</strong> ${getPromptContent(currentPromptId)}
+                </div>
+              </div>
+            </div>
+
+            <!-- Delay -->
+            <div>
+              <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Thời gian chờ tương tác:</label>
+              <div class="input-range-row">
+                Từ <input type="number" class="input-number" value="${cond.delay ? cond.delay.from : 5}"> đến 
+                <input type="number" class="input-number" value="${cond.delay ? cond.delay.to : 20}"> giây
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (actKey === '05') {
+        // Bình luận ảnh
+        return `
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div>
+              <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Thư mục ảnh:</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" class="input-text" style="flex: 1;" value="D:/OSINT/Images/Co_vu_bong_da" placeholder="C:/path/to/folder">
+                <button class="btn btn-default" type="button">Chọn thư mục...</button>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 20px; font-size: 13px;">
+              <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="radio" name="img-pick-${cond.id}" checked>
+                <span>Ngẫu nhiên 1 ảnh</span>
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="radio" name="img-pick-${cond.id}">
+                <span>Tuần tự theo tên</span>
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer; margin-left: auto;">
+                <input type="checkbox" checked>
+                <span>Tự động xoá ảnh đã sử dụng</span>
+              </label>
+            </div>
+          </div>
+        `;
+      } else if (actKey === '07') {
+        // Báo cáo vi phạm
+        return `
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 20px; font-size: 13px;">
+              <span style="font-weight: 600;">Đối tượng báo cáo:</span>
+              <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="radio" name="report-target-${cond.id}" checked>
+                <span>Báo cáo bài viết</span>
+              </label>
+              <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="radio" name="report-target-${cond.id}">
+                <span>Báo cáo bình luận vi phạm</span>
+              </label>
+            </div>
+            <div>
+              <label style="font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Lý do vi phạm Facebook:</label>
+              <div style="display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px;">
+                <label style="cursor: pointer;"><input type="checkbox" checked> Ngôn từ thù ghét</label>
+                <label style="cursor: pointer;"><input type="checkbox" checked> Tin giả / Sai sự thật</label>
+                <label style="cursor: pointer;"><input type="checkbox"> Quấy rối</label>
+                <label style="cursor: pointer;"><input type="checkbox"> Kích động bạo lực</label>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; border-top: 1px dashed var(--border-color); padding-top: 8px;">
+              <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="checkbox" checked>
+                <span>Phân bổ luân phiên các lý do đã chọn</span>
+              </label>
+              <div class="input-range-row">
+                Thời gian chờ trước khi gửi: <input type="number" class="input-number" value="10"> đến <input type="number" class="input-number" value="20"> giây
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      return '';
+    }
+
+    /* ====================================================================
+       HÀM XỬ LÝ SUB-MODAL PROMPT AI
+       ==================================================================== */
+    let currentEditingTarget = { actKey: null, condId: null };
+
+    function getPromptName(id) {
+      const p = promptLibrary.find(item => item.id === id);
+      return p ? p.name : "Chọn Prompt AI...";
+    }
+
+    function renderPromptOptionItem(p, actKey, condId, selectedId) {
+      const isSelected = p.id === selectedId;
+      return `
+        <div class="combobox-option ${isSelected ? 'selected' : ''}" onclick="selectComboboxPrompt('${actKey}', ${condId}, '${p.id}')">
+          <div class="combobox-option-info">
+            <div class="combobox-option-title">${p.name}</div>
+            <div class="combobox-option-desc">${p.content}</div>
+          </div>
+          <button type="button" class="btn-option-edit" title="Chỉnh sửa prompt này" onclick="event.stopPropagation(); openEditPromptById('${actKey}', ${condId}, '${p.id}')">
+            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+          </button>
+        </div>
+      `;
+    }
+
+    function renderComboboxOptions(actKey, condId, selectedId) {
+      return promptLibrary.map(p => renderPromptOptionItem(p, actKey, condId, selectedId)).join('');
+    }
+
+    function toggleCombobox(actKey, condId) {
+      const el = document.getElementById(`combobox-${actKey}-${condId}`);
+      if (!el) return;
+      const wasOpen = el.classList.contains('open');
+      document.querySelectorAll('.custom-combobox').forEach(c => c.classList.remove('open'));
+      if (!wasOpen) {
+        el.classList.add('open');
+        const input = el.querySelector('.combobox-search-input');
+        if (input) {
+          input.value = '';
+          filterComboboxPrompts(actKey, condId, '');
+          setTimeout(() => input.focus(), 60);
+        }
+      }
+    }
+
+    function filterComboboxPrompts(actKey, condId, keyword) {
+      const container = document.getElementById(`combobox-options-${actKey}-${condId}`);
+      if (!container) return;
+      const kw = (keyword || '').toLowerCase().trim();
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      const currentPromptId = (actKey === '06') ? (cond.replyAiPromptId || 'p1') : (cond.aiPromptId || 'p1');
+
+      const filtered = promptLibrary.filter(p =>
+        p.name.toLowerCase().includes(kw) || p.content.toLowerCase().includes(kw)
+      );
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="padding: 12px; font-size: 12px; color: var(--text-dim); text-align: center;">Không tìm thấy Prompt phù hợp</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(p => renderPromptOptionItem(p, actKey, condId, currentPromptId)).join('');
+    }
+
+    function selectComboboxPrompt(actKey, condId, promptId) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      if (cond) {
+        if (actKey === '06') cond.replyAiPromptId = promptId;
+        else cond.aiPromptId = promptId;
+      }
+
+      const textEl = document.getElementById(`combobox-text-${actKey}-${condId}`);
+      if (textEl) textEl.innerText = getPromptName(promptId);
+
+      const previewEl = document.getElementById(`ai-preview-text-${actKey}-${condId}`);
+      if (previewEl) {
+        previewEl.innerHTML = `<strong>Nội dung câu lệnh:</strong> ${getPromptContent(promptId)}`;
+      }
+
+      const combobox = document.getElementById(`combobox-${actKey}-${condId}`);
+      if (combobox) combobox.classList.remove('open');
+    }
+
+    function toggleHintPopover(e, hintId) {
+      e.stopPropagation();
+      const popover = document.getElementById(hintId);
+      if (popover) {
+        popover.classList.toggle('pinned');
+      }
+    }
+
+    function handlePromptInput(actKey, condId, textarea) {
+      const val = textarea.value;
+      updatePromptValue(actKey, condId, val);
+
+      const slashMenu = document.getElementById(`slash-menu-${actKey}-${condId}`);
+      if (!slashMenu) return;
+
+      const lastSlashIdx = val.lastIndexOf('/');
+      if (lastSlashIdx !== -1 && lastSlashIdx >= val.length - 12) {
+        slashMenu.classList.add('show');
+      } else {
+        slashMenu.classList.remove('show');
+      }
+    }
+
+    function insertSlashOption(actKey, condId, type) {
+      const textarea = document.getElementById(`prompt-input-${actKey}-${condId}`);
+      const slashMenu = document.getElementById(`slash-menu-${actKey}-${condId}`);
+      if (slashMenu) slashMenu.classList.remove('show');
+
+      let insertText = '';
+      if (type === 'chude') insertText = 'Chủ đề: Chính trị, Xã hội';
+      else if (type === 'thucthe') insertText = 'Thực thể: Đảng, Nhà nước';
+      else if (type === 'sacthai') insertText = 'Sắc thái: Tích cực, ủng hộ';
+      else if (type === 'laptruong') insertText = 'Lập trường: Ủng hộ chính sách';
+      else if (type === 'tacgia') insertText = 'Tác giả: Báo tích xanh';
+      else if (type === 'tuongtac') insertText = 'Tương tác cao >200 like';
+      else if (type === 'dodochan') insertText = 'Độ độc hại: Ngôn từ thù ghét';
+      else if (type === 'mau') {
+        applyPresetDirect(actKey, condId, 'khen_chinh_sach');
+        return;
+      }
+
+      if (textarea) {
+        let val = textarea.value;
+        const lastSlash = val.lastIndexOf('/');
+        if (lastSlash !== -1) {
+          val = val.substring(0, lastSlash).trimEnd();
+        }
+        val = val ? `${val}, ${insertText}` : insertText;
+        textarea.value = val;
+        updatePromptValue(actKey, condId, val);
+        textarea.focus();
+      }
+    }
+
+    function getPromptContent(id) {
+      const p = promptLibrary.find(item => item.id === id);
+      return p ? p.content : "Chưa có nội dung";
+    }
+
+    function openEditPromptById(actKey, condId, promptId) {
+      currentEditingTarget = { actKey, condId, mode: 'edit', promptId };
+      document.querySelectorAll('.custom-combobox').forEach(c => c.classList.remove('open'));
+
+      const p = promptLibrary.find(item => item.id === promptId) || promptLibrary[0];
+      document.getElementById('edit-prompt-id').value = p.id;
+      document.getElementById('edit-prompt-name').value = p.name;
+      document.getElementById('edit-prompt-content').value = p.content;
+
+      const titleEl = document.getElementById('edit-prompt-modal-title-text');
+      if (titleEl) titleEl.innerText = "Chỉnh sửa Prompt AI";
+      const btnSave = document.getElementById('btn-save-prompt-modal');
+      if (btnSave) btnSave.innerText = "Lưu thay đổi";
+
+      document.getElementById('edit-prompt-modal').style.display = 'flex';
+      setTimeout(() => {
+        const input = document.getElementById('edit-prompt-name');
+        if (input) input.focus();
+      }, 50);
+    }
+
+    function openCreatePromptModal(actKey, condId) {
+      currentEditingTarget = { actKey, condId, mode: 'create' };
+      document.querySelectorAll('.custom-combobox').forEach(c => c.classList.remove('open'));
+
+      document.getElementById('edit-prompt-id').value = '';
+      document.getElementById('edit-prompt-name').value = '';
+      document.getElementById('edit-prompt-content').value = '';
+
+      const titleEl = document.getElementById('edit-prompt-modal-title-text');
+      if (titleEl) titleEl.innerText = "Tạo Prompt AI mới";
+      const btnSave = document.getElementById('btn-save-prompt-modal');
+      if (btnSave) btnSave.innerText = "Tạo prompt";
+
+      document.getElementById('edit-prompt-modal').style.display = 'flex';
+      setTimeout(() => {
+        const input = document.getElementById('edit-prompt-name');
+        if (input) input.focus();
+      }, 50);
+    }
+
+    function openEditPromptModal(actKey, condId) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      const isReply = actKey === '06';
+      const promptId = isReply ? (cond.replyAiPromptId || 'p1') : (cond.aiPromptId || 'p1');
+      openEditPromptById(actKey, condId, promptId);
+    }
+
+    function closeEditPromptModal() {
+      document.getElementById('edit-prompt-modal').style.display = 'none';
+    }
+
+    function insertVarToPrompt(varName) {
+      const textarea = document.getElementById('edit-prompt-content');
+      if (textarea) {
+        textarea.value += ' ' + varName;
+        textarea.focus();
+      }
+    }
+
+    function savePromptModal() {
+      const name = (document.getElementById('edit-prompt-name').value || '').trim();
+      const content = (document.getElementById('edit-prompt-content').value || '').trim();
+
+      if (!name) {
+        showToast("Vui lòng nhập tên Prompt!");
+        document.getElementById('edit-prompt-name').focus();
+        return;
+      }
+      if (!content) {
+        showToast("Vui lòng nhập nội dung prompt!");
+        document.getElementById('edit-prompt-content').focus();
+        return;
+      }
+
+      if (currentEditingTarget.mode === 'create') {
+        const newId = 'p_' + Date.now();
+        const newPrompt = { id: newId, name: name, content: content };
+        promptLibrary.push(newPrompt);
+
+        // Tự động chọn luôn prompt mới tạo cho điều kiện hiện tại
+        if (currentEditingTarget.actKey && currentEditingTarget.condId) {
+          const cond = state.actions[currentEditingTarget.actKey].conditions.find(c => c.id === currentEditingTarget.condId);
+          if (cond) {
+            if (currentEditingTarget.actKey === '06') {
+              cond.replyAiPromptId = newId;
+            } else {
+              cond.aiPromptId = newId;
+            }
+          }
+        }
+
+        closeEditPromptModal();
+        showToast("Đã tạo và tự động chọn Prompt mới thành công!");
+
+        if (currentEditingTarget.actKey) {
+          renderConditions(currentEditingTarget.actKey);
+        }
+      } else {
+        const id = document.getElementById('edit-prompt-id').value;
+        const p = promptLibrary.find(item => item.id === id);
+        if (p) {
+          p.name = name;
+          p.content = content;
+        }
+
+        closeEditPromptModal();
+        showToast("Đã lưu thay đổi Prompt AI thành công!");
+
+        if (currentEditingTarget.actKey) {
+          renderConditions(currentEditingTarget.actKey);
+        }
+      }
+    }
+
+    function setContentMode(actKey, condId, mode) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      if (cond) {
+        if (actKey === '06') cond.replyContentType = mode;
+        else cond.contentType = mode;
+
+        const manualBlock = document.getElementById(`manual-block-${actKey}-${condId}`);
+        const aiBlock = document.getElementById(`ai-block-${actKey}-${condId}`);
+        if (manualBlock && aiBlock) {
+          manualBlock.style.display = mode === 'manual' ? 'flex' : 'none';
+          aiBlock.style.display = mode === 'ai' ? 'flex' : 'none';
+        }
+      }
+    }
+
+    function changeAiPrompt(actKey, condId, promptId) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      if (cond) {
+        if (actKey === '06') cond.replyAiPromptId = promptId;
+        else cond.aiPromptId = promptId;
+
+        const previewEl = document.getElementById(`ai-preview-text-${actKey}-${condId}`);
+        if (previewEl) {
+          previewEl.innerHTML = `<strong>Nội dung câu lệnh:</strong> ${getPromptContent(promptId)}`;
+        }
+      }
+    }
+
+    function updateManualText(actKey, condId, val) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      if (cond) {
+        if (actKey === '06') cond.replyManualText = val;
+        else cond.manualText = val;
+      }
+    }
+
+    /* ====================================================================
+       THAO TÁC CARD: THÊM / XÓA / NHÂN BẢN / MỞ RỘNG / THU GỌN
+       ==================================================================== */
+    function setActionMatchMode(actKey, mode) {
+      const actData = state.actions[actKey];
+      if (actData) {
+        actData.matchMode = mode;
+        renderConditions(actKey);
+        showToast(mode === 'all'
+          ? "Đã lưu: Áp dụng tất cả các điều kiện thỏa mãn"
+          : "Đã lưu: Chỉ áp dụng điều kiện đầu tiên thỏa mãn");
+      }
+    }
+
+    function addNewCondition(containerId, actKey) {
+      const actData = state.actions[actKey];
+      const newId = Date.now();
+      const newCond = {
+        id: newId,
+        prompt: "",
+        applyMode: "percent",
+        percent: 80,
+        quantity: { from: 1, to: 3 },
+        reactions: ["like"],
+        delay: { from: 3, to: 6 },
+        chipsOpen: false,
+        collapsed: false // Khi người dùng thêm một điều kiện mới thì điều kiện mới sẽ ở dạng mở rộng
+      };
+
+      actData.conditions.push(newCond);
+      renderConditions(actKey);
+      showToast(`Đã thêm Điều kiện ${actData.conditions.length}!`);
+
+      // Tự động cuộn đến thẻ điều kiện mới và focus vào ô prompt
+      setTimeout(() => {
+        const newCard = document.getElementById(`card-${actKey}-${newId}`);
+        if (newCard) {
+          newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          newCard.classList.add('highlight-new');
+          setTimeout(() => newCard.classList.remove('highlight-new'), 1800);
+          const textarea = document.getElementById(`prompt-input-${actKey}-${newId}`);
+          if (textarea) textarea.focus();
+        }
+      }, 60);
+    }
+
+    function deleteCondition(actKey, condId) {
+      const actData = state.actions[actKey];
+      actData.conditions = actData.conditions.filter(c => c.id !== condId);
+      renderConditions(actKey);
+      showToast("Đã xóa điều kiện.");
+    }
+
+    function duplicateCondition(actKey, condId) {
+      const actData = state.actions[actKey];
+      const source = actData.conditions.find(c => c.id === condId);
+      if (!source) return;
+
+      const clone = JSON.parse(JSON.stringify(source));
+      const newId = Date.now();
+      clone.id = newId;
+      clone.collapsed = false; // Khi nhân bản cũng ở dạng mở rộng để tiện theo dõi
+      actData.conditions.push(clone);
+      renderConditions(actKey);
+      showToast(`Đã nhân bản thành Điều kiện ${actData.conditions.length}!`);
+
+      setTimeout(() => {
+        const clonedCard = document.getElementById(`card-${actKey}-${newId}`);
+        if (clonedCard) {
+          clonedCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          clonedCard.classList.add('highlight-new');
+          setTimeout(() => clonedCard.classList.remove('highlight-new'), 1800);
+        }
+      }, 60);
+    }
+
+    function toggleCard(actKey, condId) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      const card = document.getElementById(`card-${actKey}-${condId}`);
+      if (card) {
+        card.classList.toggle('collapsed');
+        if (cond) {
+          cond.collapsed = card.classList.contains('collapsed');
+        }
+      }
+    }
+
+    function toggleAllCards(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const cards = container.querySelectorAll('.condition-card');
+      if (cards.length === 0) return;
+
+      const actKey = containerId.replace('container-', '');
+      const anyOpen = Array.from(cards).some(c => !c.classList.contains('collapsed'));
+      const shouldCollapse = anyOpen;
+
+      cards.forEach(card => {
+        if (shouldCollapse) card.classList.add('collapsed');
+        else card.classList.remove('collapsed');
+      });
+
+      if (state.actions[actKey]) {
+        state.actions[actKey].conditions.forEach(c => {
+          c.collapsed = shouldCollapse;
+        });
+      }
+    }
+
+    /* Đóng mở thanh chèn nhanh ở Khối 1 */
+    function toggleChipsBar(actKey, condId) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      if (cond) {
+        cond.chipsOpen = !cond.chipsOpen;
+        const bar = document.getElementById(`chips-bar-${actKey}-${condId}`);
+        if (bar) bar.classList.toggle('open', cond.chipsOpen);
+      }
+    }
+
+    /* Đóng mở dropdown menu của thanh chèn nhanh */
+    function toggleDropdownMenu(e, dropdownId) {
+      e.stopPropagation();
+      document.querySelectorAll('.dropdown-chip').forEach(d => {
+        if (d.id !== dropdownId) d.classList.remove('open');
+      });
+      const target = document.getElementById(dropdownId);
+      if (target) target.classList.toggle('open');
+    }
+
+    document.addEventListener('click', (e) => {
+      document.querySelectorAll('.dropdown-chip').forEach(d => d.classList.remove('open'));
+      if (!e.target.closest('.custom-combobox')) {
+        document.querySelectorAll('.custom-combobox').forEach(c => c.classList.remove('open'));
+      }
+      if (!e.target.closest('.info-hint-icon')) {
+        document.querySelectorAll('.hint-popover').forEach(p => p.classList.remove('pinned'));
+      }
+      if (!e.target.closest('.slash-menu-wrap')) {
+        document.querySelectorAll('.slash-popup-menu').forEach(m => m.classList.remove('show'));
+      }
+    });
+
+    /* ====================================================================
+       UPDATE DỮ LIỆU TỪ FORM
+       ==================================================================== */
+    function updatePromptValue(actKey, condId, text) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      if (cond) cond.prompt = text;
+
+      const card = document.getElementById(`card-${actKey}-${condId}`);
+      if (card) {
+        const textEl = card.querySelector('.card-summary-text');
+        if (textEl) textEl.innerText = text || "Chưa nhập nội dung prompt mô tả điều kiện...";
+      }
+    }
+
+    function insertPromptPhrase(actKey, condId, phrase) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      if (!cond) return;
+
+      const current = (cond.prompt || "").trim();
+      let newPrompt = "";
+      if (!current) {
+        newPrompt = `Bài viết ${phrase}`;
+      } else {
+        newPrompt = `${current}, ${phrase}`;
+      }
+      cond.prompt = newPrompt;
+
+      const textarea = document.getElementById(`prompt-input-${actKey}-${condId}`);
+      if (textarea) textarea.value = newPrompt;
+      updatePromptValue(actKey, condId, newPrompt);
+      document.querySelectorAll('.dropdown-chip').forEach(d => d.classList.remove('open'));
+    }
+
+    function applyPresetDirect(actKey, condId, presetKey) {
+      const p = presetTemplates.find(item => item.key === presetKey);
+      if (!p) return;
+
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      if (cond) {
+        cond.prompt = p.text;
+        const textarea = document.getElementById(`prompt-input-${actKey}-${condId}`);
+        if (textarea) textarea.value = p.text;
+        updatePromptValue(actKey, condId, p.text);
+      }
+      document.querySelectorAll('.dropdown-chip').forEach(d => d.classList.remove('open'));
+    }
+
+    function setApplyMode(actKey, condId, mode) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      if (cond) {
+        if (cond.applyMode === mode) return;
+        cond.applyMode = mode;
+        renderConditions(actKey);
+      }
+    }
+
+    function updateCondField(actKey, condId, field, val) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      if (cond) cond[field] = parseInt(val) || 0;
+    }
+
+    function updateCondQuantity(actKey, condId, bound, val) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      if (cond && cond.quantity) cond.quantity[bound] = parseInt(val) || 0;
+    }
+
+    function updateCondDelay(actKey, condId, bound, val) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      if (cond) {
+        if (!cond.delay) cond.delay = { from: 3, to: 8 };
+        cond.delay[bound] = parseInt(val) || 0;
+      }
+    }
+
+    function toggleReactionEmoji(actKey, condId, emojiKey) {
+      const cond = state.actions[actKey].conditions.find(c => c.id === condId);
+      if (!cond) return;
+      if (!cond.reactions) cond.reactions = [];
+
+      if (cond.reactions.includes(emojiKey)) {
+        cond.reactions = cond.reactions.filter(r => r !== emojiKey);
+      } else {
+        cond.reactions.push(emojiKey);
+      }
+      renderConditions(actKey);
+    }
+
+    function updateTotalCount() {
+      let total = 0;
+      Object.keys(state.actions).forEach(key => {
+        total += state.actions[key].conditions.length;
+      });
+      const el = document.getElementById('footer-summary-text');
+      if (el) el.innerText = `Tổng số điều kiện đã thiết lập: ${total} điều kiện`;
+    }
+
+    /* ====================================================================
+       SCREEN 08: TỔNG QUAN CẤU HÌNH (MÔ TẢ & JSON)
+       ==================================================================== */
+    function switchOverviewTab(tab, btn) {
+      document.querySelectorAll('.overview-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const visualView = document.getElementById('overview-visual-view');
+      const jsonView = document.getElementById('overview-json-view');
+
+      if (tab === 'visual') {
+        visualView.style.display = 'flex';
+        jsonView.style.display = 'none';
+        renderOverviewVisual();
+      } else {
+        visualView.style.display = 'none';
+        jsonView.style.display = 'block';
+        renderOverviewJson();
+      }
+    }
+
+    function renderConditionExecutionSummary(actKey, cond) {
+      const emojiLabels = {
+        like: '👍 Thích',
+        love: '❤️ Yêu thích',
+        care: '🥰 Thương thương',
+        haha: '😆 Haha',
+        wow: '😮 Wow',
+        sad: '😢 Buồn',
+        angry: '😡 Phẫn nộ'
+      };
+
+      let rows = [];
+
+      // 1. Cơ chế áp dụng
+      if (cond.applyMode === 'percent') {
+        rows.push({
+          label: 'Cơ chế áp dụng',
+          value: `Tỷ lệ ${cond.percent || 0}% bài viết phù hợp`
+        });
+      } else {
+        const qFrom = cond.quantity ? cond.quantity.from : 1;
+        const qTo = cond.quantity ? cond.quantity.to : 3;
+        rows.push({
+          label: 'Cơ chế áp dụng',
+          value: `Số lượng ${qFrom} - ${qTo} bài viết`
+        });
+      }
+
+      // 2. Tham số chi tiết theo hành động
+      if (actKey === '01') {
+        // Bày tỏ cảm xúc bài viết
+        const dFrom = cond.delay ? cond.delay.from : 3;
+        const dTo = cond.delay ? cond.delay.to : 8;
+        rows.push({
+          label: 'Thời gian dừng đọc',
+          value: `Từ ${dFrom} đến ${dTo} giây`
+        });
+
+        const reactionsHtml = cond.reactions && cond.reactions.length > 0
+          ? cond.reactions.map(r => `<span class="overview-emoji-tag">${emojiLabels[r] || r}</span>`).join('')
+          : 'Chưa chọn';
+        rows.push({
+          label: 'Biểu tượng cảm xúc',
+          value: reactionsHtml,
+          fullWidth: true
+        });
+      } else if (actKey === '02') {
+        // Xem đầy đủ bài viết
+        const rFrom = cond.readDuration ? cond.readDuration.from : 5;
+        const rTo = cond.readDuration ? cond.readDuration.to : 12;
+        rows.push({
+          label: 'Thời gian đọc tiếp',
+          value: `Từ ${rFrom} đến ${rTo} giây`
+        });
+      } else if (actKey === '03') {
+        // Chia sẻ bài viết
+        rows.push({ label: 'Vị trí chia sẻ', value: 'Lên tường cá nhân' });
+        rows.push({ label: 'Hình thức chia sẻ', value: 'Chia sẻ kèm nội dung' });
+        const dFrom = cond.delay ? cond.delay.from : 5;
+        const dTo = cond.delay ? cond.delay.to : 20;
+        rows.push({ label: 'Thời gian chờ', value: `Từ ${dFrom} đến ${dTo} giây` });
+        const cType = cond.contentType === 'ai' ? `Tạo bằng AI: "${getPromptName(cond.aiPromptId || 'p1')}"` : `Nội dung thủ công: "${cond.manualText || 'Mẫu nội dung'}"`;
+        rows.push({ label: 'Nội dung chia sẻ', value: cType, fullWidth: true });
+      } else if (actKey === '04') {
+        // Bình luận văn bản
+        const dFrom = cond.delay ? cond.delay.from : 5;
+        const dTo = cond.delay ? cond.delay.to : 15;
+        rows.push({ label: 'Thời gian chờ', value: `Từ ${dFrom} đến ${dTo} giây` });
+        rows.push({ label: 'Tự động xoá đã dùng', value: cond.autoDelete !== false ? 'Bật' : 'Tắt' });
+        rows.push({ label: 'Bình luận kèm sticker', value: cond.withSticker !== false ? 'Bật' : 'Tắt' });
+        const cType = cond.contentType === 'ai' ? `Tạo bằng AI: "${getPromptName(cond.aiPromptId || 'p1')}"` : `Nội dung thủ công: "${cond.manualText || 'Đã nhập mẫu'}"`;
+        rows.push({ label: 'Nguồn nội dung', value: cType, fullWidth: true });
+      } else if (actKey === '05') {
+        // Bình luận ảnh
+        rows.push({ label: 'Thư mục ảnh', value: 'D:/OSINT/Images/Co_vu_bong_da' });
+        rows.push({ label: 'Cách chọn ảnh', value: 'Ngẫu nhiên 1 ảnh' });
+        rows.push({ label: 'Tự động xoá ảnh đã dùng', value: 'Bật' });
+      } else if (actKey === '06') {
+        // Tương tác với bình luận
+        const sqFrom = cond.scanQuota ? cond.scanQuota.from : 5;
+        const sqTo = cond.scanQuota ? cond.scanQuota.to : 20;
+        rows.push({ label: 'Số bình luận quét / bài', value: `Từ ${sqFrom} đến ${sqTo} bình luận` });
+        const iqFrom = cond.interactQuota ? cond.interactQuota.from : 1;
+        const iqTo = cond.interactQuota ? cond.interactQuota.to : 2;
+        rows.push({ label: 'Tương tác tối đa / bài', value: `Từ ${iqFrom} đến ${iqTo} bình luận` });
+        const dFrom = cond.delay ? cond.delay.from : 5;
+        const dTo = cond.delay ? cond.delay.to : 20;
+        rows.push({ label: 'Thời gian chờ tương tác', value: `Từ ${dFrom} đến ${dTo} giây` });
+        rows.push({ label: 'Tự động xoá đã dùng', value: cond.replyAutoDelete !== false ? 'Bật' : 'Tắt' });
+
+        /* Tạm thời ẩn phần Bày tỏ cảm xúc bình luận:
+        if (cond.enableReaction !== false && cond.reactions && cond.reactions.length > 0) {
+          const reactionsHtml = cond.reactions.map(r => `<span class="overview-emoji-tag">${emojiLabels[r] || r}</span>`).join('');
+          rows.push({ label: 'Bày tỏ cảm xúc bình luận', value: reactionsHtml, fullWidth: true });
+        }
+        */
+
+        const replyType = cond.replyContentType === 'ai' ? `Tạo bằng AI: "${getPromptName(cond.replyAiPromptId || 'p1')}"` : `Nội dung thủ công: "${cond.replyManualText || 'Đã thiết lập'}"`;
+        rows.push({ label: 'Trả lời bình luận', value: replyType, fullWidth: true });
+      } else if (actKey === '07') {
+        // Báo cáo vi phạm
+        rows.push({ label: 'Đối tượng báo cáo', value: 'Báo cáo bài viết' });
+        rows.push({ label: 'Lý do vi phạm', value: 'Ngôn từ thù ghét, Tin giả / Sai sự thật' });
+        rows.push({ label: 'Cơ chế xử lý', value: 'Phân bổ luân phiên các lý do' });
+        rows.push({ label: 'Thời gian chờ trước khi gửi', value: 'Từ 10 đến 20 giây' });
+      }
+
+      return `
+        <div class="overview-grid">
+          ${rows.map(r => `
+            <div class="overview-grid-item ${r.fullWidth ? 'full-width' : ''}">
+              <span class="overview-item-label">${r.label}:</span>
+              <span class="overview-item-value">${r.value}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderOverviewVisual() {
+      const container = document.getElementById('visual-summary-content');
+      if (!container) return;
+
+      let html = '';
+      Object.keys(state.actions).forEach(key => {
+        const act = state.actions[key];
+        const isEnabled = act.enabled;
+        const count = act.conditions.length;
+
+        html += `
+          <div class="condition-card" style="margin-bottom: 12px;">
+            <div class="card-header" style="background: #ffffff; border-bottom: ${count > 0 ? '1px solid var(--border-color)' : 'none'};">
+              <div class="card-header-left">
+                <span style="font-weight: 700; font-size: 13.5px; color: var(--text-heading);">${act.title}</span>
+                <span style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: ${isEnabled ? 'var(--success-soft)' : '#f1f5f9'}; border: 1px solid ${isEnabled ? 'var(--success-border)' : '#e2e8f0'}; color: ${isEnabled ? 'var(--success)' : 'var(--text-dim)'}; font-weight: 600;">
+                  ${isEnabled ? 'Đang bật' : 'Tắt'}
+                </span>
+                <span style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: #f8fafc; border: 1px solid var(--border-color); color: var(--text-muted); font-weight: 500;">
+                  Quy tắc: ${act.matchMode === 'all' ? 'Áp dụng tất cả điều kiện thỏa mãn' : 'Chỉ áp dụng điều kiện đầu tiên thỏa mãn'}
+                </span>
+              </div>
+              <span style="font-size: 12px; color: var(--text-dim); font-weight: 500;">${count} điều kiện</span>
+            </div>
+            ${count > 0 ? `
+              <div style="padding: 12px 16px; background: var(--bg-surface); display: flex; flex-direction: column; gap: 12px;">
+                ${act.conditions.map((c, i) => `
+                  <div class="overview-cond-card">
+                    <div class="overview-cond-header">
+                      <span class="overview-cond-badge">Điều kiện ${i + 1}</span>
+                      <span style="font-size: 12px; color: var(--text-dim);">
+                        ${c.applyMode === 'percent' ? `Tỷ lệ ${c.percent || 0}%` : `Số lượng ${c.quantity ? c.quantity.from : 1}-${c.quantity ? c.quantity.to : 3} bài`}
+                      </span>
+                    </div>
+                    <div class="overview-cond-body">
+                      <!-- Khối Điều kiện kích hoạt -->
+                      <div class="overview-section-row">
+                        <div class="overview-section-label">Prompt mô tả điều kiện</div>
+                        <div class="overview-prompt-box">
+                          ${c.prompt || '<em style="color: var(--text-dim);">Chưa nhập nội dung mô tả điều kiện</em>'}
+                        </div>
+                      </div>
+
+                      <!-- Khối Hành động thực thi -->
+                      <div class="overview-section-row">
+                        <div class="overview-section-label">Cấu hình hành động thực thi</div>
+                        ${renderConditionExecutionSummary(key, c)}
+                      </div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            ` : `
+              <div style="padding: 12px 16px; background: var(--bg-surface); font-size: 12.5px; color: var(--text-dim); font-style: italic;">
+                Chưa có điều kiện nào được thiết lập cho hành động này.
+              </div>
+            `}
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderOverviewJson() {
+      const codeBox = document.getElementById('json-code-box');
+      if (codeBox) {
+        codeBox.innerText = JSON.stringify(state, null, 2);
+      }
+    }
+
+    function copyJsonPayload() {
+      const jsonStr = JSON.stringify(state, null, 2);
+      navigator.clipboard.writeText(jsonStr).then(() => {
+        showToast("Đã sao chép toàn bộ mã JSON cấu hình vào Clipboard!");
+      }).catch(() => {
+        const dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = jsonStr;
+        dummy.select();
+        document.execCommand("copy");
+        document.body.removeChild(dummy);
+        showToast("Đã sao chép JSON thành công!");
+      });
+    }
+
+    function saveConfiguration() {
+      const nameInput = document.getElementById('cfg-action-name');
+      if (nameInput) state.global.actionName = nameInput.value;
+
+      showToast("Lưu cấu hình kịch bản thành công!");
+      console.log("OSINT Action Configuration Saved:", state);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      if (toast) {
+        toast.innerText = msg;
+        toast.style.display = 'flex';
+        setTimeout(() => {
+          toast.style.display = 'none';
+        }, 2200);
+      }
+    }
+
+    /* Khởi tạo ban đầu */
+    window.addEventListener('DOMContentLoaded', () => {
+      Object.keys(state.actions).forEach(key => {
+        renderConditions(key);
+      });
+    });
+  </script>
+</body>
+
+</html>

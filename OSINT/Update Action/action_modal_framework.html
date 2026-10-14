@@ -1,0 +1,3133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bộ Khung Cấu Hình Hành Động Kịch Bản OSINT V2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --primary-border: #bfdbfe;
+      --navy: #0f172a;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --emerald: #10b981;
+      --emerald-light: #ecfdf5;
+      --amber: #f59e0b;
+      --amber-light: #fffbeb;
+      --rose: #f43f5e;
+      --rose-light: #fff1f2;
+      --purple: #8b5cf6;
+      --purple-light: #f5f3ff;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 18px;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.08), 0 2px 4px -2px rgb(0 0 0 / 0.08);
+      --shadow-lg: 0 10px 25px -3px rgb(0 0 0 / 0.12), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-modal: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #090d16;
+      color: var(--slate-800);
+      font-size: 13.5px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Control Bar for Demo */
+    .top-toolbar {
+      background: #111827;
+      border-bottom: 1px solid #1f2937;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #f3f4f6;
+      z-index: 10;
+    }
+    .top-toolbar .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      letter-spacing: 0.5px;
+    }
+    .top-toolbar h1 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f9fafb;
+    }
+    .demo-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .demo-selector label {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .demo-select {
+      background: #1f2937;
+      color: white;
+      border: 1px solid #374151;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      cursor: pointer;
+      outline: none;
+    }
+    .demo-select:focus {
+      border-color: var(--primary);
+    }
+    .btn-top {
+      background: #374151;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-top:hover { background: #4b5563; }
+    .btn-top.active { background: var(--primary); }
+
+    /* Modal Backdrop & Container */
+    .modal-backdrop {
+      flex: 1;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top center, #1e293b 0%, #090d16 100%);
+    }
+
+    .modal-shell {
+      width: 100%;
+      max-width: 1140px;
+      height: 88vh;
+      max-height: 860px;
+      background: #ffffff;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-modal);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    /* Modal Header */
+    .modal-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--slate-200);
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      z-index: 5;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .action-icon-wrapper {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      border: 1px solid var(--primary-border);
+    }
+    .header-titles h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--slate-900);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: var(--slate-100);
+      color: var(--slate-600);
+      border: 1px solid var(--slate-200);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .header-breadcrumb {
+      font-size: 12px;
+      color: var(--slate-500);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .header-breadcrumb span { color: var(--slate-400); }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .action-master-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 14px;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+    }
+    .toggle-state-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-700);
+    }
+
+    /* Switch Component */
+    .switch-ui {
+      position: relative;
+      display: inline-block;
+      width: 38px;
+      height: 22px;
+    }
+    .switch-ui input { opacity: 0; width: 0; height: 0; }
+    .slider-ui {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: var(--slate-300);
+      transition: .25s;
+      border-radius: 24px;
+    }
+    .slider-ui:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .25s;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    input:checked + .slider-ui { background-color: var(--primary); }
+    input:checked + .slider-ui:before { transform: translateX(16px); }
+
+    .btn-close-modal {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--slate-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.15s;
+    }
+    .btn-close-modal:hover {
+      background: var(--slate-100);
+      color: var(--slate-700);
+    }
+
+    /* Modal Main Body (2 Columns) */
+    .modal-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Left Sidebar: Radar & Anchor Navigation */
+    .modal-sidebar {
+      background: #f8fafc;
+      border-right: 1px solid var(--slate-200);
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+    }
+    .sidebar-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--slate-400);
+      padding: 8px 10px 4px;
+    }
+    .nav-anchor-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      border-radius: var(--radius-md);
+      color: var(--slate-600);
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 500;
+      transition: all 0.15s;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .nav-anchor-item:hover {
+      background: #f1f5f9;
+      color: var(--slate-900);
+    }
+    .nav-anchor-item.active {
+      background: #ffffff;
+      color: var(--primary);
+      font-weight: 600;
+      border-color: var(--slate-200);
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-anchor-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+    .nav-anchor-icon { font-size: 15px; }
+    .nav-anchor-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .nav-badge-state {
+      font-size: 10.5px;
+      padding: 1px 6px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .nav-badge-state.on {
+      background: var(--emerald-light);
+      color: var(--emerald);
+    }
+    .nav-badge-state.off {
+      background: var(--slate-200);
+      color: var(--slate-500);
+    }
+    .nav-badge-state.count {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .sidebar-footer-hint {
+      margin-top: auto;
+      padding: 12px;
+      background: #eff6ff80;
+      border: 1px dashed var(--primary-border);
+      border-radius: var(--radius-md);
+      font-size: 11px;
+      color: var(--slate-600);
+      line-height: 1.4;
+    }
+    .sidebar-footer-hint b { color: var(--primary); }
+
+    /* Right Main Workspace: Scrollable */
+    .modal-workspace {
+      background: #ffffff;
+      padding: 24px 32px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    /* Card Component Architecture */
+    .module-card {
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      background: #ffffff;
+      margin-bottom: 20px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      overflow: hidden;
+    }
+    .module-card:hover {
+      border-color: #cbd5e1;
+    }
+    .module-card.is-active {
+      border-color: #bfdbfe;
+      box-shadow: 0 4px 12px -2px rgba(37, 99, 235, 0.05);
+    }
+    .module-card.is-collapsed .module-card-body {
+      display: none;
+    }
+
+    .module-card-header {
+      padding: 14px 20px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      user-select: none;
+    }
+    .module-header-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .module-header-icon {
+      font-size: 17px;
+    }
+    .module-header-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-800);
+    }
+    .module-header-desc {
+      font-size: 12px;
+      color: var(--slate-500);
+      font-weight: 400;
+    }
+    .module-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .module-summary-pill {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--slate-200);
+      color: var(--slate-600);
+      font-weight: 500;
+    }
+    .module-summary-pill.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      font-weight: 600;
+    }
+
+    .module-card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Forms & Grid System */
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .col-span-full { grid-column: 1 / -1; }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--slate-700);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .label-hint {
+      font-size: 11px;
+      color: var(--slate-400);
+      font-weight: 400;
+    }
+    .form-hint {
+      font-size: 11.5px;
+      color: var(--slate-500);
+      line-height: 1.4;
+    }
+
+    /* Range Input Component */
+    .range-inputs-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .input-wrapper {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .input-prefix {
+      position: absolute;
+      left: 10px;
+      font-size: 11px;
+      color: var(--slate-400);
+      pointer-events: none;
+      font-weight: 500;
+    }
+    .input-suffix {
+      position: absolute;
+      right: 10px;
+      font-size: 11px;
+      color: var(--slate-400);
+      pointer-events: none;
+    }
+    .input-control {
+      width: 100%;
+      height: 38px;
+      border: 1px solid var(--slate-300);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      font-size: 13px;
+      color: var(--slate-800);
+      background: #ffffff;
+      outline: none;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .input-control.has-prefix { padding-left: 36px; }
+    .input-control.has-suffix { padding-right: 36px; }
+    .input-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+    .range-separator {
+      font-size: 12px;
+      color: var(--slate-400);
+      font-weight: 500;
+    }
+
+    /* Select & Textarea */
+    select.input-control {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 16px;
+      padding-right: 32px;
+    }
+    textarea.input-control {
+      height: auto;
+      min-height: 80px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    /* Reaction Buttons Group Component */
+    .reaction-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+    .btn-reaction {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 4px;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      background: #ffffff;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-reaction:hover {
+      background: var(--slate-50);
+      border-color: var(--slate-300);
+      transform: translateY(-2px);
+    }
+    .btn-reaction.selected {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px -1px rgba(37, 99, 235, 0.2);
+    }
+    .reaction-emoji { font-size: 22px; line-height: 1; }
+    .reaction-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--slate-600);
+    }
+    .btn-reaction.selected .reaction-label {
+      color: var(--primary);
+    }
+
+    /* Content Source Mode Selector */
+    .segmented-control {
+      display: flex;
+      background: var(--slate-100);
+      padding: 3px;
+      border-radius: var(--radius-md);
+      gap: 3px;
+    }
+    .seg-item {
+      flex: 1;
+      text-align: center;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slate-600);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+    }
+    .seg-item:hover { color: var(--slate-900); }
+    .seg-item.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+      border-color: var(--slate-200);
+    }
+
+    /* Tag & Badge List */
+    .chip-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: var(--slate-100);
+      border: 1px solid var(--slate-200);
+      border-radius: 20px;
+      font-size: 12px;
+      color: var(--slate-700);
+    }
+    .chip .chip-remove {
+      cursor: pointer;
+      color: var(--slate-400);
+      font-size: 14px;
+      line-height: 1;
+    }
+    .chip .chip-remove:hover { color: var(--rose); }
+
+    /* Rules Table for Semantic Policy Engine */
+    .rules-card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .rule-item-card {
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: all 0.15s;
+    }
+    .rule-item-card:hover {
+      border-color: var(--primary-border);
+      background: var(--slate-50);
+    }
+    .rule-card-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+    .rule-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rule-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--slate-900);
+    }
+    .rule-tag {
+      font-size: 10.5px;
+      padding: 2px 7px;
+      border-radius: 12px;
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .rule-desc-row {
+      font-size: 11.5px;
+      color: var(--slate-500);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rule-card-tools {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .btn-icon-tool {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--slate-200);
+      background: #ffffff;
+      color: var(--slate-600);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 13px;
+    }
+    .btn-icon-tool:hover {
+      background: var(--slate-100);
+      color: var(--slate-900);
+    }
+    .btn-icon-tool.delete:hover {
+      background: var(--rose-light);
+      border-color: var(--rose);
+      color: var(--rose);
+    }
+
+    /* Modal Footer */
+    .modal-footer {
+      padding: 14px 24px;
+      background: #ffffff;
+      border-top: 1px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      z-index: 5;
+    }
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-secondary {
+      background: #ffffff;
+      border: 1px solid var(--slate-300);
+      color: var(--slate-700);
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn-secondary:hover {
+      background: var(--slate-50);
+      border-color: var(--slate-400);
+    }
+    .btn-primary {
+      background: var(--primary);
+      border: 1px solid var(--primary);
+      color: #ffffff;
+      padding: 8px 20px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Drawer: Slide-over sub panel for advanced editing */
+    .drawer-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(2px);
+      z-index: 20;
+      display: none;
+      justify-content: flex-end;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .drawer-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+    .drawer-panel {
+      width: 460px;
+      max-width: 90%;
+      height: 100%;
+      background: #ffffff;
+      box-shadow: -10px 0 25px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+    }
+    .drawer-overlay.active .drawer-panel {
+      transform: translateX(0);
+    }
+    .drawer-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .drawer-header h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--slate-900);
+    }
+    .drawer-body {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .drawer-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--slate-200);
+      background: var(--slate-50);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* JSON Drawer / Viewer */
+    .json-code-box {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      line-height: 1.5;
+      background: #0f172a;
+      color: #93c5fd;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      overflow: auto;
+      flex: 1;
+    }
+
+    /* Checkbox list & Helper UI */
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--slate-700);
+      cursor: pointer;
+    }
+    .checkbox-item input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .spin-test-box {
+      padding: 10px 12px;
+      background: #f8fafc;
+      border: 1px dashed var(--slate-300);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      color: var(--slate-600);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .spin-result-text {
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .btn-spin-try {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .btn-spin-try:hover { background: var(--slate-100); }
+
+    /* Toast Notification */
+    #toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 900px) {
+      .modal-body { grid-template-columns: 1fr; }
+      .modal-sidebar { display: none; }
+      .reaction-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Demo Switcher Bar -->
+  <header class="top-toolbar">
+    <div class="logo-group">
+      <span class="logo-badge">OSINT V2</span>
+      <h1>Bộ Khung Component Cấu Hình Hành Động (Action Modal Framework)</h1>
+    </div>
+    <div class="demo-selector">
+      <label for="demoActionSelect">Chọn hành động để xem UI:</label>
+      <select id="demoActionSelect" class="demo-select" onchange="switchActionDemo(this.value)">
+        <option value="interact_newsfeed">1. Tương tác Newsfeed (Full AI, Prompt & Reply)</option>
+        <option value="add_friend_keyword">2. Kết bạn theo từ khóa / Gợi ý</option>
+        <option value="post_group">3. Đăng bài lên nhóm / Tường</option>
+        <option value="change_password">4. Đổi mật khẩu / Up Avatar</option>
+        <option value="take_break">5. Nghỉ giải lao / Đọc thông báo</option>
+      </select>
+      <button class="btn-top" onclick="openJsonDrawer()">
+        <span>{ }</span> Xem JSON Contract V2
+      </button>
+    </div>
+  </header>
+
+  <!-- Modal Shell -->
+  <main class="modal-backdrop">
+    <div class="modal-shell" id="mainModalShell">
+      
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="header-left">
+          <div class="action-icon-wrapper" id="headerActionIcon">📰</div>
+          <div class="header-titles">
+            <h2>
+              <span id="headerActionTitle">Tương tác Newsfeed</span>
+              <span class="action-badge" id="headerActionType">interact_newsfeed</span>
+            </h2>
+            <div class="header-breadcrumb">
+              <span>Kịch bản:</span> <b>Nuôi Nick Bán Hàng 14 Ngày</b>
+              <span>•</span> <span>Ngày 2</span>
+              <span>•</span> <span>Lượt 1 (Sáng)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="action-master-toggle">
+            <span class="toggle-state-text" id="masterToggleLabel">Đang Bật</span>
+            <label class="switch-ui">
+              <input type="checkbox" id="masterActionEnabled" checked onchange="toggleMasterAction(this.checked)">
+              <span class="slider-ui"></span>
+            </label>
+          </div>
+          <button class="btn-close-modal" title="Đóng modal" onclick="toast('Đã bấm đóng modal')">✕</button>
+        </div>
+      </div>
+
+      <!-- Modal Body (2 Columns) -->
+      <div class="modal-body">
+        
+        <!-- Left Column: Sticky Sidebar Navigator (Radar View) -->
+        <aside class="modal-sidebar" id="sidebarNavContainer">
+          <!-- Dynamic Links will be rendered here -->
+        </aside>
+
+        <!-- Right Column: Dynamic Workspace Components -->
+        <div class="modal-workspace" id="workspaceContainer">
+          <!-- Action Form Modules will be rendered here -->
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <div class="footer-left">
+          <button class="btn-secondary" onclick="resetToDefaults()">
+            ↺ Khôi phục mặc định
+          </button>
+          <span style="font-size: 11.5px; color: var(--slate-400);">Contract: script-response/v2-final</span>
+        </div>
+        <div class="footer-right" style="display:flex; gap:10px;">
+          <button class="btn-secondary" onclick="toast('Đã hủy bỏ thao tác')">Hủy bỏ</button>
+          <button class="btn-primary" onclick="saveActionConfig()">💾 Lưu cấu hình hành động</button>
+        </div>
+      </div>
+
+      <!-- Drawer Sub-Panel: Chỉnh sửa Quy tắc AI Semantic chuyên sâu (PolicyRule chuẩn Contract V2) -->
+      <div class="drawer-overlay" id="ruleDrawer">
+        <div class="drawer-panel" style="width: 520px;">
+          <div class="drawer-header">
+            <h3 id="drawerRuleTitle">Cấu hình Quy tắc AI (Policy Rule)</h3>
+            <button class="btn-close-modal" onclick="closeRuleDrawer()">✕</button>
+          </div>
+          <div class="drawer-body">
+            
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Mã quy tắc (Rule ID) *</label>
+                <input type="text" id="drRuleId" class="input-control" placeholder="vd: rule_sports">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tên quy tắc gợi nhớ</label>
+                <input type="text" id="drRuleName" class="input-control" placeholder="vd: Bài viết Thể thao tích cực">
+              </div>
+            </div>
+
+            <!-- Block 1: Match Conditions -->
+            <div style="padding: 12px; background: #f8fafc; border: 1px solid var(--slate-200); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 12px;">
+              <span style="font-size: 12px; font-weight: 700; color: var(--slate-800); text-transform: uppercase; letter-spacing: 0.5px;">🎯 1. Điều kiện nhận diện bài viết (match)</span>
+              
+              <div class="form-group">
+                <label class="checkbox-item">
+                  <input type="checkbox" id="drRuleMeaningful" checked>
+                  <span><b>has_meaningful_content</b>: Yêu cầu bài viết có nội dung đủ nghĩa để phân loại</span>
+                </label>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Nhóm nội dung (category_any_of)</label>
+                  <select id="drRuleCategory" class="input-control">
+                    <option value="sports">Thể thao (sports)</option>
+                    <option value="news">Tin tức (news)</option>
+                    <option value="tech">Công nghệ (tech)</option>
+                    <option value="finance">Tài chính (finance)</option>
+                    <option value="entertainment">Giải trí (entertainment)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Sắc thái cảm xúc (sentiment_any_of)</label>
+                  <select id="drRuleSentiment" class="input-control">
+                    <option value="all">Bất kỳ cảm xúc nào</option>
+                    <option value="positive">Tích cực (Positive)</option>
+                    <option value="neutral">Trung tính (Neutral)</option>
+                    <option value="negative">Tiêu cực (Negative)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Từ khóa chủ đề cụ thể (topic_any_of)</label>
+                <input type="text" id="drRuleTopic" class="input-control" placeholder="vd: bóng đá, ngoại hạng anh, v-league">
+                <span class="form-hint">Nhập các chủ đề cách nhau bằng dấu phẩy.</span>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Lập trường / Quan điểm (stance)</label>
+                  <select id="drRuleStance" class="input-control">
+                    <option value="all">Không giới hạn</option>
+                    <option value="support">Ủng hộ (Support)</option>
+                    <option value="oppose">Phản đối (Oppose)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Khi AI không chắc chắn (on_unclear)</label>
+                  <select id="drRuleOnUnclear" class="input-control">
+                    <option value="skip">Bỏ qua bài viết (skip)</option>
+                    <option value="allow">Vẫn cho phép chạy (allow)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Block 2: Behavior -->
+            <div style="padding: 12px; background: #f8fafc; border: 1px solid var(--slate-200); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 12px;">
+              <span style="font-size: 12px; font-weight: 700; color: var(--slate-800); text-transform: uppercase; letter-spacing: 0.5px;">⚡ 2. Hành vi thực hiện khi khớp (behavior)</span>
+              
+              <div class="form-group">
+                <label class="form-label">Thả cảm xúc bài viết (reaction.post)</label>
+                <div style="display:flex; gap:14px; align-items:center;">
+                  <label class="checkbox-item">
+                    <input type="checkbox" id="drRuleDoLike" checked>
+                    <span>👍 Like</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" id="drRuleDoLove">
+                    <span>❤️ Love</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 6px;">
+                  <span style="font-weight: 600; font-size: 12.5px;">Bình luận bài viết (comment.selection)</span>
+                  <label class="switch-ui">
+                    <input type="checkbox" id="drRuleDoComment" onchange="document.getElementById('drRuleCommentDetailBox').style.display = this.checked ? 'block' : 'none';">
+                    <span class="slider-ui"></span>
+                  </label>
+                </div>
+
+                <div id="drRuleCommentDetailBox" style="display:none; padding:10px; background:#fff; border:1px solid var(--slate-200); border-radius:var(--radius-md);">
+                  <div class="form-group" style="margin-bottom: 8px;">
+                    <label class="form-label">Chọn Prompt sinh bình luận (prompt_id)</label>
+                    <select id="drRulePromptSelect" class="input-control">
+                      <option value="prompt_sport_fan_01">Fan thể thao cuồng nhiệt (prompt_sport_fan_01)</option>
+                      <option value="prompt_friendly_buyer">Người mua hàng thân thiện (prompt_friendly_buyer)</option>
+                      <option value="prompt_tech_enthusiast">Chuyên gia công nghệ (prompt_tech_enthusiast)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Chỉ dẫn bổ sung khi sinh text (generation_instruction)</label>
+                    <textarea id="drRuleInstruction" class="input-control" rows="2" placeholder="vd: Khen ngợi tinh thần thi đấu quả cảm, dùng icon bóng đá..."></textarea>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+          <div class="drawer-footer">
+            <button class="btn-secondary" onclick="closeRuleDrawer()">Đóng</button>
+            <button class="btn-primary" onclick="saveRuleFromDrawer()">Cập nhật Quy tắc AI</button>
+          </div>
+        </div>
+      </div>
+
+      
+      <!-- Drawer Sub-Panel: Chỉnh sửa Quy tắc Trả lời Bình luận (Reply Policy Drawer) -->
+      <div class="drawer-overlay" id="replyPolicyDrawer">
+        <div class="drawer-panel" style="width: 500px;">
+          <div class="drawer-header">
+            <h3 id="drawerReplyPolicyTitle">Cấu hình Quy tắc Trả lời Bình luận</h3>
+            <button class="btn-close-modal" onclick="closeReplyPolicyDrawer()">✕</button>
+          </div>
+          <div class="drawer-body">
+            
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Mã chính sách (Policy ID) *</label>
+                <input type="text" id="drReplyPolicyId" class="input-control" placeholder="vd: reply_ask_price">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tên phân loại gợi nhớ</label>
+                <input type="text" id="drReplyPolicyName" class="input-control" placeholder="vd: Khách hỏi giá / Tư vấn">
+              </div>
+            </div>
+
+            <div style="padding: 12px; background: #f8fafc; border: 1px solid var(--slate-200); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 12px;">
+              <span style="font-size: 12px; font-weight: 700; color: var(--slate-800); text-transform: uppercase; letter-spacing: 0.5px;">🎯 1. Điều kiện bình luận nguồn (Match Conditions)</span>
+              
+              <div class="form-group">
+                <label class="form-label">Cảm xúc / Sắc thái của bình luận nguồn</label>
+                <select id="drReplySentiment" class="input-control">
+                  <option value="any">Tất cả cảm xúc (Không lọc)</option>
+                  <option value="question">Hỏi đáp / Thắc mắc / Xin giá (Question/Inquiry)</option>
+                  <option value="positive">Tích cực / Khen ngợi / Cảm ơn (Positive)</option>
+                  <option value="negative">Tiêu cực / Khiếu nại / Chê bai (Negative)</option>
+                  <option value="neutral">Trung tính / Chia sẻ (Neutral)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Từ khóa bình luận nguồn cần chứa</label>
+                <input type="text" id="drReplyKeywords" class="input-control" placeholder="vd: giá, bao nhiêu, ib, inbox, tư vấn, ship, lỗi">
+                <span class="form-hint">Nhập các từ khóa cách nhau bằng dấu phẩy. Bình luận chứa một trong các từ này sẽ khớp.</span>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Độ dài comment tối thiểu (ký tự)</label>
+                  <input type="number" id="drReplyMinLength" class="input-control" value="2" min="1">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Tỷ lệ trả lời bình luận loại này (%)</label>
+                  <div class="input-wrapper">
+                    <input type="number" id="drReplyPercent" class="input-control has-suffix" value="100" min="1" max="100">
+                    <span class="input-suffix">%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 12px; background: #f8fafc; border: 1px solid var(--slate-200); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 12px;">
+              <span style="font-size: 12px; font-weight: 700; color: var(--slate-800); text-transform: uppercase; letter-spacing: 0.5px;">⚡ 2. Hành động phản hồi khi khớp quy tắc</span>
+              
+              <div class="form-group">
+                <label class="form-label">Thả cảm xúc vào bình luận nguồn đó</label>
+                <select id="drReplyReactionType" class="input-control">
+                  <option value="love">❤️ Thả tim (Love) - Khuyên dùng cho tương tác</option>
+                  <option value="like">👍 Thích (Like)</option>
+                  <option value="care">🤗 Thương thương (Care)</option>
+                  <option value="haha">😆 Haha</option>
+                  <option value="none">Không thả cảm xúc</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Phương thức tạo nội dung trả lời cho quy tắc này</label>
+                <div class="segmented-control" id="drReplyModeSegmented">
+                  <div class="seg-item active" onclick="switchDrawerReplyContentMode('fixed')">✍️ Văn bản mẫu</div>
+                  <div class="seg-item" onclick="switchDrawerReplyContentMode('prompt')">📚 Prompt ID</div>
+                  <div class="seg-item" onclick="switchDrawerReplyContentMode('instruction')">🤖 AI Chỉ dẫn</div>
+                </div>
+              </div>
+
+              <!-- Content Mode 1: Fixed text -->
+              <div id="drReplyBox_fixed">
+                <div class="form-group">
+                  <label class="form-label">Danh sách câu trả lời mẫu (Hỗ trợ Spin {a|b|c})</label>
+                  <textarea id="drReplyFixedTexts" class="input-control" rows="3" placeholder="Nhập mỗi dòng một câu trả lời mẫu..."></textarea>
+                </div>
+              </div>
+
+              <!-- Content Mode 2: Prompt picker -->
+              <div id="drReplyBox_prompt" style="display:none;">
+                <div class="form-group">
+                  <label class="form-label">Chọn Prompt chuyên biệt cho tình huống này</label>
+                  <select id="drReplyPromptSelect" class="input-control">
+                    <option value="prompt_consult_customer">Tư vấn bán hàng & Báo giá (Lịch sự, xin SĐT)</option>
+                    <option value="prompt_thank_supporter">Cảm ơn khách hàng thân thiết (Thân thiện, ấm áp)</option>
+                    <option value="prompt_solve_complaint">Xử lý khiếu nại (Xin lỗi, cam kết đổi trả & hotline)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Content Mode 3: Instruction -->
+              <div id="drReplyBox_instruction" style="display:none;">
+                <div class="form-group">
+                  <label class="form-label">Chỉ dẫn cụ thể cho AI (Prompt Instruction)</label>
+                  <textarea id="drReplyInstruction" class="input-control" rows="3" placeholder="vd: Trả lời ngắn gọn, chào mừng khách, nhắc khách kiểm tra hộp thư chờ để nhận báo giá chi tiết..."></textarea>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+          <div class="drawer-footer">
+            <button class="btn-secondary" onclick="closeReplyPolicyDrawer()">Đóng</button>
+            <button class="btn-primary" onclick="saveReplyPolicyFromDrawer()">Cập nhật Quy tắc Trả lời</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drawer Sub-Panel: JSON Preview & Import -->
+      <div class="drawer-overlay" id="jsonDrawer">
+        <div class="drawer-panel" style="width: 540px;">
+          <div class="drawer-header">
+            <h3>Dữ liệu JSON chuẩn V2 (Contract Compliant)</h3>
+            <button class="btn-close-modal" onclick="closeJsonDrawer()">✕</button>
+          </div>
+          <div class="drawer-body">
+            <p class="form-hint">Dữ liệu được serialize chính xác theo hợp đồng <code>script-response/v2-final</code> để gửi tới Backend lưu trữ DB.</p>
+            <pre class="json-code-box" id="jsonViewerContent"></pre>
+          </div>
+          <div class="drawer-footer">
+            <button class="btn-secondary" onclick="copyJsonToClipboard()">Sao chép JSON</button>
+            <button class="btn-primary" onclick="closeJsonDrawer()">Đóng</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div id="toast-msg">Thông báo thành công</div>
+
+  <script>
+    // ==========================================
+    // ACTION DEMO PRESETS (53 ACTIONS CATALOG DATA)
+    // ==========================================
+    const DEMO_PRESETS = {
+      interact_newsfeed: {
+        type: 'interact_newsfeed',
+        title: 'Tương tác Newsfeed',
+        icon: '📰',
+        enabled: true,
+        scope: {
+          mode: 'quantity', // 'quantity' or 'duration' or 'both'
+          quantity: { from: 5, to: 10, unit: 'post' },
+          from: 5, to: 10, unit: 'post'
+        },
+        timing: {
+          delayBefore: { from: 0, to: 0 },
+          delayBetween: { from: 20, to: 40 },
+          duration: { from: 15, to: 30 }, // thời gian xem mỗi bài
+          totalDurationMinutes: { from: 5, to: 15 } // giới hạn thời gian lướt tổng
+        },
+        target: { kind: 'newsfeed', selectionMode: 'joined' },
+        operations: {
+          read: { enabled: true },
+          viewFullContent: {
+            enabled: true,
+            selectionPercent: 80, // % click See more
+            selectionMode: 'same_selected_items'
+          },
+          reactionPost: {
+            enabled: true,
+            types: ['like', 'love'],
+            selectionPercent: 100,
+            selectionMode: 'same_selected_items'
+          },
+          commentPost: {
+            enabled: true,
+            selectionPercent: 60,
+            typeBinhLuan: 'both', // 'text_only', 'image_only', 'random'
+            content: {
+              source: 'fixed', // 'none', 'fixed', 'prompt', 'ai'
+              promptId: 'prompt_sport_fan_01',
+              text: [
+                "Bài viết tuyệt vời quá bạn ơi! Chúc bạn ngày mới tốt lành.",
+                "Thông tin rất hữu ích, cảm ơn bạn đã chia sẻ nhé.",
+                "{Tuyệt cú mèo|Rất hay|Ý nghĩa quá} {bạn yêu|bạn tôi|ad ơi}!"
+              ],
+              mediaIds: ["anh_comment_01.jpg", "anh_comment_02.png"],
+              cleanupAfterUse: true
+            },
+            media: {
+              enabled: false,
+              selectionPercent: 50,
+              mediaIds: ["anh_comment_01.jpg", "anh_comment_02.png"]
+            },
+            sticker: {
+              enabled: false
+            },
+            tag: {
+              enabled: false,
+              source: 'friends',
+              tagCount: 3,
+              uids: []
+            }
+          },
+          sharePost: {
+            enabled: false,
+            selectionPercent: 20,
+            destination: {
+              wall: true,
+              groups: ["1029384756", "5647382910"]
+            },
+            content: {
+              source: 'fixed',
+              text: ["Chia sẻ bài viết hay cho cả nhà cùng xem nhé! {Hot|Cực hot|Xem ngay}"],
+              promptId: null,
+              cleanupAfterUse: false
+            }
+          },
+          reactionComment: {
+            enabled: false,
+            types: ['love', 'like'],
+            selectionPercent: 50,
+            maxComment: 15
+          },
+          replyComment: {
+            enabled: true,
+            selectionMode: 'all_matching',
+            selectionPercent: 100,
+            count: null,
+            maxComment: 20,
+            delaySeconds: { from: 5, to: 10 },
+            reactionComment: {
+              enabled: true,
+              types: ['love', 'like'],
+              selectionPercent: 100,
+              maxComment: 20
+            },
+            content: {
+              source: 'ai',
+              text: [
+                "Cảm ơn bạn đã quan tâm nhé! Bạn check inbox giúp mình nha.",
+                "Rất vui được kết nối cùng bạn! Chúc bạn ngày mới tốt lành.",
+                "{Dạ vâng|Dạ em cảm ơn|Thanks bạn} {nhiều nha|ạ|nhiều lắm}!"
+              ],
+              promptId: 'prompt_reply_friendly',
+              cleanupAfterUse: true
+            },
+            policies: [
+              {
+                id: 'policy_ask_price',
+                name: 'Bình luận hỏi giá / xin tư vấn mua hàng',
+                sentiment: 'question',
+                keywords: 'giá, bao nhiêu, ib, inbox, tư vấn, ship, mua, đặt',
+                minLength: 3,
+                reactionType: 'love',
+                selectionPercent: 100,
+                contentMode: 'prompt',
+                promptId: 'prompt_consult_customer',
+                instruction: 'Báo giá ưu đãi và mời khách kiểm tra tin nhắn chờ.',
+                fixedTexts: []
+              },
+              {
+                id: 'policy_positive_praise',
+                name: 'Bình luận khen ngợi / cảm ơn tích cực',
+                sentiment: 'positive',
+                keywords: 'đẹp, hay, tuyệt, tốt, uy tín, cảm ơn, thanks',
+                minLength: 2,
+                reactionType: 'love',
+                selectionPercent: 100,
+                contentMode: 'fixed',
+                promptId: null,
+                instruction: '',
+                fixedTexts: [
+                  "Cảm ơn bạn đã luôn ủng hộ bên mình nhé! ❤️",
+                  "Dạ cảm ơn bạn nhiều ạ, chúc bạn một ngày ngập tràn niềm vui!",
+                  "{Dạ vâng|Dạ em cảm ơn|Thanks bạn} {nhiều nha|ạ|nhiều lắm}!"
+                ]
+              },
+              {
+                id: 'policy_complaint_feedback',
+                name: 'Bình luận phàn nàn / khiếu nại',
+                sentiment: 'negative',
+                keywords: 'lỗi, tệ, kém, chậm, lừa đảo, thất vọng',
+                minLength: 5,
+                reactionType: 'like',
+                selectionPercent: 100,
+                contentMode: 'instruction',
+                promptId: null,
+                instruction: 'Thành thật xin lỗi khách hàng về trải nghiệm không tốt, đề nghị khách gửi mã đơn qua inbox hoặc gọi hotline để được hỗ trợ ngay lập tức.',
+                fixedTexts: []
+              }
+            ]
+          }
+        },
+        semanticRuntime: {
+          enabled: true,
+          schemaVersion: "semantic-runtime-action/v2",
+          summary: "Chỉ like, comment bài viết thuộc chủ đề Thể thao & Tin tức tích cực.",
+          taxonomy: {
+            categories: ['sports', 'news'],
+            default_category: 'unclear',
+            allow_multiple_categories: false
+          },
+          rule_resolution: 'first_match',
+          rules: [
+            {
+              id: 'rule_sports',
+              name: 'Bài viết Thể thao tích cực',
+              category: 'sports',
+              topic: 'bóng đá, thể thao',
+              sentiment: 'positive',
+              stance: 'support',
+              speechAct: 'praise',
+              entities: '',
+              onUnclear: 'skip',
+              hasMeaningfulContent: true,
+              doLike: true,
+              doLove: true,
+              doComment: true,
+              commentMode: 'quantity',
+              commentCount: 1,
+              promptId: 'prompt_sport_fan_01',
+              instruction: 'Bình luận cổ vũ hào hứng, khen ngợi tinh thần thi đấu của các cầu thủ'
+            },
+            {
+              id: 'rule_news',
+              name: 'Tin tức & Xã hội chung',
+              category: 'news',
+              topic: 'tin tức',
+              sentiment: 'all',
+              stance: 'all',
+              speechAct: 'all',
+              entities: '',
+              onUnclear: 'skip',
+              hasMeaningfulContent: true,
+              doLike: true,
+              doLove: false,
+              doComment: false,
+              commentMode: 'skip',
+              commentCount: null,
+              promptId: null,
+              instruction: ''
+            }
+          ],
+          otherwise: {
+            reactionPost: false,
+            commentMode: 'skip',
+            replyEnabled: false
+          }
+        }
+      },
+
+      add_friend_keyword: {
+        type: 'add_friend_keyword',
+        title: 'Kết bạn theo từ khóa',
+        icon: '👥',
+        enabled: true,
+        scope: { from: 3, to: 8, unit: 'person' },
+        timing: { delayBefore: { from: 0, to: 5 }, delayBetween: { from: 30, to: 60 } },
+        target: {
+          kind: 'person',
+          selectionMode: 'keyword',
+          keywords: ["Bất động sản Hà Nội", "Kinh doanh online", "Chủ shop thời trang", "Crypto trader"]
+        },
+        filters: {
+          mutualFriendsMin: 5,
+          gender: 'all', // 'all', 'male', 'female'
+          hasAvatar: true
+        }
+      },
+
+      post_group: {
+        type: 'post_group',
+        title: 'Đăng bài lên nhóm',
+        icon: '📢',
+        enabled: true,
+        scope: {
+          outer: { from: 3, to: 5, unit: 'group' },
+          inner: { from: 1, to: 1, unit: 'post' }
+        },
+        timing: { delayBefore: { from: 0, to: 0 }, delayBetween: { from: 60, to: 120 } },
+        target: {
+          kind: 'group',
+          selectionMode: 'joined', // 'joined' or 'explicit_ids'
+          groupIds: ["1234567890", "9876543210"]
+        },
+        content: {
+          source: 'fixed',
+          promptId: 'prompt_sell_product',
+          text: [
+            "Chào cả nhà! Bên em đang có chương trình khuyến mãi cực sốc {hôm nay|tuần này}. Bác nào quan tâm inbox em nhé!",
+            "Giao lưu cùng anh em hội nhóm! Hàng chuẩn xuất khẩu giá tại xưởng."
+          ],
+          mediaIds: ["img_sample_01.jpg", "img_sample_02.jpg"],
+          tagFriends: false,
+          cleanupAfterUse: false
+        }
+      },
+
+      change_password: {
+        type: 'change_password',
+        title: 'Đổi mật khẩu tài khoản',
+        icon: '🔐',
+        enabled: true,
+        scope: { from: 1, to: 1, unit: 'account' },
+        timing: { delayBefore: { from: 0, to: 0 }, timeoutSeconds: 60 },
+        security: {
+          mode: 'random', // 'random', 'manual_list'
+          passwordPattern: 'AlphaNumericSpecial',
+          length: 12,
+          manualPasswords: []
+        }
+      },
+
+      take_break: {
+        type: 'take_break',
+        title: 'Nghỉ giải lao',
+        icon: '☕',
+        enabled: true,
+        scope: { from: 5, to: 15, unit: 'minute' },
+        timing: { delayBefore: { from: 0, to: 0 }, duration: { from: 300, to: 900 } }
+      }
+    };
+
+    // Current Active State
+    let currentAction = JSON.parse(JSON.stringify(DEMO_PRESETS.interact_newsfeed));
+    let editingRuleIndex = -1;
+
+    // Initialize UI
+    window.addEventListener('DOMContentLoaded', () => {
+      renderFullActionUI(currentAction);
+    });
+
+    // Switch between Action Demos
+    function switchActionDemo(actionType) {
+      if (!DEMO_PRESETS[actionType]) return;
+      currentAction = JSON.parse(JSON.stringify(DEMO_PRESETS[actionType]));
+      renderFullActionUI(currentAction);
+      toast(`Đã tải giao diện mẫu: ${currentAction.title}`);
+    }
+
+    // Master Toggle Action
+    function toggleMasterAction(enabled) {
+      currentAction.enabled = enabled;
+      document.getElementById('masterToggleLabel').textContent = enabled ? 'Đang Bật' : 'Đang Tắt';
+      document.getElementById('masterToggleLabel').style.color = enabled ? 'var(--slate-700)' : 'var(--slate-400)';
+      toast(enabled ? 'Đã bật hành động' : 'Đã tắt hành động');
+      updateSidebarRadar();
+    }
+
+    // ==========================================
+    // RENDER FULL ACTION UI
+    // ==========================================
+    function renderFullActionUI(action) {
+      // 1. Header Info
+      document.getElementById('headerActionIcon').textContent = action.icon || '⚡';
+      document.getElementById('headerActionTitle').textContent = action.title;
+      document.getElementById('headerActionType').textContent = action.type;
+      document.getElementById('masterActionEnabled').checked = !!action.enabled;
+      document.getElementById('masterToggleLabel').textContent = action.enabled ? 'Đang Bật' : 'Đang Tắt';
+
+      // 2. Render Workspace Modules & Sidebar Links
+      const sidebarContainer = document.getElementById('sidebarNavContainer');
+      const workspaceContainer = document.getElementById('workspaceContainer');
+      
+      sidebarContainer.innerHTML = '';
+      workspaceContainer.innerHTML = '';
+
+      const modules = [];
+
+      // Determine Modules based on Action Type
+      if (action.type === 'interact_newsfeed') {
+        modules.push({ id: 'mod_scope_timing', name: 'Phạm vi & Thời lượng lướt', icon: '⏱️', render: renderScopeAndTimingModule });
+        modules.push({ id: 'mod_view_full', name: 'Đọc & Xem đầy đủ bài viết', icon: '📖', render: renderViewFullContentModule });
+        modules.push({ id: 'mod_reactions', name: 'Thả cảm xúc bài viết', icon: '👍', render: renderReactionsModule });
+        modules.push({ id: 'mod_comments', name: 'Bình luận bài viết (Đầy đủ)', icon: '💬', render: renderCommentsModule });
+        modules.push({ id: 'mod_shares', name: 'Chia sẻ bài viết', icon: '↗️', render: renderSharesModule });
+        modules.push({ id: 'mod_replies', name: 'Trả lời bình luận (Reply)', icon: '↩️', render: renderRepliesModule });
+        modules.push({ id: 'mod_semantic', name: 'Bộ não AI lọc nội dung', icon: '🧠', render: renderSemanticPolicyModule });
+      } 
+      else if (action.type === 'add_friend_keyword') {
+        modules.push({ id: 'mod_scope_timing', name: 'Số lượng & Độ trễ', icon: '⏱️', render: renderScopeAndTimingModule });
+        modules.push({ id: 'mod_target_keywords', name: 'Từ khóa tìm kiếm', icon: '🔍', render: renderTargetKeywordsModule });
+        modules.push({ id: 'mod_friend_filters', name: 'Bộ lọc đối tượng', icon: '🎯', render: renderFriendFiltersModule });
+      }
+      else if (action.type === 'post_group') {
+        modules.push({ id: 'mod_group_scope', name: 'Phạm vi đăng bài', icon: '🏢', render: renderNestedGroupScopeModule });
+        modules.push({ id: 'mod_post_content', name: 'Soạn nội dung & Ảnh', icon: '✍️', render: renderPostContentModule });
+        modules.push({ id: 'mod_timing_delays', name: 'Thời gian & Độ trễ', icon: '⏳', render: renderTimingDelaysOnlyModule });
+      }
+      else if (action.type === 'change_password') {
+        modules.push({ id: 'mod_password_rules', name: 'Quy tắc mật khẩu mới', icon: '🔑', render: renderSecurityPasswordModule });
+        modules.push({ id: 'mod_timing_delays', name: 'Thời gian chờ xử lý', icon: '⏳', render: renderTimingDelaysOnlyModule });
+      }
+      else if (action.type === 'take_break') {
+        modules.push({ id: 'mod_break_time', name: 'Thời gian nghỉ ngơi', icon: '☕', render: renderBreakTimeModule });
+      }
+
+      // Sidebar Header
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'sidebar-section-title';
+      headerDiv.textContent = 'Mục lục cấu hình';
+      sidebarContainer.appendChild(headerDiv);
+
+      // Render Each Module
+      modules.forEach((mod, index) => {
+        // Nav Item
+        const navItem = document.createElement('a');
+        navItem.className = `nav-anchor-item ${index === 0 ? 'active' : ''}`;
+        navItem.id = `nav_${mod.id}`;
+        navItem.onclick = () => scrollToModule(mod.id);
+        navItem.innerHTML = `
+          <div class="nav-anchor-left">
+            <span class="nav-anchor-icon">${mod.icon}</span>
+            <span class="nav-anchor-text">${mod.name}</span>
+          </div>
+          <span class="nav-badge-state count" id="badge_${mod.id}">-</span>
+        `;
+        sidebarContainer.appendChild(navItem);
+
+        // Card Workspace
+        const cardHtml = mod.render(action);
+        workspaceContainer.insertAdjacentHTML('beforeend', cardHtml);
+      });
+
+      // Sidebar Hint
+      const hintDiv = document.createElement('div');
+      hintDiv.className = 'sidebar-footer-hint';
+      hintDiv.innerHTML = `💡 <b>Mẹo cấu hình:</b> Khối nào <b>Tắt</b> sẽ tự động thu gọn 1 dòng. Click mục lục bên trái để cuộn nhanh.`;
+      sidebarContainer.appendChild(hintDiv);
+
+      // Update State & Badges
+      updateSidebarRadar();
+    }
+
+    // Scroll smoothly to specific module card
+    function scrollToModule(moduleId) {
+      document.querySelectorAll('.nav-anchor-item').forEach(el => el.classList.remove('active'));
+      const activeNav = document.getElementById(`nav_${moduleId}`);
+      if (activeNav) activeNav.classList.add('active');
+
+      const targetCard = document.getElementById(moduleId);
+      if (targetCard) {
+        targetCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        targetCard.classList.add('is-active');
+        setTimeout(() => targetCard.classList.remove('is-active'), 1200);
+      }
+    }
+
+    // Update Radar State on Left Sidebar
+    function updateSidebarRadar() {
+      if (currentAction.type === 'interact_newsfeed') {
+        setBadge('mod_scope_timing', `${currentAction.scope.from}-${currentAction.scope.to} bài`, 'count');
+        const viewFullOn = currentAction.operations.viewFullContent?.enabled;
+        setBadge('mod_view_full', viewFullOn ? `${currentAction.operations.viewFullContent.selectionPercent}% bài` : 'TẮT', viewFullOn ? 'on' : 'off');
+        
+        const reactOn = currentAction.operations.reactionPost.enabled;
+        setBadge('mod_reactions', reactOn ? 'BẬT' : 'TẮT', reactOn ? 'on' : 'off');
+
+        const commentOn = currentAction.operations.commentPost.enabled;
+        setBadge('mod_comments', commentOn ? `${currentAction.operations.commentPost.text.length} mẫu` : 'TẮT', commentOn ? 'on' : 'off');
+
+        const shareOn = currentAction.operations.sharePost.enabled;
+        setBadge('mod_shares', shareOn ? 'BẬT' : 'TẮT', shareOn ? 'on' : 'off');
+
+        const replyOn = currentAction.operations.replyComment.enabled;
+        setBadge('mod_replies', replyOn ? `${currentAction.operations.replyComment.policies?.length || 0} Quy tắc` : 'TẮT', replyOn ? 'on' : 'off');
+
+        const semOn = currentAction.semanticRuntime.enabled;
+        setBadge('mod_semantic', semOn ? `${currentAction.semanticRuntime.rules.length} Rule` : 'TẮT', semOn ? 'on' : 'off');
+      }
+      else if (currentAction.type === 'add_friend_keyword') {
+        setBadge('mod_scope_timing', `${currentAction.scope.from}-${currentAction.scope.to} ng`, 'count');
+        setBadge('mod_target_keywords', `${currentAction.target.keywords.length} từ`, 'count');
+        setBadge('mod_friend_filters', 'Đã bật', 'on');
+      }
+      else if (currentAction.type === 'post_group') {
+        setBadge('mod_group_scope', `${currentAction.scope.outer.from}-${currentAction.scope.outer.to} nhóm`, 'count');
+        setBadge('mod_post_content', `${currentAction.content.text.length} bài`, 'count');
+        setBadge('mod_timing_delays', '60-120s', 'count');
+      }
+      else if (currentAction.type === 'change_password') {
+        setBadge('mod_password_rules', 'Ngẫu nhiên', 'on');
+        setBadge('mod_timing_delays', '60s', 'count');
+      }
+      else if (currentAction.type === 'take_break') {
+        setBadge('mod_break_time', `${currentAction.scope.from}-${currentAction.scope.to} phút`, 'count');
+      }
+    }
+
+    function setBadge(modId, text, type) {
+      const badge = document.getElementById(`badge_${modId}`);
+      if (badge) {
+        badge.textContent = text;
+        badge.className = `nav-badge-state ${type}`;
+      }
+    }
+
+    // ==========================================
+    // MODULE RENDERERS (COMPONENTS)
+    // ==========================================
+
+    // Component 1: Scope and Timing (Hỗ trợ cả Số lượng bài & Thời gian lướt tổng cbbOptionsPost)
+    function renderScopeAndTimingModule(action) {
+      const scopeMode = action.scope.mode || 'quantity';
+      return `
+        <section class="module-card" id="mod_scope_timing">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">⏱️</span>
+              <div>
+                <h3 class="module-header-title">Phạm vi số lượng & Thời lượng lướt (Scope & Timing)</h3>
+                <p class="module-header-desc">Giới hạn số lượng bài tương tác, thời gian lướt bảng tin và độ trễ an toàn chống checkpoint</p>
+              </div>
+            </div>
+            <span class="module-summary-pill active">${action.scope.from} – ${action.scope.to} ${action.scope.unit || 'bài'}</span>
+          </header>
+          <div class="module-card-body">
+            
+            <div class="form-group" style="padding-bottom: 10px; border-bottom: 1px dashed var(--slate-200);">
+              <label class="form-label">
+                <span>Tùy chọn giới hạn bài viết (cbbOptionsPost)</span>
+                <span class="label-hint">Cách xác định điểm dừng của hành động</span>
+              </label>
+              <div class="segmented-control" style="max-width: 520px;">
+                <div class="seg-item ${scopeMode === 'quantity' ? 'active' : ''}" onclick="currentAction.scope.mode='quantity'; renderFullActionUI(currentAction);">
+                  📄 Theo số lượng bài viết
+                </div>
+                <div class="seg-item ${scopeMode === 'duration' ? 'active' : ''}" onclick="currentAction.scope.mode='duration'; renderFullActionUI(currentAction);">
+                  ⏳ Theo thời lượng lướt (Phút)
+                </div>
+                <div class="seg-item ${scopeMode === 'both' ? 'active' : ''}" onclick="currentAction.scope.mode='both'; renderFullActionUI(currentAction);">
+                  ⚡ Đạt 1 trong 2 điều kiện
+                </div>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">
+                  <span>Số lượng bài viết cần lướt qua (nudSoLuong) *</span>
+                  <span class="label-hint">Từ - Đến (bài)</span>
+                </label>
+                <div class="range-inputs-row">
+                  <div class="input-wrapper">
+                    <span class="input-prefix">Từ</span>
+                    <input type="number" class="input-control has-prefix" value="${action.scope.from}" min="1" onchange="currentAction.scope.from = +this.value; updateSidebarRadar();">
+                  </div>
+                  <span class="range-separator">—</span>
+                  <div class="input-wrapper">
+                    <span class="input-prefix">Đến</span>
+                    <input type="number" class="input-control has-prefix" value="${action.scope.to}" min="1" onchange="currentAction.scope.to = +this.value; updateSidebarRadar();">
+                  </div>
+                </div>
+                <span class="form-hint">Tài khoản sẽ lướt ngẫu nhiên trong khoảng này.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">
+                  <span>Thời gian lướt/xem mỗi bài viết (nudThoiGian) *</span>
+                  <span class="label-hint">Giây / bài</span>
+                </label>
+                <div class="range-inputs-row">
+                  <div class="input-wrapper">
+                    <span class="input-prefix">Từ</span>
+                    <input type="number" class="input-control has-prefix" value="${action.timing.duration?.from || 15}" min="1" onchange="currentAction.timing.duration.from = +this.value;">
+                  </div>
+                  <span class="range-separator">—</span>
+                  <div class="input-wrapper">
+                    <span class="input-prefix">Đến</span>
+                    <input type="number" class="input-control has-prefix" value="${action.timing.duration?.to || 30}" min="1" onchange="currentAction.timing.duration.to = +this.value;">
+                  </div>
+                </div>
+                <span class="form-hint">Mô phỏng thời gian dừng lại đọc bài trước khi tương tác.</span>
+              </div>
+            </div>
+
+            <div class="form-grid-2" style="padding-top: 10px; border-top: 1px dashed var(--slate-200);">
+              <div class="form-group">
+                <label class="form-label">
+                  <span>Độ trễ giữa 2 bài viết liên tiếp (nudDelay) *</span>
+                  <span class="label-hint">Giây (delayBetweenItems)</span>
+                </label>
+                <div class="range-inputs-row">
+                  <div class="input-wrapper">
+                    <span class="input-prefix">Từ</span>
+                    <input type="number" class="input-control has-prefix" value="${action.timing.delayBetween.from}" min="0" onchange="currentAction.timing.delayBetween.from = +this.value;">
+                  </div>
+                  <span class="range-separator">—</span>
+                  <div class="input-wrapper">
+                    <span class="input-prefix">Đến</span>
+                    <input type="number" class="input-control has-prefix" value="${action.timing.delayBetween.to}" min="0" onchange="currentAction.timing.delayBetween.to = +this.value;">
+                  </div>
+                </div>
+                <span class="form-hint">Khoảng nghỉ an toàn giữa các bài viết để tránh spam.</span>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">
+                  <span>Tổng thời gian lướt tối đa (Phút)</span>
+                  <span class="label-hint">Dừng khi chạm mốc này</span>
+                </label>
+                <div class="range-inputs-row">
+                  <div class="input-wrapper">
+                    <span class="input-prefix">Từ</span>
+                    <input type="number" class="input-control has-prefix" value="${action.timing.totalDurationMinutes?.from || 5}" min="1">
+                  </div>
+                  <span class="range-separator">—</span>
+                  <div class="input-wrapper">
+                    <span class="input-prefix">Đến</span>
+                    <input type="number" class="input-control has-prefix" value="${action.timing.totalDurationMinutes?.to || 15}" min="1">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group" style="padding-top: 6px;">
+              <label class="form-label">Chờ trước khi bắt đầu hành động (delayBeforeSeconds)</label>
+              <input type="number" class="input-control" style="max-width: 250px;" value="${action.timing.delayBefore.from}" placeholder="0 = Bắt đầu ngay">
+            </div>
+
+          </div>
+        </section>
+      `;
+    }
+
+    // Component 1.5: View Full Content Module (ckbViewFullContent & nudPercentViewFullContent)
+    function renderViewFullContentModule(action) {
+      const vfc = action.operations.viewFullContent || { enabled: true, selectionPercent: 80, selectionMode: 'same_selected_items' };
+      const isChecked = vfc.enabled;
+      return `
+        <section class="module-card ${!isChecked ? 'is-collapsed' : ''}" id="mod_view_full">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">📖</span>
+              <div>
+                <h3 class="module-header-title">Đọc & Mở rộng xem toàn bộ bài viết (View Full Content)</h3>
+                <p class="module-header-desc">Tự động tìm và bấm nút "Xem thêm / See more" trên bài viết trước khi tương tác (giúp AI đọc trọn vẹn nội dung)</p>
+              </div>
+            </div>
+            <div class="module-header-actions">
+              <label class="switch-ui">
+                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleModuleCollapse('mod_view_full', this.checked, 'operations.viewFullContent.enabled')">
+                <span class="slider-ui"></span>
+              </label>
+            </div>
+          </header>
+          <div class="module-card-body">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">
+                  <span>Tỷ lệ bài viết bấm "Xem thêm" (%) (nudPercentViewFullContent)</span>
+                  <span class="label-hint">selectionPercent</span>
+                </label>
+                <div class="input-wrapper">
+                  <input type="number" class="input-control has-suffix" value="${vfc.selectionPercent || 80}" min="1" max="100" onchange="currentAction.operations.viewFullContent.selectionPercent = +this.value; updateSidebarRadar();">
+                  <span class="input-suffix">%</span>
+                </div>
+                <span class="form-hint">Mô phỏng thói quen người dùng: Không phải bài nào cũng bấm xem hết.</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Cơ chế chọn bài viết</label>
+                <select class="input-control" onchange="currentAction.operations.viewFullContent.selectionMode = this.value">
+                  <option value="same_selected_items" selected>Trên các bài viết đã chọn trong lượt lướt (same_selected_items)</option>
+                </select>
+                <span class="form-hint">Chuẩn V2: Áp dụng trên tập bài đã được chọn bởi scope.</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    // Component 2: Reactions Picker Component
+    function renderReactionsModule(action) {
+      const op = action.operations.reactionPost;
+      const isChecked = op.enabled;
+      return `
+        <section class="module-card ${!isChecked ? 'is-collapsed' : ''}" id="mod_reactions">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">👍</span>
+              <div>
+                <h3 class="module-header-title">Thả cảm xúc bài viết (Reactions)</h3>
+                <p class="module-header-desc">Tự động bày tỏ cảm xúc trên các bài viết lướt qua</p>
+              </div>
+            </div>
+            <div class="module-header-actions">
+              <label class="switch-ui">
+                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleModuleCollapse('mod_reactions', this.checked, 'operations.reactionPost.enabled')">
+                <span class="slider-ui"></span>
+              </label>
+            </div>
+          </header>
+          <div class="module-card-body">
+            <div class="form-group">
+              <label class="form-label">Chọn các loại cảm xúc được phép thả ngẫu nhiên</label>
+              <div class="reaction-grid">
+                ${[
+                  ['like', '👍', 'Thích'],
+                  ['love', '❤️', 'Yêu thích'],
+                  ['care', '🤗', 'Thương'],
+                  ['haha', '😆', 'Haha'],
+                  ['wow', '😮', 'Wow'],
+                  ['sad', '😢', 'Buồn'],
+                  ['angry', '😡', 'Phẫn nộ']
+                ].map(([val, icon, label]) => `
+                  <button type="button" class="btn-reaction ${op.types.includes(val) ? 'selected' : ''}" onclick="toggleReactionType('${val}', this)">
+                    <span class="reaction-emoji">${icon}</span>
+                    <span class="reaction-label">${label}</span>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="form-grid-2" style="margin-top: 6px;">
+              <div class="form-group">
+                <label class="form-label">Tỷ lệ thả cảm xúc trên tập bài lướt qua (%)</label>
+                <div class="input-wrapper">
+                  <input type="number" class="input-control has-suffix" value="${op.selectionPercent}" min="1" max="100" onchange="currentAction.operations.reactionPost.selectionPercent = +this.value;">
+                  <span class="input-suffix">%</span>
+                </div>
+                <span class="form-hint">Chuẩn V2: 100% là thả tất cả bài đủ điều kiện, 50% là đúng 1 nửa.</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Cơ chế chọn bài (selectionMode)</label>
+                <select class="input-control" onchange="currentAction.operations.reactionPost.selectionMode = this.value">
+                  <option value="same_selected_items" selected>Trên tập bài đã lướt (same_selected_items)</option>
+                  <option value="percentage">Theo tỷ lệ chính xác (percentage)</option>
+                  <option value="all_matching">Tất cả bài khớp điều kiện (all_matching)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function toggleReactionType(type, btn) {
+      const types = currentAction.operations.reactionPost.types;
+      const index = types.indexOf(type);
+      if (index > -1) {
+        if (types.length === 1) {
+          toast('Phải giữ lại ít nhất 1 loại cảm xúc!');
+          return;
+        }
+        types.splice(index, 1);
+        btn.classList.remove('selected');
+      } else {
+        types.push(type);
+        btn.classList.add('selected');
+      }
+    }
+
+    // Component 3: Comprehensive Comments Engine (Đầy đủ Text, AI Prompt, Media, Sticker, Tag bạn bè)
+    function renderCommentsModule(action) {
+      const op = action.operations.commentPost;
+      const isChecked = op.enabled;
+      const media = op.media || { enabled: false, selectionPercent: 50, mediaIds: [] };
+      const sticker = op.sticker || { enabled: false };
+      const tag = op.tag || { enabled: false, source: 'friends', tagCount: 3, uids: [] };
+      const typeBinhLuan = op.typeBinhLuan || 'both';
+
+      return `
+        <section class="module-card ${!isChecked ? 'is-collapsed' : ''}" id="mod_comments">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">💬</span>
+              <div>
+                <h3 class="module-header-title">Bình luận bài viết (Comment Post)</h3>
+                <p class="module-header-desc">Đầy đủ tính năng: Văn bản Spin, AI Prompt theo ngữ cảnh, Đính kèm ảnh, Sticker và Gắn thẻ bạn bè</p>
+              </div>
+            </div>
+            <div class="module-header-actions">
+              <label class="switch-ui">
+                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleModuleCollapse('mod_comments', this.checked, 'operations.commentPost.enabled')">
+                <span class="slider-ui"></span>
+              </label>
+            </div>
+          </header>
+          <div class="module-card-body">
+            
+            <!-- Hình thức bình luận (typeBinhLuan) -->
+            <div style="padding-bottom: 12px; border-bottom: 1px dashed var(--slate-200);">
+              <label class="form-label" style="margin-bottom: 8px;">
+                <span>Hình thức bình luận được phép (typeBinhLuan)</span>
+                <span class="label-hint">Văn bản, Hình ảnh hoặc Kết hợp</span>
+              </label>
+              <div class="segmented-control" style="max-width: 500px;">
+                <div class="seg-item ${typeBinhLuan === 'text_only' ? 'active' : ''}" onclick="currentAction.operations.commentPost.typeBinhLuan='text_only'; renderFullActionUI(currentAction);">
+                  📝 Chỉ văn bản
+                </div>
+                <div class="seg-item ${typeBinhLuan === 'image_only' ? 'active' : ''}" onclick="currentAction.operations.commentPost.typeBinhLuan='image_only'; renderFullActionUI(currentAction);">
+                  🖼️ Chỉ hình ảnh
+                </div>
+                <div class="seg-item ${typeBinhLuan === 'both' ? 'active' : ''}" onclick="currentAction.operations.commentPost.typeBinhLuan='both'; renderFullActionUI(currentAction);">
+                  🎲 Ngẫu nhiên Văn bản / Ảnh
+                </div>
+              </div>
+            </div>
+
+            <!-- Nguồn nội dung văn bản -->
+            ${typeBinhLuan !== 'image_only' ? `
+              <div style="padding-bottom: 12px; border-bottom: 1px dashed var(--slate-200);">
+                <span style="font-size: 12px; font-weight: 700; color: var(--slate-800); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">
+                  ✍️ 1. Cấu hình nội dung văn bản (content)
+                </span>
+                
+                <div class="form-group">
+                  <label class="form-label">Phương thức tạo nội dung văn bản (source)</label>
+                  <div class="segmented-control" style="max-width: 520px;">
+                    <div class="seg-item ${op.content.source === 'fixed' ? 'active' : ''}" onclick="switchCommentSource('fixed')">
+                      ✍️ Tự nhập văn bản / Spin-text
+                    </div>
+                    <div class="seg-item ${op.content.source === 'prompt' ? 'active' : ''}" onclick="switchCommentSource('prompt')">
+                      📚 Chọn Prompt thư viện (cbbPrompt)
+                    </div>
+                    <div class="seg-item ${op.content.source === 'ai' ? 'active' : ''}" onclick="switchCommentSource('ai')">
+                      🤖 AI tự sinh theo bài viết (Vision)
+                    </div>
+                  </div>
+                </div>
+
+                <!-- View 1: Fixed Texts with Spin syntax -->
+                <div id="commentSource_fixed" style="display: ${op.content.source === 'fixed' ? 'block' : 'none'}; margin-top: 10px;">
+                  <div class="form-group">
+                    <label class="form-label">
+                      <span>Danh sách nội dung bình luận (txtComment)</span>
+                      <span class="label-hint">${op.content.text?.length || 0} mẫu câu có sẵn</span>
+                    </label>
+                    <textarea class="input-control" rows="4" placeholder="Nhập mỗi dòng một câu bình luận. Dùng cú pháp {a|b|c} để spin text..." onchange="updateCommentTextList(this.value)">${escapeHtml((op.content.text || []).join('\n'))}</textarea>
+                  </div>
+                  <div class="spin-test-box" style="margin-top: 8px;">
+                    <div><span>Thử nghiệm Spin: </span><span class="spin-result-text" id="spinResultPreview">Bấm nút để thử...</span></div>
+                    <button type="button" class="btn-spin-try" onclick="testSpinText()">Thử Spin Text</button>
+                  </div>
+                </div>
+
+                <!-- View 2: Prompt Picker -->
+                <div id="commentSource_prompt" style="display: ${op.content.source === 'prompt' ? 'block' : 'none'}; margin-top: 10px;">
+                  <div class="form-group">
+                    <label class="form-label">Chọn Prompt từ Thư viện Prompt * (cbbPrompt)</label>
+                    <select class="input-control" onchange="currentAction.operations.commentPost.content.promptId = this.value">
+                      <option value="prompt_sport_fan_01" ${op.content.promptId === 'prompt_sport_fan_01' ? 'selected' : ''}>Fan Thể Thao cuồng nhiệt (Khen ngợi, chúc mừng đội bóng)</option>
+                      <option value="prompt_friendly_buyer" ${op.content.promptId === 'prompt_friendly_buyer' ? 'selected' : ''}>Người mua hàng thân thiện (Hỏi giá, xin tư vấn)</option>
+                      <option value="prompt_tech_enthusiast" ${op.content.promptId === 'prompt_tech_enthusiast' ? 'selected' : ''}>Chuyên gia công nghệ (Bình luận sâu về tính năng)</option>
+                    </select>
+                    <span class="form-hint">Prompt ID sẽ được gửi tới LLM khi tài khoản gặp bài viết phù hợp để sinh text bám ngữ cảnh.</span>
+                  </div>
+                </div>
+
+                <!-- View 3: Pure AI -->
+                <div id="commentSource_ai" style="display: ${op.content.source === 'ai' ? 'block' : 'none'}; margin-top: 10px;">
+                  <div class="form-group">
+                    <label class="form-label">Chỉ dẫn bổ sung cho AI (Instruction)</label>
+                    <textarea class="input-control" rows="3" placeholder="Ví dụ: Đóng vai người dùng năng động, bình luận tự nhiên từ 1-2 câu, dùng icon phù hợp với cảm xúc bài viết..."></textarea>
+                  </div>
+                </div>
+
+                <div class="form-grid-2" style="margin-top: 10px;">
+                  <div class="form-group">
+                    <label class="form-label">Tỷ lệ bình luận bằng văn bản (%) (nudPercentCommentText)</label>
+                    <div class="input-wrapper">
+                      <input type="number" class="input-control has-suffix" value="${op.selectionPercent}" min="1" max="100" onchange="currentAction.operations.commentPost.selectionPercent = +this.value">
+                      <span class="input-suffix">%</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="checkbox-item" style="margin-top: 26px;">
+                      <input type="checkbox" ${op.content.cleanupAfterUse ? 'checked' : ''} onchange="currentAction.operations.commentPost.content.cleanupAfterUse = this.checked">
+                      <span>Tự động xóa nội dung đã dùng (chống lặp lại - ckbTuDongXoaNoiDung)</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Bình luận bằng hình ảnh / Media (ckbSendAnh, txtAnh, nudPercentCommentImage) -->
+            <div style="padding-bottom: 12px; border-bottom: 1px dashed var(--slate-200);">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 8px;">
+                <span style="font-size: 12px; font-weight: 700; color: var(--slate-800); text-transform: uppercase; letter-spacing: 0.5px;">
+                  🖼️ 2. Bình luận bằng hình ảnh (ckbSendAnh & media)
+                </span>
+                <label class="switch-ui">
+                  <input type="checkbox" ${media.enabled ? 'checked' : ''} onchange="currentAction.operations.commentPost.media.enabled = this.checked; renderFullActionUI(currentAction);">
+                  <span class="slider-ui"></span>
+                </label>
+              </div>
+
+              ${media.enabled ? `
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label class="form-label">Tỷ lệ bình luận bằng ảnh (%) (nudPercentCommentImage)</label>
+                    <div class="input-wrapper">
+                      <input type="number" class="input-control has-suffix" value="${media.selectionPercent || 50}" min="1" max="100" onchange="currentAction.operations.commentPost.media.selectionPercent = +this.value">
+                      <span class="input-suffix">%</span>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Danh sách tệp ảnh bình luận (txtAnh / mediaIds)</label>
+                    <div class="chip-container">
+                      ${(media.mediaIds || []).map(id => `<span class="chip">🖼️ ${id} <span class="chip-remove" onclick="removeCommentMedia('${id}')">✕</span></span>`).join('')}
+                      <button type="button" class="btn-top" style="padding:3px 8px; font-size:11px;" onclick="addCommentMediaPrompt()">+ Thêm ảnh...</button>
+                    </div>
+                  </div>
+                </div>
+              ` : `
+                <span class="form-hint">Đang tắt tính năng bình luận bằng ảnh. Bật công tắc nếu muốn đính kèm ảnh ngẫu nhiên.</span>
+              `}
+            </div>
+
+            <!-- Sticker & Gắn thẻ bạn bè (ckbSticker, tag) -->
+            <div>
+              <span style="font-size: 12px; font-weight: 700; color: var(--slate-800); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">
+                🏷️ 3. Sticker & Gắn thẻ bạn bè (Sticker & Tagging)
+              </span>
+              <div class="form-grid-2">
+                <div class="form-group" style="padding: 10px; background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md);">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 4px;">
+                    <span style="font-weight: 600; font-size: 12.5px;">Bình luận bằng Sticker (ckbSticker)</span>
+                    <label class="switch-ui">
+                      <input type="checkbox" ${sticker.enabled ? 'checked' : ''} onchange="currentAction.operations.commentPost.sticker.enabled = this.checked">
+                      <span class="slider-ui"></span>
+                    </label>
+                  </div>
+                  <span class="form-hint">Tự động chọn ngẫu nhiên 1 sticker từ kho sticker Facebook.</span>
+                </div>
+
+                <div class="form-group" style="padding: 10px; background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md);">
+                  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 4px;">
+                    <span style="font-weight: 600; font-size: 12.5px;">Gắn thẻ bạn bè vào comment (Tag)</span>
+                    <label class="switch-ui">
+                      <input type="checkbox" ${tag.enabled ? 'checked' : ''} onchange="currentAction.operations.commentPost.tag.enabled = this.checked; renderFullActionUI(currentAction);">
+                      <span class="slider-ui"></span>
+                    </label>
+                  </div>
+                  ${tag.enabled ? `
+                    <div style="margin-top: 6px; display:flex; gap:10px; align-items:center;">
+                      <span style="font-size: 11.5px; color: var(--slate-600);">Số bạn gắn thẻ/bài:</span>
+                      <input type="number" class="input-control" style="width: 70px; height: 30px;" value="${tag.tagCount || 3}" min="1" max="10" onchange="currentAction.operations.commentPost.tag.tagCount = +this.value">
+                    </div>
+                  ` : `
+                    <span class="form-hint">Tag tên bạn bè của tài khoản để kích thích tương tác qua lại.</span>
+                  `}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      `;
+    }
+
+    function addCommentMediaPrompt() {
+      const name = prompt("Nhập tên tệp hình ảnh (vd: anh_dep_01.jpg):");
+      if (name) {
+        if (!currentAction.operations.commentPost.media.mediaIds) currentAction.operations.commentPost.media.mediaIds = [];
+        currentAction.operations.commentPost.media.mediaIds.push(name.trim());
+        renderFullActionUI(currentAction);
+      }
+    }
+
+    function removeCommentMedia(id) {
+      currentAction.operations.commentPost.media.mediaIds = currentAction.operations.commentPost.media.mediaIds.filter(x => x !== id);
+      renderFullActionUI(currentAction);
+    }
+
+
+    function switchCommentSource(mode) {
+      currentAction.operations.commentPost.source = mode;
+      document.querySelectorAll('#mod_comments .seg-item').forEach(el => el.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('commentSource_fixed').style.display = mode === 'fixed' ? 'block' : 'none';
+      document.getElementById('commentSource_prompt').style.display = mode === 'prompt' ? 'block' : 'none';
+      document.getElementById('commentSource_ai').style.display = mode === 'ai' ? 'block' : 'none';
+    }
+
+    function updateCommentTextList(val) {
+      currentAction.operations.commentPost.text = val.split('\n').map(s => s.trim()).filter(Boolean);
+      updateSidebarRadar();
+    }
+
+    function testSpinText() {
+      const texts = currentAction.operations.commentPost.text;
+      if (!texts || !texts.length) return;
+      const raw = texts[Math.floor(Math.random() * texts.length)];
+      // Simple spin syntax parser {a|b|c}
+      const spun = raw.replace(/\{([^{}]+)\}/g, (match, choices) => {
+        const arr = choices.split('|');
+        return arr[Math.floor(Math.random() * arr.length)];
+      });
+      document.getElementById('spinResultPreview').textContent = spun;
+    }
+
+    // Component 4: Shares Module Component (Đầy đủ Tường cá nhân, Nhóm, Nội dung share)
+    function renderSharesModule(action) {
+      const op = action.operations.sharePost;
+      const isChecked = op.enabled;
+      const dest = op.destination || { wall: true, groups: [] };
+      const contentObj = op.content || { source: 'fixed', text: [], promptId: null };
+
+      return `
+        <section class="module-card ${!isChecked ? 'is-collapsed' : ''}" id="mod_shares">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">↗️</span>
+              <div>
+                <h3 class="module-header-title">Chia sẻ bài viết (Share Post)</h3>
+                <p class="module-header-desc">Chia sẻ bài viết lên tường cá nhân (ckbShareWall) hoặc vào các hội nhóm chỉ định kèm lời dẫn</p>
+              </div>
+            </div>
+            <div class="module-header-actions">
+              <label class="switch-ui">
+                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleModuleCollapse('mod_shares', this.checked, 'operations.sharePost.enabled')">
+                <span class="slider-ui"></span>
+              </label>
+            </div>
+          </header>
+          <div class="module-card-body">
+            
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Tỷ lệ bài viết được chia sẻ (%) (nudPercentShareWall)</label>
+                <div class="input-wrapper">
+                  <input type="number" class="input-control has-suffix" value="${op.selectionPercent || 20}" min="1" max="100" onchange="currentAction.operations.sharePost.selectionPercent = +this.value;">
+                  <span class="input-suffix">%</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Điểm đến chia sẻ (destination)</label>
+                <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
+                  <label class="checkbox-item">
+                    <input type="checkbox" ${dest.wall ? 'checked' : ''} onchange="currentAction.operations.sharePost.destination.wall = this.checked">
+                    <span>Chia sẻ lên Tường cá nhân (ckbShareWall)</span>
+                  </label>
+                  <label class="checkbox-item">
+                    <input type="checkbox" ${dest.groups?.length ? 'checked' : ''} onchange="toast('Đã bật tính năng chia sẻ vào nhóm')">
+                    <span>Chia sẻ vào các Hội nhóm đã tham gia</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group" style="padding-top: 10px; border-top: 1px dashed var(--slate-200);">
+              <label class="form-label">
+                <span>Nội dung lời dẫn khi chia sẻ (txtContentShare)</span>
+                <span class="label-hint">Hỗ trợ cú pháp Spin {A|B|C}</span>
+              </label>
+              <textarea class="input-control" rows="3" placeholder="Nhập lời dẫn khi chia sẻ bài viết (mỗi dòng một câu)..." onchange="currentAction.operations.sharePost.content.text = this.value.split('
+').filter(Boolean);">${escapeHtml((contentObj.text || []).join('\n'))}</textarea>
+            </div>
+
+          </div>
+        </section>
+      `;
+    }
+
+    // Component 5: Comprehensive Replies Module Component (Chuẩn Contract V2)
+    function renderRepliesModule(action) {
+      const op = action.operations.replyComment;
+      const isChecked = op.enabled;
+      const rc = op.reactionComment || { enabled: false, types: ['love'], selectionPercent: 100, maxComment: 20 };
+      const policies = op.policies || [];
+      const contentObj = op.content || { source: 'ai', text: [], promptId: null, cleanupAfterUse: false };
+
+      return `
+        <section class="module-card ${!isChecked ? 'is-collapsed' : ''}" id="mod_replies">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">↩️</span>
+              <div>
+                <h3 class="module-header-title">Trả lời bình luận của người khác (Reply Comment)</h3>
+                <p class="module-header-desc">Quét bình luận dưới bài viết, phân loại theo nội dung/cảm xúc và trả lời tự động</p>
+              </div>
+            </div>
+            <div class="module-header-actions">
+              <label class="switch-ui">
+                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleModuleCollapse('mod_replies', this.checked, 'operations.replyComment.enabled')">
+                <span class="slider-ui"></span>
+              </label>
+            </div>
+          </header>
+          <div class="module-card-body">
+            
+            <!-- SECTION 1: Quota & Scan Scope -->
+            <div style="padding-bottom: 14px; border-bottom: 1px dashed var(--slate-200);">
+              <span style="font-size: 12px; font-weight: 700; color: var(--slate-800); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 10px;">
+                ⏱️ 1. Phạm vi quét & Tần suất trả lời
+              </span>
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label class="form-label">
+                    <span>Số comment tối đa được quét</span>
+                    <span class="label-hint">maxComment</span>
+                  </label>
+                  <input type="number" class="input-control" value="${op.maxComment || 20}" min="1" onchange="currentAction.operations.replyComment.maxComment = +this.value">
+                  <span class="form-hint">Mặc định: 20 comment đầu tiên của bài viết.</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">
+                    <span>Cơ chế chọn bình luận</span>
+                    <span class="label-hint">selectionMode</span>
+                  </label>
+                  <select class="input-control" onchange="currentAction.operations.replyComment.selectionMode = this.value; renderFullActionUI(currentAction);">
+                    <option value="all_matching" ${op.selectionMode === 'all_matching' ? 'selected' : ''}>Tất cả bình luận phù hợp (all_matching)</option>
+                    <option value="percentage" ${op.selectionMode === 'percentage' ? 'selected' : ''}>Theo tỷ lệ chính xác % (percentage)</option>
+                    <option value="quota" ${op.selectionMode === 'quota' ? 'selected' : ''}>Giới hạn số lượng (quota)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">
+                    <span>${op.selectionMode === 'percentage' ? 'Tỷ lệ trả lời (%)' : 'Tổng số câu trả lời tối đa'}</span>
+                    <span class="label-hint">${op.selectionMode === 'percentage' ? 'selectionPercent' : 'count'}</span>
+                  </label>
+                  ${op.selectionMode === 'percentage' ? `
+                    <div class="input-wrapper">
+                      <input type="number" class="input-control has-suffix" value="${op.selectionPercent || 100}" min="1" max="100" onchange="currentAction.operations.replyComment.selectionPercent = +this.value">
+                      <span class="input-suffix">%</span>
+                    </div>
+                  ` : `
+                    <input type="number" class="input-control" value="${op.count || ''}" placeholder="${op.selectionMode === 'all_matching' ? 'Không giới hạn (null)' : '3'}" ${op.selectionMode === 'all_matching' ? 'disabled' : ''} onchange="currentAction.operations.replyComment.count = this.value ? +this.value : null">
+                  `}
+                </div>
+              </div>
+
+              <div class="form-grid-2" style="margin-top: 10px;">
+                <div class="form-group">
+                  <label class="form-label">Giãn cách giữa 2 lần trả lời liên tiếp (delaySeconds)</label>
+                  <div class="range-inputs-row">
+                    <div class="input-wrapper">
+                      <span class="input-prefix">Từ</span>
+                      <input type="number" class="input-control has-prefix" value="${op.delaySeconds?.from || 5}" min="1" onchange="currentAction.operations.replyComment.delaySeconds.from = +this.value">
+                    </div>
+                    <span class="range-separator">—</span>
+                    <div class="input-wrapper">
+                      <span class="input-prefix">Đến</span>
+                      <input type="number" class="input-control has-prefix" value="${op.delaySeconds?.to || 10}" min="1" onchange="currentAction.operations.replyComment.delaySeconds.to = +this.value">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Tùy chọn phụ</label>
+                  <label class="checkbox-item" style="margin-top: 8px;">
+                    <input type="checkbox" ${contentObj.cleanupAfterUse ? 'checked' : ''} onchange="currentAction.operations.replyComment.content.cleanupAfterUse = this.checked">
+                    <span>Tự động xóa nội dung trả lời sau khi dùng (chống trùng lặp)</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 2: Reaction on Source Comment -->
+            <div style="padding-bottom: 14px; border-bottom: 1px dashed var(--slate-200);">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 10px;">
+                <span style="font-size: 12px; font-weight: 700; color: var(--slate-800); text-transform: uppercase; letter-spacing: 0.5px;">
+                  ❤️ 2. Thả cảm xúc vào bình luận nguồn (reactionComment)
+                </span>
+                <label class="switch-ui">
+                  <input type="checkbox" ${rc.enabled ? 'checked' : ''} onchange="currentAction.operations.replyComment.reactionComment.enabled = this.checked; renderFullActionUI(currentAction);">
+                  <span class="slider-ui"></span>
+                </label>
+              </div>
+
+              ${rc.enabled ? `
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label class="form-label">Loại cảm xúc thả vào bình luận nguồn</label>
+                    <select class="input-control" onchange="currentAction.operations.replyComment.reactionComment.types = [this.value]">
+                      <option value="love" ${rc.types.includes('love') ? 'selected' : ''}>❤️ Thả tim (Yêu thích - Khuyên dùng)</option>
+                      <option value="like" ${rc.types.includes('like') ? 'selected' : ''}>👍 Thích (Like)</option>
+                      <option value="care" ${rc.types.includes('care') ? 'selected' : ''}>🤗 Thương thương (Care)</option>
+                      <option value="haha" ${rc.types.includes('haha') ? 'selected' : ''}>😆 Haha</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Tỷ lệ thả cảm xúc vào bình luận nguồn (%)</label>
+                    <div class="input-wrapper">
+                      <input type="number" class="input-control has-suffix" value="${rc.selectionPercent || 100}" min="1" max="100" onchange="currentAction.operations.replyComment.reactionComment.selectionPercent = +this.value">
+                      <span class="input-suffix">%</span>
+                    </div>
+                  </div>
+                </div>
+              ` : `
+                <span class="form-hint">Đang tắt tính năng thả cảm xúc vào comment nguồn. Bật công tắc bên cạnh nếu muốn tăng tương tác tự nhiên.</span>
+              `}
+            </div>
+
+            <!-- SECTION 3: Detailed Conditional Reply Policies (QUY TẮC PHÂN LOẠI TRẢ LỜI) -->
+            <div>
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 10px;">
+                <div>
+                  <span style="font-size: 12px; font-weight: 700; color: var(--slate-800); text-transform: uppercase; letter-spacing: 0.5px; display: block;">
+                    🎯 3. Quy tắc trả lời theo nội dung bình luận (Reply Policies)
+                  </span>
+                  <span class="form-hint">Phân loại comment nguồn (hỏi giá, khen ngợi, phàn nàn) để trả lời kịch bản phù hợp</span>
+                </div>
+                <button type="button" class="btn-primary" style="padding: 5px 12px; font-size: 11.5px;" onclick="openReplyPolicyDrawer(-1)">
+                  + Thêm quy tắc trả lời
+                </button>
+              </div>
+
+              <div class="rules-card-list" id="replyPoliciesCardList">
+                ${policies.length ? policies.map((pol, idx) => `
+                  <div class="rule-item-card">
+                    <div class="rule-card-info">
+                      <div class="rule-title-row">
+                        <span class="rule-name">${pol.name}</span>
+                        <span class="rule-tag" style="background:#f0fdf4; color:#166534; border:1px solid #bbf7d0;">
+                          ${pol.sentiment === 'question' ? '❓ Hỏi đáp / Báo giá' : pol.sentiment === 'positive' ? '👍 Khen ngợi' : pol.sentiment === 'negative' ? '⚠️ Phàn nàn' : 'Mọi cảm xúc'}
+                        </span>
+                        <span class="rule-tag" style="background:#eff6ff; color:#1e40af;">${pol.reactionType ? '❤️ ' + pol.reactionType : 'Không react'}</span>
+                        <span class="rule-tag" style="background:#f8fafc; color:#64748b;">${pol.selectionPercent}% bài</span>
+                      </div>
+                      <div class="rule-desc-row">
+                        ${pol.keywords ? `<span>• Chứa từ khóa: <b>${pol.keywords}</b></span>` : '<span>• Bất kỳ từ khóa nào</span>'}
+                        ${pol.contentMode === 'prompt' ? `<span>• Dùng Prompt: <i>${pol.promptId}</i></span>` : pol.contentMode === 'instruction' ? `<span>• AI: "${pol.instruction.slice(0, 45)}..."</span>` : `<span>• Văn bản mẫu (${pol.fixedTexts?.length || 0} câu)</span>`}
+                      </div>
+                    </div>
+                    <div class="rule-card-tools">
+                      <button type="button" class="btn-icon-tool" title="Chỉnh sửa quy tắc trả lời" onclick="openReplyPolicyDrawer(${idx})">✎</button>
+                      <button type="button" class="btn-icon-tool delete" title="Xóa quy tắc trả lời" onclick="deleteReplyPolicy(${idx})">🗑</button>
+                    </div>
+                  </div>
+                `).join('') : `
+                  <div style="padding: 16px; background: var(--slate-50); border: 1px dashed var(--slate-300); border-radius: var(--radius-md); text-align: center; color: var(--slate-500); font-size: 12px;">
+                    Chưa có quy tắc phân loại trả lời nào. Bấm <b>"+ Thêm quy tắc trả lời"</b> để thiết lập kịch bản tự động phản hồi khách hàng thông minh.
+                  </div>
+                `}
+              </div>
+            </div>
+
+            <!-- SECTION 4: Fallback Content when no policy matches -->
+            <div style="padding-top: 12px; border-top: 1px dashed var(--slate-200);">
+              <span style="font-size: 12px; font-weight: 700; color: var(--slate-800); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">
+                🔄 4. Nội dung trả lời chung (Khi không khớp quy tắc nào ở trên)
+              </span>
+              <div class="form-group">
+                <label class="form-label">Phương thức trả lời mặc định</label>
+                <div class="segmented-control" style="max-width: 450px;">
+                  <div class="seg-item ${contentObj.source === 'ai' ? 'active' : ''}" onclick="switchDefaultReplyContentSource('ai')">
+                    🤖 AI phân tích tự động
+                  </div>
+                  <div class="seg-item ${contentObj.source === 'prompt' ? 'active' : ''}" onclick="switchDefaultReplyContentSource('prompt')">
+                    📚 Prompt mặc định
+                  </div>
+                  <div class="seg-item ${contentObj.source === 'fixed' ? 'active' : ''}" onclick="switchDefaultReplyContentSource('fixed')">
+                    ✍️ Mẫu câu cố định
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fixed text list fallback -->
+              <div id="defaultReplyBox_fixed" style="display: ${contentObj.source === 'fixed' ? 'block' : 'none'}; margin-top: 8px;">
+                <textarea class="input-control" rows="3" placeholder="Nhập mỗi dòng một câu trả lời dự phòng..." onchange="updateDefaultReplyTexts(this.value)">${escapeHtml((contentObj.text || []).join('\n'))}</textarea>
+              </div>
+
+              <!-- Prompt ID fallback -->
+              <div id="defaultReplyBox_prompt" style="display: ${contentObj.source === 'prompt' ? 'block' : 'none'}; margin-top: 8px;">
+                <select class="input-control" onchange="currentAction.operations.replyComment.content.promptId = this.value">
+                  <option value="prompt_reply_friendly" ${contentObj.promptId === 'prompt_reply_friendly' ? 'selected' : ''}>Trả lời thân thiện, lịch sự (prompt_reply_friendly)</option>
+                  <option value="prompt_reply_sales" ${contentObj.promptId === 'prompt_reply_sales' ? 'selected' : ''}>Chào mời mua hàng & Xem ưu đãi (prompt_reply_sales)</option>
+                </select>
+              </div>
+
+              <!-- Pure AI fallback -->
+              <div id="defaultReplyBox_ai" style="display: ${contentObj.source === 'ai' ? 'block' : 'none'}; margin-top: 8px;">
+                <span class="form-hint">AI Vision analyze sẽ tự động đọc ngữ cảnh bài viết và nội dung bình luận nguồn để sinh câu trả lời ngắn gọn (1-2 câu) phù hợp nhất.</span>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      `;
+    }
+
+    // Component 6: Semantic AI Policy Engine Component
+    function renderSemanticPolicyModule(action) {
+      const sem = action.semanticRuntime;
+      const isChecked = sem.enabled;
+      return `
+        <section class="module-card ${!isChecked ? 'is-collapsed' : ''}" id="mod_semantic">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">🧠</span>
+              <div>
+                <h3 class="module-header-title">Bộ não AI lọc nội dung thông minh (Semantic Policy)</h3>
+                <p class="module-header-desc">Chỉ like, comment bài viết đúng chủ đề; tự động bỏ qua bài tiêu cực</p>
+              </div>
+            </div>
+            <div class="module-header-actions">
+              <label class="switch-ui">
+                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleModuleCollapse('mod_semantic', this.checked, 'semanticRuntime.enabled')">
+                <span class="slider-ui"></span>
+              </label>
+            </div>
+          </header>
+          <div class="module-card-body">
+            
+            <div class="form-group">
+              <label class="form-label">Danh mục chủ đề quan tâm (Taxonomy Categories)</label>
+              <div class="chip-container" id="categoryChips">
+                ${sem.categories.map(cat => `
+                  <span class="chip">
+                    <b>#${cat}</b>
+                    <span class="chip-remove" onclick="removeCategory('${cat}')">✕</span>
+                  </span>
+                `).join('')}
+                <button type="button" class="btn-top" style="padding: 3px 8px; font-size: 11px;" onclick="addCategoryPrompt()">+ Thêm chủ đề</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 6px;">
+                <label class="form-label" style="margin:0;">Danh sách quy tắc lọc chi tiết (Post Rules)</label>
+                <button type="button" class="btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="openRuleDrawer(-1)">
+                  + Thêm quy tắc mới
+                </button>
+              </div>
+
+              <div class="rules-card-list" id="rulesCardList">
+                ${sem.rules.map((rule, idx) => `
+                  <div class="rule-item-card">
+                    <div class="rule-card-info">
+                      <div class="rule-title-row">
+                        <span class="rule-name">${rule.name}</span>
+                        <span class="rule-tag">#${rule.category}</span>
+                        <span class="rule-tag" style="background:#f1f5f9; color:#475569;">${rule.sentiment}</span>
+                      </div>
+                      <div class="rule-desc-row">
+                        <span>Hành vi: ${rule.doLike ? '👍 Like ' : ''}${rule.doLove ? '❤️ Love ' : ''}${rule.doComment ? '💬 Comment AI' : ''}</span>
+                        ${rule.instruction ? `<span>• Chỉ dẫn: "${rule.instruction}"</span>` : ''}
+                      </div>
+                    </div>
+                    <div class="rule-card-tools">
+                      <button type="button" class="btn-icon-tool" title="Chỉnh sửa rule" onclick="openRuleDrawer(${idx})">✎</button>
+                      <button type="button" class="btn-icon-tool delete" title="Xóa rule" onclick="deleteRule(${idx})">🗑</button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="form-group" style="padding-top: 10px; border-top: 1px dashed var(--slate-200);">
+              <label class="form-label">Khi bài viết KHÔNG KHỚP bất kỳ quy tắc nào ở trên (otherwise)</label>
+              <select class="input-control" onchange="currentAction.semanticRuntime.otherwise = this.value">
+                <option value="skip" ${sem.otherwise === 'skip' ? 'selected' : ''}>Bỏ qua bài viết, không làm gì (skip) - An toàn nhất</option>
+                <option value="fixed" ${sem.otherwise === 'fixed' ? 'selected' : ''}>Thực hiện tương tác mặc định (fixed fallback)</option>
+              </select>
+            </div>
+
+          </div>
+        </section>
+      `;
+    }
+
+    // Helper functions for Semantic Policy
+    function addCategoryPrompt() {
+      const name = prompt("Nhập mã chủ đề mới (viết liền không dấu, vd: real_estate, crypto):");
+      if (name && !currentAction.semanticRuntime.categories.includes(name.trim())) {
+        currentAction.semanticRuntime.categories.push(name.trim());
+        renderFullActionUI(currentAction);
+      }
+    }
+
+    function removeCategory(cat) {
+      currentAction.semanticRuntime.categories = currentAction.semanticRuntime.categories.filter(c => c !== cat);
+      renderFullActionUI(currentAction);
+    }
+
+    function openRuleDrawer(ruleIndex) {
+      editingRuleIndex = ruleIndex;
+      const drawer = document.getElementById('ruleDrawer');
+      const title = document.getElementById('drawerRuleTitle');
+
+      if (ruleIndex >= 0) {
+        title.textContent = 'Chỉnh sửa Quy tắc AI (Policy Rule)';
+        const rule = currentAction.semanticRuntime.rules[ruleIndex];
+        document.getElementById('drRuleId').value = rule.id || '';
+        document.getElementById('drRuleName').value = rule.name || '';
+        document.getElementById('drRuleCategory').value = rule.category || 'sports';
+        document.getElementById('drRuleSentiment').value = rule.sentiment || 'all';
+        document.getElementById('drRuleStance').value = rule.stance || 'all';
+        document.getElementById('drRuleTopic').value = rule.topic || '';
+        document.getElementById('drRuleOnUnclear').value = rule.onUnclear || 'skip';
+        document.getElementById('drRuleMeaningful').checked = rule.hasMeaningfulContent !== false;
+
+        document.getElementById('drRuleDoLike').checked = !!rule.doLike;
+        document.getElementById('drRuleDoLove').checked = !!rule.doLove;
+        document.getElementById('drRuleDoComment').checked = !!rule.doComment;
+        document.getElementById('drRuleCommentDetailBox').style.display = rule.doComment ? 'block' : 'none';
+        document.getElementById('drRulePromptSelect').value = rule.promptId || 'prompt_sport_fan_01';
+        document.getElementById('drRuleInstruction').value = rule.instruction || '';
+      } else {
+        title.textContent = 'Thêm Quy tắc AI mới (Policy Rule)';
+        document.getElementById('drRuleId').value = 'rule_' + Date.now().toString().slice(-4);
+        document.getElementById('drRuleName').value = 'Quy tắc bài viết mới';
+        document.getElementById('drRuleCategory').value = 'sports';
+        document.getElementById('drRuleSentiment').value = 'positive';
+        document.getElementById('drRuleStance').value = 'all';
+        document.getElementById('drRuleTopic').value = '';
+        document.getElementById('drRuleOnUnclear').value = 'skip';
+        document.getElementById('drRuleMeaningful').checked = true;
+
+        document.getElementById('drRuleDoLike').checked = true;
+        document.getElementById('drRuleDoLove').checked = true;
+        document.getElementById('drRuleDoComment').checked = true;
+        document.getElementById('drRuleCommentDetailBox').style.display = 'block';
+        document.getElementById('drRulePromptSelect').value = 'prompt_sport_fan_01';
+        document.getElementById('drRuleInstruction').value = 'Bình luận vui vẻ, tích cực bám sát nội dung bài viết.';
+      }
+
+      drawer.classList.add('active');
+    }
+
+    function saveRuleFromDrawer() {
+      const doComment = document.getElementById('drRuleDoComment').checked;
+      const newRule = {
+        id: document.getElementById('drRuleId').value.trim() || 'rule_' + Date.now(),
+        name: document.getElementById('drRuleName').value.trim() || 'Quy tắc chưa đặt tên',
+        category: document.getElementById('drRuleCategory').value,
+        sentiment: document.getElementById('drRuleSentiment').value,
+        stance: document.getElementById('drRuleStance').value,
+        topic: document.getElementById('drRuleTopic').value.trim(),
+        onUnclear: document.getElementById('drRuleOnUnclear').value,
+        hasMeaningfulContent: document.getElementById('drRuleMeaningful').checked,
+        doLike: document.getElementById('drRuleDoLike').checked,
+        doLove: document.getElementById('drRuleDoLove').checked,
+        doComment: doComment,
+        promptId: doComment ? document.getElementById('drRulePromptSelect').value : null,
+        instruction: doComment ? document.getElementById('drRuleInstruction').value.trim() : ''
+      };
+
+      if (!currentAction.semanticRuntime.rules) currentAction.semanticRuntime.rules = [];
+
+      if (editingRuleIndex >= 0) {
+        currentAction.semanticRuntime.rules[editingRuleIndex] = newRule;
+      } else {
+        currentAction.semanticRuntime.rules.push(newRule);
+      }
+
+      closeRuleDrawer();
+      renderFullActionUI(currentAction);
+      toast('Đã lưu quy tắc AI thành công!');
+    }
+
+    function deleteRule(idx) {
+      if (confirm('Bạn có chắc muốn xóa quy tắc này?')) {
+        currentAction.semanticRuntime.rules.splice(idx, 1);
+        renderFullActionUI(currentAction);
+        toast('Đã xóa quy tắc.');
+      }
+    }
+
+    // Toggle Collapse / Expand
+    function toggleModuleCollapse(modId, enabled, path) {
+      const card = document.getElementById(modId);
+      if (enabled) {
+        card.classList.remove('is-collapsed');
+      } else {
+        card.classList.add('is-collapsed');
+      }
+      // set nested value
+      const parts = path.split('.');
+      let obj = currentAction;
+      for (let i = 0; i < parts.length - 1; i++) {
+        obj = obj[parts[i]];
+      }
+      obj[parts[parts.length - 1]] = enabled;
+      updateSidebarRadar();
+    }
+
+    // Other Action Modules
+    function renderTargetKeywordsModule(action) {
+      return `
+        <section class="module-card" id="mod_target_keywords">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">🔍</span>
+              <div>
+                <h3 class="module-header-title">Danh sách từ khóa tìm kiếm bạn bè</h3>
+                <p class="module-header-desc">Hệ thống sẽ tìm kiếm người dùng theo các từ khóa này để gửi lời mời</p>
+              </div>
+            </div>
+            <span class="module-summary-pill active">${action.target.keywords.length} từ khóa</span>
+          </header>
+          <div class="module-card-body">
+            <div class="form-group">
+              <label class="form-label">Nhập từ khóa (Mỗi dòng một từ khóa)</label>
+              <textarea class="input-control" rows="5" placeholder="Nhập từ khóa...">${action.target.keywords.join('\n')}</textarea>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderFriendFiltersModule(action) {
+      return `
+        <section class="module-card" id="mod_friend_filters">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">🎯</span>
+              <div>
+                <h3 class="module-header-title">Bộ lọc người dùng hợp lệ</h3>
+                <p class="module-header-desc">Chỉ gửi lời mời nếu tài khoản mục tiêu thỏa mãn điều kiện</p>
+              </div>
+            </div>
+          </header>
+          <div class="module-card-body">
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label class="form-label">Bạn chung tối thiểu</label>
+                <input type="number" class="input-control" value="5">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Giới tính</label>
+                <select class="input-control">
+                  <option value="all">Tất cả giới tính</option>
+                  <option value="male">Chỉ Nam</option>
+                  <option value="female">Chỉ Nữ</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Yêu cầu có Avatar</label>
+                <select class="input-control">
+                  <option value="true">Bắt buộc có Avatar</option>
+                  <option value="false">Không bắt buộc</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderNestedGroupScopeModule(action) {
+      return `
+        <section class="module-card" id="mod_group_scope">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">🏢</span>
+              <div>
+                <h3 class="module-header-title">Phạm vi đăng bài vào nhóm (Nested Scope)</h3>
+                <p class="module-header-desc">Số lượng nhóm cần vào và số bài đăng trên mỗi nhóm</p>
+              </div>
+            </div>
+          </header>
+          <div class="module-card-body">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Số lượng nhóm cần đăng (outer scope) *</label>
+                <div class="range-inputs-row">
+                  <div class="input-wrapper">
+                    <span class="input-prefix">Từ</span>
+                    <input type="number" class="input-control has-prefix" value="${action.scope.outer.from}">
+                  </div>
+                  <span class="range-separator">—</span>
+                  <div class="input-wrapper">
+                    <span class="input-prefix">Đến</span>
+                    <input type="number" class="input-control has-prefix" value="${action.scope.outer.to}">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Số bài đăng trên mỗi nhóm (inner scope) *</label>
+                <div class="range-inputs-row">
+                  <div class="input-wrapper">
+                    <span class="input-prefix">Từ</span>
+                    <input type="number" class="input-control has-prefix" value="${action.scope.inner.from}">
+                  </div>
+                  <span class="range-separator">—</span>
+                  <div class="input-wrapper">
+                    <span class="input-prefix">Đến</span>
+                    <input type="number" class="input-control has-prefix" value="${action.scope.inner.to}">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderPostContentModule(action) {
+      return `
+        <section class="module-card" id="mod_post_content">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">✍️</span>
+              <div>
+                <h3 class="module-header-title">Nội dung bài đăng & Ảnh đính kèm</h3>
+                <p class="module-header-desc">Soạn thảo bài viết, spin text và tệp tin phương tiện</p>
+              </div>
+            </div>
+          </header>
+          <div class="module-card-body">
+            <div class="form-group">
+              <label class="form-label">Nội dung bài viết (Hỗ trợ Spin {A|B|C})</label>
+              <textarea class="input-control" rows="5">${action.content.text.join('\n')}</textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tệp Media đính kèm (Ảnh / Video)</label>
+              <div class="chip-container">
+                <span class="chip">🖼️ hinh_anh_01.jpg</span>
+                <span class="chip">🖼️ hinh_anh_02.jpg</span>
+                <button type="button" class="btn-top" style="padding:3px 8px; font-size:11px;">+ Chọn tệp từ máy...</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderTimingDelaysOnlyModule(action) {
+      return `
+        <section class="module-card" id="mod_timing_delays">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">⏳</span>
+              <div>
+                <h3 class="module-header-title">Thời gian & Độ trễ</h3>
+                <p class="module-header-desc">Giãn cách giữa các lần thực hiện</p>
+              </div>
+            </div>
+          </header>
+          <div class="module-card-body">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Độ trễ giữa 2 lần (giây)</label>
+                <div class="range-inputs-row">
+                  <input type="number" class="input-control" value="60">
+                  <span class="range-separator">—</span>
+                  <input type="number" class="input-control" value="120">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Timeout toàn hành động (giây)</label>
+                <input type="number" class="input-control" value="1800">
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderSecurityPasswordModule(action) {
+      return `
+        <section class="module-card" id="mod_password_rules">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">🔑</span>
+              <div>
+                <h3 class="module-header-title">Cấu hình mật khẩu mới</h3>
+                <p class="module-header-desc">Tự động sinh mật khẩu bảo mật cao hoặc nhập danh sách</p>
+              </div>
+            </div>
+          </header>
+          <div class="module-card-body">
+            <div class="form-group">
+              <label class="form-label">Chế độ tạo mật khẩu</label>
+              <select class="input-control">
+                <option value="random">Sinh ngẫu nhiên bảo mật (Chữ hoa + chữ thường + số + ký tự đặc biệt)</option>
+                <option value="manual">Sử dụng danh sách mật khẩu nhập sẵn</option>
+              </select>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Độ dài mật khẩu (ký tự)</label>
+                <input type="number" class="input-control" value="12">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Đăng xuất tất cả thiết bị cũ sau khi đổi</label>
+                <select class="input-control">
+                  <option value="true">Có (Khuyên dùng)</option>
+                  <option value="false">Không</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderBreakTimeModule(action) {
+      return `
+        <section class="module-card" id="mod_break_time">
+          <header class="module-card-header">
+            <div class="module-header-title-group">
+              <span class="module-header-icon">☕</span>
+              <div>
+                <h3 class="module-header-title">Thời gian nghỉ giải lao</h3>
+                <p class="module-header-desc">Tạm dừng tài khoản giữa các hành động để mô phỏng người thật</p>
+              </div>
+            </div>
+          </header>
+          <div class="module-card-body">
+            <div class="form-group">
+              <label class="form-label">Thời gian nghỉ (phút) *</label>
+              <div class="range-inputs-row">
+                <div class="input-wrapper">
+                  <span class="input-prefix">Từ</span>
+                  <input type="number" class="input-control has-prefix" value="${action.scope.from}">
+                </div>
+                <span class="range-separator">—</span>
+                <div class="input-wrapper">
+                  <span class="input-prefix">Đến</span>
+                  <input type="number" class="input-control has-prefix" value="${action.scope.to}">
+                </div>
+              </div>
+              <span class="form-hint">Hệ thống sẽ cho tài khoản ngủ trong khoảng thời gian này trước khi sang lượt tiếp theo.</span>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    // JSON Drawer & Export
+    function openJsonDrawer() {
+      const viewer = document.getElementById('jsonViewerContent');
+      // Format canonical object compliant with Contract V2
+      const payload = {
+        actionId: `action-${Date.now()}`,
+        order: 1,
+        type: currentAction.type,
+        title: currentAction.title,
+        enabled: currentAction.enabled,
+        target: currentAction.target || {},
+        scope: currentAction.scope || {},
+        timing: currentAction.timing || {},
+        behavior: {
+          mode: currentAction.semanticRuntime?.enabled ? 'semantic_policy' : 'fixed',
+          operations: currentAction.operations || {}
+        },
+        semanticRuntime: currentAction.semanticRuntime?.enabled ? currentAction.semanticRuntime : null
+      };
+
+      viewer.textContent = JSON.stringify(payload, null, 2);
+      document.getElementById('jsonDrawer').classList.add('active');
+    }
+
+    function closeJsonDrawer() {
+      document.getElementById('jsonDrawer').classList.remove('active');
+    }
+
+    function copyJsonToClipboard() {
+      const text = document.getElementById('jsonViewerContent').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        toast('Đã sao chép JSON vào bộ nhớ đệm!');
+      });
+    }
+
+    function resetToDefaults() {
+      if (confirm('Khôi phục cấu hình hành động này về mặc định ban đầu?')) {
+        switchActionDemo(currentAction.type);
+        toast('Đã khôi phục mặc định.');
+      }
+    }
+
+    function saveActionConfig() {
+      toast(`✅ Đã lưu cấu hình hành động "${currentAction.title}" thành công!`);
+    }
+
+
+    // ==========================================
+    // REPLY POLICY DRAWER HANDLERS
+    // ==========================================
+    let editingReplyPolicyIndex = -1;
+    let currentReplyContentMode = 'fixed';
+
+    function openReplyPolicyDrawer(policyIdx) {
+      editingReplyPolicyIndex = policyIdx;
+      const drawer = document.getElementById('replyPolicyDrawer');
+      const title = document.getElementById('drawerReplyPolicyTitle');
+
+      if (policyIdx >= 0) {
+        title.textContent = 'Chỉnh sửa Quy tắc Trả lời Bình luận';
+        const pol = currentAction.operations.replyComment.policies[policyIdx];
+        document.getElementById('drReplyPolicyId').value = pol.id;
+        document.getElementById('drReplyPolicyName').value = pol.name;
+        document.getElementById('drReplySentiment').value = pol.sentiment || 'any';
+        document.getElementById('drReplyKeywords').value = pol.keywords || '';
+        document.getElementById('drReplyMinLength').value = pol.minLength || 2;
+        document.getElementById('drReplyPercent').value = pol.selectionPercent || 100;
+        document.getElementById('drReplyReactionType').value = pol.reactionType || 'love';
+        
+        switchDrawerReplyContentMode(pol.contentMode || 'fixed');
+        document.getElementById('drReplyFixedTexts').value = (pol.fixedTexts || []).join('\n');
+        document.getElementById('drReplyPromptSelect').value = pol.promptId || 'prompt_consult_customer';
+        document.getElementById('drReplyInstruction').value = pol.instruction || '';
+      } else {
+        title.textContent = 'Thêm Quy tắc Trả lời Bình luận mới';
+        document.getElementById('drReplyPolicyId').value = 'policy_reply_' + Date.now().toString().slice(-4);
+        document.getElementById('drReplyPolicyName').value = 'Khách quan tâm sản phẩm';
+        document.getElementById('drReplySentiment').value = 'question';
+        document.getElementById('drReplyKeywords').value = 'giá, bao nhiêu, tư vấn, inbox';
+        document.getElementById('drReplyMinLength').value = 2;
+        document.getElementById('drReplyPercent').value = 100;
+        document.getElementById('drReplyReactionType').value = 'love';
+        
+        switchDrawerReplyContentMode('prompt');
+        document.getElementById('drReplyFixedTexts').value = "Dạ chào bạn, bạn check inbox mình tư vấn ngay nhé! ❤️";
+        document.getElementById('drReplyPromptSelect').value = 'prompt_consult_customer';
+        document.getElementById('drReplyInstruction').value = 'Chào khách lịch sự, báo giá ưu đãi và nhắc khách kiểm tra tin nhắn chờ.';
+      }
+
+      drawer.classList.add('active');
+    }
+
+    function closeReplyPolicyDrawer() {
+      document.getElementById('replyPolicyDrawer').classList.remove('active');
+    }
+
+    function switchDrawerReplyContentMode(mode) {
+      currentReplyContentMode = mode;
+      const items = document.querySelectorAll('#drReplyModeSegmented .seg-item');
+      items.forEach(el => el.classList.remove('active'));
+      
+      if (mode === 'fixed') items[0].classList.add('active');
+      else if (mode === 'prompt') items[1].classList.add('active');
+      else if (mode === 'instruction') items[2].classList.add('active');
+
+      document.getElementById('drReplyBox_fixed').style.display = mode === 'fixed' ? 'block' : 'none';
+      document.getElementById('drReplyBox_prompt').style.display = mode === 'prompt' ? 'block' : 'none';
+      document.getElementById('drReplyBox_instruction').style.display = mode === 'instruction' ? 'block' : 'none';
+    }
+
+    function saveReplyPolicyFromDrawer() {
+      const newPol = {
+        id: document.getElementById('drReplyPolicyId').value.trim() || 'policy_' + Date.now(),
+        name: document.getElementById('drReplyPolicyName').value.trim() || 'Quy tắc chưa đặt tên',
+        sentiment: document.getElementById('drReplySentiment').value,
+        keywords: document.getElementById('drReplyKeywords').value.trim(),
+        minLength: +document.getElementById('drReplyMinLength').value || 1,
+        reactionType: document.getElementById('drReplyReactionType').value,
+        selectionPercent: +document.getElementById('drReplyPercent').value || 100,
+        contentMode: currentReplyContentMode,
+        promptId: currentReplyContentMode === 'prompt' ? document.getElementById('drReplyPromptSelect').value : null,
+        instruction: currentReplyContentMode === 'instruction' ? document.getElementById('drReplyInstruction').value.trim() : '',
+        fixedTexts: currentReplyContentMode === 'fixed' ? document.getElementById('drReplyFixedTexts').value.split('\n').map(s=>s.trim()).filter(Boolean) : []
+      };
+
+      if (!currentAction.operations.replyComment.policies) {
+        currentAction.operations.replyComment.policies = [];
+      }
+
+      if (editingReplyPolicyIndex >= 0) {
+        currentAction.operations.replyComment.policies[editingReplyPolicyIndex] = newPol;
+      } else {
+        currentAction.operations.replyComment.policies.push(newPol);
+      }
+
+      closeReplyPolicyDrawer();
+      renderFullActionUI(currentAction);
+      toast('Đã lưu quy tắc trả lời bình luận thành công!');
+    }
+
+    function deleteReplyPolicy(idx) {
+      if (confirm('Bạn có chắc muốn xóa quy tắc trả lời này?')) {
+        currentAction.operations.replyComment.policies.splice(idx, 1);
+        renderFullActionUI(currentAction);
+        toast('Đã xóa quy tắc trả lời.');
+      }
+    }
+
+    function switchDefaultReplyContentSource(source) {
+      currentAction.operations.replyComment.content.source = source;
+      renderFullActionUI(currentAction);
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function updateDefaultReplyTexts(val) {
+      currentAction.operations.replyComment.content.text = val.split('\n').map(s=>s.trim()).filter(Boolean);
+    }
+
+    function toast(text) {
+      const el = document.getElementById('toast-msg');
+      el.textContent = text;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2500);
+    }
+  </script>
+</body>
+</html>

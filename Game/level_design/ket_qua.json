@@ -1,0 +1,580 @@
+{
+ "L1": {
+  "van": {
+   "opt": 31.833333333333336,
+   "naive": 31.833333333333336,
+   "naive_fail": null,
+   "path": [
+    [
+     13.3,
+     "KhoA",
+     "lấy Sieu+Hoa"
+    ],
+    [
+     22.6,
+     "Hoa",
+     "giao Hoa"
+    ],
+    [
+     31.8,
+     "Sieu",
+     "giao Sieu"
+    ]
+   ],
+   "naive_log": [
+    [
+     13.3,
+     "KhoA",
+     "lấy"
+    ],
+    [
+     22.6,
+     "Hoa",
+     "giao"
+    ],
+    [
+     31.8,
+     "Sieu",
+     "giao"
+    ]
+   ]
+  }
+ },
+ "L2": {
+  "van": {
+   "opt": 50.888888888888886,
+   "naive": 93.88888888888889,
+   "naive_fail": null,
+   "path": [
+    [
+     13.3,
+     "KhoA",
+     "lấy Dong+Bac"
+    ],
+    [
+     22.6,
+     "Dong",
+     "giao Dong"
+    ],
+    [
+     27.9,
+     "Bac",
+     "giao Bac"
+    ],
+    [
+     37.7,
+     "KhoA",
+     "lấy Tay"
+    ],
+    [
+     50.9,
+     "Tay",
+     "giao Tay"
+    ]
+   ],
+   "naive_log": [
+    [
+     13.3,
+     "KhoA",
+     "lấy"
+    ],
+    [
+     22.6,
+     "Dong",
+     "giao"
+    ],
+    [
+     45.0,
+     "Tay",
+     "giao"
+    ],
+    [
+     62.2,
+     "KhoA",
+     "lấy"
+    ],
+    [
+     71.4,
+     "Bac",
+     "giao"
+    ],
+    [
+     93.9,
+     "Tay",
+     "giao"
+    ]
+   ]
+  }
+ },
+ "L3": {
+  "van": {
+   "opt": 62.425925925925924,
+   "naive": 96.96913580246913,
+   "naive_fail": null,
+   "path": [
+    [
+     8.6,
+     "KhoA",
+     "lấy Cho"
+    ],
+    [
+     33.0,
+     "Cho",
+     "giao Cho"
+    ],
+    [
+     38.2,
+     "KhoB",
+     "lấy Truong"
+    ],
+    [
+     62.4,
+     "Truong",
+     "giao Truong"
+    ]
+   ],
+   "naive_log": [
+    [
+     8.6,
+     "KhoA",
+     "lấy"
+    ],
+    [
+     49.4,
+     "Cho",
+     "giao"
+    ],
+    [
+     56.2,
+     "KhoB",
+     "lấy"
+    ],
+    [
+     97.0,
+     "Truong",
+     "giao"
+    ]
+   ]
+  }
+ },
+ "L4": {
+  "van": {
+   "opt": 98.42592592592592,
+   "naive": 124.39506172839506,
+   "naive_fail": "trễ hạn Truong",
+   "path": [
+    [
+     13.3,
+     "KhoA",
+     "lấy BenhVien+Cho"
+    ],
+    [
+     26.4,
+     "BenhVien",
+     "giao BenhVien"
+    ],
+    [
+     44.8,
+     "Cho",
+     "giao Cho"
+    ],
+    [
+     58.0,
+     "KhoB",
+     "lấy Truong"
+    ],
+    [
+     74.6,
+     "Truong",
+     "giao Truong"
+    ],
+    [
+     91.7,
+     "KhoB",
+     "lấy Nha"
+    ],
+    [
+     98.4,
+     "Nha",
+     "giao Nha"
+    ]
+   ],
+   "naive_log": [
+    [
+     13.3,
+     "KhoA",
+     "lấy"
+    ],
+    [
+     26.4,
+     "BenhVien",
+     "giao"
+    ],
+    [
+     54.5,
+     "Cho",
+     "giao"
+    ],
+    [
+     69.7,
+     "KhoB",
+     "lấy"
+    ],
+    [
+     76.4,
+     "Nha",
+     "giao"
+    ],
+    [
+     102.1,
+     "Truong",
+     "giao"
+    ],
+    [
+     117.7,
+     "KhoB",
+     "lấy"
+    ],
+    [
+     124.4,
+     "Nha",
+     "giao"
+    ]
+   ]
+  }
+ },
+ "L5": {
+  "may": {
+   "opt": 142.16666666666669,
+   "naive": 154.83333333333334,
+   "naive_fail": "trễ hạn Truong",
+   "path": [
+    [
+     6.0,
+     "KhoA",
+     "lấy Cho"
+    ],
+    [
+     19.7,
+     "Cho",
+     "giao Cho"
+    ],
+    [
+     29.8,
+     "KhoB",
+     "lấy Truong"
+    ],
+    [
+     36.7,
+     "Truong",
+     "giao Truong"
+    ],
+    [
+     45.1,
+     "KhoB",
+     "lấy Cang"
+    ],
+    [
+     52.9,
+     "Cang",
+     "giao Cang"
+    ],
+    [
+     61.3,
+     "KhoB",
+     "lấy Cang"
+    ],
+    [
+     69.2,
+     "Cang",
+     "giao Cang"
+    ],
+    [
+     77.6,
+     "KhoB",
+     "lấy Cang"
+    ],
+    [
+     85.5,
+     "Cang",
+     "giao Cang"
+    ],
+    [
+     98.7,
+     "KhoA",
+     "lấy Nha"
+    ],
+    [
+     105.1,
+     "Nha",
+     "giao Nha"
+    ],
+    [
+     113.1,
+     "KhoA",
+     "lấy Nha"
+    ],
+    [
+     120.5,
+     "Nha",
+     "giao Nha"
+    ],
+    [
+     128.4,
+     "KhoA",
+     "lấy Cho"
+    ],
+    [
+     142.2,
+     "Cho",
+     "giao Cho"
+    ]
+   ],
+   "naive_log": [
+    [
+     6.0,
+     "KhoA",
+     "lấy"
+    ],
+    [
+     19.7,
+     "Cho",
+     "giao"
+    ],
+    [
+     29.8,
+     "KhoB",
+     "lấy"
+    ],
+    [
+     36.7,
+     "Cang",
+     "giao"
+    ],
+    [
+     45.1,
+     "KhoB",
+     "lấy"
+    ],
+    [
+     52.9,
+     "Cang",
+     "giao"
+    ],
+    [
+     61.3,
+     "KhoB",
+     "lấy"
+    ],
+    [
+     69.2,
+     "Cang",
+     "giao"
+    ],
+    [
+     77.6,
+     "KhoB",
+     "lấy"
+    ],
+    [
+     85.5,
+     "Truong",
+     "giao"
+    ],
+    [
+     103.2,
+     "KhoA",
+     "lấy"
+    ],
+    [
+     116.9,
+     "Cho",
+     "giao"
+    ],
+    [
+     132.0,
+     "KhoA",
+     "lấy"
+    ],
+    [
+     139.5,
+     "Nha",
+     "giao"
+    ],
+    [
+     147.4,
+     "KhoA",
+     "lấy"
+    ],
+    [
+     154.8,
+     "Nha",
+     "giao"
+    ]
+   ]
+  },
+  "van": {
+   "opt": 98.87037037037037,
+   "naive": 120.86419753086419,
+   "naive_fail": "trễ hạn Truong",
+   "path": [
+    [
+     7.8,
+     "KhoA",
+     "lấy Cho"
+    ],
+    [
+     27.0,
+     "Cho",
+     "giao Cho"
+    ],
+    [
+     40.7,
+     "KhoB",
+     "lấy Truong"
+    ],
+    [
+     50.0,
+     "Truong",
+     "giao Truong"
+    ],
+    [
+     61.3,
+     "KhoB",
+     "lấy Cang"
+    ],
+    [
+     72.0,
+     "Cang",
+     "giao Cang"
+    ],
+    [
+     90.2,
+     "KhoA",
+     "lấy Nha"
+    ],
+    [
+     98.9,
+     "Nha",
+     "giao Nha"
+    ]
+   ],
+   "naive_log": [
+    [
+     9.8,
+     "KhoA",
+     "lấy"
+    ],
+    [
+     20.0,
+     "Nha",
+     "giao"
+    ],
+    [
+     41.8,
+     "Cho",
+     "giao"
+    ],
+    [
+     56.9,
+     "KhoB",
+     "lấy"
+    ],
+    [
+     66.2,
+     "Cang",
+     "giao"
+    ],
+    [
+     77.5,
+     "KhoB",
+     "lấy"
+    ],
+    [
+     88.3,
+     "Truong",
+     "giao"
+    ],
+    [
+     110.7,
+     "KhoA",
+     "lấy"
+    ],
+    [
+     120.9,
+     "Nha",
+     "giao"
+    ]
+   ]
+  },
+  "tai": {
+   "opt": 129.85897435897436,
+   "naive": 112.69230769230771,
+   "naive_fail": "trễ hạn Truong",
+   "path": [
+    [
+     38.4,
+     "KhoB",
+     "lấy Cang+Truong"
+    ],
+    [
+     50.7,
+     "Truong",
+     "giao Truong"
+    ],
+    [
+     66.5,
+     "Cang",
+     "giao Cang"
+    ],
+    [
+     92.9,
+     "KhoA",
+     "lấy Cho+Nha"
+    ],
+    [
+     104.3,
+     "Nha",
+     "giao Nha"
+    ],
+    [
+     129.9,
+     "Cho",
+     "giao Cho"
+    ]
+   ],
+   "naive_log": [
+    [
+     12.5,
+     "KhoA",
+     "lấy"
+    ],
+    [
+     26.4,
+     "Nha",
+     "giao"
+    ],
+    [
+     59.4,
+     "Cho",
+     "giao"
+    ],
+    [
+     82.1,
+     "KhoB",
+     "lấy"
+    ],
+    [
+     94.3,
+     "Cang",
+     "giao"
+    ],
+    [
+     112.7,
+     "Truong",
+     "giao"
+    ]
+   ]
+  }
+ }
+}

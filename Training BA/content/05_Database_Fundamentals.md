@@ -17,6 +17,9 @@ Cơ sở dữ liệu quan hệ (Ví dụ: MySQL, SQL Server, Oracle) lưu trữ 
 | **002** | Trần Thị B | Nữ | 05/05/1995 | 0987654321 | *(Bản ghi số 2)* |
 | **003** | Nguyễn Văn A | Nam | 01/01/1990 | 0999888777 | *(Bản ghi số 3)* |
 
+![Hình 5.1: Cấu trúc cơ bản của một Bảng trong Cơ sở dữ liệu](images/05_01_cau_truc_bang_database.png)
+*Hình 5.1: Minh họa trực quan các thành phần Table, Column, Row và Cell trong CSDL*
+
 Dựa trên minh họa trên, các định nghĩa cốt lõi bao gồm:
 - **Table (Bảng):** Tập hợp dữ liệu về một đối tượng cụ thể. Ở ví dụ trên, toàn bộ khung lưới được gọi là Bảng `NguoiDung`, dùng để lưu trữ dữ liệu tập trung về đối tượng người dùng.
 - **Column (Cột / Trường dữ liệu):** Đại diện cho các **thuộc tính** của đối tượng (Cột 1 đến Cột 5). Trong cơ sở dữ liệu quan hệ, cấu trúc các cột (như `Họ và Tên`, `Giới Tính`) bắt buộc phải được khai báo trước khi hệ thống tiếp nhận dữ liệu.
@@ -38,6 +41,9 @@ Dựa trên minh họa trên, các định nghĩa cốt lõi bao gồm:
   Khi xây dựng Bảng `DonHang` (Orders), việc sao chép lại toàn bộ họ tên, ngày sinh của khách hàng sẽ gây ra sự dư thừa dữ liệu và tăng rủi ro sai lệch. Thay vào đó, chúng ta chỉ cần thiết lập trường `UserID` (Khóa ngoại) trong Bảng `DonHang`. 
   Khi cần truy xuất thông tin, hệ thống sẽ sử dụng giá trị `UserID = 001` tại Bảng `DonHang` để tham chiếu đối chiếu với Khóa chính `001` tại Bảng `NguoiDung`, từ đó lấy ra thông tin đầy đủ của khách hàng.
 
+![Hình 5.2: Cơ chế liên kết giữa Khóa chính (PK) và Khóa ngoại (FK)](images/05_02_khoa_chinh_khoa_ngoai.png)
+*Hình 5.2: Mối liên kết giữa Khóa ngoại (FK) và Khóa chính (PK) giúp tránh trùng lặp dữ liệu*
+
 ---
 
 ## 2. Các loại Quan hệ Dữ liệu (Relationships)
@@ -57,6 +63,9 @@ Năng lực xác định mối quan hệ giữa các thực thể dữ liệu l�
 - **Định nghĩa:** Một bản ghi tại Bảng A liên kết với **nhiều** bản ghi tại Bảng B, và đồng thời một bản ghi tại Bảng B cũng liên kết với **nhiều** bản ghi tại Bảng A.
 - **Ví dụ minh họa:** Mối quan hệ giữa **Sinh viên** và **Môn học**. Một Sinh viên có thể đăng ký nhiều Môn học khác nhau, và một Môn học cũng tiếp nhận nhiều Sinh viên tham gia.
 - **Phương pháp xử lý:** Các hệ quản trị cơ sở dữ liệu không hỗ trợ lưu trữ trực tiếp quan hệ N - N. Giải pháp kỹ thuật bắt buộc là thiết lập một **Bảng trung gian (Junction Table)**. Trong ví dụ trên, bảng trung gian `DangKyMonHoc` sẽ được tạo ra, chứa ít nhất hai Khóa ngoại là `Mã_SinhVien` và `Mã_MonHoc` để chuẩn hóa mối liên kết.
+
+![Hình 5.3: Mô hình 3 chuẩn quan hệ dữ liệu cốt lõi (1-1, 1-N, N-N)](images/05_03_cac_loai_quan_he_du_lieu.png)
+*Hình 5.3: Minh họa 3 dạng quan hệ thực thể và vai trò của Bảng trung gian (Junction Table)*
 
 ---
 
@@ -93,6 +102,9 @@ Dưới đây là 2 "Tài liệu" lưu trữ thông tin của 2 đối tượng 
 Trong vận hành An ninh mạng, máy chủ trung tâm phải xử lý hàng triệu **Cảnh báo bảo mật (Logs/Alerts)** theo thời gian thực.
 - **Hạn chế của SQL:** Các bản ghi Log từ Firewall, phần mềm Diệt Virus (AV), và Máy trạm (Endpoint) có cấu trúc trường dữ liệu khác biệt hoàn toàn (Firewall tập trung vào `IP`, trong khi AV tập trung vào `File Path` và `Malware Signature`). Hệ SQL sẽ gặp tình trạng thắt cổ chai hiệu năng khi xử lý cấu trúc dữ liệu không đồng nhất này.
 - **Ưu điểm của NoSQL:** NoSQL là giải pháp lưu trữ tối ưu, có khả năng tiếp nhận ngay lập tức mọi cảnh báo bảo mật bất chấp sự sai biệt về định dạng cấu trúc. Khả năng xử lý Dữ liệu lớn (Big Data) với độ trễ thấp giúp các hệ thống bảo mật như EDR và SOAR duy trì năng lực phân tích theo thời gian thực (Real-time Analysis).
+
+![Hình 5.4: So sánh trực quan mô hình CSDL SQL và NoSQL](images/05_04_so_sanh_sql_va_nosql.png)
+*Hình 5.4: So sánh giữa CSDL Quan hệ (SQL Schema cố định) và Phi quan hệ (NoSQL Document linh hoạt)*
 
 ---
 

@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quản lý mã giảm giá - Mockup</title>
+<style>
+  :root{--bg:#f4f6fa;--card:#fff;--line:#e3e7ef;--text:#1f2937;--muted:#6b7280;--pri:#2563eb;--pri-soft:#e8efff;--ok:#16a34a;--ok-soft:#e7f7ec;--warn:#d97706;--warn-soft:#fdf3e2;--err:#dc2626;--err-soft:#fde8e8;--gray-soft:#eef0f4}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;font-size:14px;color:var(--text);background:var(--bg)}
+  .view{display:none;padding:24px 32px}
+  .view.active{display:block}
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .crumb{color:var(--muted);font-size:13px}
+  h1{font-size:20px;margin:4px 0 0;display:flex;align-items:center;gap:10px}
+  h2{font-size:15px;margin:0 0 14px;display:flex;align-items:center;gap:8px}
+  h2 .num{width:22px;height:22px;border-radius:50%;background:var(--pri);color:#fff;font-size:12px;display:inline-flex;align-items:center;justify-content:center}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:16px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 18px}
+  .grid.g2{grid-template-columns:repeat(2,1fr)}
+  .grid .span2{grid-column:span 2}.grid .span3{grid-column:span 3}
+  label.f{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+  label.f .req{color:var(--err)}
+  .in{width:100%;height:36px;border:1px solid #cfd5e1;border-radius:6px;padding:0 10px;font:inherit;background:#fff;display:flex;align-items:center;gap:6px;color:var(--text)}
+  .in.ph{color:#9aa3b2}.in.sel::after{content:"▾";margin-left:auto;color:var(--muted)}
+  .in.date::after{content:"📅";margin-left:auto;font-size:13px}
+  .in.lock{background:#f3f4f6;color:var(--muted)}
+  .in.lock::before{content:"🔒";font-size:12px}
+  .in .unit{margin-left:auto;color:var(--muted);border-left:1px solid var(--line);padding-left:10px}
+  .in.multi{height:auto;min-height:36px;flex-wrap:wrap;padding:4px 8px}
+  .chip{background:var(--pri-soft);color:var(--pri);border-radius:4px;padding:2px 8px;font-size:12px}
+  textarea.in{height:64px;padding:8px 10px}
+  .hint{font-size:12px;color:var(--muted);margin-top:4px}
+  .err{font-size:12px;color:var(--err);margin-top:4px}
+  .in.bad{border-color:var(--err)}
+  .radio{display:flex;gap:22px;height:36px;align-items:center;flex-wrap:wrap}
+  .radio span{display:flex;align-items:center;gap:6px}
+  .dot{width:16px;height:16px;border-radius:50%;border:2px solid #9aa3b2;display:inline-block}
+  .dot.on{border:5px solid var(--pri)}
+  .chk{width:16px;height:16px;border-radius:3px;border:2px solid #9aa3b2;display:inline-block;vertical-align:-3px;flex:none}
+  .chk.on{background:var(--pri);border-color:var(--pri);position:relative}
+  .chk.on::after{content:"✓";color:#fff;font-size:11px;position:absolute;left:2px;top:-2px}
+  .chk.part{background:var(--pri);border-color:var(--pri);position:relative}
+  .chk.part::after{content:"";position:absolute;left:2px;top:5px;width:8px;height:2px;background:#fff}
+  .sw{width:34px;height:20px;border-radius:999px;background:#cbd2de;position:relative;display:inline-block;flex:none}
+  .sw::after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px}
+  .sw.on{background:var(--ok)}.sw.on::after{left:16px}
+  .btn{height:36px;padding:0 16px;border-radius:6px;border:1px solid #cfd5e1;background:#fff;font:inherit;font-weight:600;display:inline-flex;align-items:center;gap:6px;color:var(--text);white-space:nowrap}
+  .btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+  .btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+  .btn.danger{color:var(--err);border-color:#f3b4b4}
+  .btn.danger.fill{background:var(--err);color:#fff;border-color:var(--err)}
+  .btn.warn{color:var(--warn);border-color:#f2cf98}
+  .btn.ghost{border-color:transparent;color:var(--pri)}
+  .btn.sm{height:30px;padding:0 10px;font-size:13px}
+  .btn[disabled]{opacity:.45}
+  .ic{width:28px;height:28px;border:1px solid var(--line);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;background:#fff}
+  .ic.del{color:var(--err)}
+  .actions{display:flex;justify-content:flex-end;gap:10px}
+  .tag{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+  .tag.ok{background:var(--ok-soft);color:var(--ok)}.tag.warn{background:var(--warn-soft);color:var(--warn)}.tag.err{background:var(--err-soft);color:var(--err)}.tag.info{background:var(--pri-soft);color:var(--pri)}.tag.gray{background:var(--gray-soft);color:var(--muted)}.tag.purple{background:#f1e9fe;color:#7c3aed}
+  .toolbar{display:flex;gap:10px;align-items:center;margin-bottom:14px}
+  .toolbar .in{width:auto}
+  .bulk{display:flex;align-items:center;gap:12px;background:var(--pri-soft);border:1px solid #bcd0f7;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:13px}
+  table{width:100%;border-collapse:collapse;background:#fff}
+  th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);font-size:13px;white-space:nowrap;vertical-align:middle}
+  th{background:#f8f9fc;color:var(--muted);font-weight:600}
+  tr.selrow td{background:#f7faff}
+  .bar{width:48px;height:6px;border-radius:3px;background:#e5e7eb;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:6px}
+  .bar i{display:block;height:100%;background:var(--pri)}
+  .pager{display:flex;justify-content:space-between;align-items:center;padding:12px 4px 0;color:var(--muted);font-size:13px}
+  .pager .pg{display:flex;gap:6px}.pager .pg span{min-width:28px;height:28px;border:1px solid var(--line);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;background:#fff}
+  .pager .pg span.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+  .overlay{background:rgba(17,24,39,.45);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:32px}
+  .modal{background:#fff;border-radius:12px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+  .modal .hd{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}
+  .modal .hd h3{margin:0;font-size:16px;display:flex;align-items:center;gap:8px}
+  .modal .bd{padding:18px 20px;background:#fafbfd}
+  .modal .ft{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px;background:#fff;border-radius:0 0 12px 12px}
+  .sec{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+  .layout{display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start}
+  .ticket{border-radius:12px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;padding:18px;position:relative}
+  .ticket .code{font-size:20px;font-weight:700;letter-spacing:1px;border:1px dashed rgba(255,255,255,.7);border-radius:6px;padding:4px 10px;display:inline-block;margin:8px 0}
+  .ticket small{opacity:.85}
+  .kv{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+  .kv div{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .kv small{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}
+  .kv b{font-size:18px}
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px}
+  .tabs span{padding:8px 14px;color:var(--muted);font-weight:600}
+  .tabs span.on{color:var(--pri);border-bottom:2px solid var(--pri)}
+  .infogrid{display:grid;grid-template-columns:200px 1fr 200px 1fr;gap:12px 16px;font-size:13px}
+  .infogrid .k{color:var(--muted)}
+  .alert{display:flex;gap:10px;align-items:flex-start;background:var(--warn-soft);border:1px solid #f2cf98;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+  .dyn th,.dyn td{padding:6px 8px}
+  .dyn .in{height:32px}
+  .link{color:var(--pri);font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- ============ MÀN 1: DANH SÁCH MÃ GIẢM GIÁ ============ -->
+<section class="view" id="viewList">
+  <div class="topbar">
+    <div><div class="crumb">Marketing / Khuyến mãi / Mã giảm giá</div><h1>Danh sách mã giảm giá</h1></div>
+    <div class="actions"><button class="btn">⬇ Xuất file</button><button class="btn pri">＋ Tạo mới</button></div>
+  </div>
+  <div class="card" style="padding:14px 16px">
+    <div class="toolbar">
+      <div class="in ph" style="width:280px">🔎&nbsp; Tìm theo mã hoặc tên chương trình</div>
+      <div class="in sel" style="width:220px">Trạng thái: Tất cả</div>
+      <div class="in sel" style="width:190px">Loại giảm giá: Tất cả</div>
+      <div class="in date ph" style="width:250px">Thời gian hiệu lực</div>
+      <button class="btn ghost">Xóa bộ lọc</button>
+    </div>
+    <div class="bulk"><b>Đã chọn 2 mã</b><span style="color:var(--muted)">·</span><button class="btn sm danger">🗑 Xóa</button><button class="btn sm ghost" style="margin-left:auto">Bỏ chọn</button></div>
+    <table>
+      <thead><tr><th><i class="chk part"></i></th><th>Mã giảm giá</th><th>Tên chương trình</th><th>Loại giảm</th><th>Giá trị giảm</th><th>Thời gian hiệu lực</th><th>Lượt sử dụng</th><th>Trạng thái</th><th>Kích hoạt</th><th>Hành động</th></tr></thead>
+      <tbody>
+        <tr><td><i class="chk"></i></td><td><a class="link">SUMMER10</a></td><td>Ưu đãi hè 2026</td><td>Phần trăm</td><td>10%<div class="hint">Tối đa 50.000đ</div></td><td>01/06/2026 00:00<div class="hint">→ 31/10/2026 23:59</div></td><td><span class="bar"><i style="width:25%"></i></span>1.234 / 5.000</td><td><span class="tag ok">Đang hoạt động</span></td><td><span class="sw on"></span></td><td><span class="ic">✎</span> <span class="ic">⧉</span> <span class="ic del">🗑</span></td></tr>
+        <tr><td><i class="chk"></i></td><td><a class="link">NEWUSER50K</a></td><td>Chào mừng khách hàng mới</td><td>Số tiền</td><td>50.000đ</td><td>01/01/2026 00:00<div class="hint">→ 31/12/2026 23:59</div></td><td><span class="bar"><i style="width:0%"></i></span>812 / ∞</td><td><span class="tag ok">Đang hoạt động</span></td><td><span class="sw on"></span></td><td><span class="ic">✎</span> <span class="ic">⧉</span> <span class="ic del">🗑</span></td></tr>
+        <tr class="selrow"><td><i class="chk on"></i></td><td><a class="link">FLASH1111</a></td><td>Flash sale 11.11</td><td>Phần trăm</td><td>30%<div class="hint">Tối đa 200.000đ</div></td><td>11/11/2026 00:00<div class="hint">→ 11/11/2026 23:59</div></td><td><span class="bar"><i style="width:0%"></i></span>0 / 1.000</td><td><span class="tag info">Sắp diễn ra</span></td><td><span class="sw on"></span></td><td><span class="ic">✎</span> <span class="ic">⧉</span> <span class="ic del">🗑</span></td></tr>
+        <tr><td><i class="chk"></i></td><td><a class="link">VIPGOLD20</a></td><td>Tri ân hạng Vàng</td><td>Phần trăm</td><td>20%<div class="hint">Tối đa 300.000đ</div></td><td>01/09/2026 00:00<div class="hint">→ 31/12/2026 23:59</div></td><td><span class="bar"><i style="width:31%"></i></span>156 / 500</td><td><span class="tag warn">Tạm dừng</span></td><td><span class="sw"></span></td><td><span class="ic">✎</span> <span class="ic">⧉</span> <span class="ic del">🗑</span></td></tr>
+        <tr><td><i class="chk"></i></td><td><a class="link">TET2026</a></td><td>Lì xì Tết 2026</td><td>Số tiền</td><td>100.000đ</td><td>20/01/2026 00:00<div class="hint">→ 15/02/2026 23:59</div></td><td><span class="bar"><i style="width:100%;background:var(--muted)"></i></span>3.000 / 3.000</td><td><span class="tag gray">Đã kết thúc</span></td><td></td><td><span class="ic">⧉</span></td></tr>
+        <tr class="selrow"><td><i class="chk on"></i></td><td><a class="link">BLACKFRI25</a></td><td>Black Friday 2026</td><td>Phần trăm</td><td>25%<div class="hint">Tối đa 250.000đ</div></td><td>27/11/2026 00:00<div class="hint">→ 29/11/2026 23:59</div></td><td><span class="bar"><i style="width:0%"></i></span>0 / 2.000</td><td><span class="tag purple">Nháp</span></td><td></td><td><span class="ic">✎</span> <span class="ic">⧉</span> <span class="ic del">🗑</span></td></tr>
+      </tbody>
+    </table>
+    <div class="pager"><div>Hiển thị 1–6 / 42 mã · <span class="in sel" style="display:inline-flex;width:110px;height:28px;white-space:nowrap">20 / trang</span></div><div class="pg"><span>‹</span><span class="on">1</span><span>2</span><span>3</span><span>›</span></div></div>
+  </div>
+</section>
+
+<!-- ============ POPUP: THÊM MỚI MÃ GIẢM GIÁ ============ -->
+<section class="view" id="modalCreate" style="padding:0">
+  <div class="overlay"><div class="modal" style="max-width:1180px">
+    <div class="hd"><h3>Thêm mới mã giảm giá</h3><span style="font-size:18px;color:var(--muted)">✕</span></div>
+    <div class="bd">
+      <div class="layout">
+        <div>
+          <div class="sec">
+            <h2><span class="num">1</span>Thông tin chung</h2>
+            <div class="grid">
+              <div><label class="f">Mã giảm giá <span class="req">*</span></label>
+                <div style="display:flex;gap:8px"><div class="in ph">VD: SUMMER10</div><button class="btn" style="flex:none">⟳ Sinh mã</button></div>
+                <div class="hint">4–20 ký tự, chữ in hoa và số</div></div>
+              <div class="span2"><label class="f">Tên chương trình <span class="req">*</span></label><div class="in ph">Nhập tên chương trình khuyến mãi</div></div>
+              <div class="span3"><label class="f">Mô tả</label><textarea class="in" placeholder="Nhập mô tả hiển thị cho khách hàng"></textarea><div class="hint" style="text-align:right">0/500</div></div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <h2><span class="num">2</span>Giá trị giảm</h2>
+            <div class="grid">
+              <div class="span3"><label class="f">Loại giảm giá <span class="req">*</span></label>
+                <div class="radio"><span><i class="dot on"></i>Giảm theo phần trăm</span><span><i class="dot"></i>Giảm số tiền cố định</span></div></div>
+              <div><label class="f">Giá trị giảm <span class="req">*</span></label><div class="in ph">Nhập giá trị<span class="unit">%</span></div></div>
+              <div><label class="f">Giảm tối đa <span class="req">*</span></label><div class="in ph">Nhập số tiền<span class="unit">VNĐ</span></div></div>
+              <div><label class="f">Giá trị đơn hàng tối thiểu</label><div class="in">0<span class="unit">VNĐ</span></div></div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <h2><span class="num">3</span>Phạm vi áp dụng</h2>
+            <div class="grid">
+              <div class="span3"><label class="f">Sản phẩm áp dụng <span class="req">*</span></label>
+                <div class="radio"><span><i class="dot"></i>Tất cả sản phẩm</span><span><i class="dot on"></i>Theo danh mục</span><span><i class="dot"></i>Sản phẩm cụ thể</span></div></div>
+              <div class="span3"><label class="f">Danh mục <span class="req">*</span></label>
+                <div class="in multi"><span class="chip">Thời trang nữ ✕</span><span class="chip">Giày dép ✕</span><span class="chip">Phụ kiện ✕</span><span style="margin-left:auto;color:var(--muted)">▾</span></div></div>
+              <div class="span2"><label class="f">Kênh bán áp dụng <span class="req">*</span></label>
+                <div class="radio"><span><i class="chk on"></i>Website</span><span><i class="chk on"></i>Ứng dụng di động</span><span><i class="chk"></i>Cửa hàng (POS)</span></div></div>
+              <div><label class="f">Đối tượng khách hàng <span class="req">*</span></label><div class="in sel">Tất cả khách hàng</div></div>
+            </div>
+          </div>
+
+          <div class="sec">
+            <h2><span class="num">4</span>Thời gian &amp; giới hạn sử dụng</h2>
+            <div class="grid">
+              <div class="span2"><label class="f">Thời gian hiệu lực <span class="req">*</span></label><div class="in date ph">dd/mm/yyyy HH:mm  →  dd/mm/yyyy HH:mm</div></div>
+              <div></div>
+              <div><label class="f">Tổng số lượt sử dụng <span class="req">*</span></label><div class="in ph">Nhập số lượt</div>
+                <div class="hint" style="display:flex;align-items:center;gap:6px"><i class="chk"></i> Không giới hạn</div></div>
+              <div><label class="f">Số lượt tối đa / khách hàng <span class="req">*</span></label><div class="in">1</div></div>
+              <div><label class="f">Dùng chung với khuyến mãi khác</label><div style="height:36px;display:flex;align-items:center;gap:8px"><span class="sw"></span> Không cho phép</div></div>
+              <div class="span3"><label class="f" style="display:flex;align-items:center;gap:8px"><span class="sw on"></span> Chỉ áp dụng trong khung giờ</label>
+                <table class="dyn" style="border:1px solid var(--line);border-radius:8px">
+                  <thead><tr><th style="width:50px">STT</th><th>Ngày trong tuần <span style="color:var(--err)">*</span></th><th style="width:150px">Từ giờ <span style="color:var(--err)">*</span></th><th style="width:150px">Đến giờ <span style="color:var(--err)">*</span></th><th style="width:60px"></th></tr></thead>
+                  <tbody>
+                    <tr><td>1</td><td><div class="in multi" style="min-height:32px"><span class="chip">Thứ 6 ✕</span><span class="chip">Thứ 7 ✕</span><span class="chip">Chủ nhật ✕</span></div></td><td><div class="in">11:00</div></td><td><div class="in">13:00</div></td><td><span class="ic del">🗑</span></td></tr>
+                    <tr><td>2</td><td><div class="in multi ph" style="min-height:32px">Chọn ngày</div></td><td><div class="in ph">HH:mm</div></td><td><div class="in ph">HH:mm</div></td><td><span class="ic del">🗑</span></td></tr>
+                  </tbody>
+                </table>
+                <button class="btn sm ghost" style="margin-top:6px">＋ Thêm khung giờ</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="position:sticky;top:0">
+          <div class="sec">
+            <div style="font-weight:600;margin-bottom:10px">Xem trước</div>
+            <div class="ticket">
+              <small>Ưu đãi hè 2026</small>
+              <div style="font-size:22px;font-weight:700;margin-top:6px">Giảm 10%</div>
+              <small>Tối đa 50.000đ · Đơn từ 200.000đ</small>
+              <div class="code">SUMMER10</div>
+              <div><small>HSD: 01/06/2026 – 31/10/2026</small></div>
+            </div>
+            <div class="hint" style="margin-top:10px">Bản xem trước cập nhật theo thông tin đang nhập, hiển thị như khách hàng thấy trên ứng dụng.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ft"><button class="btn">Hủy</button><button class="btn">Lưu nháp</button><button class="btn pri">Lưu &amp; kích hoạt</button></div>
+  </div></div>
+</section>
+
+<!-- ============ POPUP: CHỈNH SỬA MÃ GIẢM GIÁ ============ -->
+<section class="view" id="modalEdit" style="padding:0">
+  <div class="overlay"><div class="modal" style="max-width:1180px">
+    <div class="hd"><h3>Chỉnh sửa mã giảm giá · SUMMER10 <span class="tag ok">Đang hoạt động</span></h3><span style="font-size:18px;color:var(--muted)">✕</span></div>
+    <div class="bd">
+      <div class="alert"><span>⚠️</span><div>Mã giảm giá đã có <b>1.234 lượt sử dụng</b>. Các trường có biểu tượng 🔒 không thể chỉnh sửa. Thời gian kết thúc chỉ được kéo dài, tổng số lượt chỉ được tăng.</div></div>
+      <div class="layout">
+        <div>
+          <div class="sec">
+            <h2><span class="num">1</span>Thông tin chung</h2>
+            <div class="grid">
+              <div><label class="f">Mã giảm giá <span class="req">*</span></label><div class="in lock">SUMMER10</div></div>
+              <div class="span2"><label class="f">Tên chương trình <span class="req">*</span></label><div class="in">Ưu đãi hè 2026</div></div>
+              <div class="span3"><label class="f">Mô tả</label><textarea class="in">Giảm 10% tối đa 50.000đ cho đơn hàng thời trang từ 200.000đ.</textarea><div class="hint" style="text-align:right">62/500</div></div>
+            </div>
+          </div>
+          <div class="sec">
+            <h2><span class="num">2</span>Giá trị giảm</h2>
+            <div class="grid">
+              <div class="span3"><label class="f">Loại giảm giá <span class="req">*</span></label>
+                <div class="radio" style="opacity:.55"><span><i class="dot on"></i>Giảm theo phần trăm</span><span><i class="dot"></i>Giảm số tiền cố định</span><span>🔒</span></div></div>
+              <div><label class="f">Giá trị giảm <span class="req">*</span></label><div class="in lock">10<span class="unit">%</span></div></div>
+              <div><label class="f">Giảm tối đa <span class="req">*</span></label><div class="in lock">50.000<span class="unit">VNĐ</span></div></div>
+              <div><label class="f">Giá trị đơn hàng tối thiểu</label><div class="in lock">200.000<span class="unit">VNĐ</span></div></div>
+            </div>
+          </div>
+          <div class="sec">
+            <h2><span class="num">3</span>Phạm vi áp dụng</h2>
+            <div class="grid">
+              <div class="span3"><label class="f">Sản phẩm áp dụng <span class="req">*</span></label>
+                <div class="radio"><span><i class="dot"></i>Tất cả sản phẩm</span><span><i class="dot on"></i>Theo danh mục</span><span><i class="dot"></i>Sản phẩm cụ thể</span></div></div>
+              <div class="span3"><label class="f">Danh mục <span class="req">*</span></label>
+                <div class="in multi"><span class="chip">Thời trang nữ ✕</span><span class="chip">Giày dép ✕</span><span class="chip">Phụ kiện ✕</span><span style="margin-left:auto;color:var(--muted)">▾</span></div></div>
+              <div class="span2"><label class="f">Kênh bán áp dụng <span class="req">*</span></label>
+                <div class="radio"><span><i class="chk on"></i>Website</span><span><i class="chk on"></i>Ứng dụng di động</span><span><i class="chk"></i>Cửa hàng (POS)</span></div></div>
+              <div><label class="f">Đối tượng khách hàng <span class="req">*</span></label><div class="in sel">Tất cả khách hàng</div></div>
+            </div>
+          </div>
+          <div class="sec">
+            <h2><span class="num">4</span>Thời gian &amp; giới hạn sử dụng</h2>
+            <div class="grid">
+              <div class="span2"><label class="f">Thời gian hiệu lực <span class="req">*</span></label>
+                <div style="display:flex;gap:8px;align-items:center"><div class="in lock">01/06/2026 00:00</div><span>→</span><div class="in date">31/10/2026 23:59</div></div></div>
+              <div></div>
+              <div><label class="f">Tổng số lượt sử dụng <span class="req">*</span></label><div class="in">5.000</div><div class="hint">Đã dùng 1.234 lượt</div></div>
+              <div><label class="f">Số lượt tối đa / khách hàng <span class="req">*</span></label><div class="in lock">1</div></div>
+              <div><label class="f">Dùng chung với khuyến mãi khác</label><div style="height:36px;display:flex;align-items:center;gap:8px"><span class="sw"></span> Không cho phép</div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sec">
+            <div style="font-weight:600;margin-bottom:10px">Xem trước</div>
+            <div class="ticket">
+              <small>Ưu đãi hè 2026</small>
+              <div style="font-size:22px;font-weight:700;margin-top:6px">Giảm 10%</div>
+              <small>Tối đa 50.000đ · Đơn từ 200.000đ</small>
+              <div class="code">SUMMER10</div>
+              <div><small>HSD: 01/06/2026 – 31/10/2026</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ft"><button class="btn">Hủy</button><button class="btn pri" disabled>Lưu thay đổi</button></div>
+  </div></div>
+</section>
+
+<!-- ============ MÀN 2: CHI TIẾT MÃ GIẢM GIÁ ============ -->
+<section class="view" id="viewDetail">
+  <div class="topbar">
+    <div><div class="crumb">Marketing / Khuyến mãi / Mã giảm giá / SUMMER10</div><h1>← SUMMER10 · Ưu đãi hè 2026 <span class="tag ok">Đang hoạt động</span></h1></div>
+    <div class="actions"><button class="btn">⧉ Sao chép</button><button class="btn warn">⏸ Tạm dừng</button><button class="btn pri">✎ Sửa</button></div>
+  </div>
+  <div class="kv">
+    <div><small>Lượt đã sử dụng</small><b>1.234</b> <span class="hint">/ 5.000 (24,7%)</span></div>
+    <div><small>Tổng tiền đã giảm</small><b>48.560.000đ</b></div>
+    <div><small>Doanh thu đơn hàng áp mã</small><b>612.300.000đ</b></div>
+    <div><small>Thời gian còn lại</small><b>18 ngày</b> <span class="hint">đến 31/10/2026 23:59</span></div>
+  </div>
+  <div class="card">
+    <div class="tabs"><span class="on">Thông tin</span><span>Lịch sử sử dụng (1.234)</span><span>Lịch sử thay đổi (5)</span></div>
+    <div class="infogrid">
+      <div class="k">Mã giảm giá</div><div><b>SUMMER10</b></div>
+      <div class="k">Loại giảm giá</div><div>Giảm theo phần trăm</div>
+      <div class="k">Tên chương trình</div><div>Ưu đãi hè 2026</div>
+      <div class="k">Giá trị giảm</div><div>10%, tối đa 50.000đ</div>
+      <div class="k">Mô tả</div><div>Giảm 10% tối đa 50.000đ cho đơn hàng thời trang từ 200.000đ.</div>
+      <div class="k">Giá trị đơn hàng tối thiểu</div><div>200.000đ</div>
+      <div class="k">Sản phẩm áp dụng</div><div>Theo danh mục: Thời trang nữ, Giày dép, Phụ kiện</div>
+      <div class="k">Kênh bán áp dụng</div><div>Website, Ứng dụng di động</div>
+      <div class="k">Đối tượng khách hàng</div><div>Tất cả khách hàng</div>
+      <div class="k">Thời gian hiệu lực</div><div>01/06/2026 00:00 → 31/10/2026 23:59</div>
+      <div class="k">Tổng số lượt sử dụng</div><div>5.000</div>
+      <div class="k">Số lượt tối đa / khách hàng</div><div>1</div>
+      <div class="k">Dùng chung với khuyến mãi khác</div><div>Không cho phép</div>
+      <div class="k">Khung giờ áp dụng</div><div>Không giới hạn khung giờ</div>
+      <div class="k">Người tạo</div><div>lan.pt · 20/05/2026 14:32</div>
+      <div class="k">Cập nhật gần nhất</div><div>minh.dq · 02/10/2026 09:15</div>
+    </div>
+  </div>
+  <div class="card">
+    <div style="font-weight:600;margin-bottom:10px">Lịch sử sử dụng <span class="hint">(xem trước tab)</span></div>
+    <table>
+      <thead><tr><th>Mã đơn hàng</th><th>Khách hàng</th><th>Kênh</th><th>Giá trị đơn</th><th>Số tiền giảm</th><th>Thời gian sử dụng</th><th>Trạng thái đơn</th></tr></thead>
+      <tbody>
+        <tr><td><a class="link">DH-20261013-0457</a></td><td>Nguyễn Thu Trang<div class="hint">0912***678</div></td><td>Ứng dụng di động</td><td>540.000đ</td><td>50.000đ</td><td>13/10/2026 10:21</td><td><span class="tag ok">Hoàn thành</span></td></tr>
+        <tr><td><a class="link">DH-20261013-0412</a></td><td>Lê Minh Quân<div class="hint">0987***210</div></td><td>Website</td><td>320.000đ</td><td>32.000đ</td><td>13/10/2026 09:48</td><td><span class="tag info">Đang giao</span></td></tr>
+        <tr><td><a class="link">DH-20261012-1988</a></td><td>Phạm Hồng Nhung<div class="hint">0903***455</div></td><td>Website</td><td>250.000đ</td><td>25.000đ</td><td>12/10/2026 21:05</td><td><span class="tag err">Đã hủy · hoàn lượt</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ HỘP THOẠI: XÓA MÃ GIẢM GIÁ (HÀNG LOẠT) ============ -->
+<section class="view" id="modalDelete" style="padding:0">
+  <div class="overlay"><div class="modal" style="max-width:520px;margin-top:80px">
+    <div class="hd"><h3>Xác nhận xóa mã giảm giá</h3><span style="font-size:18px;color:var(--muted)">✕</span></div>
+    <div class="bd" style="background:#fff">
+      <p style="margin:0 0 12px">Bạn có chắc chắn muốn xóa <b>2 mã giảm giá</b> đã chọn? Hành động này không thể hoàn tác.</p>
+      <table style="border:1px solid var(--line)">
+        <thead><tr><th>Mã giảm giá</th><th>Trạng thái</th><th>Kết quả kiểm tra</th></tr></thead>
+        <tbody>
+          <tr><td>BLACKFRI25</td><td><span class="tag purple">Nháp</span></td><td style="color:var(--ok)">✓ Có thể xóa</td></tr>
+          <tr><td>FLASH1111</td><td><span class="tag info">Sắp diễn ra</span></td><td style="color:var(--ok)">✓ Có thể xóa</td></tr>
+        </tbody>
+      </table>
+      <div class="hint" style="margin-top:10px">Chỉ xóa được mã ở trạng thái Nháp hoặc Sắp diễn ra và chưa có lượt sử dụng. Mã đã có lượt sử dụng chỉ có thể Tạm dừng.</div>
+    </div>
+    <div class="ft"><button class="btn">Hủy</button><button class="btn danger fill">Xóa</button></div>
+  </div></div>
+</section>
+
+<script>
+  function show(){var id=(location.hash||'#viewList').slice(1);document.querySelectorAll('.view').forEach(function(v){v.classList.toggle('active',v.id===id)})}
+  window.addEventListener('hashchange',show);show();
+</script>
+</body>
+</html>

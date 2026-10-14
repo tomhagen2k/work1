@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Demo Giao Hàng</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+  html,body{width:100%;height:100%;overflow:hidden;background:#1b1f24;font-family:"Nunito","Segoe UI",sans-serif;touch-action:none}
+  #wrap{position:fixed;inset:0;display:grid;place-items:center}
+  #stage{position:relative;width:844px;height:390px;overflow:hidden;transform-origin:center;background:#8fd16a;border-radius:6px}
+  #view{position:absolute;inset:0;display:block}
+  .abs{position:absolute}
+  svg.ic{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  button{font-family:inherit;border:0;cursor:pointer;touch-action:none}
+  .dim{opacity:.55;filter:grayscale(.85)}
+  .glow{box-shadow:0 0 0 3px #ffd84d,0 0 16px 6px rgba(255,214,60,.85)!important}
+  .sel{background:#ffd84d!important;box-shadow:0 0 0 3px #fff,0 0 16px 6px rgba(255,214,60,.9)!important}
+  .label{font-size:9px;font-weight:900;letter-spacing:.2px;margin-top:1px}
+
+  /* mission display (đề xuất 3) */
+  .chip{background:rgba(20,28,38,.82);color:#fff;border-radius:22px}
+  #timer{left:12px;top:12px;padding:5px 14px;font-size:24px;font-weight:900;display:flex;align-items:center;gap:7px}
+  #timer svg{width:20px;height:20px}
+  #timer.warn{background:#e03131}
+  #missions{left:12px;top:56px;display:flex;gap:10px}
+  .mc{width:50px;height:50px;border-radius:50%;position:relative;display:grid;place-items:center}
+  .mc svg.ring{position:absolute;inset:0;width:50px;height:50px;transform:rotate(-90deg)}
+  .mc .c{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;color:#fff;font-size:10px;font-weight:900;line-height:1}
+  .mc .c svg{width:16px;height:16px;margin-bottom:2px}
+  .mc .dd{position:absolute;z-index:2;bottom:-8px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:900;padding:1px 5px;border-radius:7px;background:#fff;color:#1d2733;white-space:nowrap}
+  .mc.warn .dd{background:#ff4d42;color:#fff}
+  .mc.done{opacity:.55}
+  .mc .onb{position:absolute;z-index:2;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#ffd84d;border:2px solid #1d2733;display:none}
+  .mc.carry .onb{display:block}
+
+  /* controls + minimap (đề xuất 1) */
+  .rbtn{width:56px;height:56px;border-radius:50%;background:#fff;box-shadow:0 4px 0 rgba(0,0,0,.18);display:grid;place-items:center;color:#2d3440}
+  .rbtn .in{display:flex;flex-direction:column;align-items:center;pointer-events:none}
+  .rbtn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+  #bPause{right:242px;top:10px;width:40px;height:40px}
+  #bPause svg{width:18px;height:18px}
+  #mm{right:10px;top:10px;width:224px;height:128px;border-radius:14px;overflow:hidden;border:3px solid #fff;box-shadow:0 3px 0 rgba(0,0,0,.15);cursor:pointer;background:#8fd16a}
+  #mm svg{display:block;width:100%;height:100%}
+  .dpad{left:12px;bottom:10px;display:grid;grid-template-columns:repeat(3,52px);grid-template-rows:repeat(3,52px);gap:3px}
+  .dpad .rbtn{width:52px;height:52px}
+  .dpad .rbtn svg{width:28px;height:28px}
+  #bN{grid-column:2;grid-row:1}#bW{grid-column:1;grid-row:2}#bE{grid-column:3;grid-row:2}#bS{grid-column:2;grid-row:3}
+  #bW svg{transform:rotate(-90deg)}#bE svg{transform:rotate(90deg)}#bS svg{transform:rotate(180deg)}
+  .br{right:16px;bottom:14px;display:flex;gap:12px;align-items:flex-end}
+  .big{width:66px;height:66px}
+  .stop{background:#ff5a4f;color:#fff}
+  .go{background:#37c26b;color:#fff}
+  #acts{left:50%;transform:translateX(-50%);bottom:16px;display:flex;gap:10px}
+  .pill{background:#fff;border-radius:24px;padding:10px 16px;font-weight:900;font-size:12.5px;color:#2d3440;box-shadow:0 4px 0 rgba(0,0,0,.18);display:flex;gap:6px;align-items:center;white-space:nowrap}
+  .pill svg{width:18px;height:18px}
+
+  #ask{left:calc(50% + 30px);transform:translateX(-50%);bottom:12px;display:none;background:#fff;border-radius:16px;padding:8px 10px 10px;box-shadow:0 5px 0 rgba(0,0,0,.2),0 8px 24px rgba(0,0,0,.25);z-index:5;width:max-content;max-width:600px}
+  #ask.on{display:block}
+  #ask .hd{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:7px}
+  #ask .hd b{font-size:14px;font-weight:900;color:#2d3440;display:flex;align-items:center;gap:6px}
+  #ask .hd b i{width:12px;height:12px;border-radius:50%;display:inline-block}
+  #ask .hd span{font-size:10px;font-weight:900;color:#fff;background:rgba(20,28,38,.85);padding:3px 8px;border-radius:9px}
+  #ask .opts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  #ask .opt{background:#37c26b;color:#fff;border-radius:14px;padding:10px 14px;font-weight:900;font-size:13px;box-shadow:0 4px 0 #24995a;display:flex;gap:6px;align-items:center;white-space:nowrap}
+  #ask .opt svg{width:18px;height:18px}
+  #ask .opt.skip{background:#fff;color:#2d3440;border:2px solid #dfe4ea;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+  #ask .opt kbd{font-family:inherit;font-size:9px;opacity:.75;border:1px solid currentColor;border-radius:4px;padding:0 3px}
+  #bUturn{width:64px;height:64px}
+
+  /* overlays */
+  .ov{position:absolute;inset:0;display:none;z-index:20}
+  .ov.on{display:flex}
+  .panel{background:#fff;border-radius:16px;box-shadow:0 6px 0 rgba(0,0,0,.2);color:#2d3440}
+  .cta{background:#37c26b;color:#fff;border-radius:22px;padding:11px 26px;font-weight:900;font-size:15px;box-shadow:0 4px 0 #24995a}
+  .cta.alt{background:#fff;color:#2d3440;box-shadow:0 4px 0 rgba(0,0,0,.2);border:2px solid #e3e6ea}
+  #prep{background:rgba(25,32,40,.55);padding:14px;gap:14px;align-items:stretch}
+  #prep .mapbox{flex:1;border-radius:14px;overflow:hidden;border:3px solid #fff;background:#8fd16a}
+  #prep .mapbox svg{width:100%;height:100%;display:block}
+  #prep .side{width:250px;padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+  #prep h2{font-size:17px;font-weight:900}
+  #prep .meta{font-size:11.5px;font-weight:800;color:#5c6573;display:flex;gap:10px}
+  #prep .mi{border:1.5px solid #e6e9ee;border-left:5px solid;border-radius:9px;padding:5px 8px;font-size:11.5px;font-weight:800}
+  #prep .mi small{display:block;color:#6b7686;font-size:10px}
+  #prep .keys{font-size:9.5px;color:#7b8494;font-weight:700;line-height:1.35;margin-top:auto}
+  #mapv{background:rgba(25,32,40,.8);flex-direction:column;align-items:center;justify-content:center;gap:8px}
+  #mapv .mapbox{width:640px;height:340px;border-radius:14px;overflow:hidden;border:3px solid #fff;position:relative}
+  #mapv .mapbox svg{width:100%;height:100%;display:block}
+  #mapv .tag{position:absolute;left:10px;top:10px;background:rgba(20,28,38,.85);color:#fff;font-size:11px;font-weight:900;padding:4px 10px;border-radius:10px}
+  #mapv .close{position:absolute;right:10px;top:10px}
+  #pausev{background:#2b3440;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff}
+  #pausev h2{font-size:26px;font-weight:900}
+  #pausev p{font-size:12px;color:#aab4c0;font-weight:700}
+  #pausev .row{display:flex;gap:12px}
+  #result{background:rgba(25,32,40,.6);align-items:center;justify-content:center}
+  #result .panel{width:340px;padding:18px 20px;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center}
+  #result h2{font-size:24px;font-weight:900}
+  #result .why{font-size:13px;font-weight:800;color:#e03131}
+  #result .st{font-size:12.5px;font-weight:800;color:#5c6573}
+  #result .rec{background:#fff3bf;color:#8a6d00;border-radius:8px;padding:2px 8px;font-size:11px;font-weight:900}
+  #rotate{display:none;position:fixed;inset:0;background:#1b1f24;color:#fff;z-index:99;align-items:center;justify-content:center;text-align:center;font-weight:900;font-size:18px;padding:30px}
+  @media (orientation:portrait) and (max-width:700px){#rotate{display:flex}}
+</style>
+</head>
+<body>
+<div id="rotate">Xoay ngang điện thoại để chơi</div>
+<div id="wrap"><div id="stage">
+  <svg id="view" viewBox="0 0 844 390" xmlns="http://www.w3.org/2000/svg">
+    <g id="cam"><g id="static"></g><g id="dyn"></g></g>
+  </svg>
+
+  <div id="hud">
+    <div class="abs chip" id="timer"></div>
+    <div class="abs" id="missions"></div>
+    <button class="abs rbtn" id="bPause" aria-label="Tạm dừng"></button>
+    <div class="abs" id="mm" aria-label="Bản đồ"></div>
+    <div class="abs dpad">
+      <button class="rbtn" id="bN" aria-label="Lên"></button>
+      <button class="rbtn" id="bW" aria-label="Trái"></button>
+      <button class="rbtn" id="bE" aria-label="Phải"></button>
+      <button class="rbtn" id="bS" aria-label="Xuống"></button>
+    </div>
+    <div class="abs br">
+      <button class="rbtn" id="bUturn"></button>
+    </div>
+    <div class="abs" id="ask"><div class="hd"><b id="askT"></b><span>⏸ Thời gian đang dừng</span></div><div class="opts" id="askO"></div></div>
+  </div>
+
+  <div class="ov" id="prep">
+    <div class="mapbox"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet"><use href="#static"/><g class="carmark"></g></svg></div>
+    <div class="panel side">
+      <h2>Màn demo · Giao hàng</h2>
+      <div class="meta"><span id="pTime"></span><span>Xe van · 3 kiện</span></div>
+      <div id="pList" style="display:flex;flex-direction:column;gap:6px"></div>
+      <div class="keys">Xe tự chạy. Gần giao lộ, các nút hướng đi được sẽ sáng: bấm hướng muốn đi (theo màn hình). Tới vùng P có việc: xe tự dừng, tự giao hàng; lấy hàng thì chọn ở bảng hỏi (đồng hồ dừng khi hỏi).<br>Bàn phím: ↑ ↓ ← → chọn hướng · U quay đầu · 1/2/3 chọn ở bảng hỏi · Enter đi tiếp · P tạm dừng · M bản đồ</div>
+      <button class="cta" id="bStart">Bắt đầu</button>
+    </div>
+  </div>
+
+  <div class="ov" id="mapv">
+    <div class="mapbox"><svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet"><rect width="1600" height="900" fill="#8fd16a"/><use href="#static"/><g class="carmark"></g></svg>
+      <span class="tag">⏸ Thời gian đang dừng</span>
+      <button class="cta alt close" id="bMapClose">Đóng</button>
+    </div>
+  </div>
+
+  <div class="ov" id="pausev">
+    <h2>Tạm dừng</h2><p>Bản đồ được ẩn trong khi tạm dừng</p>
+    <div class="row"><button class="cta" id="bResume">Tiếp tục</button><button class="cta alt" id="bRestart1">Chơi lại</button></div>
+  </div>
+
+  <div class="ov" id="result">
+    <div class="panel"><h2 id="rTitle"></h2><div class="why" id="rWhy"></div><div class="st" id="rStat"></div><div id="rRec"></div>
+      <button class="cta" id="bRestart2" style="margin-top:6px">Chơi lại</button></div>
+  </div>
+</div></div>
+
+<script>
+/* ================= Cấu hình màn ================= */
+const W=1600,H=900, XS=[100,450,800,1150,1500], YS=[100,450,800];
+const SPEED=90;            // px/giây (xe van)
+const TURN_ZONE=2.0;        // giây trước giao lộ: vùng nhận lệnh rẽ
+const STOP=34;              // khoảng cách vạch dừng tới tâm giao lộ
+const UTURN_TIME=1.5, PICK_TIME=2, DROP_TIME=1.5, CAPACITY=3, T0=90;
+const LIGHT_CYCLE=8;        // ngang xanh 4s, dọc xanh 4s
+const LIGHTS={};             // MVP: bỏ đèn tín hiệu (phản hồi demo lần 2)
+const ZONES=[
+  {id:'kho', a:'c1r0',b:'c2r0',d1:85,d2:265,name:'Kho A',col:'#1c7ed6',pin:[630,58]},
+  {id:'hoa', a:'c3r0',b:'c3r1',d1:85,d2:265,name:'Tiệm hoa',col:'#e64980',pin:[1222,275]},
+  {id:'sieu',a:'c3r2',b:'c4r2',d1:85,d2:265,name:'Siêu thị',col:'#f76707',pin:[1330,858]}
+];
+const MISSIONS_DEF=[
+  {id:'m1',name:'Siêu thị',from:'kho',to:'sieu',qty:2,deadline:null,col:'#f76707'},
+  {id:'m2',name:'Tiệm hoa',from:'kho',to:'hoa',qty:1,deadline:null,col:'#e64980'}
+];
+
+/* ================= Đồ thị đường ================= */
+const N={};XS.forEach((x,i)=>YS.forEach((y,j)=>N[`c${i}r${j}`]={x,y}));
+const E=[];
+function addE(a,b,one=false){E.push({a,b,one,len:Math.hypot(N[a].x-N[b].x,N[a].y-N[b].y)});}
+for(let j=0;j<3;j++)for(let i=0;i<4;i++){
+  if(i===0&&j===0)continue;
+  addE(`c${i}r${j}`,`c${i+1}r${j}`);
+}
+for(let i=0;i<5;i++)for(let j=0;j<2;j++){
+  if(i===4&&j===0)continue;
+  addE(`c${i}r${j}`,`c${i}r${j+1}`);
+}
+const getE=(u,v)=>E.find(e=>(e.a===u&&e.b===v)||(e.a===v&&e.b===u));
+const canGo=(u,v)=>{const e=getE(u,v);return !!e&&(!e.one||e.a===u);};
+const nbrs=n=>E.filter(e=>e.a===n||e.b===n).map(e=>e.a===n?e.b:e.a);
+const unit=(p,q)=>{const dx=q.x-p.x,dy=q.y-p.y,l=Math.hypot(dx,dy);return{x:dx/l,y:dy/l};};
+const absDir=v=>Math.abs(v.x)>Math.abs(v.y)?(v.x>0?'E':'W'):(v.y>0?'S':'N');
+const heading=(from,to)=>absDir(unit(N[from],N[to]));
+// các hướng (theo màn hình) có thể đi tiếp tại nút 'to', không tính quay lại
+function options(from,to){
+  const r={};
+  for(const nb of nbrs(to)){if(nb===from||!canGo(to,nb))continue;r[absDir(unit(N[to],N[nb]))]=nb;}
+  return r;
+}
+const green=(node,from)=>{const ph=((G.t+LIGHTS[node])%LIGHT_CYCLE+LIGHT_CYCLE)%LIGHT_CYCLE;const horiz=N[from].y===N[node].y;return horiz?ph<LIGHT_CYCLE/2:ph>=LIGHT_CYCLE/2;};
+
+/* ================= Vẽ bản đồ tĩnh ================= */
+const NS='http://www.w3.org/2000/svg';
+const ST=document.getElementById('static'),DYN=document.getElementById('dyn');
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||ST).appendChild(e);return e;}
+let seed=11;const rnd=()=>{seed=(seed*16807)%2147483647;return(seed-1)/2147483646;};
+const PAL={grass:'#8fd16a',dot:'#a8e07f',road:'#4a4f57',walk:'#dfe2d9',line:'#f6f6f2',wall:'#f1e9dc',tree:'#5aa83a',treeD:'#3f8526',roofs:['#c4623f','#5b6b7d','#8b6a52','#4f7a5a','#b0563a','#6d5f8a'],shadow:'rgba(0,0,0,.18)'};
+function shade(hex,p){const n=parseInt(hex.slice(1),16);const f=v=>Math.max(0,Math.min(255,Math.round(v*(1+p))));return'#'+[f(n>>16),f((n>>8)&255),f(n&255)].map(v=>v.toString(16).padStart(2,'0')).join('');}
+function house(x,y,w,h,c){
+  el('rect',{x:x+5,y:y+6,width:w,height:h,fill:PAL.shadow,rx:2});el('rect',{x,y,width:w,height:h,fill:PAL.wall,rx:2});
+  if(w>=h){el('polygon',{points:`${x-2},${y-2} ${x+w+2},${y-2} ${x+w-h/2+2},${y+h/2} ${x+h/2-2},${y+h/2}`,fill:c});
+    el('polygon',{points:`${x-2},${y+h+2} ${x+w+2},${y+h+2} ${x+w-h/2+2},${y+h/2} ${x+h/2-2},${y+h/2}`,fill:shade(c,-.22)});
+    el('polygon',{points:`${x-2},${y-2} ${x+h/2-2},${y+h/2} ${x-2},${y+h+2}`,fill:shade(c,-.1)});
+    el('polygon',{points:`${x+w+2},${y-2} ${x+w-h/2+2},${y+h/2} ${x+w+2},${y+h+2}`,fill:shade(c,-.32)});}
+  else{el('polygon',{points:`${x-2},${y-2} ${x-2},${y+h+2} ${x+w/2},${y+h-w/2+2} ${x+w/2},${y+w/2-2}`,fill:c});
+    el('polygon',{points:`${x+w+2},${y-2} ${x+w+2},${y+h+2} ${x+w/2},${y+h-w/2+2} ${x+w/2},${y+w/2-2}`,fill:shade(c,-.22)});
+    el('polygon',{points:`${x-2},${y-2} ${x+w+2},${y-2} ${x+w/2},${y+w/2-2}`,fill:shade(c,-.1)});
+    el('polygon',{points:`${x-2},${y+h+2} ${x+w+2},${y+h+2} ${x+w/2},${y+h-w/2+2}`,fill:shade(c,-.32)});}
+}
+function tree(x,y,r){
+  el('ellipse',{cx:x+4,cy:y+5,rx:r,ry:r*.85,fill:PAL.shadow});
+  const p=[];for(let i=0;i<6;i++){const a=Math.PI/3*i+Math.PI/6;p.push(`${x+r*Math.cos(a)},${y+r*Math.sin(a)}`);}
+  el('polygon',{points:p.join(' '),fill:PAL.tree});el('polygon',{points:`${x},${y} ${p[0]} ${p[1]} ${p[2]}`,fill:PAL.treeD});
+}
+function pin(x,y,col,glyph){
+  el('ellipse',{cx:x,cy:y+2,rx:8,ry:3.5,fill:'rgba(0,0,0,.25)'});
+  el('path',{d:`M${x} ${y} C ${x-5} ${y-9} ${x-15} ${y-16} ${x-15} ${y-27} A 15 15 0 1 1 ${x+15} ${y-27} C ${x+15} ${y-16} ${x+5} ${y-9} ${x} ${y}Z`,fill:col,stroke:'#fff','stroke-width':3});
+  const g=el('g',{transform:`translate(${x-8},${y-35})`,fill:'none',stroke:'#fff','stroke-width':2.2,'stroke-linecap':'round','stroke-linejoin':'round'});
+  if(glyph==='kho')el('path',{d:'M1 7 L8 2 L15 7 V15 H1Z M5 15 V10 H11 V15'},g);
+  else el('path',{d:'M1 5 L8 1 L15 5 L15 12 L8 16 L1 12Z M1 5 L8 9 L15 5 M8 9 V16'},g);
+}
+function label(x,y,t){const e=el('text',{x,y,'text-anchor':'middle','font-size':13,'font-weight':900,'font-family':'Nunito,Segoe UI',fill:'#2d3440',stroke:'#fff','stroke-width':4,'paint-order':'stroke'});e.textContent=t;}
+
+// cỏ
+el('rect',{x:-500,y:-500,width:W+1000,height:H+1000,fill:PAL.grass});
+for(let i=0;i<700;i++)el('circle',{cx:rnd()*W,cy:rnd()*H,r:1+rnd()*1.6,fill:PAL.dot});
+// công trình đặc biệt (tránh nhà ngẫu nhiên đè lên)
+const RES=[[560,8,140,72],[1185,225,95,95],[1270,828,130,72]];
+const hit=(x,y,w,h)=>RES.some(r=>x<r[0]+r[2]+8&&x+w+8>r[0]&&y<r[1]+r[3]+8&&y+h+8>r[1]);
+// nhà theo khối
+for(let i=0;i<4;i++)for(let j=0;j<2;j++){
+  const x0=XS[i]+42,y0=YS[j]+42,x1=XS[i+1]-42,y1=YS[j+1]-42,cw=(x1-x0)/2,ch=(y1-y0)/2;
+  for(let a=0;a<2;a++)for(let b=0;b<2;b++){
+    const w=60+rnd()*50,h=40+rnd()*45,x=x0+a*cw+(cw-w)*rnd(),y=y0+b*ch+(ch-h)*rnd();
+    if(!hit(x,y,w,h))house(x,y,w,h,PAL.roofs[Math.floor(rnd()*6)]);else tree(x+w/2,y+h/2,12);
+  }
+}
+// dải biên trên/dưới/trái/phải: nhà nhỏ + cây
+for(let x=20;x<W;x+=95){if(!hit(x,10,58,46)&&rnd()>.35)house(x,12,58,44,PAL.roofs[Math.floor(rnd()*6)]);else if(!hit(x,10,40,40))tree(x+25,40,11);
+  if(!hit(x,838,58,46)&&rnd()>.35)house(x,840,58,44,PAL.roofs[Math.floor(rnd()*6)]);else if(!hit(x,838,40,40))tree(x+25,866,11);}
+for(let y=150;y<780;y+=80){tree(40,y+rnd()*30,11);tree(1560,y+rnd()*30,11);}
+// đường: vỉa hè → mặt đường → vạch giữa
+ROADW=46;
+E.forEach(e=>el('line',{x1:N[e.a].x,y1:N[e.a].y,x2:N[e.b].x,y2:N[e.b].y,stroke:PAL.walk,'stroke-width':ROADW+14,'stroke-linecap':'square'}));
+E.forEach(e=>el('line',{x1:N[e.a].x,y1:N[e.a].y,x2:N[e.b].x,y2:N[e.b].y,stroke:PAL.road,'stroke-width':ROADW,'stroke-linecap':'square'}));
+E.forEach(e=>{if(e.one)return;const u=unit(N[e.a],N[e.b]);
+  el('line',{x1:N[e.a].x+u.x*30,y1:N[e.a].y+u.y*30,x2:N[e.b].x-u.x*30,y2:N[e.b].y-u.y*30,stroke:PAL.line,'stroke-width':2,'stroke-dasharray':'12 12',opacity:.75});});
+// biển một chiều
+E.filter(e=>e.one).forEach(e=>{const u=unit(N[e.a],N[e.b]);const mx=(N[e.a].x+N[e.b].x)/2,my=(N[e.a].y+N[e.b].y)/2;
+  [-1,1].forEach(s=>{const x=mx-u.y*42*s,y=my+u.x*42*s;const ang=Math.atan2(u.y,u.x)*180/Math.PI;
+    el('rect',{x:x-1.5,y:y,width:3,height:16,fill:'#6b6f76'});
+    el('circle',{cx:x,cy:y,r:12,fill:'#1c7ed6',stroke:'#fff','stroke-width':2.5});
+    el('path',{d:'M-6 0 H6 M2 -4 L6 0 L2 4',stroke:'#fff','stroke-width':2.6,fill:'none','stroke-linecap':'round','stroke-linejoin':'round',transform:`translate(${x},${y}) rotate(${ang})`});});});
+// vùng đỗ
+ZONES.forEach(z=>{const A=N[z.a],u=unit(N[z.a],N[z.b]);const x1=A.x+u.x*z.d1,y1=A.y+u.y*z.d1,x2=A.x+u.x*z.d2,y2=A.y+u.y*z.d2;
+  const x=Math.min(x1,x2)-(u.x?0:20),y=Math.min(y1,y2)-(u.y?0:20),w=Math.abs(x2-x1)+(u.x?0:40),h=Math.abs(y2-y1)+(u.y?0:40);
+  el('rect',{x,y,width:w,height:h,rx:4,fill:'rgba(255,214,60,.22)',stroke:'#ffd43b','stroke-width':3,'stroke-dasharray':'9 6'});
+  el('text',{x:x+w/2,y:y+h/2+6,'text-anchor':'middle','font-size':17,'font-weight':900,fill:'#ffd43b','font-family':'Nunito,Segoe UI'}).textContent='P';});
+// công trình nhiệm vụ
+house(566,14,128,52,'#3b6ea8');pin(630,58,'#1c7ed6','kho');label(630,92-100+6,'');
+house(1192,232,80,78,'#c2255c');pin(1232,270,'#e64980','box');label(1232,330,'Tiệm hoa');
+house(1276,834,118,54,'#e8590c');pin(1335,862,'#f76707','box');label(1335,822+0,'');
+label(742,46,'Kho A');label(1448,866,'Siêu thị');
+// đèn tín hiệu + vạch dừng
+const LIGHT_EL=[];
+for(const n in LIGHTS){nbrs(n).forEach(nb=>{if(!canGo(nb,n))return;const u=unit(N[nb],N[n]);const px=-u.y,py=u.x;
+  const sx=N[n].x-u.x*STOP,sy=N[n].y-u.y*STOP;
+  el('line',{x1:sx,y1:sy,x2:sx+px*ROADW/2,y2:sy+py*ROADW/2,stroke:'#fff','stroke-width':4});
+  const lx=sx+px*(ROADW/2+14),ly=sy+py*(ROADW/2+14);
+  el('rect',{x:lx-8,y:ly-8,width:16,height:16,rx:4,fill:'#24282e',stroke:'#fff','stroke-width':1.5});
+  const c=el('circle',{cx:lx,cy:ly,r:5.5,fill:'#ff3b30'});LIGHT_EL.push({n,nb,c});});}
+
+/* ================= Xe ================= */
+const carG=el('g',{},DYN);
+function drawVan(p){const L=24,Wd=11;
+  el('rect',{x:-L+3,y:-Wd+4,width:2*L,height:2*Wd,rx:5,fill:'rgba(0,0,0,.28)'},p);
+  el('rect',{x:-L,y:-Wd,width:2*L,height:2*Wd,rx:5,fill:'#f8f9fb',stroke:'#c9ced6','stroke-width':1},p);
+  el('rect',{x:-L+2,y:-Wd+2,width:30,height:2*Wd-4,rx:3,fill:'#e9edf2'},p);
+  el('line',{x1:-L+32,y1:-Wd+2,x2:-L+32,y2:Wd-2,stroke:'#b8bec7','stroke-width':1.2},p);
+  el('rect',{x:L-12,y:-Wd+2.5,width:6,height:2*Wd-5,rx:2,fill:'#2b3a4a'},p);
+  el('rect',{x:L-2.5,y:-Wd+2,width:2.5,height:4,fill:'#fff6b0'},p);el('rect',{x:L-2.5,y:Wd-6,width:2.5,height:4,fill:'#fff6b0'},p);
+  el('rect',{x:-L,y:-Wd+2,width:2,height:4,fill:'#ff6b6b'},p);el('rect',{x:-L,y:Wd-6,width:2,height:4,fill:'#ff6b6b'},p);}
+const carBody=el('g',{},carG);drawVan(carBody);
+const badge=el('g',{},DYN);
+el('rect',{x:-17,y:-11,width:34,height:20,rx:10,fill:'#e8590c',stroke:'#fff','stroke-width':2},badge);
+const badgeT=el('text',{x:0,y:4,'text-anchor':'middle','font-size':12,'font-weight':900,fill:'#fff','font-family':'Nunito,Segoe UI'},badge);
+const turnInd=el('g',{},DYN);
+el('circle',{r:13,fill:'#ffd84d',stroke:'#fff','stroke-width':2.5},turnInd);
+const turnPath=el('path',{fill:'none',stroke:'#2d3440','stroke-width':2.8,'stroke-linecap':'round','stroke-linejoin':'round'},turnInd);
+const busyG=el('g',{},DYN);
+el('rect',{x:-30,y:-5,width:60,height:10,rx:5,fill:'rgba(20,28,38,.8)'},busyG);
+const busyBar=el('rect',{x:-28,y:-3,width:0,height:6,rx:3,fill:'#37c26b'},busyG);
+
+/* ================= Trạng thái ================= */
+let G;
+function reset(){
+  G={t:0,state:'ready',car:{from:'c0r1',to:'c1r1',d:40,stopped:false,hold:false,wait:false,busy:null,cmd:null,skip:null},ask:null,
+     M:MISSIONS_DEF.map(m=>({...m,picked:0,delivered:0,onboard:0})),disp:null,result:null};
+  const p=carPose();G.disp={x:p.x,y:p.y,a:p.a};
+  show('prep');renderAsk();render();
+}
+const len=()=>getE(G.car.from,G.car.to).len;
+const load=()=>G.M.reduce((s,m)=>s+m.onboard,0);
+const moving=()=>!(G.car.stopped||G.car.wait||G.car.hold||G.car.busy);
+const still=()=>!moving();
+function zonePos(z){const c=G.car;if(c.from===z.a&&c.to===z.b)return c.d;if(c.from===z.b&&c.to===z.a)return len()-c.d;return null;}
+function curZone(){for(const z of ZONES){const p=zonePos(z);if(p!==null&&p>=z.d1&&p<=z.d2)return z;}return null;}
+function inTurnZone(){const c=G.car;return c.wait||c.hold||(len()-c.d)<=SPEED*TURN_ZONE;}
+function validDirs(){if(G.car.busy||!inTurnZone())return{};return options(G.car.from,G.car.to);}
+
+// Việc cần người chơi chọn tại vùng đỗ (lấy hàng; sau này: đón khách, đổi xe)
+function choices(z){
+  const free=CAPACITY-load(),list=[];
+  G.M.forEach(m=>{if(m.from!==z.id)return;const rem=m.qty-m.picked;if(rem<=0||free<=0)return;const n=Math.min(rem,free);
+    list.push({label:`Lấy ${n} kiện · ${m.name}`,run:()=>busy(PICK_TIME,()=>{m.picked+=n;m.onboard+=n;zoneProcess(z);})});});
+  return list;
+}
+const deliverables=z=>G.M.filter(m=>m.to===z.id&&m.onboard>0);
+const hasWork=z=>deliverables(z).length>0||choices(z).length>0;
+// Xử lý tại vùng đỗ: tự giao → hỏi việc cần chọn → hết việc thì tự chạy tiếp
+function zoneProcess(z){
+  const c=G.car,del=deliverables(z);
+  if(del.length){c.stopped=true;busy(DROP_TIME,()=>{del.forEach(m=>{m.delivered+=m.onboard;m.onboard=0;});zoneProcess(z);});return;}
+  const ch=choices(z);
+  if(ch.length){c.stopped=true;G.ask={z,ch};G.state='ask';renderAsk();return;}
+  c.stopped=false;c.skip=z.id;
+}
+function askChoose(i){if(G.state!=='ask'||!G.ask.ch[i])return;const a=G.ask.ch[i];G.ask=null;G.state='play';renderAsk();a.run();}
+function askSkip(){if(G.state!=='ask')return;const z=G.ask.z;G.ask=null;G.state='play';renderAsk();G.car.stopped=false;G.car.skip=z.id;}
+function busy(dur,done){G.car.busy={t:0,dur,done};}
+
+/* ================= Mô phỏng (bước cố định) ================= */
+function step(dt){
+  const c=G.car;G.t+=dt;
+  if(c.busy){c.busy.t+=dt;if(c.busy.t>=c.busy.dur){const b=c.busy;c.busy=null;b.done();}}
+  else if(!c.stopped&&!c.wait){
+    const L=len(),stopLine=L-STOP;let nd=c.d+SPEED*dt;
+    if(LIGHTS[c.to]!==undefined&&!green(c.to,c.from)&&c.d<=stopLine+.01&&nd>stopLine){nd=stopLine;c.hold=true;}else c.hold=false;
+    if(nd>=L){
+      const over=nd-L,o=options(c.from,c.to);let nx=null;
+      const hd=heading(c.from,c.to);if(c.cmd&&o[c.cmd])nx=o[c.cmd];else if(o[hd])nx=o[hd];
+      c.cmd=null;
+      if(nx){c.from=c.to;c.to=nx;c.d=over;}else{c.d=L;c.wait=true;}
+    }else c.d=nd;
+    const z=curZone();
+    if(c.skip&&(!z||z.id!==c.skip))c.skip=null;
+    if(z&&z.id!==c.skip&&!c.busy&&hasWork(z))zoneProcess(z);
+  }
+  // thắng trước, thua sau
+  if(G.M.every(m=>m.delivered>=m.qty))return end(true);
+  for(const m of G.M)if(m.deadline!==null&&G.t>m.deadline&&m.delivered<m.qty)return end(false,`Đơn hàng ${m.name} đã quá hạn (hạn ${fmt(m.deadline)}, mới giao ${m.delivered}/${m.qty} kiện).`);
+  if(G.t>=T0){G.t=T0;return end(false,`Hết thời gian tổng. Còn ${G.M.filter(m=>m.delivered<m.qty).map(m=>m.name).join(', ')} chưa hoàn thành.`);}
+}
+function end(win,why){
+  G.state=win?'won':'lost';const t=G.t;let best=null,rec=false;
+  try{best=parseFloat(localStorage.getItem('demo_best'));if(win&&(!best||t<best)){localStorage.setItem('demo_best',t);rec=!!best||true;best=t;}}catch(e){}
+  document.getElementById('rTitle').textContent=win?'Hoàn thành!':'Không đạt';
+  document.getElementById('rTitle').style.color=win?'#2b8a3e':'#2d3440';
+  document.getElementById('rWhy').textContent=win?'':why;
+  document.getElementById('rStat').textContent=win?`Thời gian hoàn thành: ${fmt(t)} · còn lại ${fmt(T0-t)}`:`Đã chơi ${fmt(t)}`;
+  document.getElementById('rRec').innerHTML=win&&best!==null?`<span class="rec">${Math.abs(best-t)<1e-6?'Kỷ lục: ':'Tốt nhất: '}${fmt(best)}</span>`:'';
+  show('result');
+}
+
+/* ================= Điều khiển ================= */
+function cTurn(dir){if(G.state!=='play')return;const c=G.car,v=validDirs();if(!v[dir])return;
+  if(c.wait){c.from=c.to;c.to=v[dir];c.d=0;c.wait=false;c.cmd=null;return;}
+  c.cmd=c.cmd===dir?null:dir;}
+// Quay đầu bất kỳ lúc nào (không còn nút Dừng): xe dừng tại chỗ, quay đầu, rồi tự chạy tiếp
+function cUturn(){if(G.state!=='play')return;const c=G.car;if(c.busy||!canGo(c.to,c.from))return;
+  busy(UTURN_TIME,()=>{const L=len();[c.from,c.to]=[c.to,c.from];c.d=L-c.d;c.stopped=false;c.wait=false;c.hold=false;c.cmd=null;});c.busy.uturn=true;}
+
+/* ================= Hiển thị ================= */
+const I={
+  left:'<svg class="ic" viewBox="0 0 28 28"><path d="M17 24 V13 a3 3 0 0 0-3-3 H6 M10 6 L6 10 L10 14"/></svg>',
+  right:'<svg class="ic" viewBox="0 0 28 28"><path d="M11 24 V13 a3 3 0 0 1 3-3 H22 M18 6 L22 10 L18 14"/></svg>',
+  uturn:'<svg class="ic" viewBox="0 0 28 28"><path d="M9 24 V11 a5 5 0 0 1 10 0 V18 M15 15 L19 19 L23 15"/></svg>',
+  stop:'<svg class="ic" viewBox="0 0 28 28"><rect x="8" y="8" width="12" height="12" rx="2" fill="currentColor"/></svg>',
+  go:'<svg class="ic" viewBox="0 0 28 28"><path d="M10 7 L21 14 L10 21Z" fill="currentColor"/></svg>',
+  pause:'<svg class="ic" viewBox="0 0 28 28"><path d="M10 7 V21 M18 7 V21"/></svg>',
+  clock:'<svg class="ic" viewBox="0 0 28 28"><circle cx="14" cy="15" r="9"/><path d="M14 10 V15 L17 17 M11 3 H17"/></svg>',
+  box:'<svg class="ic" viewBox="0 0 28 28"><path d="M4 9 L14 4 L24 9 V20 L14 25 L4 20Z M4 9 L14 14 L24 9 M14 14 V25"/></svg>',
+  up:'<svg class="ic" viewBox="0 0 28 28"><path d="M4 12 L14 7 L24 12 V22 H4Z M14 19 V12 M10 15 L14 11 L18 15"/></svg>',
+  down:'<svg class="ic" viewBox="0 0 28 28"><path d="M4 12 L14 7 L24 12 V22 H4Z M14 11 V18 M10 14 L14 18 L18 14"/></svg>'
+};
+const $=id=>document.getElementById(id);
+const ARROW='<svg class="ic" viewBox="0 0 28 28"><path d="M14 23 V6 M7 12 L14 5 L21 12"/></svg>';
+const DBTN={N:'bN',S:'bS',W:'bW',E:'bE'};
+for(const k in DBTN)$(DBTN[k]).innerHTML=ARROW;
+$('bUturn').innerHTML=`<div class="in">${I.uturn}<span class="label">QUAY ĐẦU</span></div>`;
+$('bPause').innerHTML=I.pause;
+const fmt=s=>{s=Math.max(0,Math.ceil(s-1e-9));return`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;};
+
+// minimap
+const mmSvg=document.createElementNS(NS,'svg');mmSvg.setAttribute('viewBox',`-20 -20 ${W+40} ${H+40}`);mmSvg.setAttribute('preserveAspectRatio','xMidYMid meet');$('mm').appendChild(mmSvg);
+el('rect',{x:-20,y:-20,width:W+40,height:H+40,fill:'#9ad877'},mmSvg);
+E.forEach(e=>el('line',{x1:N[e.a].x,y1:N[e.a].y,x2:N[e.b].x,y2:N[e.b].y,stroke:PAL.road,'stroke-width':40,'stroke-linecap':'square'},mmSvg));
+for(const n in LIGHTS)el('circle',{cx:N[n].x,cy:N[n].y,r:16,fill:'#ffd43b'},mmSvg);
+ZONES.forEach(z=>{const A=N[z.a],u=unit(N[z.a],N[z.b]),m=(z.d1+z.d2)/2,x=A.x+u.x*m,y=A.y+u.y*m;
+  el('circle',{cx:x,cy:y,r:48,fill:z.col,stroke:'#fff','stroke-width':12},mmSvg);
+  const vert=!!u.y,ty=vert?y+24:(y<450?y+120:y-70),tx=vert?(x>800?x-70:x+70):x;
+  const t=el('text',{x:tx,y:ty,'text-anchor':vert?(x>800?'end':'start'):'middle','font-size':68,'font-weight':900,'font-family':'Nunito,Segoe UI',fill:'#1d2733',stroke:'#fff','stroke-width':14,'paint-order':'stroke'},mmSvg);t.textContent=z.name;});
+const mmView=el('rect',{width:844,height:390,fill:'none',stroke:'#fff','stroke-width':10,'stroke-dasharray':'30 20',opacity:.9},mmSvg);
+const mmCar=el('circle',{r:40,fill:'#fff',stroke:'#e8590c','stroke-width':16},mmSvg);
+// dấu xe trên bản đồ lớn / chuẩn bị
+document.querySelectorAll('.carmark').forEach(g=>{el('circle',{r:30,fill:'rgba(255,255,255,.5)'},g);el('circle',{r:16,fill:'#fff',stroke:'#2d3440','stroke-width':5},g);});
+
+function carPose(){
+  const c=G.car,A=N[c.from],u=unit(A,N[c.to]);let a=Math.atan2(u.y,u.x)*180/Math.PI;
+  let x=A.x+u.x*c.d-u.y*11,y=A.y+u.y*c.d+u.x*11;
+  if(c.busy&&c.busy.uturn){const k=Math.min(1,c.busy.t/c.busy.dur);a+=180*k;x+=u.y*22*k;y-=u.x*22*k;}
+  return{x,y,a};
+}
+function render(){
+  const p=carPose(),d=G.disp;
+  const k=0.25;d.x+=(p.x-d.x)*k;d.y+=(p.y-d.y)*k;let da=((p.a-d.a+540)%360)-180;d.a+=da*k;
+  carG.setAttribute('transform',`translate(${d.x},${d.y}) rotate(${d.a})`);
+  badge.setAttribute('transform',`translate(${d.x},${d.y-30})`);badgeT.textContent=`${load()}/${CAPACITY}`;
+  const c=G.car;
+  if(c.cmd){turnInd.style.display='';turnInd.setAttribute('transform',`translate(${d.x+30},${d.y-30})`);
+    turnPath.setAttribute('d','M0 7 V-7 M-5 -2 L0 -7 L5 -2');turnPath.setAttribute('transform',`rotate(${{N:0,E:90,S:180,W:-90}[c.cmd]})`);}
+  else turnInd.style.display='none';
+  if(c.busy){busyG.style.display='';busyG.setAttribute('transform',`translate(${d.x},${d.y+28})`);busyBar.setAttribute('width',56*Math.min(1,c.busy.t/c.busy.dur));}else busyG.style.display='none';
+  // camera
+  const cx=Math.max(0,Math.min(W-844,d.x-422)),cy=Math.max(0,Math.min(H-390,d.y-215));
+  $('cam').setAttribute('transform',`translate(${-cx},${-cy})`);
+  mmView.setAttribute('x',cx);mmView.setAttribute('y',cy);mmCar.setAttribute('cx',d.x);mmCar.setAttribute('cy',d.y);
+  document.querySelectorAll('.carmark').forEach(g=>g.setAttribute('transform',`translate(${d.x},${d.y})`));
+  // đèn
+  LIGHT_EL.forEach(l=>l.c.setAttribute('fill',green(l.n,l.nb)?'#40c057':'#ff3b30'));
+  // HUD
+  const left=T0-G.t;$('timer').innerHTML=`${I.clock}${fmt(left)}`;$('timer').classList.toggle('warn',left<=10&&G.state==='play');
+  renderMissions();
+  const v=validDirs();
+  for(const dir in DBTN){const b=$(DBTN[dir]);b.classList.toggle('glow',!!v[dir]&&c.cmd!==dir);b.classList.toggle('sel',c.cmd===dir);}
+  $('bUturn').classList.toggle('dim',G.state!=='play'||!!c.busy);
+}
+let lastMis='';
+function renderMissions(){
+  const html=G.M.map(m=>{const p=m.delivered/m.qty,cc=2*Math.PI*22;let dd='—',warn=false;
+    if(m.deadline!==null){const r=m.deadline-G.t;dd=m.delivered>=m.qty?'✓':fmt(r);warn=r<=10&&m.delivered<m.qty;}
+    if(m.delivered>=m.qty)dd='✓';
+    return`<div class="mc ${warn?'warn':''} ${m.delivered>=m.qty?'done':''} ${m.onboard>0?'carry':''}"><svg class="ring" viewBox="0 0 50 50"><circle cx="25" cy="25" r="22" fill="rgba(20,28,38,.85)" stroke="rgba(255,255,255,.25)" stroke-width="4"/><circle cx="25" cy="25" r="22" fill="none" stroke="${warn?'#ff4d42':m.col}" stroke-width="4" stroke-dasharray="${cc*p} ${cc}" stroke-linecap="round"/></svg><div class="c">${I.box}${m.delivered}/${m.qty}</div>${dd==='—'?'':`<span class="dd">${dd}</span>`}<span class="onb"></span></div>`;}).join('');
+  if(html!==lastMis){$('missions').innerHTML=html;lastMis=html;}
+}
+function renderAsk(){
+  const box=$('ask');if(!G.ask){box.classList.remove('on');return;}
+  const z=G.ask.z;$('askT').innerHTML=`<i style="background:${z.col}"></i>${z.name}`;
+  $('askO').innerHTML=G.ask.ch.map((a,i)=>`<button class="opt" data-i="${i}">${I.up}${a.label} <kbd>${i+1}</kbd></button>`).join('')+`<button class="opt skip" data-i="-1">Đi tiếp <kbd>Enter</kbd></button>`;
+  box.classList.add('on');
+}
+
+/* ================= Màn hình phủ ================= */
+function show(id){['prep','mapv','pausev','result'].forEach(o=>$(o).classList.toggle('on',o===id));}
+$('pTime').textContent=`⏱ ${fmt(T0)}`;
+$('pList').innerHTML=MISSIONS_DEF.map(m=>`<div class="mi" style="border-left-color:${m.col}">Kho A → ${m.name} · ${m.qty} kiện<small>${m.deadline?`Hạn giao: trước ${fmt(m.deadline)} kể từ khi bắt đầu`:'Không có hạn riêng'}</small></div>`).join('');
+function startGame(){G.state='play';show(null);}
+function pauseGame(){if(G.state!=='play')return;G.state='paused';show('pausev');}
+function mapView(){if(G.state!=='play')return;G.state='map';show('mapv');}
+function resume(){G.state='play';show(null);}
+
+/* ================= Nhập liệu ================= */
+const tap=(id,fn)=>$(id).addEventListener('pointerdown',e=>{e.preventDefault();fn();});
+for(const k in DBTN)tap(DBTN[k],()=>cTurn(k));
+tap('bUturn',cUturn);
+tap('bPause',pauseGame);tap('mm',mapView);tap('bMapClose',resume);tap('bResume',resume);
+tap('bStart',startGame);tap('bRestart1',reset);tap('bRestart2',reset);
+$('askO').addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(!b)return;e.preventDefault();const i=+b.dataset.i;i<0?askSkip():askChoose(i);});
+addEventListener('keydown',e=>{
+  const k=e.key;
+  if(G.state==='ready'&&(k==='Enter'||k===' ')){startGame();return;}
+  if(G.state==='map'&&(k==='m'||k==='M'||k==='Escape')){resume();return;}
+  if(G.state==='paused'&&(k==='p'||k==='P'||k==='Escape')){resume();return;}
+  if((G.state==='won'||G.state==='lost')&&(k==='Enter'||k==='r'||k==='R')){reset();return;}
+  if(G.state==='ask'){if(k>='1'&&k<='9')askChoose(+k-1);else if(k==='Enter'||k===' ')askSkip();e.preventDefault();return;}
+  if(k==='ArrowLeft')cTurn('W');else if(k==='ArrowRight')cTurn('E');else if(k==='ArrowUp')cTurn('N');else if(k==='ArrowDown')cTurn('S');
+
+  else if(k==='u'||k==='U')cUturn();else if(k==='p'||k==='P')pauseGame();else if(k==='m'||k==='M')mapView();
+  if(k.startsWith('Arrow')||k===' ')e.preventDefault();
+});
+
+/* ================= Khung hình & co giãn ================= */
+function fit(){const s=Math.min(innerWidth/844,innerHeight/390);$('stage').style.transform=`scale(${s})`;}
+addEventListener('resize',fit);fit();
+const DT=1/60;let acc=0,last=performance.now();
+function loop(now){acc+=Math.min(.25,(now-last)/1000);last=now;
+  while(acc>=DT){if(G.state==='play')step(DT);acc-=DT;}
+  render();requestAnimationFrame(loop);}
+reset();requestAnimationFrame(loop);
+</script>
+</body>
+</html>

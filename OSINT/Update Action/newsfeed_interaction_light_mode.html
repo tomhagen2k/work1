@@ -1,0 +1,3275 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cấu hình Hành động: Tương tác Newsfeed - OSINT V2 (Light Mode)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-backdrop: rgba(15, 23, 42, 0.45);
+      --bg-modal: #ffffff;
+      --bg-surface: #f8fafc;
+      --bg-surface-soft: #f1f5f9;
+      --bg-surface-elevated: #ffffff;
+      --border-color: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --border-focus: #2563eb;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --primary-border: #bfdbfe;
+      --success: #16a34a;
+      --success-soft: #f0fdf4;
+      --success-border: #bbf7d0;
+      --warning: #d97706;
+      --warning-soft: #fffbeb;
+      --warning-border: #fde68a;
+      --danger: #dc2626;
+      --danger-soft: #fef2f2;
+      --danger-border: #fecaca;
+      --purple: #7c3aed;
+      --purple-soft: #f5f3ff;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 18px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08);
+      --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: #f1f5f9;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
+      overflow: hidden;
+      line-height: 1.45;
+    }
+
+    /* Modal Backdrop */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-backdrop);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    /* Main Modal Window (Thu nhỏ chiều ngang 2/3 ~960px) */
+    .modal-window {
+      background: var(--bg-modal);
+      width: 90vw;
+      max-width: 960px;
+      height: 92vh;
+      max-height: 92vh;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-modal);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ====================================================================
+       1. FIXED HEADER
+       ==================================================================== */
+    .modal-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 20px 12px 20px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .header-title-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .action-icon-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+    }
+
+    .header-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-close-modal {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-dim);
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 15px;
+      transition: all 0.15s;
+    }
+
+    .btn-close-modal:hover {
+      background: var(--danger-soft);
+      border-color: var(--danger-border);
+      color: var(--danger);
+    }
+
+    /* 1.1 GLOBAL LIMITS BAR */
+    .global-limits-bar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .limit-label-group {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #1e3a8a;
+    }
+
+    .limit-options-cluster {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .limit-radio-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-main);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .limit-radio-item input[type="radio"] {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border-strong);
+      border-radius: 50%;
+      outline: none;
+      cursor: pointer;
+      position: relative;
+      background: #ffffff;
+      transition: all 0.15s;
+    }
+
+    .limit-radio-item input[type="radio"]:checked {
+      border-color: var(--primary);
+      background: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+
+    .range-inputs-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #ffffff;
+      padding: 2px 7px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      margin-left: 2px;
+      transition: all 0.2s;
+    }
+
+    .range-inputs-box.disabled {
+      opacity: 0.45;
+      pointer-events: none;
+      background: var(--bg-surface-soft);
+    }
+
+    .input-number-tiny {
+      width: 48px;
+      background: #ffffff;
+      border: 1px solid var(--border-strong);
+      color: var(--primary);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      padding: 2px 4px;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .input-number-tiny:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    }
+
+    /* 1.2 KHỐI LỰA CHỌN CẤU HÌNH TƯƠNG TÁC */
+    .mode-selector-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-top: 2px;
+    }
+
+    .mode-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #1e3a8a;
+    }
+
+    .mode-radios-cluster {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .mode-radio-card {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 14px;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      background: var(--bg-surface);
+      transition: all 0.15s;
+      user-select: none;
+      position: relative;
+    }
+
+    .mode-radio-card:hover {
+      border-color: var(--border-strong);
+      background: #f8fafc;
+    }
+
+    .mode-radio-card.active {
+      border-color: var(--primary);
+      background: #f0f7ff;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.12);
+    }
+
+    .mode-radio-card input[type="radio"] {
+      appearance: none;
+      width: 17px;
+      height: 17px;
+      border: 2px solid var(--border-strong);
+      border-radius: 50%;
+      outline: none;
+      cursor: pointer;
+      background: #ffffff;
+      transition: all 0.15s;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .mode-radio-card.active input[type="radio"] {
+      border-color: var(--primary);
+      background: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+
+    .mode-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .mode-desc {
+      font-size: 11.5px;
+      color: var(--text-dim);
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+
+    .status-pill-applied {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--success);
+      background: var(--success-soft);
+      border: 1px solid var(--success-border);
+      padding: 1px 7px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ====================================================================
+       2. MODAL BODY (CONTAINERS)
+       ==================================================================== */
+    .modal-body {
+      flex: 1 1 0%;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 16px 20px 24px 20px;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      scroll-behavior: smooth;
+    }
+
+    .modal-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .modal-body::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* CONTAINER A: DEFAULT INTERACTION MODE VIEW */
+    .default-mode-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .preview-card-box {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-card-header {
+      background: #f1f5f9;
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .preview-header-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .view-mode-tabs {
+      display: flex;
+      gap: 3px;
+      background: #e2e8f0;
+      padding: 2px;
+      border-radius: var(--radius-sm);
+    }
+
+    .view-tab-btn {
+      border: none;
+      background: transparent;
+      padding: 3px 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-dim);
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .view-tab-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .preview-body-content {
+      padding: 16px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-main);
+    }
+
+    .code-view-pre {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    /* SCROLL CONTAINER CHUẨN 15 DÒNG (~310px) */
+    .rule-preview-scroll-container {
+      max-height: 310px;
+      height: 310px;
+      overflow-y: auto;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    /* ====================================================================
+       ACTION CONFIG CARD (TƯƠNG TÁC MẶC ĐỊNH FORM THEO MẪU ĐÍNH KÈM)
+       ==================================================================== */
+    .action-config-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .action-config-card:hover {
+      border-color: #cbd5e1;
+    }
+
+    .action-config-card-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .action-config-card-header:hover {
+      background: #f8fafc;
+    }
+
+    .card-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-header-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1877f2;
+    }
+
+    .card-header-title.default-rule-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #2563eb;
+    }
+
+    .card-header-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .action-config-card-body {
+      background: #ffffff;
+    }
+
+    .config-view-duration-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 18px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13px;
+    }
+
+    .config-row-label {
+      width: 175px;
+      flex-shrink: 0;
+      color: #1e293b;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .config-row-text {
+      color: #334155;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .action-config-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 14px 18px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .action-config-row:last-child {
+      border-bottom: none;
+    }
+
+    .action-col-left {
+      width: 175px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      border-right: 1px solid #f1f5f9;
+      padding-right: 12px;
+    }
+
+    .action-title-text {
+      color: #1877f2;
+      font-weight: 600;
+      font-size: 13px;
+      line-height: 1.4;
+      cursor: pointer;
+    }
+
+    .action-col-right {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .spinner-input-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      width: 180px;
+    }
+
+    .spinner-input-wrapper.small {
+      width: 68px;
+    }
+
+    .spinner-input-wrapper.medium {
+      width: 180px;
+    }
+
+    .cfg-input-spinner {
+      width: 100%;
+      height: 34px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 6px 26px 6px 12px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1e293b;
+      outline: none;
+      transition: all 0.15s;
+    }
+
+    .cfg-input-spinner:focus {
+      border-color: #1877f2;
+      box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.15);
+    }
+
+    .cfg-input-spinner.rate {
+      text-align: center;
+      padding: 6px 22px 6px 8px;
+    }
+
+    .spinner-arrows {
+      position: absolute;
+      right: 6px;
+      display: flex;
+      flex-direction: column;
+      height: 24px;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .spin-arrow {
+      font-size: 8px;
+      color: #64748b;
+      line-height: 9px;
+      user-select: none;
+    }
+
+    .cfg-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+      background-color: #ffffff;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+      transition: all 0.15s ease;
+    }
+
+    .cfg-checkbox:checked {
+      background-color: #1877f2;
+      border-color: #1877f2;
+    }
+
+    .cfg-checkbox:checked::after {
+      content: '';
+      width: 4px;
+      height: 8px;
+      border: solid #ffffff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg) translate(-0.5px, -1px);
+      display: block;
+    }
+
+    .cfg-radio {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 50%;
+      outline: none;
+      cursor: pointer;
+      background-color: #ffffff;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .cfg-radio:checked {
+      border-color: #1877f2;
+    }
+
+    .cfg-radio:checked::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #1877f2;
+      display: block;
+    }
+
+    .sub-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #334155;
+    }
+
+    .unit-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: #475569;
+    }
+
+    .field-title-bold {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .red-hint-text {
+      color: #ef4444;
+      font-size: 11.5px;
+      font-weight: 400;
+    }
+
+    .cfg-textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-family: inherit;
+      font-size: 13px;
+      color: #1e293b;
+      outline: none;
+      resize: vertical;
+      transition: all 0.15s;
+    }
+
+    .cfg-textarea:focus {
+      border-color: #1877f2;
+      box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.15);
+    }
+
+    .cfg-textarea::placeholder {
+      color: #94a3b8;
+    }
+
+    .cfg-text-input {
+      width: 100%;
+      height: 34px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-family: inherit;
+      font-size: 13px;
+      color: #1e293b;
+      outline: none;
+      transition: all 0.15s;
+    }
+
+    .cfg-text-input:focus {
+      border-color: #1877f2;
+      box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.15);
+    }
+
+    .cfg-text-input::placeholder {
+      color: #94a3b8;
+    }
+
+    .browse-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .browse-input-wrapper .cfg-text-input {
+      padding-right: 36px;
+    }
+
+    .btn-dots-browse {
+      position: absolute;
+      right: 6px;
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      line-height: 1;
+    }
+
+    .btn-dots-browse:hover {
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+
+    .sub-checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #334155;
+      user-select: none;
+    }
+
+    .sub-radio-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #334155;
+      user-select: none;
+    }
+
+    .comment-field-label {
+      width: 170px;
+      flex-shrink: 0;
+      font-size: 13px;
+      font-weight: 500;
+      color: #334155;
+    }
+
+    .reactions-list {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .reaction-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .reaction-item .cfg-checkbox {
+      margin-top: 0;
+    }
+
+    .reaction-svg-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s ease;
+    }
+
+    .reaction-item:hover .reaction-svg-icon {
+      transform: scale(1.15);
+    }
+
+    /* TOPIC TOGGLE BAR (CHỌN ÁP DỤNG TƯƠNG TÁC THEO CHỦ ĐỀ) */
+    .topic-section-wrapper {
+      margin-bottom: 14px;
+    }
+
+    .topic-toggle-bar {
+      background: #f8fafc;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .topic-toggle-bar:hover {
+      border-color: #cbd5e1;
+      background: #f1f5f9;
+    }
+
+    .topic-toggle-bar.active {
+      border-color: #93c5fd;
+      background: #eff6ff;
+    }
+
+    .topic-toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+      flex: 1;
+    }
+
+    .topic-toggle-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .topic-toggle-title {
+      font-weight: 700;
+      font-size: 13.5px;
+      color: #1e3a8a;
+    }
+
+    .topic-toggle-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .topic-badge-active {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #16a34a;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      padding: 2px 8px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    /* ====================================================================
+       TOPIC TOGGLE SECTION & UNIFIED LAYOUT
+       ==================================================================== */
+    .topic-section-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .topic-toggle-bar {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .topic-toggle-bar:hover {
+      border-color: #cbd5e1;
+      background: #f8fafc;
+    }
+
+    .topic-toggle-bar.active {
+      border-color: #93c5fd;
+      background: #eff6ff;
+    }
+
+    .topic-toggle-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+      width: 100%;
+    }
+
+    .topic-toggle-label input[type="checkbox"] {
+      margin-top: 3px;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: var(--primary);
+    }
+
+    .topic-toggle-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .topic-toggle-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .topic-badge-active {
+      font-size: 11px;
+      font-weight: 600;
+      color: #0369a1;
+      background: #e0f2fe;
+      border: 1px solid #bae6fd;
+      padding: 1px 8px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .topic-toggle-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    /* CONTAINER B: TOPIC-BASED INTERACTION MODE VIEW */
+    .topic-mode-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .topic-panel-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: #ffffff;
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .toolbar-left-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toolbar-right-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-add-primary {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: #ffffff;
+      border: none;
+      padding: 7px 14px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+      transition: all 0.15s;
+    }
+
+    .btn-add-primary:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    .btn-toolbar-view-all {
+      background: #ffffff;
+      border: 1px solid var(--border-strong);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn-toolbar-view-all:hover {
+      background: var(--bg-surface-soft);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .matching-policy-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .matching-policy-box select {
+      background: #ffffff;
+      border: 1px solid var(--border-strong);
+      color: var(--text-main);
+      padding: 5px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 11.5px;
+      font-weight: 500;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* TOPIC RULES CARDS LIST */
+    .rules-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .topic-rule-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .topic-rule-card:hover {
+      border-color: #cbd5e1;
+    }
+
+    .topic-rule-card-header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .topic-rule-card-header:hover {
+      background: #f8fafc;
+    }
+
+    .rule-title-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-expand-rule {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.15s;
+      transform: rotate(-90deg);
+      padding: 0;
+    }
+
+    .btn-expand-rule:hover {
+      background: #e2e8f0;
+      color: var(--text-main);
+    }
+
+    .topic-rule-card.expanded .btn-expand-rule {
+      transform: rotate(0deg);
+    }
+
+    .rule-badge-priority {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--primary);
+      background: var(--primary-soft);
+      border: 1px solid var(--primary-border);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+    }
+
+    .rule-card-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .rule-actions-cluster {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-icon-action {
+      background: #ffffff;
+      border: 1px solid var(--border-strong);
+      color: var(--text-muted);
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      padding: 0;
+    }
+
+    .btn-icon-action:hover {
+      background: var(--bg-surface-soft);
+      color: var(--primary);
+      border-color: var(--primary-border);
+    }
+
+    .btn-icon-action.delete {
+      border-color: var(--danger-border);
+      color: var(--danger);
+    }
+
+    .btn-icon-action.delete:hover {
+      background: var(--danger-soft);
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .topic-rule-card-body {
+      display: none;
+    }
+
+    .topic-rule-card.expanded .topic-rule-card-body {
+      display: block;
+    }
+
+    .switch-toggle {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 19px;
+    }
+
+    .switch-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #cbd5e1;
+      transition: .2s;
+      border-radius: 999px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 13px;
+      width: 13px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .2s;
+      border-radius: 50%;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    input:checked+.slider {
+      background-color: var(--primary);
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(17px);
+    }
+
+    /* GLOBAL FALLBACK CARD */
+    .fallback-summary-strip {
+      background: var(--warning-soft);
+      border: 1px solid var(--warning-border);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 12.5px;
+    }
+
+    .fallback-summary-title {
+      font-weight: 700;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .fallback-summary-strip select {
+      background: #ffffff;
+      border: 1px solid #f59e0b;
+      color: #78350f;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 11.5px;
+      font-weight: 600;
+      outline: none;
+    }
+
+    /* ====================================================================
+       3. SUBMODAL A: TRỢ LÝ AI SOẠN THẢO TEXT-TO-RULE
+       ==================================================================== */
+    .submodal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .submodal-backdrop.open {
+      display: flex;
+    }
+
+    .submodal-window {
+      background: #ffffff;
+      width: 820px;
+      max-width: 95vw;
+      max-height: 88vh;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-modal);
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalFadeIn 0.2s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .submodal-header {
+      padding: 14px 18px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .submodal-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .submodal-body {
+      padding: 16px 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #f8fafc;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .form-input-text {
+      background: #ffffff;
+      border: 1px solid var(--border-strong);
+      color: var(--text-main);
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .form-input-text:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .chips-suggestions-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 3px;
+    }
+
+    .chip-btn {
+      background: #ffffff;
+      border: 1px dashed var(--border-strong);
+      color: var(--primary);
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .chip-btn:hover {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+    }
+
+    .textarea-prompt {
+      background: #ffffff;
+      border: 1px solid var(--border-strong);
+      color: var(--text-main);
+      padding: 9px 12px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      line-height: 1.5;
+      font-family: var(--font-sans);
+      outline: none;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .textarea-prompt:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .btn-generate-ai {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #7c3aed, #6366f1);
+      color: #ffffff;
+      border: none;
+      padding: 7px 18px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 3px 8px rgba(124, 58, 237, 0.25);
+      transition: all 0.15s;
+    }
+
+    .btn-generate-ai:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .gap-notice-banner {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 11.5px;
+      color: #92400e;
+    }
+
+    .gap-notice-title {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #b45309;
+    }
+
+    .textarea-preview-structured {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--border-strong);
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: 12.5px;
+      line-height: 1.55;
+      outline: none;
+      resize: vertical;
+      min-height: 170px;
+    }
+
+    .textarea-preview-structured:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .btn-update-json-from-preview {
+      background: #ffffff;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+      align-self: flex-start;
+    }
+
+    .btn-update-json-from-preview:hover {
+      background: var(--primary-soft);
+    }
+
+    .submodal-footer {
+      padding: 12px 18px;
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .btn-primary:disabled,
+    .btn-primary.btn-disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
+      filter: grayscale(0.5);
+    }
+
+    /* ====================================================================
+       4. FIXED FOOTER
+       ==================================================================== */
+    .modal-footer {
+      background: #ffffff;
+      border-top: 1px solid var(--border-color);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      width: 100%;
+      box-sizing: border-box;
+      z-index: 10;
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      border: 1px solid var(--border-strong);
+      color: var(--text-main);
+      padding: 7px 15px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-surface-soft);
+      border-color: #94a3b8;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      border: none;
+      color: #ffffff;
+      padding: 7px 22px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
+      transition: all 0.15s;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- MODAL BACKDROP -->
+  <div class="modal-backdrop">
+
+    <!-- MAIN MODAL WINDOW -->
+    <div class="modal-window">
+
+      <!-- ====================================================================
+           1. FIXED HEADER
+           ==================================================================== -->
+      <div class="modal-header">
+
+        <!-- TITLE ROW -->
+        <div class="header-top">
+          <div class="header-title-box">
+            <div class="action-icon-badge">📰</div>
+            <div class="header-title">
+              Cấu hình Hành động: Tương tác Newsfeed
+            </div>
+          </div>
+          <button class="btn-close-modal" title="Đóng modal" onclick="alert('Đóng modal')">✕</button>
+        </div>
+
+        <!-- TẦNG 1: TÙY CHỌN GIỚI HẠN TƯƠNG TÁC PHIÊN -->
+        <div class="global-limits-bar">
+          <div class="limit-label-group">
+            Tùy chọn giới hạn tương tác phiên:
+          </div>
+
+          <div class="limit-options-cluster">
+
+            <!-- OPTION 1: POST COUNT LIMIT -->
+            <label class="limit-radio-item" onclick="selectLimitOption('post_quantity')">
+              <input type="radio" name="interactionLimitMode" id="radioLimitPost" checked>
+              <span>Giới hạn số bài viết tương tác:</span>
+              <div class="range-inputs-box" id="boxLimitPost">
+                <span>Từ</span>
+                <input type="number" class="input-number-tiny" id="inputPostFrom" value="5" min="1">
+                <span>đến</span>
+                <input type="number" class="input-number-tiny" id="inputPostTo" value="10" min="1">
+                <span>bài</span>
+              </div>
+            </label>
+
+            <!-- OPTION 2: TIME DURATION LIMIT -->
+            <label class="limit-radio-item" onclick="selectLimitOption('time_duration')">
+              <input type="radio" name="interactionLimitMode" id="radioLimitTime">
+              <span>Giới hạn thời gian tương tác:</span>
+              <div class="range-inputs-box disabled" id="boxLimitTime">
+                <span>Từ</span>
+                <input type="number" class="input-number-tiny" id="inputTimeFrom" value="120" min="10">
+                <span>đến</span>
+                <input type="number" class="input-number-tiny" id="inputTimeTo" value="300" min="10">
+                <span>giây</span>
+              </div>
+            </label>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ====================================================================
+           2. MODAL BODY: KHÔNG GIAN CẤU HÌNH CHI TIẾT
+           ==================================================================== -->
+      <div class="modal-body">
+
+        <!-- 2.1. THANH BẬT / TẮT TƯƠNG TÁC THEO ĐIỀU KIỆN (NÂNG CAO) -->
+        <div class="topic-toggle-bar" id="topicToggleBar" onclick="toggleTopicCheckboxClick(event)">
+            <label class="topic-toggle-label" onclick="event.stopPropagation()">
+              <input type="checkbox" id="chkEnableTopicMode" class="cfg-checkbox"
+                onchange="toggleTopicMode(this.checked)">
+              <div class="topic-toggle-info">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="topic-toggle-title">Áp dụng tương tác theo điều kiện (Nâng cao)</span>
+                  <span class="topic-badge-active" id="badgeTopicActive" style="display: none;">Đang kích hoạt</span>
+                </div>
+                <span class="topic-toggle-desc">Tự động phân loại ngữ nghĩa bài viết trên bảng tin bằng AI để áp dụng
+                  kịch bản tương tác riêng theo từng điều kiện.</span>
+              </div>
+            </label>
+          </div>
+
+        <!-- 2.2. THANH CÔNG CỤ QUY TẮC CHỦ ĐỀ (CHỈ HIỂN THỊ KHI BẬT) -->
+        <div class="topic-panel-toolbar" id="topicToolbar" style="display: none;">
+              <div class="toolbar-left-group">
+                <button class="btn-add-primary" onclick="openAiConfigModal('topic')">
+                  <svg viewBox="64 64 896 896" width="13" height="13" fill="currentColor">
+                    <path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z" />
+                    <path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z" />
+                  </svg>
+                  <span>Thêm quy tắc</span>
+                </button>
+
+                <button class="btn-toolbar-view-all" onclick="openAllRulesSummaryModal('preview')"
+                  title="Xem toàn bộ cấu hình kịch bản các quy tắc">
+                  <span>👁️ Toàn bộ Preview</span>
+                </button>
+                <button class="btn-toolbar-view-all" onclick="openAllRulesSummaryModal('json')"
+                  title="Xem toàn bộ mã JSON Schema hợp nhất">
+                  <span>{ } Toàn bộ JSON</span>
+                </button>
+              </div>
+
+              <div class="toolbar-right-group">
+                <div class="matching-policy-box">
+                  <span>Cơ chế đối chiếu:</span>
+                  <select id="matchingPolicySelect">
+                    <option value="first_match">Thứ tự ưu tiên (Dừng ở rule đầu tiên khớp)</option>
+                    <option value="multi_match">Đa chủ đề kết hợp (Chạy tất cả rule khớp)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+        <!-- 2.3. DANH SÁCH QUY TẮC (TẤT CẢ QUY TẮC NẰM TRONG CÙNG 1 KHUNG VỚI KHOẢNG CÁCH ĐỒNG BỘ 10PX) -->
+        <div class="rules-list-container" id="allRulesListContainer">
+
+          <!-- KHỐI QUY TẮC CHỦ ĐỀ: #1 & #2 (CHỈ HIỂN THỊ KHI BẬT TƯƠNG TÁC THEO ĐIỀU KIỆN) -->
+          <div id="topicRulesContainer" style="display: none; flex-direction: column; gap: 10px; width: 100%; box-sizing: border-box;">
+            <div class="topic-rule-card" id="cardRule1">
+                <div class="topic-rule-card-header" onclick="toggleRuleCardExpand(event, 'cardRule1')">
+                  <div class="rule-title-group">
+                    <button class="btn-expand-rule" type="button" title="Thu gọn / Mở rộng">
+                      <svg viewBox="64 64 896 896" width="11" height="11" fill="currentColor">
+                        <path
+                          d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" />
+                      </svg>
+                    </button>
+                    <span class="rule-badge-priority">#1</span>
+                    <span class="rule-card-name">Chính trị & An ninh quốc gia</span>
+                  </div>
+
+                  <div class="rule-actions-cluster" onclick="event.stopPropagation()">
+                    <button class="btn-icon-action" title="Chỉnh sửa"
+                      onclick="openAiConfigModal('topic', 'Chính trị & An ninh quốc gia')">
+                      <svg viewBox="64 64 896 896" width="13" height="13" fill="currentColor">
+                        <path
+                          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l57.2 57.2-362.7 362.6-68.9 12 11.7-69.2zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z" />
+                      </svg>
+                    </button>
+                    <button class="btn-icon-action delete" title="Xóa" onclick="deleteRuleCard('cardRule1')">
+                      <svg viewBox="64 64 896 896" width="13" height="13" fill="currentColor">
+                        <path
+                          d="M360 184h-8c4.4 0 8-3.6 8-8v-8h304v8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-39.7-32.3-72-72-72H352c-39.7 0-72 32.3-72 72v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v24c0 4.4 3.6 8 8 8h60.5l45.4 564.8C243.6 907.5 262.3 928 285 928h454c22.7 0 41.4-20.5 43.1-43.2L827.5 320H888c4.4 0 8-3.6 8-8v-24c0-17.7-14.3-32-32-32zM716.4 856H307.6L267 320h490l-40.6 536z" />
+                      </svg>
+                    </button>
+                    <label class="switch-toggle" title="Bật/Tắt quy tắc này">
+                      <input type="checkbox" checked>
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- BODY QUY TẮC #1 (MẶC ĐỊNH THU GỌN) -->
+                <div class="topic-rule-card-body">
+                  <div
+                    style="background: #f8fafc; border-bottom: 1px solid var(--border-color); padding: 6px 16px; display: flex; justify-content: flex-end;">
+                    <div class="view-mode-tabs">
+                      <button class="view-tab-btn active" id="btnRule1ViewPreview"
+                        onclick="switchRuleView('rule1', 'preview')">Preview</button>
+                      <button class="view-tab-btn" id="btnRule1ViewJson"
+                        onclick="switchRuleView('rule1', 'json')">JSON</button>
+                    </div>
+                  </div>
+
+                  <div class="rule-preview-scroll-container" id="rule1ContentPreview">
+                    <div class="preview-body-content" style="white-space: pre-line;">🎯 CHỦ ĐỀ: CHÍNH TRỊ & AN NINH QUỐC
+                      GIA (Thực thể: party, state, general_secretary)
+
+                      - HÀNH ĐỘNG 1: Bày tỏ cảm xúc bài viết (reaction_post)
+                      + Bài khen ngợi, ủng hộ: Thả Tim ❤️ (Tỷ lệ: 100%, Delay: 5-10s)
+                      + Bài bôi nhọ, xuyên tạc: Thả Phẫn nộ 😡 (Tỷ lệ: 100%, Delay: 3-6s)
+                      + Fallback bài trung lập: Bỏ qua không thả cảm xúc
+
+                      - HÀNH ĐỘNG 2: Bình luận ảnh trên bài viết (comment_image_post)
+                      + Đăng 1 ảnh từ thư mục: E:/OSINT/Kho_Anh_Tuyen_Truyen (Tỷ lệ: 30%, Xóa ảnh sau khi đăng: Có)
+
+                      - HÀNH ĐỘNG 3: Trả lời bình luận nguồn (reply_comment)
+                      + Quét tối đa 20 comment nổi bật trên bài viết
+                      + Comment bôi nhọ Lãnh đạo: AI Reply dẫn chứng thực tế (Quota: 2 comment/bài, Delay: 20-40s)
+                      + Fallback khi không có comment xấu: Hoàn thành bài viết & lướt tiếp</div>
+                  </div>
+
+                  <div class="rule-preview-scroll-container" id="rule1ContentJson"
+                    style="display: none; padding: 10px; background: #0f172a;">
+                    <pre class="code-view-pre" style="padding: 0; background: transparent;">{
+  "ruleId": "rule_01",
+  "ruleName": "Chính trị & An ninh quốc gia",
+  "entities": ["party", "state", "general_secretary"],
+  "actions": [
+    {
+      "type": "reaction_post",
+      "conditions": [
+        { "sentiment": "positive", "reaction": "love", "percent": 100, "delay": "5-10s" },
+        { "sentiment": "negative", "reaction": "angry", "percent": 100, "delay": "3-6s" }
+      ],
+      "fallback": "skip"
+    },
+    {
+      "type": "comment_image_post",
+      "folderPath": "E:/OSINT/Kho_Anh_Tuyen_Truyen",
+      "deleteAfterUse": true
+    },
+    {
+      "type": "reply_comment",
+      "scanLimit": 20,
+      "scenarios": [
+        { "target": "general_secretary", "stance": "attacks", "tactic": "debunk_facts", "quota": 2, "delay": "20-40s" }
+      ],
+      "fallback": "complete_and_scroll"
+    }
+  ]
+}</pre>
+                  </div>
+                </div>
+              </div>
+
+            <div class="topic-rule-card" id="cardRule2">
+                <div class="topic-rule-card-header" onclick="toggleRuleCardExpand(event, 'cardRule2')">
+                  <div class="rule-title-group">
+                    <button class="btn-expand-rule" type="button" title="Thu gọn / Mở rộng">
+                      <svg viewBox="64 64 896 896" width="11" height="11" fill="currentColor">
+                        <path
+                          d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" />
+                      </svg>
+                    </button>
+                    <span class="rule-badge-priority">#2</span>
+                    <span class="rule-card-name">Kinh tế, Tài chính & Doanh nghiệp</span>
+                  </div>
+
+                  <div class="rule-actions-cluster" onclick="event.stopPropagation()">
+                    <button class="btn-icon-action" title="Chỉnh sửa"
+                      onclick="openAiConfigModal('topic', 'Kinh tế, Tài chính & Doanh nghiệp')">
+                      <svg viewBox="64 64 896 896" width="13" height="13" fill="currentColor">
+                        <path
+                          d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l57.2 57.2-362.7 362.6-68.9 12 11.7-69.2zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z" />
+                      </svg>
+                    </button>
+                    <button class="btn-icon-action delete" title="Xóa" onclick="deleteRuleCard('cardRule2')">
+                      <svg viewBox="64 64 896 896" width="13" height="13" fill="currentColor">
+                        <path
+                          d="M360 184h-8c4.4 0 8-3.6 8-8v-8h304v8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-39.7-32.3-72-72-72H352c-39.7 0-72 32.3-72 72v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v24c0 4.4 3.6 8 8 8h60.5l45.4 564.8C243.6 907.5 262.3 928 285 928h454c22.7 0 41.4-20.5 43.1-43.2L827.5 320H888c4.4 0 8-3.6 8-8v-24c0-17.7-14.3-32-32-32zM716.4 856H307.6L267 320h490l-40.6 536z" />
+                      </svg>
+                    </button>
+                    <label class="switch-toggle" title="Bật/Tắt quy tắc này">
+                      <input type="checkbox" checked>
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- BODY QUY TẮC #2 (MẶC ĐỊNH THU GỌN) -->
+                <div class="topic-rule-card-body">
+                  <div
+                    style="background: #f8fafc; border-bottom: 1px solid var(--border-color); padding: 6px 16px; display: flex; justify-content: flex-end;">
+                    <div class="view-mode-tabs">
+                      <button class="view-tab-btn active" id="btnRule2ViewPreview"
+                        onclick="switchRuleView('rule2', 'preview')">Preview</button>
+                      <button class="view-tab-btn" id="btnRule2ViewJson"
+                        onclick="switchRuleView('rule2', 'json')">JSON</button>
+                    </div>
+                  </div>
+
+                  <div class="rule-preview-scroll-container" id="rule2ContentPreview">
+                    <div class="preview-body-content" style="white-space: pre-line;">🎯 CHỦ ĐỀ: KINH TẾ, TÀI CHÍNH &
+                      DOANH NGHIỆP (Thực thể: economy, bank, stock)
+
+                      - HÀNH ĐỘNG 1: Bày tỏ cảm xúc bài viết (reaction_post)
+                      + Bài tích cực tăng trưởng kinh tế: Thả Like 👍 (Tỷ lệ: 80%, Delay: 5-8s)
+                      + Bài tiêu cực thị trường, sập sàn: Thả Sad 😢 (Tỷ lệ: 50%, Delay: 4-7s)
+
+                      - HÀNH ĐỘNG 2: Xem đầy đủ bài viết (view_full_content)
+                      + 80% xác suất bấm Xem thêm và dừng đọc 10s - 20s</div>
+                  </div>
+
+                  <div class="rule-preview-scroll-container" id="rule2ContentJson"
+                    style="display: none; padding: 10px; background: #0f172a;">
+                    <pre class="code-view-pre" style="padding: 0; background: transparent;">{
+  "ruleId": "rule_02",
+  "ruleName": "Kinh tế, Tài chính & Doanh nghiệp",
+  "entities": ["economy", "bank", "stock"],
+  "actions": [
+    {
+      "type": "reaction_post",
+      "conditions": [
+        { "sentiment": "positive", "reaction": "like", "percent": 80, "delay": "5-8s" },
+        { "sentiment": "negative", "reaction": "sad", "percent": 50, "delay": "4-7s" }
+      ]
+    },
+    {
+      "type": "view_full_content",
+      "percent": 80,
+      "delay": "10-20s"
+    }
+  ]
+}</pre>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <!-- QUY TẮC (MẶC ĐỊNH) - LUÔN HIỂN THỊ (NẰM Ở CUỐI DANH SÁCH KHI BẬT ĐIỀU KIỆN) -->
+          <div class="action-config-card" id="cardActionDefault">
+          <!-- Card Header -->
+          <div class="action-config-card-header" onclick="toggleActionConfigCard(event)">
+            <div class="card-header-left">
+              <button class="btn-expand-rule" id="btnExpandDefaultRule" type="button" title="Thu gọn / Mở rộng" style="transform: rotate(0deg);">
+                <svg viewBox="64 64 896 896" width="11" height="11" fill="currentColor">
+                  <path
+                    d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" />
+                </svg>
+              </button>
+              <span class="card-header-title default-rule-title" id="titleDefaultActionConfig">Cấu hình hành động tương tác</span>
+            </div>
+            <div class="card-header-right" id="wrapDefaultRuleToggle" onclick="event.stopPropagation()" style="display: none;">
+              <label class="switch-toggle" title="Bật/Tắt áp dụng quy tắc mặc định">
+                <input type="checkbox" id="chkEnableDefaultRule" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+            <!-- Card Body -->
+            <div class="action-config-card-body" id="actionConfigCardBody">
+
+              <!-- Row: Xem bài viết từ ... đến ... -->
+              <div class="config-view-duration-row">
+                <span class="config-row-label">Xem bài viết từ</span>
+                <div class="spinner-input-wrapper">
+                  <input type="text" class="cfg-input-spinner" value="3s">
+                  <div class="spinner-arrows">
+                    <span class="spin-arrow spin-up">▲</span>
+                    <span class="spin-arrow spin-down">▼</span>
+                  </div>
+                </div>
+                <span class="config-row-text">đến</span>
+                <div class="spinner-input-wrapper">
+                  <input type="text" class="cfg-input-spinner" value="3s">
+                </div>
+              </div>
+
+              <!-- HÀNH ĐỘNG 1: Bày tỏ cảm xúc -->
+              <div class="action-config-row">
+                <div class="action-col-left">
+                  <input type="checkbox" class="cfg-checkbox" id="chkDefReaction" checked>
+                  <label for="chkDefReaction" class="action-title-text">Bày tỏ cảm xúc</label>
+                </div>
+                <div class="action-col-right">
+                  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 14px;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                      <span class="sub-label">Tỷ lệ thực hiện hành động</span>
+                      <div class="spinner-input-wrapper small">
+                        <input type="number" class="cfg-input-spinner rate" value="80">
+                        <div class="spinner-arrows">
+                          <span class="spin-arrow spin-up">▲</span>
+                          <span class="spin-arrow spin-down">▼</span>
+                        </div>
+                      </div>
+                      <span class="unit-text">%</span>
+                    </div>
+
+                    <div class="reactions-list" style="margin-left: 10px;">
+                      <!-- 1. Like -->
+                      <label class="reaction-item">
+                        <input type="checkbox" class="cfg-checkbox" checked>
+                        <span class="reaction-svg-icon" title="Thích">
+                          <svg viewBox="0 0 32 32" width="22" height="22">
+                            <circle cx="16" cy="16" r="16" fill="#1877F2" />
+                            <path fill="#FFF"
+                              d="M19.3 14.7h3.8c1 0 1.7.9 1.5 1.9l-1.6 7c-.2.9-1 1.5-1.9 1.5H13c-.6 0-1-.4-1-1v-8c0-.3.1-.5.3-.7l4.6-4.6c.5-.5 1.3-.5 1.7.1.3.4.4.9.3 1.4l-1 3.4h1.4zM9 14h2v11H9z" />
+                          </svg>
+                        </span>
+                      </label>
+                      <!-- 2. Love -->
+                      <label class="reaction-item">
+                        <input type="checkbox" class="cfg-checkbox">
+                        <span class="reaction-svg-icon" title="Yêu thích">
+                          <svg viewBox="0 0 32 32" width="22" height="22">
+                            <circle cx="16" cy="16" r="16" fill="#F02849" />
+                            <path fill="#FFF"
+                              d="M16 23.5l-6.8-6.7c-2-2-2-5.1 0-7.1 1.8-1.8 4.8-1.8 6.6 0l.2.2.2-.2c1.8-1.8 4.8-1.8 6.6 0 2 2 2 5.1 0 7.1L16 23.5z" />
+                          </svg>
+                        </span>
+                      </label>
+                      <!-- 3. Care -->
+                      <label class="reaction-item">
+                        <input type="checkbox" class="cfg-checkbox" checked>
+                        <span class="reaction-svg-icon" title="Thương thương">
+                          <svg viewBox="0 0 32 32" width="22" height="22">
+                            <circle cx="16" cy="16" r="16" fill="#F7B125" />
+                            <path fill="#583803"
+                              d="M10.5 11a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z" />
+                            <path fill="none" stroke="#583803" stroke-width="1.6" stroke-linecap="round"
+                              d="M13 18c.8.8 2.2.8 3 0" />
+                            <path fill="#F02849"
+                              d="M16 13.5l2.4 2.4c.6.6.6 1.6 0 2.2-.6.6-1.6.6-2.2 0l-.2-.2-.2.2c-.6.6-1.6.6-2.2 0-.6-.6-.6-1.6 0-2.2l2.4-2.4z" />
+                            <path fill="#E69910"
+                              d="M8.5 17c1.2.6 2.3 2 2.3 3.2 0 .7-.6 1.3-1.3 1.3s-1.8-.7-2.4-2c-.3-.8-.2-1.9 1.4-2.5zm15 0c-1.2.6-2.3 2-2.3 3.2 0 .7.6 1.3 1.3 1.3s1.8-.7 2.4-2c.3-.8.2-1.9-1.4-2.5z" />
+                          </svg>
+                        </span>
+                      </label>
+                      <!-- 4. Haha -->
+                      <label class="reaction-item">
+                        <input type="checkbox" class="cfg-checkbox" checked>
+                        <span class="reaction-svg-icon" title="Haha">
+                          <svg viewBox="0 0 32 32" width="22" height="22">
+                            <circle cx="16" cy="16" r="16" fill="#F7B125" />
+                            <path fill="#583803" d="M10.2 12.5l2.6 1.5-2.6 1.5zm11.6 0l-2.6 1.5 2.6 1.5z" />
+                            <path fill="#583803" d="M10 18c0 3.3 2.7 6 6 6s6-2.7 6-6H10z" />
+                            <path fill="#FFF" d="M11.5 18c0 1.2 2 2 4.5 2s4.5-.8 4.5-2H11.5z" />
+                            <path fill="#E84855"
+                              d="M13 22.5c.9.7 1.9 1 3 1s2.1-.3 3-1c-.8-1-2.2-1.5-3-1.5s-2.2.5-3 1.5z" />
+                          </svg>
+                        </span>
+                      </label>
+                      <!-- 5. Wow -->
+                      <label class="reaction-item">
+                        <input type="checkbox" class="cfg-checkbox" checked>
+                        <span class="reaction-svg-icon" title="Wow">
+                          <svg viewBox="0 0 32 32" width="22" height="22">
+                            <circle cx="16" cy="16" r="16" fill="#F7B125" />
+                            <ellipse cx="11" cy="11.5" rx="2" ry="3" fill="#583803" />
+                            <ellipse cx="21" cy="11.5" rx="2" ry="3" fill="#583803" />
+                            <ellipse cx="16" cy="20.5" rx="3.5" ry="5" fill="#583803" />
+                            <ellipse cx="16" cy="20.5" rx="2.5" ry="4" fill="#311E02" />
+                            <path fill="none" stroke="#583803" stroke-width="1.3" stroke-linecap="round"
+                              d="M9 7.5c1-1 3-1 4 0M19 7.5c1-1 3-1 4 0" />
+                          </svg>
+                        </span>
+                      </label>
+                      <!-- 6. Sad -->
+                      <label class="reaction-item">
+                        <input type="checkbox" class="cfg-checkbox">
+                        <span class="reaction-svg-icon" title="Buồn">
+                          <svg viewBox="0 0 32 32" width="22" height="22">
+                            <circle cx="16" cy="16" r="16" fill="#F7B125" />
+                            <circle cx="11" cy="13" r="1.8" fill="#583803" />
+                            <circle cx="21" cy="13" r="1.8" fill="#583803" />
+                            <path fill="none" stroke="#583803" stroke-width="1.8" stroke-linecap="round"
+                              d="M12 21c1.2-1.5 3-2 4-2s2.8.5 4 2" />
+                            <path fill="none" stroke="#583803" stroke-width="1.4" stroke-linecap="round"
+                              d="M9.5 9c1.2.8 2.5.8 3.5 0M19 9c1-.8 2.3-.8 3.5 0" />
+                            <path fill="#2E86DE"
+                              d="M22.5 17c0 1.4-1 2.5-2.2 2.5s-2.2-1.1-2.2-2.5c0-.9 1.5-2.5 2.2-3.5.7 1 2.2 2.6 2.2 3.5z" />
+                          </svg>
+                        </span>
+                      </label>
+                      <!-- 7. Angry -->
+                      <label class="reaction-item">
+                        <input type="checkbox" class="cfg-checkbox">
+                        <span class="reaction-svg-icon" title="Phẫn nộ">
+                          <svg viewBox="0 0 32 32" width="22" height="22">
+                            <circle cx="16" cy="16" r="16" fill="#E84855" />
+                            <circle cx="11.5" cy="15.5" r="1.8" fill="#FFF" />
+                            <circle cx="20.5" cy="15.5" r="1.8" fill="#FFF" />
+                            <circle cx="11.5" cy="15.5" r="1" fill="#000" />
+                            <circle cx="20.5" cy="15.5" r="1" fill="#000" />
+                            <path fill="none" stroke="#FFF" stroke-width="1.8" stroke-linecap="round"
+                              d="M12 22.5c1.2-1.2 2.5-1.7 4-1.7s2.8.5 4 1.7" />
+                            <path fill="#311E02"
+                              d="M9 11l4.5 2.2c.4.2.3.8-.2.8L9 13.5c-.5-.1-.7-.7-.3-1.1zm14 0l-4.5 2.2c-.4.2-.3.8.2.8l4.3-.5c.5-.1.7-.7.3-1.1z" />
+                          </svg>
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- HÀNH ĐỘNG 2: Xem đầy đủ nội dung bài viết -->
+              <div class="action-config-row">
+                <div class="action-col-left">
+                  <input type="checkbox" class="cfg-checkbox" id="chkDefViewFull" checked>
+                  <label for="chkDefViewFull" class="action-title-text">Xem đầy đủ nội dung bài viết</label>
+                </div>
+                <div class="action-col-right">
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span class="sub-label">Tỷ lệ thực hiện hành động</span>
+                    <div class="spinner-input-wrapper small">
+                      <input type="number" class="cfg-input-spinner rate" value="80">
+                      <div class="spinner-arrows">
+                        <span class="spin-arrow spin-up">▲</span>
+                        <span class="spin-arrow spin-down">▼</span>
+                      </div>
+                    </div>
+                    <span class="unit-text">%</span>
+                  </div>
+                  <div style="margin-top: 8px; color: #475569; font-size: 12.5px;">
+                    (Tự động nhấn "Xem thêm" với các bài viết có nội dung dài)
+                  </div>
+                </div>
+              </div>
+
+              <!-- HÀNH ĐỘNG 3: Chia sẻ lên tường -->
+              <div class="action-config-row">
+                <div class="action-col-left">
+                  <input type="checkbox" class="cfg-checkbox" id="chkDefShare" checked>
+                  <label for="chkDefShare" class="action-title-text">Chia sẻ lên tường</label>
+                </div>
+                <div class="action-col-right">
+                  <div style="display: flex; gap: 20px; align-items: flex-start;">
+                    <div style="display: flex; flex-direction: column; gap: 6px; width: 155px; flex-shrink: 0;">
+                      <span class="sub-label">Tỷ lệ thực hiện hành động</span>
+                      <div style="display: flex; align-items: center; gap: 6px;">
+                        <div class="spinner-input-wrapper small">
+                          <input type="number" class="cfg-input-spinner rate" value="80">
+                          <div class="spinner-arrows">
+                            <span class="spin-arrow spin-up">▲</span>
+                            <span class="spin-arrow spin-down">▼</span>
+                          </div>
+                        </div>
+                        <span class="unit-text">%</span>
+                      </div>
+                    </div>
+
+                    <div style="flex: 1; min-width: 0;">
+                      <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                        <span class="field-title-bold">Nội dung chia sẻ <span style="color: #ef4444;">*</span></span>
+                        <span class="red-hint-text">Có thể nhập nhiều nội dung. Ngăn cách mỗi nội dung bằng một dòng chỉ
+                          chứa ký tự |</span>
+                      </div>
+                      <textarea class="cfg-textarea" placeholder="Nhập nội dung chia sẻ" rows="3"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- HÀNH ĐỘNG 4: Bình luận văn bản -->
+              <div class="action-config-row">
+                <div class="action-col-left">
+                  <input type="checkbox" class="cfg-checkbox" id="chkDefCommentText" checked>
+                  <label for="chkDefCommentText" class="action-title-text">Bình luận văn bản</label>
+                </div>
+                <div class="action-col-right">
+                  <div style="display: flex; gap: 20px; align-items: flex-start;">
+                    <div style="display: flex; flex-direction: column; gap: 6px; width: 155px; flex-shrink: 0;">
+                      <span class="sub-label">Tỷ lệ thực hiện hành động</span>
+                      <div style="display: flex; align-items: center; gap: 6px;">
+                        <div class="spinner-input-wrapper small">
+                          <input type="number" class="cfg-input-spinner rate" value="100">
+                          <div class="spinner-arrows">
+                            <span class="spin-arrow spin-up">▲</span>
+                            <span class="spin-arrow spin-down">▼</span>
+                          </div>
+                        </div>
+                        <span class="unit-text">%</span>
+                      </div>
+                      <label class="sub-checkbox-label" style="margin-top: 6px;">
+                        <input type="checkbox" class="cfg-checkbox">
+                        <span>Tạo nội dung bằng AI</span>
+                      </label>
+                    </div>
+
+                    <div style="flex: 1; min-width: 0;">
+                      <div style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                        <span class="field-title-bold">Nội dung bình luận <span style="color: #ef4444;">*</span></span>
+                        <span class="red-hint-text">Có thể nhập nhiều nội dung. Ngăn cách mỗi nội dung bằng một dòng chỉ
+                          chứa ký tự |</span>
+                      </div>
+                      <textarea class="cfg-textarea" placeholder="Nhập nội dung bình luận" rows="3"></textarea>
+                    </div>
+                  </div>
+
+                  <div style="margin-left: 175px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+                      <label class="sub-checkbox-label">
+                        <input type="checkbox" class="cfg-checkbox">
+                        <span>Tự động xoá nội dung đã sử dụng</span>
+                      </label>
+                      <label class="sub-checkbox-label">
+                        <input type="checkbox" class="cfg-checkbox">
+                        <span>Bình luận sticker ngẫu nhiên</span>
+                      </label>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 16px; margin-top: 2px;">
+                      <span class="field-title-bold" style="font-size: 12.5px;">Tuỳ chọn bình luận</span>
+                      <label class="sub-radio-label">
+                        <input type="radio" name="optDefCommentSelect" class="cfg-radio" checked>
+                        <span>Chỉ định 1 trong 2</span>
+                      </label>
+                      <label class="sub-radio-label">
+                        <input type="radio" name="optDefCommentSelect" class="cfg-radio">
+                        <span>Ngẫu nhiên 1 trong 2</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- HÀNH ĐỘNG 5: Bình luận ảnh -->
+              <div class="action-config-row">
+                <div class="action-col-left">
+                  <input type="checkbox" class="cfg-checkbox" id="chkDefCommentImg" checked>
+                  <label for="chkDefCommentImg" class="action-title-text">Bình luận ảnh</label>
+                </div>
+                <div class="action-col-right">
+                  <div style="display: flex; gap: 20px; align-items: flex-start;">
+                    <div style="display: flex; flex-direction: column; gap: 6px; width: 155px; flex-shrink: 0;">
+                      <span class="sub-label">Tỷ lệ thực hiện hành động</span>
+                      <div style="display: flex; align-items: center; gap: 6px;">
+                        <div class="spinner-input-wrapper small">
+                          <input type="number" class="cfg-input-spinner rate" value="80">
+                          <div class="spinner-arrows">
+                            <span class="spin-arrow spin-up">▲</span>
+                            <span class="spin-arrow spin-down">▼</span>
+                          </div>
+                        </div>
+                        <span class="unit-text">%</span>
+                      </div>
+                    </div>
+
+                    <div style="flex: 1; min-width: 0;">
+                      <div style="margin-bottom: 6px;">
+                        <span class="field-title-bold">Thư mục ảnh</span>
+                      </div>
+                      <div class="browse-input-wrapper">
+                        <input type="text" class="cfg-text-input" placeholder="Nhập đường dẫn tới thư mục ảnh">
+                        <button type="button" class="btn-dots-browse" title="Duyệt thư mục">⋮</button>
+                      </div>
+                      <div style="margin-top: 8px;">
+                        <label class="sub-checkbox-label">
+                          <input type="checkbox" class="cfg-checkbox">
+                          <span>Tự động xoá ảnh đã sử dụng</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- HÀNH ĐỘNG 6: Tương tác với bình luận của bài viết -->
+              <div class="action-config-row">
+                <div class="action-col-left">
+                  <input type="checkbox" class="cfg-checkbox" id="chkDefCommentInteract" checked>
+                  <label for="chkDefCommentInteract" class="action-title-text">Tương tác với bình luận của bài
+                    viết</label>
+                </div>
+                <div class="action-col-right">
+                  <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <!-- Line 1: Số bình luận/bài viết -->
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <span class="comment-field-label">Số bình luận/bài viết</span>
+                      <div class="spinner-input-wrapper medium">
+                        <input type="number" class="cfg-input-spinner" value="1">
+                        <div class="spinner-arrows">
+                          <span class="spin-arrow spin-up">▲</span>
+                          <span class="spin-arrow spin-down">▼</span>
+                        </div>
+                      </div>
+                      <span class="config-row-text">đến</span>
+                      <div class="spinner-input-wrapper medium">
+                        <input type="number" class="cfg-input-spinner" value="3">
+                      </div>
+                    </div>
+
+                    <!-- Line 2: Delay bình luận từ -->
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <span class="comment-field-label">Delay bình luận từ</span>
+                      <div class="spinner-input-wrapper medium">
+                        <input type="text" class="cfg-input-spinner" value="5s">
+                        <div class="spinner-arrows">
+                          <span class="spin-arrow spin-up">▲</span>
+                          <span class="spin-arrow spin-down">▼</span>
+                        </div>
+                      </div>
+                      <span class="config-row-text">đến</span>
+                      <div class="spinner-input-wrapper medium">
+                        <input type="text" class="cfg-input-spinner" value="30s">
+                      </div>
+                    </div>
+
+                    <!-- Line 3: Bày tỏ cảm xúc bình luận -->
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <span class="comment-field-label">Bày tỏ cảm xúc bình luận</span>
+                      <div class="reactions-list">
+                        <!-- 1. Like -->
+                        <label class="reaction-item">
+                          <input type="checkbox" class="cfg-checkbox" checked>
+                          <span class="reaction-svg-icon" title="Thích">
+                            <svg viewBox="0 0 32 32" width="22" height="22">
+                              <circle cx="16" cy="16" r="16" fill="#1877F2" />
+                              <path fill="#FFF"
+                                d="M19.3 14.7h3.8c1 0 1.7.9 1.5 1.9l-1.6 7c-.2.9-1 1.5-1.9 1.5H13c-.6 0-1-.4-1-1v-8c0-.3.1-.5.3-.7l4.6-4.6c.5-.5 1.3-.5 1.7.1.3.4.4.9.3 1.4l-1 3.4h1.4zM9 14h2v11H9z" />
+                            </svg>
+                          </span>
+                        </label>
+                        <!-- 2. Love -->
+                        <label class="reaction-item">
+                          <input type="checkbox" class="cfg-checkbox">
+                          <span class="reaction-svg-icon" title="Yêu thích">
+                            <svg viewBox="0 0 32 32" width="22" height="22">
+                              <circle cx="16" cy="16" r="16" fill="#F02849" />
+                              <path fill="#FFF"
+                                d="M16 23.5l-6.8-6.7c-2-2-2-5.1 0-7.1 1.8-1.8 4.8-1.8 6.6 0l.2.2.2-.2c1.8-1.8 4.8-1.8 6.6 0 2 2 2 5.1 0 7.1L16 23.5z" />
+                            </svg>
+                          </span>
+                        </label>
+                        <!-- 3. Care -->
+                        <label class="reaction-item">
+                          <input type="checkbox" class="cfg-checkbox" checked>
+                          <span class="reaction-svg-icon" title="Thương thương">
+                            <svg viewBox="0 0 32 32" width="22" height="22">
+                              <circle cx="16" cy="16" r="16" fill="#F7B125" />
+                              <path fill="#583803"
+                                d="M10.5 11a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z" />
+                              <path fill="none" stroke="#583803" stroke-width="1.6" stroke-linecap="round"
+                                d="M13 18c.8.8 2.2.8 3 0" />
+                              <path fill="#F02849"
+                                d="M16 13.5l2.4 2.4c.6.6.6 1.6 0 2.2-.6.6-1.6.6-2.2 0l-.2-.2-.2.2c-.6.6-1.6.6-2.2 0-.6-.6-.6-1.6 0-2.2l2.4-2.4z" />
+                              <path fill="#E69910"
+                                d="M8.5 17c1.2.6 2.3 2 2.3 3.2 0 .7-.6 1.3-1.3 1.3s-1.8-.7-2.4-2c-.3-.8-.2-1.9 1.4-2.5zm15 0c-1.2.6-2.3 2-2.3 3.2 0 .7.6 1.3 1.3 1.3s1.8-.7 2.4-2c.3-.8.2-1.9-1.4-2.5z" />
+                            </svg>
+                          </span>
+                        </label>
+                        <!-- 4. Haha -->
+                        <label class="reaction-item">
+                          <input type="checkbox" class="cfg-checkbox" checked>
+                          <span class="reaction-svg-icon" title="Haha">
+                            <svg viewBox="0 0 32 32" width="22" height="22">
+                              <circle cx="16" cy="16" r="16" fill="#F7B125" />
+                              <path fill="#583803" d="M10.2 12.5l2.6 1.5-2.6 1.5zm11.6 0l-2.6 1.5 2.6 1.5z" />
+                              <path fill="#583803" d="M10 18c0 3.3 2.7 6 6 6s6-2.7 6-6H10z" />
+                              <path fill="#FFF" d="M11.5 18c0 1.2 2 2 4.5 2s4.5-.8 4.5-2H11.5z" />
+                              <path fill="#E84855"
+                                d="M13 22.5c.9.7 1.9 1 3 1s2.1-.3 3-1c-.8-1-2.2-1.5-3-1.5s-2.2.5-3 1.5z" />
+                            </svg>
+                          </span>
+                        </label>
+                        <!-- 5. Wow -->
+                        <label class="reaction-item">
+                          <input type="checkbox" class="cfg-checkbox" checked>
+                          <span class="reaction-svg-icon" title="Wow">
+                            <svg viewBox="0 0 32 32" width="22" height="22">
+                              <circle cx="16" cy="16" r="16" fill="#F7B125" />
+                              <ellipse cx="11" cy="11.5" rx="2" ry="3" fill="#583803" />
+                              <ellipse cx="21" cy="11.5" rx="2" ry="3" fill="#583803" />
+                              <ellipse cx="16" cy="20.5" rx="3.5" ry="5" fill="#583803" />
+                              <ellipse cx="16" cy="20.5" rx="2.5" ry="4" fill="#311E02" />
+                              <path fill="none" stroke="#583803" stroke-width="1.3" stroke-linecap="round"
+                                d="M9 7.5c1-1 3-1 4 0M19 7.5c1-1 3-1 4 0" />
+                            </svg>
+                          </span>
+                        </label>
+                        <!-- 6. Sad -->
+                        <label class="reaction-item">
+                          <input type="checkbox" class="cfg-checkbox">
+                          <span class="reaction-svg-icon" title="Buồn">
+                            <svg viewBox="0 0 32 32" width="22" height="22">
+                              <circle cx="16" cy="16" r="16" fill="#F7B125" />
+                              <circle cx="11" cy="13" r="1.8" fill="#583803" />
+                              <circle cx="21" cy="13" r="1.8" fill="#583803" />
+                              <path fill="none" stroke="#583803" stroke-width="1.8" stroke-linecap="round"
+                                d="M12 21c1.2-1.5 3-2 4-2s2.8.5 4 2" />
+                              <path fill="none" stroke="#583803" stroke-width="1.4" stroke-linecap="round"
+                                d="M9.5 9c1.2.8 2.5.8 3.5 0M19 9c1-.8 2.3-.8 3.5 0" />
+                              <path fill="#2E86DE"
+                                d="M22.5 17c0 1.4-1 2.5-2.2 2.5s-2.2-1.1-2.2-2.5c0-.9 1.5-2.5 2.2-3.5.7 1 2.2 2.6 2.2 3.5z" />
+                            </svg>
+                          </span>
+                        </label>
+                        <!-- 7. Angry -->
+                        <label class="reaction-item">
+                          <input type="checkbox" class="cfg-checkbox">
+                          <span class="reaction-svg-icon" title="Phẫn nộ">
+                            <svg viewBox="0 0 32 32" width="22" height="22">
+                              <circle cx="16" cy="16" r="16" fill="#E84855" />
+                              <circle cx="11.5" cy="15.5" r="1.8" fill="#FFF" />
+                              <circle cx="20.5" cy="15.5" r="1.8" fill="#FFF" />
+                              <circle cx="11.5" cy="15.5" r="1" fill="#000" />
+                              <circle cx="20.5" cy="15.5" r="1" fill="#000" />
+                              <path fill="none" stroke="#FFF" stroke-width="1.8" stroke-linecap="round"
+                                d="M12 22.5c1.2-1.2 2.5-1.7 4-1.7s2.8.5 4 1.7" />
+                              <path fill="#311E02"
+                                d="M9 11l4.5 2.2c.4.2.3.8-.2.8L9 13.5c-.5-.1-.7-.7-.3-1.1zm14 0l-4.5 2.2c-.4.2-.3.8.2.8l4.3-.5c.5-.1.7-.7.3-1.1z" />
+                            </svg>
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- Line 4: Trả lời bình luận -->
+                    <div style="display: flex; align-items: flex-start; gap: 12px; margin-top: 4px;">
+                      <span class="comment-field-label" style="padding-top: 2px;">Trả lời bình luận</span>
+                      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+                        <!-- Tạo nội dung radio -->
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                          <span class="field-title-bold" style="font-size: 13px;">Tạo nội dung</span>
+                          <label class="sub-radio-label">
+                            <input type="radio" name="optDefReplyCreation" class="cfg-radio" checked>
+                            <span>Tạo nội dung thủ công</span>
+                          </label>
+                          <label class="sub-radio-label">
+                            <input type="radio" name="optDefReplyCreation" class="cfg-radio">
+                            <span>Tạo nội dung bằng AI</span>
+                          </label>
+                        </div>
+
+                        <!-- Textarea & Hint -->
+                        <div>
+                          <div
+                            style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                            <span class="field-title-bold">Nội dung bình luận <span
+                                style="color: #ef4444;">*</span></span>
+                            <span class="red-hint-text">Có thể nhập nhiều nội dung. Ngăn cách mỗi nội dung bằng một dòng
+                              chỉ chứa ký tự |</span>
+                          </div>
+                          <textarea class="cfg-textarea" placeholder="Nhập nội dung bình luận" rows="3"></textarea>
+                        </div>
+
+                        <!-- Checkbox tự động xóa -->
+                        <div>
+                          <label class="sub-checkbox-label">
+                            <input type="checkbox" class="cfg-checkbox">
+                            <span>Tự động xoá nội dung đã sử dụng</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div><!-- /.modal-body -->
+
+      <!-- ====================================================================
+           4. FIXED FOOTER (CỐ ĐỊNH Ở ĐÁY MODAL-WINDOW)
+           ==================================================================== -->
+      <div class="modal-footer">
+        <div></div>
+
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-secondary" onclick="alert('Đã hủy thay đổi.')">Hủy bỏ</button>
+          <button class="btn-primary" onclick="saveGlobalActionConfig()">Lưu</button>
+        </div>
+      </div>
+
+    </div><!-- /.modal-window -->
+
+  </div><!-- /.modal-backdrop -->
+
+  <!-- ====================================================================
+       SUBMODAL A: TRỢ LÝ AI SOẠN THẢO TEXT-TO-RULE
+       ==================================================================== -->
+  <div class="submodal-backdrop" id="aiConfigSubmodal">
+
+        <div class="submodal-window">
+
+          <div class="submodal-header">
+            <div class="submodal-title">
+              <span style="font-size: 16px;">🧠</span>
+              <span id="submodalTitleText">Thêm quy tắc</span>
+            </div>
+            <button class="btn-close-modal" onclick="closeAiConfigModal()">✕</button>
+          </div>
+
+          <div class="submodal-body">
+
+            <!-- Ô NHẬP TÊN CHỦ ĐỀ (SẼ BỊ ẨN KHI Ở CHẾ ĐỘ MẶC ĐỊNH) -->
+            <div class="form-group" id="groupTopicName">
+              <label class="form-label">Tên chủ đề quy tắc:</label>
+              <input type="text" class="form-input-text" id="inputSubmodalTopicName"
+                placeholder="Ví dụ: Chính trị & An ninh quốc gia" oninput="handleInputStateChange()">
+            </div>
+
+            <!-- KHỐI MÔ TẢ BẰNG TEXT TỰ NHIÊN -->
+            <div class="form-group">
+              <label class="form-label">Mô tả nội dung hành động bằng ngôn ngữ tự nhiên:</label>
+
+              <div class="chips-suggestions-bar">
+                <span style="font-size: 10.5px; color: var(--text-dim); margin-right: 4px;">💡 Gợi ý thành phần:</span>
+                <span class="chip-btn" onclick="insertPromptKeyword('bài viết khen ngợi Nhà nước ')">+ Sắc thái
+                  bài</span>
+                <span class="chip-btn" onclick="insertPromptKeyword('nhắc đến Lãnh đạo cấp cao ')">+ Thực thể</span>
+                <span class="chip-btn" onclick="insertPromptKeyword('thả tim 1 bài viết ')">+ Thả cảm xúc</span>
+                <span class="chip-btn" onclick="insertPromptKeyword('bình luận 1 ảnh infographic ')">+ Comment
+                  ảnh</span>
+                <span class="chip-btn" onclick="insertPromptKeyword('phản bác 2 bình luận tiêu cực bằng dẫn chứng ')">+
+                  Phản bác AI</span>
+                <span class="chip-btn" onclick="insertPromptKeyword('tối đa 1 comment/bài ')">+ Hạn mức</span>
+              </div>
+
+              <textarea class="textarea-prompt" id="textareaAiPrompt"
+                placeholder="Nhập câu mô tả tự do... Ví dụ: Thả tim 1 bài viết tích cực, bình luận 1 ảnh và phản bác 2 bình luận tiêu cực bằng dẫn chứng thực tế."
+                oninput="handleInputStateChange()"></textarea>
+            </div>
+
+            <!-- NÚT SINH CẤU HÌNH TỪ MÔ TẢ & DÙNG MẪU KỊCH BẢN CHI TIẾT -->
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <button class="btn-generate-ai" onclick="generateConditionsFromText()">
+                <span>Sinh cấu hình từ mô tả</span>
+              </button>
+              <button class="btn-secondary" style="font-size: 11.5px; padding: 6px 12px;" onclick="loadSamplePrompt()">
+                <span>Dùng mẫu kịch bản</span>
+              </button>
+            </div>
+
+            <!-- KHUNG GỢI Ý THÔNG TIN THIẾU -->
+            <div class="gap-notice-banner" id="gapNoticeBanner" style="display: none;">
+              <div class="gap-notice-title">
+                <span>⚠️ Gợi ý bổ sung thông tin (Để AI sinh chuẩn xác 100%):</span>
+              </div>
+              <ul style="padding-left: 18px; line-height: 1.45;" id="gapNoticeList">
+                <li>Bạn chưa cung cấp <strong>đường dẫn thư mục ảnh</strong> cho hành động bình luận ảnh.</li>
+                <li>Bạn chưa nêu <strong>chiến thuật phản bác của AI</strong> (Ví dụ: Dẫn chứng sự thật hay Viện dẫn
+                  pháp luật).</li>
+                <li>Chưa có phương án xử lý khi bài viết <strong>không có comment tiêu cực nào</strong> (Fallback: Bỏ
+                  qua hay Tự tạo comment mới).</li>
+              </ul>
+              <div style="font-size: 11px; color: #78350f; font-style: italic; margin-top: 2px;">
+                👉 Bạn chỉ cần đặt chuột vào ô mô tả bên trên, gõ thêm các chi tiết này rồi bấm 'Sinh cấu hình từ mô
+                tả'.
+              </div>
+            </div>
+
+            <!-- KHỐI HIỂN THỊ KẾT QUẢ DUAL-VIEW -->
+            <div class="form-group" style="margin-top: 4px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                <label class="form-label">Kết quả kịch bản sinh ra:</label>
+                <div class="view-mode-tabs">
+                  <button class="view-tab-btn active" id="btnSubViewPreview"
+                    onclick="switchSubmodalView('preview')">Preview</button>
+                  <button class="view-tab-btn" id="btnSubViewJson" onclick="switchSubmodalView('json')">JSON</button>
+                </div>
+              </div>
+
+              <!-- VIEW 1: PREVIEW TEXTAREA -->
+              <div id="submodalViewPreviewBlock">
+                <textarea class="textarea-preview-structured" id="textareaStructuredPreview"
+                  placeholder="Nội dung preview phân cấp sẽ xuất hiện tại đây sau khi bấm 'Sinh cấu hình từ mô tả'...">🎯 CHỦ ĐỀ: CHÍNH TRỊ & AN NINH QUỐC GIA (Thực thể: party, state, general_secretary)
+
+- HÀNH ĐỘNG 1: Bày tỏ cảm xúc bài viết (reaction_post)
+  + Bài khen ngợi, ủng hộ: Thả Tim ❤️ (Tỷ lệ: 100%, Delay: 5-10s)
+  + Bài bôi nhọ, xuyên tạc: Thả Phẫn nộ 😡 (Tỷ lệ: 100%, Delay: 3-6s)
+  + Fallback bài trung lập: Bỏ qua không thả cảm xúc
+
+- HÀNH ĐỘNG 2: Bình luận ảnh trên bài viết (comment_image_post)
+  + Đăng 1 ảnh từ thư mục: E:/OSINT/Kho_Anh_Tuyen_Truyen (Tỷ lệ: 30%, Xóa ảnh sau khi đăng: Có)
+
+- HÀNH ĐỘNG 3: Trả lời bình luận nguồn (reply_comment)
+  + Quét tối đa 20 comment nổi bật trên bài viết
+  + Comment bôi nhọ Lãnh đạo: AI Reply dẫn chứng thực tế (Quota: 2 comment/bài, Delay: 20-40s)
+  + Fallback khi không có comment xấu: Hoàn thành bài viết & lướt tiếp</textarea>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+                  <span style="font-size: 11px; color: var(--text-dim); font-style: italic;">
+                    ✎ Bạn có thể sửa trực tiếp câu chữ trong khung trên rồi bấm:
+                  </span>
+                  <button class="btn-update-json-from-preview" onclick="updateJsonFromPreviewText()">
+                    <span>🔄 Cập nhật JSON từ Preview</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- VIEW 2: JSON VIEW -->
+              <div id="submodalViewJsonBlock" style="display: none;">
+                <pre class="code-view-pre" id="preSubmodalJson">{
+  "ruleName": "Chính trị & An ninh quốc gia",
+  "entities": ["party", "state", "general_secretary"],
+  "actions": [
+    {
+      "type": "reaction_post",
+      "conditions": [
+        { "sentiment": "positive", "reaction": "love", "percent": 100, "delay": "5-10s" },
+        { "sentiment": "negative", "reaction": "angry", "percent": 100, "delay": "3-6s" }
+      ],
+      "fallback": "skip"
+    },
+    {
+      "type": "comment_image_post",
+      "folderPath": "E:/OSINT/Kho_Anh_Tuyen_Truyen",
+      "deleteAfterUse": true
+    },
+    {
+      "type": "reply_comment",
+      "scanLimit": 20,
+      "scenarios": [
+        { "target": "general_secretary", "stance": "attacks", "tactic": "debunk_facts", "quota": 2, "delay": "20-40s" }
+      ],
+      "fallback": "complete_and_scroll"
+    }
+  ]
+}</pre>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- FOOTER SUBMODAL -->
+          <div class="submodal-footer">
+            <button class="btn-secondary" onclick="closeAiConfigModal()">Hủy bỏ</button>
+            <button class="btn-primary" id="btnSaveSubmodalRule" onclick="saveSubmodalConfig()" disabled>Lưu</button>
+          </div>
+
+        </div>
+
+      </div>
+
+  <!-- ====================================================================
+       SUBMODAL B: XEM TOÀN BỘ PREVIEW & JSON TỔNG HỢP CÁC QUY TẮC
+       ==================================================================== -->
+  <div class="submodal-backdrop" id="allRulesSummaryModal">
+        <div class="submodal-window" style="width: 860px;">
+
+          <div class="submodal-header">
+            <div class="submodal-title">
+              <span style="font-size: 16px;">📋</span>
+              <span>Tổng Hợp Kịch Bản Tất Cả Quy Tắc Theo Chủ Đề</span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div class="view-mode-tabs">
+                <button class="view-tab-btn active" id="btnAllRulesViewPreview"
+                  onclick="switchAllRulesView('preview')">Preview</button>
+                <button class="view-tab-btn" id="btnAllRulesViewJson" onclick="switchAllRulesView('json')">JSON</button>
+              </div>
+              <button class="btn-close-modal" onclick="closeAllRulesSummaryModal()">✕</button>
+            </div>
+          </div>
+
+          <div class="submodal-body">
+            <!-- TAB 1: ALL RULES PREVIEW -->
+            <div id="allRulesViewPreviewBlock">
+              <div class="rule-preview-scroll-container"
+                style="max-height: 420px; height: 420px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #ffffff;">
+                <div class="preview-body-content" id="allRulesPreviewContent"
+                  style="white-space: pre-line; font-size: 12.5px; line-height: 1.6;"></div>
+              </div>
+            </div>
+
+            <!-- TAB 2: ALL RULES JSON -->
+            <div id="allRulesViewJsonBlock" style="display: none;">
+              <div class="rule-preview-scroll-container"
+                style="max-height: 420px; height: 420px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: #0f172a; padding: 12px;">
+                <pre class="code-view-pre" id="allRulesJsonContent" style="padding: 0; background: transparent;"></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="submodal-footer" style="justify-content: space-between;">
+            <button class="btn-secondary" onclick="copyAllRulesContent()">
+              <span>📋 Sao chép nội dung</span>
+            </button>
+            <button class="btn-primary" onclick="closeAllRulesSummaryModal()">
+              <span>Đóng</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+  <script>
+    let currentConfigMode = 'default'; // 'default' or 'topic'
+    let currentSubmodalTarget = 'topic'; // 'default' or 'topic'
+    let hasAiGenerated = false;
+
+    // TOGGLE ACTION CONFIG CARD (ACCORDION)
+    function toggleActionConfigCard(event) {
+      if (event && event.target && (event.target.closest('.switch-toggle') || event.target.tagName === 'INPUT')) {
+        return;
+      }
+      const body = document.getElementById('actionConfigCardBody');
+      const btn = document.getElementById('btnExpandDefaultRule');
+      if (body) {
+        if (body.style.display === 'none') {
+          body.style.display = 'block';
+          if (btn) btn.style.transform = 'rotate(0deg)';
+        } else {
+          body.style.display = 'none';
+          if (btn) btn.style.transform = 'rotate(-90deg)';
+        }
+      }
+    }
+
+    // TOGGLE CHỦ ĐỀ (NÂNG CAO)
+    function toggleTopicMode(enabled) {
+      const chk = document.getElementById('chkEnableTopicMode');
+      const toolbar = document.getElementById('topicToolbar');
+      const rulesContainer = document.getElementById('topicRulesContainer');
+      const badge = document.getElementById('badgeTopicActive');
+      const bar = document.getElementById('topicToggleBar');
+      const defaultRuleTitle = document.getElementById('titleDefaultActionConfig');
+      const defaultRuleToggleWrap = document.getElementById('wrapDefaultRuleToggle');
+
+      if (chk) chk.checked = enabled;
+      if (toolbar) toolbar.style.display = enabled ? 'flex' : 'none';
+      if (rulesContainer) {
+        rulesContainer.style.display = enabled ? 'flex' : 'none';
+        rulesContainer.style.flexDirection = 'column';
+        rulesContainer.style.gap = '10px';
+        rulesContainer.style.width = '100%';
+        rulesContainer.style.boxSizing = 'border-box';
+      }
+      if (badge) badge.style.display = enabled ? 'inline-flex' : 'none';
+      if (bar) {
+        if (enabled) bar.classList.add('active');
+        else bar.classList.remove('active');
+      }
+
+      if (defaultRuleTitle) {
+        defaultRuleTitle.textContent = enabled ? 'Quy tắc (Mặc định)' : 'Cấu hình hành động tương tác';
+      }
+      if (defaultRuleToggleWrap) {
+        defaultRuleToggleWrap.style.display = enabled ? 'flex' : 'none';
+      }
+    }
+
+    function toggleTopicCheckboxClick(event) {
+      if (event.target.tagName === 'INPUT' || event.target.tagName === 'LABEL') return;
+      const chk = document.getElementById('chkEnableTopicMode');
+      if (chk) {
+        chk.checked = !chk.checked;
+        toggleTopicMode(chk.checked);
+      }
+    }
+
+    function handleUnmatchedTopicSelect(val) {
+      if (document.getElementById('allRulesSummaryModal') && document.getElementById('allRulesSummaryModal').classList.contains('open')) {
+        generateAllRulesAggregatedContent();
+      }
+    }
+
+    function handleUnmatchedTopicChange(val) {
+      handleUnmatchedTopicSelect(val);
+    }
+
+    function switchConfigMode(mode) {
+      toggleTopicMode(mode === 'topic');
+    }
+
+    // 3. SWITCH DEFAULT VIEW (PREVIEW vs JSON)
+    function switchDefaultView(view) {
+      const btnPreview = document.getElementById('btnDefViewPreview');
+      const btnJson = document.getElementById('btnDefViewJson');
+      const contentPreview = document.getElementById('contentDefaultPreview');
+      const contentJson = document.getElementById('contentDefaultJson');
+
+      if (view === 'preview') {
+        btnPreview.classList.add('active');
+        btnJson.classList.remove('active');
+        contentPreview.style.display = 'block';
+        contentJson.style.display = 'none';
+      } else {
+        btnJson.classList.add('active');
+        btnPreview.classList.remove('active');
+        contentPreview.style.display = 'none';
+        contentJson.style.display = 'block';
+      }
+    }
+
+    // 4. SWITCH RULE VIEW (PREVIEW vs JSON)
+    function switchRuleView(rulePrefix, view) {
+      const btnPreview = document.getElementById(`btn${capitalize(rulePrefix)}ViewPreview`);
+      const btnJson = document.getElementById(`btn${capitalize(rulePrefix)}ViewJson`);
+      const contentPreview = document.getElementById(`${rulePrefix}ContentPreview`);
+      const contentJson = document.getElementById(`${rulePrefix}ContentJson`);
+
+      if (view === 'preview') {
+        btnPreview.classList.add('active');
+        btnJson.classList.remove('active');
+        contentPreview.style.display = 'block';
+        contentJson.style.display = 'none';
+      } else {
+        btnJson.classList.add('active');
+        btnPreview.classList.remove('active');
+        contentPreview.style.display = 'none';
+        contentJson.style.display = 'block';
+      }
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // 5. EXPAND / COLLAPSE CHO TỪNG QUY TẮC
+    function toggleRuleCardExpand(event, cardId) {
+      if (event.target.closest('.rule-actions-cluster')) return;
+      const card = document.getElementById(cardId);
+      if (card) {
+        card.classList.toggle('expanded');
+      }
+    }
+
+    // 6. KIỂM SOÁT TRẠNG THÁI ENABLE/DISABLE CỦA NÚT LƯU TRONG AI SUBMODAL
+    function updateSaveButtonState() {
+      const btnSave = document.getElementById('btnSaveSubmodalRule');
+      const prompt = document.getElementById('textareaAiPrompt').value.trim();
+      const topic = document.getElementById('inputSubmodalTopicName').value.trim();
+
+      let isValid = false;
+      if (currentSubmodalTarget === 'topic') {
+        isValid = (topic.length > 0 && prompt.length > 0 && hasAiGenerated);
+      } else {
+        isValid = (prompt.length > 0 && hasAiGenerated);
+      }
+
+      if (isValid) {
+        btnSave.disabled = false;
+        btnSave.classList.remove('btn-disabled');
+      } else {
+        btnSave.disabled = true;
+        btnSave.classList.add('btn-disabled');
+      }
+    }
+
+    function handleInputStateChange() {
+      hasAiGenerated = false;
+      updateSaveButtonState();
+    }
+
+    // 7. OPEN AI CONFIG MODAL
+    function openAiConfigModal(targetMode, topicName = '') {
+      currentSubmodalTarget = targetMode;
+      hasAiGenerated = false;
+
+      const modal = document.getElementById('aiConfigSubmodal');
+      const title = document.getElementById('submodalTitleText');
+      const groupTopic = document.getElementById('groupTopicName');
+      const inputTopic = document.getElementById('inputSubmodalTopicName');
+      const gapBanner = document.getElementById('gapNoticeBanner');
+      const promptTextarea = document.getElementById('textareaAiPrompt');
+
+      gapBanner.style.display = 'none';
+
+      if (targetMode === 'default') {
+        title.innerText = 'Chỉnh sửa cấu hình mặc định';
+        groupTopic.style.display = 'none';
+        promptTextarea.value = 'Áp dụng hành vi tương tác tự nhiên cho tài khoản mới nuôi: Lướt bảng tin ngẫu nhiên, gặp bài viết bình thường thì có xác suất 60% thả Like hoặc Thả Tim (Love) sau khi dừng đọc 5 đến 10 giây. Với các bài viết có độ dài trên 5 dòng, xác suất 75% bấm Xem thêm (See more) và cuộn đọc nội dung chi tiết trong 10 đến 18 giây. Không tự ý chia sẻ bài viết, không đăng bình luận văn bản và không bình luận ảnh để tránh bị thuật toán quét spam. Tại phần bình luận của bài viết, ngẫu nhiên thả Like vào 1 đến 2 bình luận có lượng tương tác cao nhất.';
+      } else {
+        title.innerText = topicName ? 'Chỉnh sửa quy tắc' : 'Thêm quy tắc';
+        groupTopic.style.display = 'flex';
+        inputTopic.value = topicName || '';
+        promptTextarea.value = topicName
+          ? `Gặp bài viết thuộc chủ đề ${topicName}: bài viết tích cực thì thả tim và dừng đọc 6-12s, bài xuyên tạc thì thả phẫn nộ sau 3-5s, bình luận 1 ảnh từ thư mục E:/OSINT/Kho_Anh_Tuyen_Truyen và phản bác 2 bình luận tiêu cực bằng dẫn chứng thực tế.`
+          : '';
+      }
+
+      updateSaveButtonState();
+      modal.classList.add('open');
+    }
+
+    function closeAiConfigModal() {
+      document.getElementById('aiConfigSubmodal').classList.remove('open');
+    }
+
+    // 8. INSERT PROMPT KEYWORD
+    function insertPromptKeyword(keyword) {
+      const textarea = document.getElementById('textareaAiPrompt');
+      textarea.value += keyword;
+      textarea.focus();
+      handleInputStateChange();
+    }
+
+    // 9. DÙNG MẪU KỊCH BẢN
+    function loadSamplePrompt() {
+      if (currentSubmodalTarget === 'default') {
+        document.getElementById('textareaAiPrompt').value = 'Áp dụng hành vi tương tác tự nhiên cho tài khoản mới nuôi: Lướt bảng tin ngẫu nhiên, gặp bài viết bình thường thì có xác suất 60% thả Like hoặc Thả Tim (Love) sau khi dừng đọc 5 đến 10 giây. Với các bài viết có độ dài trên 5 dòng, xác suất 75% bấm Xem thêm (See more) và cuộn đọc nội dung chi tiết trong 10 đến 18 giây. Không tự ý chia sẻ bài viết, không đăng bình luận văn bản và không bình luận ảnh để tránh bị thuật toán quét spam. Tại phần bình luận của bài viết, ngẫu nhiên thả Like vào 1 đến 2 bình luận có lượng tương tác cao nhất.';
+      } else {
+        document.getElementById('inputSubmodalTopicName').value = 'Bảo vệ nền tảng tư tưởng và đấu tranh phản bác quan điểm sai trái';
+        document.getElementById('textareaAiPrompt').value = 'Khi gặp bài viết có nội dung khen ngợi thành tựu phát triển kinh tế, xã hội và vai trò lãnh đạo của Đảng và Nhà nước, hãy thả cảm xúc Yêu thích (Love) với tỷ lệ 100% sau khi dừng đọc từ 6 đến 12 giây. Đối với bài viết có dấu hiệu xuyên tạc, bôi nhọ lãnh đạo cấp cao hoặc kích động biểu tình, lập tức thả Phẫn nộ (Angry) 100% sau 3 đến 5 giây dừng xem. Đồng thời thực hiện bình luận đính kèm 1 ảnh infographic tuyên truyền từ thư mục E:/OSINT/Kho_Anh_Tuyen_Truyen (tỷ lệ đăng 40%, tự động xóa ảnh sau khi dùng). Quét tối đa 30 bình luận nổi bật trên bài viết, nếu phát hiện bình luận tiêu cực xuyên tạc thì sử dụng AI nhập vai Chuyên gia chính trị để viết câu trả lời phản bác có trích dẫn số liệu thực tế và căn cứ pháp luật (hạn mức 2 bình luận/bài, độ trễ 25-45 giây). Nếu bài viết không có bình luận tiêu cực nào thì hoàn thành lượt tương tác và chuyển sang bài tiếp theo.';
+      }
+      handleInputStateChange();
+    }
+
+    // 10. GENERATE CONDITIONS FROM TEXT (SINH CẤU HÌNH TỪ MÔ TẢ)
+    function generateConditionsFromText() {
+      const text = document.getElementById('textareaAiPrompt').value.trim();
+      const topicName = document.getElementById('inputSubmodalTopicName').value.trim();
+      const gapBanner = document.getElementById('gapNoticeBanner');
+      const gapList = document.getElementById('gapNoticeList');
+      const previewTextarea = document.getElementById('textareaStructuredPreview');
+      const preJson = document.getElementById('preSubmodalJson');
+
+      if (!text) {
+        alert('Vui lòng nhập nội dung mô tả kịch bản trước khi sinh cấu hình!');
+        return;
+      }
+
+      if (currentSubmodalTarget === 'topic' && !topicName) {
+        alert('Vui lòng nhập Tên chủ đề quy tắc trước khi sinh cấu hình!');
+        document.getElementById('inputSubmodalTopicName').focus();
+        return;
+      }
+
+      if (!text.includes('thư mục') && !text.includes('ảnh từ') && currentSubmodalTarget === 'topic') {
+        gapBanner.style.display = 'flex';
+        gapList.innerHTML = `
+          <li>Bạn chưa cung cấp <strong>đường dẫn thư mục ảnh</strong> cho hành động bình luận ảnh.</li>
+          <li>Bạn chưa nêu <strong>phương án fallback khi không có comment tiêu cực</strong> (Bỏ qua hay Tự tạo comment mới).</li>
+        `;
+      } else {
+        gapBanner.style.display = 'none';
+      }
+
+      if (currentSubmodalTarget === 'default') {
+        previewTextarea.value = `🎯 CẤU HÌNH TƯƠNG TÁC MẶC ĐỊNH:
+
+- HÀNH ĐỘNG 1: Bày tỏ cảm xúc bài viết (reaction_post)
+  + Thả ngẫu nhiên Like hoặc Love (Tỷ lệ: 50% bài gặp phải, Độ trễ dừng đọc: 5s - 10s)
+
+- HÀNH ĐỘNG 2: Xem đầy đủ nội dung bài viết (view_full_content)
+  + 70% xác suất bấm Xem thêm (See more) và dừng đọc 8s - 15s
+
+- HÀNH ĐỘNG 3: Chia sẻ bài viết (share_post)
+  + Không kích hoạt
+
+- HÀNH ĐỘNG 4: Bình luận văn bản trên bài viết (comment_text_post)
+  + Không kích hoạt
+
+- HÀNH ĐỘNG 5: Bình luận ảnh trên bài viết (comment_image_post)
+  + Không kích hoạt
+
+- HÀNH ĐỘNG 6: Tương tác với bình luận nguồn (reaction_comment)
+  + Thả Like ngẫu nhiên vào 1 đến 2 bình luận có sẵn dưới bài viết`;
+
+        preJson.textContent = JSON.stringify({
+          "mode": "default",
+          "actions": {
+            "reaction_post": {
+              "enabled": true,
+              "selectionPercent": 50,
+              "reactionTypes": ["like", "love"],
+              "delayBeforeAction": { "from": 5, "to": 10 }
+            },
+            "view_full_content": {
+              "enabled": true,
+              "selectionPercent": 70,
+              "readingDurationAfterExpand": { "from": 8, "to": 15 }
+            },
+            "share_post": { "enabled": false },
+            "comment_text_post": { "enabled": false },
+            "comment_image_post": { "enabled": false },
+            "reaction_comment": {
+              "enabled": true,
+              "maxReactionsPerPost": 2,
+              "reactionTypes": ["like"]
+            }
+          }
+        }, null, 2);
+
+      } else {
+        const titleUpper = topicName.toUpperCase();
+        previewTextarea.value = `🎯 CHỦ ĐỀ: ${titleUpper} (Thực thể: party, state, general_secretary)
+
+- HÀNH ĐỘNG 1: Bày tỏ cảm xúc bài viết (reaction_post)
+  + Bài khen ngợi, ủng hộ: Thả Tim ❤️ (Tỷ lệ: 100%, Delay: 5-10s)
+  + Bài bôi nhọ, xuyên tạc: Thả Phẫn nộ 😡 (Tỷ lệ: 100%, Delay: 3-6s)
+  + Fallback bài trung lập: Bỏ qua không thả cảm xúc
+
+- HÀNH ĐỘNG 2: Bình luận ảnh trên bài viết (comment_image_post)
+  + Đăng 1 ảnh từ thư mục: E:/OSINT/Kho_Anh_Tuyen_Truyen (Tỷ lệ: 30%, Xóa ảnh sau khi đăng: Có)
+
+- HÀNH ĐỘNG 3: Trả lời bình luận nguồn (reply_comment)
+  + Quét tối đa 20 comment nổi bật trên bài viết
+  + Comment bôi nhọ Lãnh đạo: AI Reply dẫn chứng thực tế (Quota: 2 comment/bài, Delay: 20-40s)
+  + Fallback khi không có comment xấu: Hoàn thành bài viết & lướt tiếp`;
+
+        preJson.textContent = JSON.stringify({
+          "ruleName": topicName,
+          "entities": ["party", "state", "general_secretary"],
+          "actions": [
+            {
+              "type": "reaction_post",
+              "conditions": [
+                { "sentiment": "positive", "reaction": "love", "percent": 100, "delay": "5-10s" },
+                { "sentiment": "negative", "reaction": "angry", "percent": 100, "delay": "3-6s" }
+              ],
+              "fallback": "skip"
+            },
+            {
+              "type": "comment_image_post",
+              "folderPath": "E:/OSINT/Kho_Anh_Tuyen_Truyen",
+              "deleteAfterUse": true
+            },
+            {
+              "type": "reply_comment",
+              "scanLimit": 20,
+              "scenarios": [
+                { "target": "general_secretary", "stance": "attacks", "tactic": "debunk_facts", "quota": 2, "delay": "20-40s" }
+              ],
+              "fallback": "complete_and_scroll"
+            }
+          ]
+        }, null, 2);
+      }
+
+      hasAiGenerated = true;
+      updateSaveButtonState();
+      alert('AI đã phân tích câu mô tả và sinh ra cấu hình Preview & JSON thành công!');
+    }
+
+    // 11. UPDATE JSON FROM PREVIEW TEXT
+    function updateJsonFromPreviewText() {
+      const text = document.getElementById('textareaStructuredPreview').value;
+      const preJson = document.getElementById('preSubmodalJson');
+
+      let quota = 2;
+      if (text.includes('Quota: 1') || text.includes('tối đa 1')) quota = 1;
+      if (text.includes('Quota: 3') || text.includes('tối đa 3')) quota = 3;
+
+      let angryReaction = "angry";
+      if (text.includes('Haha') || text.includes('😄')) angryReaction = "haha";
+
+      const updatedPayload = {
+        "ruleName": document.getElementById('inputSubmodalTopicName').value || "Chủ đề cấu hình",
+        "updatedFrom": "Structured Preview Text Sync",
+        "quotaReply": quota,
+        "reactionForNegative": angryReaction,
+        "rawPreviewContent": text
+      };
+
+      preJson.textContent = JSON.stringify(updatedPayload, null, 2);
+      alert('Đã cập nhật dữ liệu JSON Schema thành công từ bản Preview vừa sửa!');
+    }
+
+    // 12. SWITCH SUBMODAL VIEW (PREVIEW vs JSON)
+    function switchSubmodalView(view) {
+      const btnPreview = document.getElementById('btnSubViewPreview');
+      const btnJson = document.getElementById('btnSubViewJson');
+      const blockPreview = document.getElementById('submodalViewPreviewBlock');
+      const blockJson = document.getElementById('submodalViewJsonBlock');
+
+      if (view === 'preview') {
+        btnPreview.classList.add('active');
+        btnJson.classList.remove('active');
+        blockPreview.style.display = 'block';
+        blockJson.style.display = 'none';
+      } else {
+        btnJson.classList.add('active');
+        btnPreview.classList.remove('active');
+        blockPreview.style.display = 'none';
+        blockJson.style.display = 'block';
+      }
+    }
+
+    // 13. SAVE SUBMODAL CONFIG
+    function saveSubmodalConfig() {
+      if (currentSubmodalTarget === 'default') {
+        alert('Đã cập nhật cấu hình Tương tác Mặc định thành công!');
+      } else {
+        const topicName = document.getElementById('inputSubmodalTopicName').value.trim() || 'Chủ đề mới';
+        addNewTopicCardToList(topicName);
+        alert(`Đã lưu quy tắc '${topicName}' thành công!`);
+      }
+      closeAiConfigModal();
+    }
+
+    // 14. ADD NEW TOPIC CARD TO LIST
+    function addNewTopicCardToList(name) {
+      const container = document.getElementById('topicRulesContainer');
+      const count = container.children.length + 1;
+      const card = document.createElement('div');
+      card.className = 'topic-rule-card';
+      const cardId = 'cardRule' + count;
+      card.id = cardId;
+
+      const previewText = document.getElementById('textareaStructuredPreview').value.trim();
+      const jsonText = document.getElementById('preSubmodalJson').textContent.trim();
+
+      card.innerHTML = `
+        <div class="topic-rule-card-header" onclick="toggleRuleCardExpand(event, '${cardId}')">
+          <div class="rule-title-group">
+            <button class="btn-expand-rule" type="button" title="Thu gọn / Mở rộng">
+              <svg viewBox="64 64 896 896" width="11" height="11" fill="currentColor">
+                <path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"/>
+              </svg>
+            </button>
+            <span class="rule-badge-priority">#${count}</span>
+            <span class="rule-card-name">${name}</span>
+          </div>
+
+          <div class="rule-actions-cluster" onclick="event.stopPropagation()">
+            <button class="btn-icon-action" title="Chỉnh sửa" onclick="openAiConfigModal('topic', '${name}')">
+              <svg viewBox="64 64 896 896" width="13" height="13" fill="currentColor">
+                <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l57.2 57.2-362.7 362.6-68.9 12 11.7-69.2zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z"/>
+              </svg>
+            </button>
+            <button class="btn-icon-action delete" title="Xóa" onclick="deleteRuleCard('${cardId}')">
+              <svg viewBox="64 64 896 896" width="13" height="13" fill="currentColor">
+                <path d="M360 184h-8c4.4 0 8-3.6 8-8v-8h304v8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-39.7-32.3-72-72-72H352c-39.7 0-72 32.3-72 72v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v24c0 4.4 3.6 8 8 8h60.5l45.4 564.8C243.6 907.5 262.3 928 285 928h454c22.7 0 41.4-20.5 43.1-43.2L827.5 320H888c4.4 0 8-3.6 8-8v-24c0-17.7-14.3-32-32-32zM716.4 856H307.6L267 320h490l-40.6 536z"/>
+              </svg>
+            </button>
+            <label class="switch-toggle" title="Bật/Tắt quy tắc này">
+              <input type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="topic-rule-card-body">
+          <div style="background: #f8fafc; border-bottom: 1px solid var(--border-color); padding: 6px 16px; display: flex; justify-content: flex-end;">
+            <div class="view-mode-tabs">
+              <button class="view-tab-btn active" id="btn${capitalize(cardId)}ViewPreview" onclick="switchRuleView('${cardId}', 'preview')">Preview</button>
+              <button class="view-tab-btn" id="btn${capitalize(cardId)}ViewJson" onclick="switchRuleView('${cardId}', 'json')">JSON</button>
+            </div>
+          </div>
+
+          <div class="rule-preview-scroll-container" id="${cardId}ContentPreview">
+            <div class="preview-body-content" style="white-space: pre-line;">${previewText}</div>
+          </div>
+
+          <div class="rule-preview-scroll-container" id="${cardId}ContentJson" style="display: none; padding: 10px; background: #0f172a;">
+            <pre class="code-view-pre" style="padding: 0; background: transparent;">${jsonText}</pre>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    }
+
+    // 15. DELETE RULE CARD
+    function deleteRuleCard(cardId) {
+      if (confirm('Bạn có chắc chắn muốn xóa quy tắc chủ đề này không?')) {
+        document.getElementById(cardId).remove();
+      }
+    }
+
+    // 16. TOÀN BỘ PREVIEW VÀ JSON TỔNG HỢP CÁC QUY TẮC CHỦ ĐỀ
+    // (SỬ DỤNG textContent ĐỂ LẤY ĐẦY ĐỦ 100% NỘI DUNG KỂ CẢ KHI CÁC QUY TẮC ĐANG THU GỌN)
+    function openAllRulesSummaryModal(view = 'preview') {
+      const modal = document.getElementById('allRulesSummaryModal');
+      switchAllRulesView(view);
+      generateAllRulesAggregatedContent();
+      modal.classList.add('open');
+    }
+
+    function closeAllRulesSummaryModal() {
+      document.getElementById('allRulesSummaryModal').classList.remove('open');
+    }
+
+    function switchAllRulesView(view) {
+      const btnPrev = document.getElementById('btnAllRulesViewPreview');
+      const btnJson = document.getElementById('btnAllRulesViewJson');
+      const blockPrev = document.getElementById('allRulesViewPreviewBlock');
+      const blockJson = document.getElementById('allRulesViewJsonBlock');
+
+      if (view === 'preview') {
+        btnPrev.classList.add('active');
+        btnJson.classList.remove('active');
+        blockPrev.style.display = 'block';
+        blockJson.style.display = 'none';
+      } else {
+        btnJson.classList.add('active');
+        btnPrev.classList.remove('active');
+        blockPrev.style.display = 'none';
+        blockJson.style.display = 'block';
+      }
+    }
+
+    function generateAllRulesAggregatedContent() {
+      const matchingPolicy = document.getElementById('matchingPolicySelect').value;
+      const policyLabel = matchingPolicy === 'first_match'
+        ? 'Thứ tự ưu tiên (Dừng ở rule đầu tiên khớp)'
+        : 'Đa chủ đề kết hợp (Chạy tất cả rule khớp)';
+
+      const chkDefault = document.getElementById('chkEnableDefaultRule');
+      const isDefaultEnabled = chkDefault ? chkDefault.checked : true;
+
+      const cards = document.querySelectorAll('#topicRulesContainer .topic-rule-card');
+      const rulesJsonList = [];
+
+      let fullPreviewText = `📋 TỔNG HỢP TOÀN BỘ CẤU HÌNH TƯƠNG TÁC THEO CHỦ ĐỀ\n`;
+      fullPreviewText += `• Cơ chế đối chiếu: ${policyLabel}\n`;
+      fullPreviewText += `• Tổng số quy tắc cấu hình: ${cards.length} quy tắc\n\n`;
+
+      cards.forEach((card, index) => {
+        const nameEl = card.querySelector('.rule-card-name');
+        const name = nameEl ? nameEl.textContent.trim() : `Quy tắc #${index + 1}`;
+        const previewEl = card.querySelector('.preview-body-content');
+        const jsonEl = card.querySelector('.code-view-pre');
+        const checkboxEl = card.querySelector('input[type="checkbox"]');
+        const isToggleChecked = checkboxEl ? checkboxEl.checked : true;
+
+        // Lấy trọn vẹn văn bản phân cấp bằng textContent (hoạt động hoàn hảo ngay cả khi thẻ đang thu gọn)
+        const pText = previewEl ? previewEl.textContent.trim() : '';
+
+        fullPreviewText += `==================================================\n`;
+        fullPreviewText += `QUY TẮC #${index + 1}: ${name.toUpperCase()} [${isToggleChecked ? 'ĐANG BẬT' : 'ĐÃ TẮT'}]\n`;
+        fullPreviewText += `==================================================\n`;
+        if (pText) {
+          fullPreviewText += `${pText}\n\n`;
+        } else {
+          fullPreviewText += `(Chưa có nội dung mô tả kịch bản)\n\n`;
+        }
+
+        if (jsonEl) {
+          const jText = jsonEl.textContent.trim();
+          try {
+            const parsed = JSON.parse(jText);
+            parsed.enabled = isToggleChecked;
+            rulesJsonList.push(parsed);
+          } catch (e) {
+            rulesJsonList.push({ "ruleIndex": index + 1, "ruleName": name, "enabled": isToggleChecked, "content": jText });
+          }
+        }
+      });
+
+      fullPreviewText += `==================================================\n`;
+      fullPreviewText += `QUY TẮC (MẶC ĐỊNH) [${isDefaultEnabled ? 'ĐANG BẬT' : 'ĐÃ TẮT'}]:\n`;
+      fullPreviewText += `+ Tự động áp dụng cho các bài viết: ${isDefaultEnabled ? 'Có (Áp dụng bộ hành vi tương tác mặc định)' : 'Không (Bỏ qua không tương tác)'}\n`;
+      fullPreviewText += `==================================================`;
+
+      // Cập nhật nội dung đầy đủ vào khung Preview
+      document.getElementById('allRulesPreviewContent').textContent = fullPreviewText;
+
+      const fullJsonPayload = {
+        "mode": "topic_based",
+        "matchingPolicy": matchingPolicy,
+        "totalRules": cards.length,
+        "rules": rulesJsonList,
+        "defaultRule": {
+          "enabled": isDefaultEnabled,
+          "description": isDefaultEnabled ? "Áp dụng bộ hành vi tương tác mặc định" : "Không tương tác"
+        }
+      };
+
+      // Cập nhật nội dung đầy đủ vào khung JSON
+      document.getElementById('allRulesJsonContent').textContent = JSON.stringify(fullJsonPayload, null, 2);
+    }
+
+    function copyAllRulesContent() {
+      const isPreview = document.getElementById('btnAllRulesViewPreview').classList.contains('active');
+      const textToCopy = isPreview
+        ? document.getElementById('allRulesPreviewContent').textContent
+        : document.getElementById('allRulesJsonContent').textContent;
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        alert(isPreview ? 'Đã sao chép toàn bộ văn bản Preview thành công!' : 'Đã sao chép toàn bộ mã JSON Schema thành công!');
+      }).catch(() => {
+        alert('Đã chọn văn bản, bạn có thể bấm Ctrl+C để sao chép.');
+      });
+    }
+
+    function saveGlobalActionConfig() {
+      const modeName = currentConfigMode === 'default' ? 'Tương tác mặc định (Cơ bản)' : 'Tương tác theo chủ đề (Nâng cao)';
+      alert(`Đã lưu thành công cấu hình hành động Tương tác Newsfeed với chế độ: '${modeName}'!`);
+    }
+  </script>
+</body>
+
+</html>

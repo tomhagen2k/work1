@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1950 1320" font-family="Segoe UI,Arial" font-weight="700">
+<rect width="1950" height="1320" fill="#e9f5df"/>
+<line x1="100" y1="100" x2="450" y2="100" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="450" y1="100" x2="800" y2="100" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="800" y1="100" x2="1150" y2="100" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="1150" y1="100" x2="1500" y2="100" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="1500" y1="100" x2="1850" y2="100" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="100" y1="450" x2="450" y2="450" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="450" y1="450" x2="800" y2="450" stroke="#e8590c" stroke-width="26" stroke-linecap="round"/>
+<line x1="800" y1="450" x2="1150" y2="450" stroke="#e8590c" stroke-width="26" stroke-linecap="round"/>
+<line x1="1150" y1="450" x2="1500" y2="450" stroke="#e8590c" stroke-width="26" stroke-linecap="round"/>
+<line x1="1500" y1="450" x2="1850" y2="450" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="100" y1="800" x2="450" y2="800" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="450" y1="800" x2="800" y2="800" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="800" y1="800" x2="1150" y2="800" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="1150" y1="800" x2="1500" y2="800" stroke="#8d6e63" stroke-width="26" stroke-linecap="round" stroke-dasharray="22 12"/>
+<line x1="1500" y1="800" x2="1850" y2="800" stroke="#8d6e63" stroke-width="26" stroke-linecap="round" stroke-dasharray="22 12"/>
+<line x1="450" y1="100" x2="450" y2="450" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="450" y1="450" x2="450" y2="800" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="450" y1="800" x2="450" y2="1150" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="800" y1="100" x2="800" y2="450" stroke="#a3a3a3" stroke-width="12" stroke-linecap="round"/>
+<line x1="800" y1="450" x2="800" y2="800" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="800" y1="800" x2="800" y2="1150" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="1150" y1="100" x2="1150" y2="450" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="1150" y1="450" x2="1150" y2="800" stroke="#8d6e63" stroke-width="26" stroke-linecap="round" stroke-dasharray="22 12"/>
+<line x1="1150" y1="800" x2="1150" y2="1150" stroke="#8d6e63" stroke-width="26" stroke-linecap="round" stroke-dasharray="22 12"/>
+<line x1="1500" y1="100" x2="1500" y2="450" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="1500" y1="450" x2="1500" y2="800" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="1500" y1="800" x2="1500" y2="1150" stroke="#a3a3a3" stroke-width="12" stroke-linecap="round"/>
+<line x1="1850" y1="100" x2="1850" y2="450" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="1850" y1="450" x2="1850" y2="800" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="1850" y1="800" x2="1850" y2="1150" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="100" y1="1150" x2="450" y2="1150" stroke="#1f6feb" stroke-width="40" stroke-linecap="round"/>
+<line x1="450" y1="1150" x2="800" y2="1150" stroke="#1f6feb" stroke-width="40" stroke-linecap="round"/>
+<line x1="800" y1="1150" x2="1150" y2="1150" stroke="#1f6feb" stroke-width="40" stroke-linecap="round"/>
+<line x1="1150" y1="1150" x2="1500" y2="1150" stroke="#1f6feb" stroke-width="40" stroke-linecap="round"/>
+<line x1="1500" y1="1150" x2="1850" y2="1150" stroke="#1f6feb" stroke-width="40" stroke-linecap="round"/>
+<line x1="100" y1="100" x2="100" y2="450" stroke="#1f6feb" stroke-width="40" stroke-linecap="round"/>
+<line x1="100" y1="450" x2="100" y2="800" stroke="#1f6feb" stroke-width="40" stroke-linecap="round"/>
+<line x1="100" y1="800" x2="100" y2="1150" stroke="#1f6feb" stroke-width="40" stroke-linecap="round"/>
+<circle cx="100" cy="100" r="7" fill="#fff" opacity=".8"/>
+<circle cx="100" cy="450" r="7" fill="#fff" opacity=".8"/>
+<circle cx="100" cy="800" r="7" fill="#fff" opacity=".8"/>
+<circle cx="100" cy="1150" r="7" fill="#fff" opacity=".8"/>
+<circle cx="450" cy="100" r="7" fill="#fff" opacity=".8"/>
+<circle cx="450" cy="450" r="7" fill="#fff" opacity=".8"/>
+<circle cx="450" cy="800" r="7" fill="#fff" opacity=".8"/>
+<circle cx="450" cy="1150" r="7" fill="#fff" opacity=".8"/>
+<circle cx="800" cy="100" r="7" fill="#fff" opacity=".8"/>
+<circle cx="800" cy="450" r="7" fill="#fff" opacity=".8"/>
+<circle cx="800" cy="800" r="7" fill="#fff" opacity=".8"/>
+<circle cx="800" cy="1150" r="7" fill="#fff" opacity=".8"/>
+<circle cx="1150" cy="100" r="7" fill="#fff" opacity=".8"/>
+<circle cx="1150" cy="450" r="7" fill="#fff" opacity=".8"/>
+<circle cx="1150" cy="800" r="7" fill="#fff" opacity=".8"/>
+<circle cx="1150" cy="1150" r="7" fill="#fff" opacity=".8"/>
+<circle cx="1500" cy="100" r="7" fill="#fff" opacity=".8"/>
+<circle cx="1500" cy="450" r="7" fill="#fff" opacity=".8"/>
+<circle cx="1500" cy="800" r="7" fill="#fff" opacity=".8"/>
+<circle cx="1500" cy="1150" r="7" fill="#fff" opacity=".8"/>
+<circle cx="1850" cy="100" r="7" fill="#fff" opacity=".8"/>
+<circle cx="1850" cy="450" r="7" fill="#fff" opacity=".8"/>
+<circle cx="1850" cy="800" r="7" fill="#fff" opacity=".8"/>
+<circle cx="1850" cy="1150" r="7" fill="#fff" opacity=".8"/>
+<rect x="76.0" y="951.0" width="48" height="48" rx="8" fill="#1c7ed6" stroke="#fff" stroke-width="5"/>
+<text x="134.0" y="983.0" text-anchor="start" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Kho A</text>
+<rect x="1826.0" y="251.0" width="48" height="48" rx="8" fill="#1c7ed6" stroke="#fff" stroke-width="5"/>
+<text x="1816.0" y="283.0" text-anchor="end" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Kho B</text>
+<circle cx="975.0" cy="100.0" r="26" fill="#f76707" stroke="#fff" stroke-width="5"/>
+<text x="975.0" y="109.0" text-anchor="middle" font-size="26" fill="#fff">2</text>
+<text x="975.0" y="58.0" text-anchor="middle" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Chợ ← Kho A</text>
+<circle cx="1500.0" cy="625.0" r="26" fill="#f76707" stroke="#fff" stroke-width="5"/>
+<text x="1500.0" y="634.0" text-anchor="middle" font-size="26" fill="#fff">1</text>
+<text x="1534.0" y="633.0" text-anchor="start" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Trường · hạn 60s ← Kho B</text>
+<circle cx="625.0" cy="800.0" r="26" fill="#f76707" stroke="#fff" stroke-width="5"/>
+<text x="625.0" y="809.0" text-anchor="middle" font-size="26" fill="#fff">2</text>
+<text x="625.0" y="758.0" text-anchor="middle" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Khu nhà ← Kho A</text>
+<circle cx="1850.0" cy="975.0" r="26" fill="#f76707" stroke="#fff" stroke-width="5"/>
+<text x="1850.0" y="984.0" text-anchor="middle" font-size="26" fill="#fff">3</text>
+<text x="1816.0" y="983.0" text-anchor="end" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Cảng ← Kho B</text>
+<g transform="translate(140.0,450.0) rotate(0.0)"><path d="M-22 -16 L22 0 L-22 16 Z" fill="#2b8a3e" stroke="#fff" stroke-width="4"/></g>
+<line x1="40" y1="1285" x2="100" y2="1285" stroke="#6b7280" stroke-width="20"/>
+<text x="112" y="1293" font-size="24" fill="#1d2733">Đường thường</text>
+<line x1="370" y1="1285" x2="430" y2="1285" stroke="#1f6feb" stroke-width="20"/>
+<text x="442" y="1293" font-size="24" fill="#1d2733">Đường lớn (nhanh)</text>
+<line x1="700" y1="1285" x2="760" y2="1285" stroke="#e8590c" stroke-width="20"/>
+<text x="772" y="1293" font-size="24" fill="#1d2733">Đường đông</text>
+<line x1="1030" y1="1285" x2="1090" y2="1285" stroke="#8d6e63" stroke-width="20" stroke-dasharray="22 12"/>
+<text x="1102" y="1293" font-size="24" fill="#1d2733">Gồ ghề</text>
+<line x1="1360" y1="1285" x2="1420" y2="1285" stroke="#a3a3a3" stroke-width="12"/>
+<text x="1432" y="1293" font-size="24" fill="#1d2733">Hẻm (chỉ xe máy)</text>
+</svg>

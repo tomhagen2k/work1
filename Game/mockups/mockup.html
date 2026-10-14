@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=844,initial-scale=1">
+<title>Mockup giao diện chơi</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:844px;height:390px;overflow:hidden;background:#222;font-family:"Nunito","Segoe UI",sans-serif}
+  #phone{position:relative;width:844px;height:390px;overflow:hidden}
+  #map{position:absolute;inset:0}
+  #hud{position:absolute;inset:0;pointer-events:none}
+  .abs{position:absolute}
+  svg.ic{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  .dim{opacity:.62;filter:grayscale(.85)}
+  .glow{box-shadow:0 0 0 3px #ffd84d,0 0 16px 6px rgba(255,214,60,.85)!important}
+  .label{font-size:9px;font-weight:800;letter-spacing:.2px;margin-top:1px}
+
+  /* ---------- V1: Góc truyền thống ---------- */
+  .v1 .card{background:rgba(255,255,255,.95);border-radius:14px;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+  .v1 .mis{left:10px;top:10px;width:226px;padding:8px 10px}
+  .v1 .mis h4{font-size:11px;color:#4a5260;font-weight:900;margin-bottom:4px;display:flex;justify-content:space-between}
+  .v1 .row{display:flex;align-items:center;gap:7px;padding:4px 0;border-top:1px solid #eef0f2;font-size:11px;color:#2d3440;font-weight:700}
+  .v1 .row .ico{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;color:#fff;flex:none}
+  .v1 .row .ico svg{width:15px;height:15px}
+  .v1 .row .t{flex:1;line-height:1.15}
+  .v1 .row .t small{display:block;color:#7b8494;font-size:9.5px;font-weight:700}
+  .v1 .dl{font-size:10px;font-weight:900;padding:2px 6px;border-radius:8px;background:#eef1f5;color:#4a5260}
+  .v1 .dl.warn{background:#ff5a4f;color:#fff}
+  .v1 .row.lock{opacity:.6}
+  .v1 .timer{left:50%;transform:translateX(-50%);top:10px;padding:4px 18px;display:flex;align-items:center;gap:8px;font-size:28px;font-weight:900;color:#2d3440}
+  .v1 .timer svg{width:24px;height:24px;color:#2d3440}
+  .v1 .veh{left:50%;transform:translateX(-50%);top:58px;padding:3px 12px;font-size:11px;font-weight:800;color:#2d3440;display:flex;gap:6px;align-items:center}
+  .v1 .veh b{color:#e8590c}
+  .v1 .mm{right:10px;top:10px;width:132px;height:90px;border-radius:14px;overflow:hidden;border:3px solid #fff;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+  .v1 .rbtn{width:54px;height:54px;border-radius:50%;background:#fff;box-shadow:0 4px 0 rgba(0,0,0,.18);display:grid;place-items:center;color:#2d3440;text-align:center}
+  .v1 .rbtn .in{display:flex;flex-direction:column;align-items:center}
+  .v1 .pause{right:150px;top:10px;width:40px;height:40px}
+  .v1 .pause svg{width:18px;height:18px}
+  .v1 .bl{left:16px;bottom:14px;display:flex;gap:12px;align-items:flex-end}
+  .v1 .br{right:16px;bottom:14px;display:flex;gap:12px;align-items:flex-end}
+  .v1 .big{width:66px;height:66px}
+  .v1 .stop{background:#ff5a4f;color:#fff}
+  .v1 .go{background:#37c26b;color:#fff}
+  .v1 .act{left:50%;transform:translateX(-50%);bottom:16px;display:flex;gap:10px}
+  .v1 .pill{background:#fff;border-radius:24px;padding:10px 18px;font-weight:900;font-size:13px;color:#2d3440;box-shadow:0 4px 0 rgba(0,0,0,.18);display:flex;gap:6px;align-items:center}
+
+  /* ---------- V2: Bảng bên trái ---------- */
+  .v2 .side{left:0;top:0;bottom:0;width:212px;background:rgba(250,251,252,.96);box-shadow:4px 0 0 rgba(0,0,0,.08);padding:10px 12px;display:flex;flex-direction:column}
+  .v2 .tm{display:flex;align-items:baseline;gap:8px}
+  .v2 .tm b{font-size:34px;font-weight:900;color:#1f2a37;line-height:1}
+  .v2 .tm span{font-size:10px;color:#6b7686;font-weight:800}
+  .v2 .bar{height:6px;border-radius:4px;background:#e4e8ee;margin:6px 0 8px;overflow:hidden}
+  .v2 .bar i{display:block;height:100%;width:52%;background:#f2a93b}
+  .v2 .vh{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid #e4e8ee;border-radius:10px;padding:5px 8px;font-size:11px;font-weight:800;color:#1f2a37}
+  .v2 .slots{display:flex;gap:3px;margin-left:auto}
+  .v2 .slots i{width:12px;height:12px;border-radius:3px;background:#e8590c}
+  .v2 .mt{font-size:10px;font-weight:900;color:#6b7686;margin:9px 0 4px;letter-spacing:.5px}
+  .v2 .m{background:#fff;border:1.5px solid #e4e8ee;border-left:5px solid #2f80ed;border-radius:8px;padding:5px 8px;margin-bottom:5px;font-size:11px;font-weight:800;color:#1f2a37}
+  .v2 .m small{display:flex;justify-content:space-between;color:#6b7686;font-size:9.5px;font-weight:800;margin-top:2px}
+  .v2 .m.warn{border-left-color:#ff5a4f;background:#fff4f3}
+  .v2 .m.warn small b{color:#e03131}
+  .v2 .m.lock{opacity:.55;border-left-color:#f5b800}
+  .v2 .prog{height:4px;background:#eef1f5;border-radius:3px;margin-top:3px;overflow:hidden}
+  .v2 .prog i{display:block;height:100%;background:#2f80ed}
+  .v2 .turns{margin-top:auto;display:flex;gap:10px}
+  .v2 .tb{flex:1;height:58px;border-radius:14px;background:#fff;border:2px solid #dfe4ea;display:grid;place-items:center;color:#1f2a37;box-shadow:0 3px 0 rgba(0,0,0,.12)}
+  .v2 .tb .in{display:flex;flex-direction:column;align-items:center}
+  .v2 .mm{right:10px;top:10px;width:150px;height:100px;border-radius:12px;overflow:hidden;border:3px solid #fff;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+  .v2 .pz{right:168px;top:10px;width:40px;height:40px;border-radius:12px;background:#fff;display:grid;place-items:center;color:#1f2a37;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+  .v2 .pz svg{width:18px;height:18px}
+  .v2 .ctl{right:14px;bottom:14px;display:flex;gap:10px;align-items:flex-end}
+  .v2 .sq{width:62px;height:62px;border-radius:16px;display:grid;place-items:center;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.2)}
+  .v2 .sq .in{display:flex;flex-direction:column;align-items:center}
+  .v2 .act{right:14px;bottom:88px;display:flex;gap:8px}
+  .v2 .ab{background:#fff;border-radius:12px;padding:8px 12px;font-size:12px;font-weight:900;color:#1f2a37;box-shadow:0 3px 0 rgba(0,0,0,.15);display:flex;gap:6px;align-items:center}
+
+  /* ---------- V3: Tối giản nổi ---------- */
+  .v3 .chip{background:rgba(20,28,38,.82);backdrop-filter:blur(4px);color:#fff;border-radius:22px}
+  .v3 .tm{left:12px;top:12px;padding:5px 14px;font-size:24px;font-weight:900;display:flex;align-items:center;gap:7px}
+  .v3 .tm svg{width:20px;height:20px}
+  .v3 .ms{left:12px;top:56px;display:flex;gap:8px}
+  .v3 .mc{width:50px;height:50px;border-radius:50%;position:relative;display:grid;place-items:center}
+  .v3 .mc svg.ring{position:absolute;inset:0;width:50px;height:50px;transform:rotate(-90deg)}
+  .v3 .mc .c{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;color:#fff;font-size:9.5px;font-weight:900;line-height:1}
+  .v3 .mc .c svg{width:16px;height:16px;margin-bottom:2px}
+  .v3 .mc .dd{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:900;padding:1px 5px;border-radius:7px;background:#fff;color:#1d2733;white-space:nowrap}
+  .v3 .mc.warn .dd{background:#ff4d42;color:#fff}
+  .v3 .mc.lock{opacity:.6}
+  .v3 .radar{right:12px;top:12px;width:96px;height:96px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,255,255,.9);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  .v3 .pz{right:116px;top:12px;width:36px;height:36px;display:grid;place-items:center}
+  .v3 .pz svg{width:16px;height:16px}
+  .v3 .tl{left:14px;bottom:14px;display:flex;gap:10px}
+  .v3 .tbtn{width:70px;height:62px;display:grid;place-items:center;background:rgba(255,255,255,.82);border:2px solid #fff;color:#1d2733;border-radius:20px;backdrop-filter:blur(3px)}
+  .v3 .tbtn svg{width:30px;height:30px}
+  .v3 .tr{right:14px;bottom:14px;display:flex;gap:10px;align-items:flex-end}
+  .v3 .tog{width:76px;height:76px;border-radius:50%;background:rgba(255,77,66,.9);border:3px solid #fff;color:#fff;display:grid;place-items:center}
+  .v3 .tog .in{display:flex;flex-direction:column;align-items:center;font-size:10px;font-weight:900}
+  .v3 .ut{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.55);border:2px solid rgba(255,255,255,.9);display:grid;place-items:center;color:#1d2733}
+  .v3 .bub{left:522px;top:176px;background:#fff;border-radius:14px;padding:6px 11px;font-size:11px;font-weight:900;color:#1d2733;box-shadow:0 3px 8px rgba(0,0,0,.25);display:flex;gap:5px;align-items:center}
+  .v3 .bub:after{content:"";position:absolute;left:34px;bottom:-6px;border:6px solid transparent;border-bottom:0;border-top-color:#fff}
+  .v3 .cap{left:344px;top:190px;font-size:10px;font-weight:900;padding:2px 7px;border-radius:9px;background:#e8590c;color:#fff;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+
+  /* ---------- V4: Bảng táp-lô ---------- */
+  .v4 .top{left:10px;top:8px;right:158px;display:flex;gap:6px}
+  .v4 .tk{background:rgba(43,38,33,.85);color:#fff3e0;border-radius:10px;padding:5px 9px;font-size:10.5px;font-weight:800;display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .v4 .tk svg{width:15px;height:15px}
+  .v4 .tk b{background:#ffe8c2;color:#3a2f26;border-radius:6px;padding:1px 5px;font-size:9.5px}
+  .v4 .tk.warn b{background:#ff5a4f;color:#fff}
+  .v4 .tk.lock{opacity:.6}
+  .v4 .mm{right:10px;top:8px;width:140px;height:92px;border-radius:12px;overflow:hidden;border:3px solid #3a332c}
+  .v4 .pz{right:10px;top:106px;width:38px;height:38px;border-radius:10px;background:rgba(43,38,33,.85);color:#fff3e0;display:grid;place-items:center}
+  .v4 .pz svg{width:16px;height:16px}
+  .v4 .dash{left:0;right:0;bottom:0;height:92px;background:linear-gradient(#3a332c,#2a2520);border-top:3px solid #5a4e43;border-radius:26px 26px 0 0;display:flex;align-items:center;padding:0 18px;gap:14px}
+  .v4 .sig{width:74px;height:64px;border-radius:14px;background:#463d35;border:2px solid #5d5147;display:grid;place-items:center;color:#ffb627}
+  .v4 .sig svg{width:34px;height:34px}
+  .v4 .sig.glow{background:#5b4a2a}
+  .v4 .gauge{width:108px;height:108px;margin-top:-34px;border-radius:50%;background:radial-gradient(#3a332c 58%,#2a2520 60%);border:4px solid #5a4e43;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff3e0;position:relative}
+  .v4 .gauge b{font-size:28px;font-weight:900;line-height:1}
+  .v4 .gauge small{font-size:9px;font-weight:800;color:#c9b8a5}
+  .v4 .gauge svg.arc{position:absolute;inset:-4px;width:108px;height:108px;transform:rotate(135deg)}
+  .v4 .load{display:flex;flex-direction:column;gap:4px;color:#fff3e0;font-size:10px;font-weight:800}
+  .v4 .cells{display:flex;gap:4px}
+  .v4 .cells i{width:20px;height:20px;border-radius:5px;background:#ffb627;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
+  .v4 .actb{background:#463d35;border:2px solid #5d5147;color:#fff3e0;border-radius:12px;padding:10px 14px;font-weight:900;font-size:12px;display:flex;gap:6px;align-items:center}
+  .v4 .sp{flex:1}
+  .v4 .ut{width:52px;height:52px;border-radius:12px;background:#463d35;border:2px solid #5d5147;color:#fff3e0;display:grid;place-items:center}
+  .v4 .rock{width:74px;height:74px;border-radius:16px;background:#463d35;border:2px solid #5d5147;display:flex;flex-direction:column;overflow:hidden}
+  .v4 .rock div{flex:1;display:grid;place-items:center;font-size:10px;font-weight:900;color:#fff}
+  .v4 .rock .s{background:#e8463a}
+  .v4 .rock .g{background:#2f6b45;color:#9fc7a9}
+
+  /* ---------- V5: Vé nhiệm vụ / kẹo ---------- */
+  .v5 .tix{left:10px;top:10px;display:flex;gap:7px}
+  .v5 .tkt{width:118px;background:#fff;border-radius:12px;padding:6px 8px 6px 10px;box-shadow:0 4px 0 #c9b6f0;position:relative;font-size:10px;font-weight:800;color:#3b2e5a}
+  .v5 .tkt:before{content:"";position:absolute;left:-5px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#a7e3c4}
+  .v5 .tkt .h{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:900}
+  .v5 .tkt .h svg{width:14px;height:14px}
+  .v5 .tkt .n{font-size:18px;font-weight:900;color:#6c4ad6;line-height:1.1}
+  .v5 .tkt .n span{font-size:10px;color:#9a8cc0}
+  .v5 .tkt .d{display:inline-block;background:#f1ecff;color:#6c4ad6;padding:1px 6px;border-radius:7px;font-size:9.5px}
+  .v5 .tkt.warn{box-shadow:0 4px 0 #ffb3ad}
+  .v5 .tkt.warn .d{background:#ff6b5e;color:#fff}
+  .v5 .tkt.lock{opacity:.65}
+  .v5 .clock{left:50%;margin-left:30px;top:6px;width:92px;height:92px;border-radius:50%;background:#ffd84d;border:5px solid #fff;box-shadow:0 5px 0 #e0a800;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#3b2e5a}
+  .v5 .clock b{font-size:28px;font-weight:900;line-height:1}
+  .v5 .clock small{font-size:9px;font-weight:900}
+  .v5 .mm{right:10px;top:10px;width:128px;height:88px;border-radius:16px;overflow:hidden;border:4px solid #fff;box-shadow:0 4px 0 #c9b6f0}
+  .v5 .pz{right:10px;top:108px;width:42px;height:42px;border-radius:14px;background:#fff;box-shadow:0 4px 0 #c9b6f0;display:grid;place-items:center;color:#6c4ad6}
+  .v5 .pz svg{width:18px;height:18px}
+  .v5 .veh{right:58px;top:110px;background:#fff;border-radius:12px;padding:5px 10px;font-size:10.5px;font-weight:900;color:#3b2e5a;box-shadow:0 4px 0 #c9b6f0;display:flex;gap:5px;align-items:center}
+  .v5 .veh i{display:inline-block;width:10px;height:10px;border-radius:3px;background:#ff8a3d}
+  .v5 .cb{border-radius:18px;display:grid;place-items:center;color:#fff;font-weight:900}
+  .v5 .cb .in{display:flex;flex-direction:column;align-items:center;font-size:10px}
+  .v5 .bl{left:14px;bottom:14px;display:flex;gap:10px}
+  .v5 .turn{width:68px;height:62px;background:#ffc93c;box-shadow:0 5px 0 #d99a00;color:#3b2e5a}
+  .v5 .br{right:14px;bottom:14px;display:flex;gap:10px;align-items:flex-end}
+  .v5 .stop{width:70px;height:70px;background:#ff6b5e;box-shadow:0 5px 0 #c9392e}
+  .v5 .go{width:70px;height:70px;background:#3ccf7d;box-shadow:0 5px 0 #24995a}
+  .v5 .ut{width:52px;height:52px;background:#9b7bff;box-shadow:0 5px 0 #6c4ad6}
+  .v5 .act{left:50%;transform:translateX(-50%);bottom:16px}
+  .v5 .ab{background:#ff8a3d;box-shadow:0 5px 0 #d4621c;border-radius:20px;padding:11px 20px;color:#fff;font-weight:900;font-size:13px;display:flex;gap:6px;align-items:center}
+</style>
+</head>
+<body>
+<div id="phone"><svg id="map" viewBox="0 0 844 390" xmlns="http://www.w3.org/2000/svg"></svg><div id="hud"></div></div>
+<script>
+const V = new URLSearchParams(location.search).get('v') || '1';
+const PAL = {
+  day:   {grass:'#8fd16a',dot:'#a8e07f',road:'#4a4f57',walk:'#dfe2d9',line:'#f6f6f2',wall:'#f1e9dc',tree:'#5aa83a',treeD:'#3f8526',roofs:['#c4623f','#5b6b7d','#8b6a52','#4f7a5a','#b0563a','#6d5f8a'],shadow:'rgba(0,0,0,.18)'},
+  fresh: {grass:'#88cf7a',dot:'#9edb8e',road:'#474d58',walk:'#e6e8e3',line:'#ffffff',wall:'#f6f2ea',tree:'#4fae5c',treeD:'#378a45',roofs:['#d0674a','#4f6d8f','#9a7b5c','#3f8a6b','#c58b3c','#7d6aa0'],shadow:'rgba(0,0,0,.16)'},
+  soft:  {grass:'#a7d98c',dot:'#b7e19f',road:'#5a606a',walk:'#eceee8',line:'#ffffff',wall:'#f7f4ee',tree:'#79b85a',treeD:'#5d9a43',roofs:['#d9896c','#7a8ea6','#b39b80','#7aa58a','#d3aa6a','#9a8fb5'],shadow:'rgba(0,0,0,.12)'},
+  warm:  {grass:'#e3c88d',dot:'#ecd6a6',road:'#56493f',walk:'#f3e5cc',line:'#fff6e4',wall:'#f8ecd8',tree:'#7ea85a',treeD:'#5f8a40',roofs:['#c4552f','#9c4a2c','#d07a3a','#7a5a44','#b8682e','#8d3f2a'],shadow:'rgba(60,30,0,.2)'},
+  candy: {grass:'#a7e3c4',dot:'#bdebd3',road:'#5d6787',walk:'#eef1fb',line:'#ffffff',wall:'#ffffff',tree:'#6cc99a',treeD:'#4aa97a',roofs:['#ff8fa3','#7fb2ff','#ffc857','#b39cff','#ff9f6b','#6fd6c9'],shadow:'rgba(60,40,120,.16)'}
+};
+const P = PAL[{1:'day',2:'fresh',3:'soft',4:'warm',5:'candy',6:'day'}[V]];
+const root = document.getElementById('map');
+const NS='http://www.w3.org/2000/svg';
+const svg=document.createElementNS('http://www.w3.org/2000/svg','g');root.appendChild(svg);if(V==='2')svg.setAttribute('transform','translate(110,0)');
+function el(t,a,p=svg){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e;}
+let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
+
+// grass + speckles
+el('rect',{x:-200,y:0,width:1244,height:390,fill:P.grass});
+for(let i=0;i<260;i++)el('circle',{cx:rnd()*844,cy:rnd()*390,r:1+rnd()*1.6,fill:P.dot});
+
+// roads: [x1,y1,x2,y2,width,dashed]
+const roads=[[-140,215,864,215,42,1],[470,-20,470,410,42,1],[140,215,140,410,34,0],[470,55,864,55,34,0],[740,55,740,215,30,0],[640,215,640,410,18,0]];
+const g=el('g',{});
+roads.forEach(r=>el('line',{x1:r[0],y1:r[1],x2:r[2],y2:r[3],stroke:P.walk,'stroke-width':r[4]+14,'stroke-linecap':'square'},g));
+roads.forEach(r=>el('line',{x1:r[0],y1:r[1],x2:r[2],y2:r[3],stroke:P.road,'stroke-width':r[4],'stroke-linecap':'square'},g));
+// center dashes on main roads (skip intersection)
+el('line',{x1:-140,y1:215,x2:440,y2:215,stroke:P.line,'stroke-width':2,'stroke-dasharray':'12 12',opacity:.75});
+el('line',{x1:500,y1:215,x2:864,y2:215,stroke:P.line,'stroke-width':2,'stroke-dasharray':'12 12',opacity:.75});
+el('line',{x1:470,y1:-20,x2:470,y2:185,stroke:P.line,'stroke-width':2,'stroke-dasharray':'12 12',opacity:.75});
+el('line',{x1:470,y1:245,x2:470,y2:410,stroke:P.line,'stroke-width':2,'stroke-dasharray':'12 12',opacity:.75});
+// crosswalks
+function zebra(x,y,w,h,vert){for(let i=0;i<5;i++){vert?el('rect',{x:x,y:y+i*h/5+1,width:w,height:h/10,fill:P.line,opacity:.8}):el('rect',{x:x+i*w/5+1,y:y,width:w/10,height:h,fill:P.line,opacity:.8});}}
+zebra(436,192,8,46,true);zebra(496,192,8,46,true);zebra(447,182,46,8,false);zebra(447,242,46,8,false);
+// stop line before intersection (eastbound lane)
+el('rect',{x:430,y:216,width:4,height:20,fill:'#fff'});
+
+// houses
+function house(x,y,w,h,c){
+  el('rect',{x:x+5,y:y+6,width:w,height:h,fill:P.shadow,rx:2});
+  el('rect',{x:x,y:y,width:w,height:h,fill:P.wall,rx:2});
+  const dark=shade(c,-0.22);
+  if(w>=h){el('polygon',{points:`${x-2},${y-2} ${x+w+2},${y-2} ${x+w-h/2+2},${y+h/2} ${x+h/2-2},${y+h/2}`,fill:c});
+           el('polygon',{points:`${x-2},${y+h+2} ${x+w+2},${y+h+2} ${x+w-h/2+2},${y+h/2} ${x+h/2-2},${y+h/2}`,fill:dark});
+           el('polygon',{points:`${x-2},${y-2} ${x+h/2-2},${y+h/2} ${x-2},${y+h+2}`,fill:shade(c,-.1)});
+           el('polygon',{points:`${x+w+2},${y-2} ${x+w-h/2+2},${y+h/2} ${x+w+2},${y+h+2}`,fill:shade(c,-.32)});}
+  else{el('polygon',{points:`${x-2},${y-2} ${x-2},${y+h+2} ${x+w/2},${y+h-w/2+2} ${x+w/2},${y+w/2-2}`,fill:c});
+       el('polygon',{points:`${x+w+2},${y-2} ${x+w+2},${y+h+2} ${x+w/2},${y+h-w/2+2} ${x+w/2},${y+w/2-2}`,fill:dark});
+       el('polygon',{points:`${x-2},${y-2} ${x+w+2},${y-2} ${x+w/2},${y+w/2-2}`,fill:shade(c,-.1)});
+       el('polygon',{points:`${x-2},${y+h+2} ${x+w+2},${y+h+2} ${x+w/2},${y+h-w/2+2}`,fill:shade(c,-.32)});}
+}
+function shade(hex,p){const n=parseInt(hex.slice(1),16);let r=n>>16,g=(n>>8)&255,b=n&255;const f=v=>Math.max(0,Math.min(255,Math.round(v*(1+p))));return '#'+[f(r),f(g),f(b)].map(v=>v.toString(16).padStart(2,'0')).join('');}
+function tree(x,y,r){
+  el('ellipse',{cx:x+4,cy:y+5,rx:r,ry:r*.85,fill:P.shadow});
+  const pts=[],pts2=[];for(let i=0;i<6;i++){const a=Math.PI/3*i+Math.PI/6;pts.push(`${x+r*Math.cos(a)},${y+r*Math.sin(a)}`);}
+  el('polygon',{points:pts.join(' '),fill:P.tree});
+  el('polygon',{points:`${x},${y} ${pts[0]} ${pts[1]} ${pts[2]}`,fill:P.treeD});
+  el('polygon',{points:`${x},${y} ${pts[5]} ${pts[0]}`,fill:shade(P.treeD,-.1)});
+}
+const R=P.roofs;
+// top-left block
+house(30,110,62,40,R[0]);house(120,105,46,52,R[1]);house(200,118,64,38,R[2]);house(300,108,50,48,R[3]);house(380,120,52,36,R[4]);
+house(40,20,56,36,R[5]);house(150,18,44,40,R[3]);house(250,24,60,34,R[0]);house(360,16,48,44,R[1]);
+// right blocks
+house(510,110,58,40,R[2]);house(600,104,44,52,R[5]);house(660,116,50,38,R[0]);
+house(770,96,52,40,R[1]);house(782,150,44,36,R[4]);
+house(520,4,50,30,R[4]);house(620,6,44,28,R[1]);house(780,2,54,30,R[3]);
+// bottom blocks
+house(10,262,54,40,R[3]);house(14,330,48,40,R[0]);
+house(180,262,50,44,R[1]);house(260,268,62,38,R[4]);house(350,260,48,46,R[2]);house(190,330,58,40,R[5]);house(300,336,56,36,R[0]);
+house(500,282,58,44,R[0]);
+house(670,262,54,40,R[5]);house(752,268,60,38,R[1]);house(680,330,50,42,R[2]);house(770,334,56,36,R[3]);
+// trees
+[[100,70],[205,70],[330,72],[425,80],[105,170],[180,170],[340,170],[560,82],[700,84],[835,120],[740,190],[575,170],[100,300],[245,350],[420,300],[420,360],[570,350],[610,290],[720,370],[835,280],[860,40],[60,380],[560,25],[700,30]].forEach(t=>tree(t[0],t[1],9+rnd()*5));
+
+// parking zone + destination (Siêu thị Mai) on eastbound lane after intersection
+el('rect',{x:528,y:218,width:74,height:18,rx:3,fill:'rgba(255,214,60,.28)',stroke:'#ffd43b','stroke-width':2,'stroke-dasharray':'6 4'});
+el('text',{x:565,y:231,'text-anchor':'middle','font-size':10,'font-weight':900,fill:'#ffd43b','font-family':'Nunito,Segoe UI'}).textContent='P';
+function pin(x,y,col,glyph){
+  el('ellipse',{cx:x,cy:y+2,rx:7,ry:3,fill:'rgba(0,0,0,.25)'});
+  el('path',{d:`M${x} ${y} C ${x-4} ${y-8} ${x-13} ${y-14} ${x-13} ${y-24} A 13 13 0 1 1 ${x+13} ${y-24} C ${x+13} ${y-14} ${x+4} ${y-8} ${x} ${y}Z`,fill:col,stroke:'#fff','stroke-width':2.5});
+  const gg=el('g',{transform:`translate(${x-7},${y-31})`,fill:'none',stroke:'#fff','stroke-width':2,'stroke-linecap':'round','stroke-linejoin':'round'});
+  if(glyph==='box'){el('path',{d:'M1 4 L7 1 L13 4 L13 11 L7 14 L1 11Z M1 4 L7 7 L13 4 M7 7 V14'},gg);}
+  else if(glyph==='swap'){el('path',{d:'M2 5 H12 M9 2 L12 5 L9 8 M12 10 H2 M5 7 L2 10 L5 13'},gg);}
+  else {el('circle',{cx:7,cy:4,r:3},gg);el('path',{d:'M1 14 C1 9 13 9 13 14'},gg);}
+}
+pin(529,282,'#e8590c','box');           // Siêu thị Mai (giao hàng)
+pin(690,108,'#7048e8','person');        // Khách sạn (chưa kích hoạt) - mờ
+svg.lastChild.parentNode;
+// swap depot (Đổi xe) near V2
+el('rect',{x:24,y:226,width:82,height:22,rx:4,fill:'rgba(47,128,237,.18)',stroke:'#4dabf7','stroke-width':2,'stroke-dasharray':'6 4'});
+pin(66,226,'#1c7ed6','swap');
+// parked taxi at depot
+function car(x,y,ang,body,len=34,wid=18,kind){
+  const c=el('g',{transform:`translate(${x},${y}) rotate(${ang})`});
+  const L=len/2,W=wid/2;
+  el('rect',{x:-L+3,y:-W+4,width:len,height:wid,rx:5,fill:'rgba(0,0,0,.28)'},c);
+  el('rect',{x:-L,y:-W,width:len,height:wid,rx:5,fill:body,stroke:shade(body,-.25),'stroke-width':1},c);
+  if(kind==='van'){ // cargo box + cab
+    el('rect',{x:-L+2,y:-W+2,width:len*0.62,height:wid-4,rx:3,fill:shade(body,-.06)},c);
+    el('line',{x1:-L+2+len*0.62,y1:-W+2,x2:-L+2+len*0.62,y2:W-2,stroke:shade(body,-.3),'stroke-width':1.2},c);
+    el('rect',{x:L-12,y:-W+2.5,width:6,height:wid-5,rx:2,fill:'#2b3a4a'},c);
+  } else { // taxi / car
+    el('rect',{x:-L+5,y:-W+2,width:len-16,height:wid-4,rx:3,fill:shade(body,-.08)},c);
+    el('rect',{x:L-11,y:-W+2.5,width:5,height:wid-5,rx:2,fill:'#2b3a4a'},c);
+    el('rect',{x:-L+7,y:-W+2.5,width:4,height:wid-5,rx:1.5,fill:'#2b3a4a'},c);
+    el('rect',{x:-3,y:-3,width:7,height:6,rx:1,fill:'#222'},c);
+  }
+  el('rect',{x:L-2.5,y:-W+2,width:2.5,height:4,rx:1,fill:'#fff6b0'},c);el('rect',{x:L-2.5,y:W-6,width:2.5,height:4,rx:1,fill:'#fff6b0'},c);
+  el('rect',{x:-L,y:-W+2,width:2,height:4,fill:'#ff6b6b'},c);el('rect',{x:-L,y:W-6,width:2,height:4,fill:'#ff6b6b'},c);
+  return c;
+}
+car(66,237,0,'#ffd43b',34,17,'taxi');
+// one-way sign on V3 + no-truck sign at alley
+function sign(x,y,kind){
+  el('rect',{x:x-1.2,y:y,width:2.4,height:14,fill:'#6b6f76'});
+  if(kind==='one'){el('circle',{cx:x,cy:y,r:9,fill:'#1c7ed6',stroke:'#fff','stroke-width':2});
+    el('path',{d:`M${x} ${y+5} V${y-4} M${x-3.5} ${y-1} L${x} ${y-5} L${x+3.5} ${y-1}`,stroke:'#fff','stroke-width':2.2,fill:'none','stroke-linecap':'round'});}
+  else{el('circle',{cx:x,cy:y,r:9,fill:'#fff',stroke:'#e03131','stroke-width':2.6});
+    el('rect',{x:x-5,y:y-3,width:7,height:5,fill:'#222'});el('rect',{x:x+2,y:y-1,width:3,height:3,fill:'#222'});
+    el('line',{x1:x-6,y1:y-6,x2:x+6,y2:y+6,stroke:'#e03131','stroke-width':2.2});}
+}
+sign(762,120,'one');sign(660,238,'no');
+// traffic light (red) for eastbound at intersection corner
+const tlx=432,tly=252;
+el('rect',{x:tlx+2,y:tly-14,width:3,height:16,fill:'#555'});
+el('rect',{x:tlx-4,y:tly-30,width:15,height:26,rx:4,fill:'#24282e',stroke:'#fff','stroke-width':1.5});
+el('circle',{cx:tlx+3.5,cy:tly-23,r:4.5,fill:'#ff3b30'});el('circle',{cx:tlx+3.5,cy:tly-23,r:8,fill:'rgba(255,59,48,.35)'});
+el('circle',{cx:tlx+3.5,cy:tly-11,r:4,fill:'#1e4d2b'});
+
+// command zone hint: soft glow on intersection
+el('rect',{x:449,y:194,width:42,height:42,rx:6,fill:'rgba(255,214,60,.10)',stroke:'rgba(255,214,60,.9)','stroke-width':2,'stroke-dasharray':'5 4'});
+
+// player vehicle: van, eastbound in lower lane
+el('ellipse',{cx:360,cy:226,rx:34,ry:17,fill:'rgba(255,255,255,.35)'});
+car(360,226,0,'#f8f9fb',48,21,'van');
+// dim taxi pin label & hotel
+</script>
+<script>
+// --------- HUD ----------
+const I={
+  left:'<svg class="ic" viewBox="0 0 28 28"><path d="M17 24 V13 a3 3 0 0 0-3-3 H6 M10 6 L6 10 L10 14"/></svg>',
+  right:'<svg class="ic" viewBox="0 0 28 28"><path d="M11 24 V13 a3 3 0 0 1 3-3 H22 M18 6 L22 10 L18 14"/></svg>',
+  uturn:'<svg class="ic" viewBox="0 0 28 28"><path d="M9 24 V11 a5 5 0 0 1 10 0 V18 M15 15 L19 19 L23 15"/></svg>',
+  stop:'<svg class="ic" viewBox="0 0 28 28"><rect x="8" y="8" width="12" height="12" rx="2" fill="currentColor"/></svg>',
+  go:'<svg class="ic" viewBox="0 0 28 28"><path d="M10 7 L21 14 L10 21Z" fill="currentColor"/></svg>',
+  pause:'<svg class="ic" viewBox="0 0 28 28"><path d="M10 7 V21 M18 7 V21"/></svg>',
+  clock:'<svg class="ic" viewBox="0 0 28 28"><circle cx="14" cy="15" r="9"/><path d="M14 10 V15 L17 17 M11 3 H17"/></svg>',
+  box:'<svg class="ic" viewBox="0 0 28 28"><path d="M4 9 L14 4 L24 9 V20 L14 25 L4 20Z M4 9 L14 14 L24 9 M14 14 V25"/></svg>',
+  person:'<svg class="ic" viewBox="0 0 28 28"><circle cx="14" cy="9" r="4.5"/><path d="M5 25 C5 16 23 16 23 25"/></svg>',
+  van:'<svg class="ic" viewBox="0 0 28 28"><path d="M3 9 H17 V20 H3Z M17 12 H22 L25 16 V20 H17 M7 22 a2 2 0 1 0 0.1 0 M20 22 a2 2 0 1 0 0.1 0"/></svg>',
+  lock:'<svg class="ic" viewBox="0 0 28 28"><rect x="7" y="13" width="14" height="10" rx="2"/><path d="M10 13 V9 a4 4 0 0 1 8 0 V13"/></svg>'
+};
+// minimap svg
+function mini(w,h,round){
+  const s=`<svg viewBox="0 0 120 80" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice" style="display:block;background:${P.grass}">
+  <g stroke="${P.road}" stroke-width="3.2" stroke-linecap="square">
+   <line x1="0" y1="40" x2="120" y2="40"/><line x1="60" y1="0" x2="60" y2="80"/><line x1="20" y1="40" x2="20" y2="80"/>
+   <line x1="60" y1="14" x2="120" y2="14"/><line x1="98" y1="14" x2="98" y2="40"/><line x1="0" y1="64" x2="60" y2="64"/>
+   <line x1="30" y1="0" x2="30" y2="40"/><line x1="0" y1="14" x2="60" y2="14"/></g>
+  <line x1="82" y1="40" x2="82" y2="80" stroke="${P.road}" stroke-width="1.8"/>
+  <rect x="34" y="27" width="40" height="26" fill="none" stroke="#fff" stroke-width="1.2" stroke-dasharray="3 2"/>
+  <circle cx="10" cy="64" r="3.6" fill="#2f80ed" stroke="#fff" stroke-width="1"/>
+  <circle cx="70" cy="47" r="3.6" fill="#e8590c" stroke="#fff" stroke-width="1"/>
+  <circle cx="30" cy="8" r="3.6" fill="#e03131" stroke="#fff" stroke-width="1"/>
+  <circle cx="90" cy="22" r="3.6" fill="#7048e8" stroke="#fff" stroke-width="1" opacity=".55"/>
+  <circle cx="16" cy="44" r="3.2" fill="#1c7ed6" stroke="#fff" stroke-width="1"/>
+  <path d="M47 37 L53 40 L47 43Z" fill="#fff" stroke="#222" stroke-width=".8"/>
+  </svg>`;return s;}
+const hud=document.getElementById('hud');
+document.getElementById('phone').className=(V==='6'?'v1 v3':'v'+V);
+const H={};
+H[1]=`
+<div class="abs card mis"><h4><span>NHIỆM VỤ</span><span>0/3 xong</span></h4>
+ <div class="row"><div class="ico" style="background:#e8590c">${I.box}</div><div class="t">Kho Bắc → Siêu thị Mai<small>Đã giao 2/5 kiện</small></div><span class="dl">1:40</span></div>
+ <div class="row"><div class="ico" style="background:#e03131">${I.box}</div><div class="t">Kho Bắc → Tiệm hoa<small>Đã giao 0/1 kiện</small></div><span class="dl warn">0:48</span></div>
+ <div class="row lock"><div class="ico" style="background:#7048e8">${I.person}</div><div class="t">Bến xe → Khách sạn<small>2 khách · cần Taxi</small></div><span class="dl">30s/lượt</span></div>
+</div>
+<div class="abs card timer">${I.clock}1:12</div>
+<div class="abs card veh">${I.van.replace('class="ic"','class="ic" style="width:16px;height:16px"')} Xe van · <b>3/3 kiện</b></div>
+<div class="abs rbtn pause">${I.pause}</div>
+<div class="abs mm">${mini(132,90)}</div>
+<div class="abs bl">
+ <div class="rbtn glow"><div class="in">${I.left}<span class="label">TRÁI</span></div></div>
+ <div class="rbtn glow"><div class="in">${I.right}<span class="label">PHẢI</span></div></div>
+</div>
+<div class="abs act"><div class="pill dim">${I.box.replace('class="ic"','class="ic" style="width:18px;height:18px"')}Giao hàng</div></div>
+<div class="abs br">
+ <div class="rbtn dim"><div class="in">${I.uturn}<span class="label">QUAY ĐẦU</span></div></div>
+ <div class="rbtn big go dim"><div class="in">${I.go}<span class="label">ĐI</span></div></div>
+ <div class="rbtn big stop"><div class="in">${I.stop}<span class="label">DỪNG</span></div></div>
+</div>`;
+H[2]=`
+<div class="abs side">
+ <div class="tm"><b>1:12</b><span>CÒN LẠI / 2:30</span></div>
+ <div class="bar"><i></i></div>
+ <div class="vh">${I.van.replace('class="ic"','class="ic" style="width:18px;height:18px"')} Xe van<div class="slots"><i></i><i></i><i></i></div></div>
+ <div class="mt">NHIỆM VỤ · 0/3</div>
+ <div class="m">Kho Bắc → Siêu thị Mai<small><span>${'2/5 kiện'}</span><span>hạn 1:40</span></small><div class="prog"><i style="width:40%"></i></div></div>
+ <div class="m warn">Kho Bắc → Tiệm hoa<small><span>0/1 kiện</span><b>hạn 0:48</b></small><div class="prog"><i style="width:0"></i></div></div>
+ <div class="m lock">Bến xe → Khách sạn<small><span>2 khách · cần Taxi</span><span>30s/lượt</span></small></div>
+ <div class="turns">
+  <div class="tb glow"><div class="in">${I.left}<span class="label">RẼ TRÁI</span></div></div>
+  <div class="tb glow"><div class="in">${I.right}<span class="label">RẼ PHẢI</span></div></div>
+ </div>
+</div>
+<div class="abs pz">${I.pause}</div>
+<div class="abs mm">${mini(150,100)}</div>
+<div class="abs act"><div class="ab dim">${I.box.replace('class="ic"','class="ic" style="width:16px;height:16px"')}Giao hàng</div></div>
+<div class="abs ctl">
+ <div class="sq dim" style="background:#5c6b7a"><div class="in">${I.uturn}<span class="label">QUAY ĐẦU</span></div></div>
+ <div class="sq dim" style="background:#2fb36a"><div class="in">${I.go}<span class="label">ĐI</span></div></div>
+ <div class="sq" style="background:#f0473c"><div class="in">${I.stop}<span class="label">DỪNG</span></div></div>
+</div>`;
+function ring(p,col){const c=2*Math.PI*22;return `<svg class="ring" viewBox="0 0 50 50"><circle cx="25" cy="25" r="22" fill="rgba(20,28,38,.85)" stroke="rgba(255,255,255,.25)" stroke-width="4"/><circle cx="25" cy="25" r="22" fill="none" stroke="${col}" stroke-width="4" stroke-dasharray="${c*p} ${c}" stroke-linecap="round"/></svg>`;}
+H[3]=`
+<div class="abs chip tm">${I.clock}1:12</div>
+<div class="abs ms">
+ <div class="mc">${ring(.4,'#ff922b')}<div class="c">${I.box}2/5</div><span class="dd">1:40</span></div>
+ <div class="mc warn">${ring(.02,'#ff4d42')}<div class="c">${I.box}0/1</div><span class="dd">0:48</span></div>
+ <div class="mc lock">${ring(0,'#9775fa')}<div class="c">${I.lock}0/2</div><span class="dd">Taxi</span></div>
+</div>
+<div class="abs chip pz">${I.pause}</div>
+<div class="abs radar">${mini(96,96)}</div>
+<div class="abs cap">3/3</div>
+<div class="abs bub dim">${I.box.replace('class="ic"','class="ic" style="width:14px;height:14px"')}Giao hàng</div>
+<div class="abs tl">
+ <div class="tbtn glow">${I.left}</div><div class="tbtn glow">${I.right}</div>
+</div>
+<div class="abs tr">
+ <div class="ut dim">${I.uturn}</div>
+ <div class="tog"><div class="in">${I.stop}DỪNG</div></div>
+</div>`;
+H[4]=`
+<div class="abs top">
+ <div class="tk">${I.box} Siêu thị Mai 2/5 <b>1:40</b></div>
+ <div class="tk warn">${I.box} Tiệm hoa 0/1 <b>0:48</b></div>
+ <div class="tk lock">${I.person} Khách sạn 0/2 · Taxi <b>30s</b></div>
+</div>
+<div class="abs mm">${mini(140,92)}</div>
+<div class="abs pz">${I.pause}</div>
+<div class="abs dash">
+ <div class="sig glow">${I.left}</div>
+ <div class="sig glow">${I.right}</div>
+ <div class="sp"></div>
+ <div class="load">XE VAN · 3/3 KIỆN<div class="cells"><i></i><i></i><i></i></div></div>
+ <div class="gauge"><svg class="arc" viewBox="0 0 108 108"><circle cx="54" cy="54" r="48" fill="none" stroke="#5a4e43" stroke-width="6" stroke-dasharray="226 302"/><circle cx="54" cy="54" r="48" fill="none" stroke="#ffb627" stroke-width="6" stroke-dasharray="109 302" stroke-linecap="round"/></svg><b>1:12</b><small>CÒN LẠI</small></div>
+ <div class="actb dim">${I.box.replace('class="ic"','class="ic" style="width:16px;height:16px"')}Giao hàng</div>
+ <div class="sp"></div>
+ <div class="ut dim">${I.uturn}</div>
+ <div class="rock"><div class="g">ĐI</div><div class="s">DỪNG</div></div>
+</div>`;
+H[5]=`
+<div class="abs tix">
+ <div class="tkt"><div class="h">${I.box} Siêu thị Mai</div><div class="n">2<span>/5 kiện</span></div><span class="d">hạn 1:40</span></div>
+ <div class="tkt warn"><div class="h">${I.box} Tiệm hoa</div><div class="n">0<span>/1 kiện</span></div><span class="d">hạn 0:48</span></div>
+ <div class="tkt lock"><div class="h">${I.person} Khách sạn</div><div class="n">0<span>/2 khách</span></div><span class="d">cần Taxi</span></div>
+</div>
+<div class="abs clock"><b>1:12</b><small>CÒN LẠI</small></div>
+<div class="abs mm">${mini(128,88)}</div>
+<div class="abs pz">${I.pause}</div>
+<div class="abs veh">Xe van <i></i><i></i><i></i> 3/3</div>
+<div class="abs bl">
+ <div class="cb turn glow"><div class="in">${I.left}TRÁI</div></div>
+ <div class="cb turn glow"><div class="in">${I.right}PHẢI</div></div>
+</div>
+<div class="abs act"><div class="ab dim">${I.box.replace('class="ic"','class="ic" style="width:18px;height:18px"')}Giao hàng</div></div>
+<div class="abs br">
+ <div class="cb ut dim">${I.uturn}</div>
+ <div class="cb go dim"><div class="in">${I.go}ĐI</div></div>
+ <div class="cb stop"><div class="in">${I.stop}DỪNG</div></div>
+</div>`;
+H[6]=`
+<div class="abs chip tm">${I.clock}1:12</div>
+<div class="abs ms">
+ <div class="mc">${ring(.4,'#ff922b')}<div class="c">${I.box}2/5</div><span class="dd">1:40</span></div>
+ <div class="mc warn">${ring(.02,'#ff4d42')}<div class="c">${I.box}0/1</div><span class="dd">0:48</span></div>
+ <div class="mc lock">${ring(0,'#9775fa')}<div class="c">${I.lock}0/2</div><span class="dd">Taxi</span></div>
+</div>
+<div class="abs cap">3/3</div>
+<div class="abs rbtn pause">${I.pause}</div>
+<div class="abs mm">${mini(132,90)}</div>
+<div class="abs bl">
+ <div class="rbtn glow"><div class="in">${I.left}<span class="label">TRÁI</span></div></div>
+ <div class="rbtn glow"><div class="in">${I.right}<span class="label">PHẢI</span></div></div>
+</div>
+<div class="abs act"><div class="pill dim">${I.box.replace('class="ic"','class="ic" style="width:18px;height:18px"')}Giao hàng</div></div>
+<div class="abs br">
+ <div class="rbtn dim"><div class="in">${I.uturn}<span class="label">QUAY ĐẦU</span></div></div>
+ <div class="rbtn big go dim"><div class="in">${I.go}<span class="label">ĐI</span></div></div>
+ <div class="rbtn big stop"><div class="in">${I.stop}<span class="label">DỪNG</span></div></div>
+</div>`;
+hud.innerHTML=H[V];
+</script>
+</body>
+</html>

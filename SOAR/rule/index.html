@@ -1443,7 +1443,7 @@
                                 <input type="radio" name="assignType">
                                 <div class="radio-box-text">
                                     <div class="radio-title">Theo ca kíp</div>
-                                    <div class="radio-desc">Tự động gán cho người đang trực. Nếu không có lịch trực hoặc không có người phù hợp, sẽ gán cho Người xử lý mặc định.</div>
+                                    <div class="radio-desc">Tự động gán cho người đang trực. Nếu không có ai thỏa mãn để gán thì sẽ bỏ trống.</div>
                                 </div>
                             </div>
                         </div>
@@ -1493,17 +1493,14 @@
                             </select>
                         </div>
 
-                        <!-- Người thực hiện / Người xử lý mặc định (Linh hoạt theo Loại chia việc) -->
-                        <div class="form-group" style="grid-column: span 2;">
+                        <!-- Người thực hiện (Chỉ hiển thị khi Loại chia việc là Cố định người xử lý) -->
+                        <div class="form-group" id="assigneeFieldGroup" style="grid-column: span 2;">
                             <label class="form-label" id="assigneeLabel">Người thực hiện <span class="req">*</span></label>
                             <select class="select-control" id="assigneeSelect">
                                 <option value="tamlv" selected>tamlv (Trần Văn Tâm - NCS)</option>
                                 <option value="superadmin">superadmin (Quản trị viên NCS)</option>
                                 <option value="admin3">admin3 (Nguyễn Văn A - NCS)</option>
                             </select>
-                            <div class="form-hint" id="assigneeHint" style="display:none; color: #94a3b8; font-size: 11.5px; margin-top: 4px;">
-                                Gán dự phòng cho người này nếu tại thời điểm sinh sự việc không có lịch trực của phòng ban hoặc không có người phù hợp.
-                            </div>
                         </div>
                     </div>
 
@@ -1564,18 +1561,12 @@
                             <span>Playbook tự động kích hoạt</span>
                         </div>
                     </div>
-
-                    <!-- Checkbox bật/tắt kích hoạt playbook -->
-                    <label class="custom-checkbox-row" style="margin-bottom: 12px;">
-                        <input type="checkbox" id="chkEnablePlaybooks" checked onchange="togglePlaybookGroup(this.checked)">
-                        <div class="checkbox-label-content">
-                            <span class="checkbox-label-title">Kích hoạt Playbook tự động khi sự việc được tạo ra</span>
-                            <span class="checkbox-label-desc">Các playbook được chỉ định bên dưới sẽ tự động chạy song song ngay khi sự việc mới được sinh ra từ quy tắc tương quan này.</span>
-                        </div>
-                    </label>
+                    <div style="font-size: 12px; color: #94a3b8; margin-top: -6px; margin-bottom: 14px;">
+                        Các playbook được chỉ định bên dưới sẽ tự động chạy song song ngay khi sự việc mới được sinh ra từ quy tắc tương quan này.
+                    </div>
 
                     <!-- Nội dung danh sách chọn Playbook -->
-                    <div id="playbookConfigBody" style="padding-left: 26px;">
+                    <div id="playbookConfigBody">
                         
                         <!-- Ô chọn nhiều Playbook (Searchable Multi-select) -->
                         <div class="form-group dropdown-menu-wrapper">
@@ -1614,17 +1605,6 @@
                             <div class="selected-playbooks-list" id="selectedPlaybooksList">
                                 <!-- Rendered dynamically by JS -->
                             </div>
-                        </div>
-
-                        <!-- Cấu hình khi gộp sự việc -->
-                        <div class="inner-subcard" style="margin-top: 14px; background: rgba(14, 25, 48, 0.7);">
-                            <label class="custom-checkbox-row">
-                                <input type="checkbox" id="chkReTriggerOnMerge">
-                                <div class="checkbox-label-content">
-                                    <span class="checkbox-label-title" style="font-size: 12.5px;">Kích hoạt lại Playbook khi có cảnh báo mới được gộp vào sự việc đang mở</span>
-                                    <span class="checkbox-label-desc">Nếu bật, mỗi khi có cảnh báo mới rơi vào sự việc cũ, các playbook trên sẽ được tái kích hoạt</span>
-                                </div>
-                            </label>
                         </div>
 
                     </div>
@@ -1707,7 +1687,7 @@
                             <div class="review-label">Loại chia việc:</div>
                             <div class="review-value" id="revAssignType">Cố định người xử lý</div>
                         </div>
-                        <div class="review-row">
+                        <div class="review-row" id="revAssigneeRow">
                             <div class="review-label" id="revAssigneeLabel">Người thực hiện:</div>
                             <div class="review-value" id="revAssigneeValue">tamlv</div>
                         </div>
@@ -1737,10 +1717,6 @@
                             <div class="review-value" id="revPlaybookContainer">
                                 <!-- Populated dynamically by updateReviewStep3() -->
                             </div>
-                        </div>
-                        <div class="review-row">
-                            <div class="review-label">Tái kích hoạt khi được<br>gộp cảnh báo mới:</div>
-                            <div class="review-value" id="revMergeReTrigger">Tắt</div>
                         </div>
                     </div>
                 </div>
@@ -1932,12 +1908,6 @@
             showToast(`Đã gỡ playbook khỏi danh sách`);
         }
 
-        // Toggle cả khối Playbook
-        function togglePlaybookGroup(enabled) {
-            const body = document.getElementById('playbookConfigBody');
-            body.style.opacity = enabled ? '1' : '0.4';
-            body.style.pointerEvents = enabled ? 'auto' : 'none';
-        }
 
         // Toggle khối gộp sự việc
         function toggleMergeSection(enabled) {
@@ -1968,14 +1938,9 @@
             document.querySelectorAll('input[name="assignType"]')[0].checked = isFixed;
             document.querySelectorAll('input[name="assignType"]')[1].checked = !isFixed;
 
-            const label = document.getElementById('assigneeLabel');
-            const hint = document.getElementById('assigneeHint');
-            if (isFixed) {
-                label.innerHTML = 'Người thực hiện <span class="req">*</span>';
-                hint.style.display = 'none';
-            } else {
-                label.innerHTML = 'Người xử lý mặc định <span class="req">*</span>';
-                hint.style.display = 'block';
+            const assigneeGroup = document.getElementById('assigneeFieldGroup');
+            if (assigneeGroup) {
+                assigneeGroup.style.display = isFixed ? 'block' : 'none';
             }
         }
 
@@ -2054,15 +2019,16 @@
             const isFixed = document.querySelectorAll('input[name="assignType"]')[0].checked;
             const assigneeSelect = document.getElementById('assigneeSelect');
             const assigneeText = assigneeSelect.options[assigneeSelect.selectedIndex].text.split(' (')[0];
+            const revAssigneeRow = document.getElementById('revAssigneeRow');
 
             if (isFixed) {
                 document.getElementById('revAssignType').innerText = 'Cố định người xử lý';
+                if (revAssigneeRow) revAssigneeRow.style.display = 'flex';
                 document.getElementById('revAssigneeLabel').innerText = 'Người thực hiện:';
                 document.getElementById('revAssigneeValue').innerText = assigneeText;
             } else {
-                document.getElementById('revAssignType').innerText = 'Theo ca kíp';
-                document.getElementById('revAssigneeLabel').innerText = 'Người xử lý mặc định:';
-                document.getElementById('revAssigneeValue').innerText = `${assigneeText} (Khi không có người trực phù hợp)`;
+                document.getElementById('revAssignType').innerText = 'Theo ca kíp (Tự động gán người trực, để trống nếu không có người phù hợp)';
+                if (revAssigneeRow) revAssigneeRow.style.display = 'none';
             }
 
             // Nhãn
@@ -2083,17 +2049,14 @@
             }
 
             // Playbook tự động kích hoạt
-            const pbEnabled = document.getElementById('chkEnablePlaybooks').checked;
             const pbContainer = document.getElementById('revPlaybookContainer');
 
-            if (!pbEnabled) {
-                pbContainer.innerHTML = '<span style="color: #94a3b8;">Tắt (Không tự động kích hoạt)</span>';
-            } else if (selectedPlaybookIds.length === 0) {
-                pbContainer.innerHTML = '<span style="color: #f59e0b;">Chưa cấu hình playbook nào</span>';
+            if (selectedPlaybookIds.length === 0) {
+                pbContainer.innerHTML = '<span style="color: #64748b; font-style: italic;">Không kích hoạt playbook nào (Chưa chọn)</span>';
             } else {
                 pbContainer.innerHTML = `
                     <div style="color: #38bdf8; font-weight: 600; margin-bottom: 6px; font-size: 12px;">
-                        Bật (${selectedPlaybookIds.length} playbook - Kích hoạt khi sự việc sinh ra)
+                        Tự động kích hoạt ${selectedPlaybookIds.length} playbook khi sự việc sinh ra:
                     </div>
                     ${selectedPlaybookIds.map(id => {
                         const pb = AVAILABLE_PLAYBOOKS.find(item => item.id === id);
@@ -2108,10 +2071,6 @@
                     }).join('')}
                 `;
             }
-
-            // Kích hoạt lại khi gộp cảnh báo
-            const reTrigger = document.getElementById('chkReTriggerOnMerge').checked;
-            document.getElementById('revMergeReTrigger').innerText = reTrigger ? 'Bật (Kích hoạt lại khi có cảnh báo mới gộp vào)' : 'Tắt';
         }
 
         // Stepper Navigation

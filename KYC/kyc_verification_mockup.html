@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xác thực KYC - Mockup</title>
+<style>
+  :root{--bg:#f4f6fa;--card:#fff;--line:#e3e7ef;--text:#1f2937;--muted:#6b7280;--pri:#2563eb;--pri-soft:#e8efff;--ok:#16a34a;--ok-soft:#e7f7ec;--warn:#d97706;--warn-soft:#fdf3e2;--err:#dc2626;--err-soft:#fde8e8;--gray-soft:#eef0f4}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;font-size:14px;color:var(--text);background:var(--bg)}
+  .view{display:none;padding:24px 32px}
+  .view.active{display:block}
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .crumb{color:var(--muted);font-size:13px}
+  h1{font-size:20px;margin:4px 0 0}
+  h2{font-size:15px;margin:0 0 14px;display:flex;align-items:center;gap:8px}
+  h2 .num{width:22px;height:22px;border-radius:50%;background:var(--pri);color:#fff;font-size:12px;display:inline-flex;align-items:center;justify-content:center}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:16px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 18px}
+  .grid .span2{grid-column:span 2}.grid .span3{grid-column:span 3}
+  label.f{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+  label.f .req{color:var(--err)}
+  .in{width:100%;height:36px;border:1px solid #cfd5e1;border-radius:6px;padding:0 10px;font:inherit;background:#fff;display:flex;align-items:center;color:var(--text)}
+  .in.ph{color:#9aa3b2}.in.sel::after{content:"▾";margin-left:auto;color:var(--muted)}
+  .in.date::after{content:"📅";margin-left:auto;font-size:13px}
+  .in.auto{background:#f7faff;border-color:#bcd0f7}
+  textarea.in{height:64px;padding:8px 10px}
+  .hint{font-size:12px;color:var(--muted);margin-top:4px}
+  .err{font-size:12px;color:var(--err);margin-top:4px}
+  .in.bad{border-color:var(--err)}
+  .radio{display:flex;gap:22px;height:36px;align-items:center}
+  .radio span{display:flex;align-items:center;gap:6px}
+  .dot{width:16px;height:16px;border-radius:50%;border:2px solid #9aa3b2;display:inline-block}
+  .dot.on{border:5px solid var(--pri)}
+  .chk{width:16px;height:16px;border-radius:3px;border:2px solid #9aa3b2;display:inline-block;vertical-align:-3px}
+  .chk.on{background:var(--pri);border-color:var(--pri);position:relative}
+  .chk.on::after{content:"✓";color:#fff;font-size:11px;position:absolute;left:2px;top:-2px}
+  .btn{height:36px;padding:0 16px;border-radius:6px;border:1px solid #cfd5e1;background:#fff;font:inherit;font-weight:600;display:inline-flex;align-items:center;gap:6px;color:var(--text)}
+  .btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+  .btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+  .btn.danger{color:var(--err);border-color:#f3b4b4}
+  .btn.warn{color:var(--warn);border-color:#f2cf98}
+  .btn.ghost{border-color:transparent;color:var(--pri)}
+  .btn.sm{height:30px;padding:0 10px;font-size:13px}
+  .btn[disabled]{opacity:.45}
+  .actions{display:flex;justify-content:flex-end;gap:10px}
+  .banner{display:flex;gap:12px;align-items:center;background:var(--warn-soft);border:1px solid #f2cf98;border-radius:10px;padding:12px 16px;margin-bottom:16px}
+  .banner b{color:var(--warn)}
+  .upload{border:2px dashed #c3cbe0;border-radius:10px;height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--muted);background:#fafbfe;text-align:center}
+  .upload .ic{font-size:26px}
+  .upload.done{border-style:solid;border-color:#bcd0f7;background:#f3f7ff;color:var(--text)}
+  .idimg{width:170px;height:100px;border-radius:8px;background:linear-gradient(135deg,#dbe6fb,#c4d5f5);position:relative;overflow:hidden}
+  .idimg::before{content:"";position:absolute;left:12px;top:22px;width:44px;height:56px;border-radius:4px;background:#9fb6e3}
+  .idimg::after{content:"";position:absolute;left:68px;top:26px;width:86px;height:8px;border-radius:4px;background:#9fb6e3;box-shadow:0 16px 0 #9fb6e3,0 32px 0 #b3c6ec,0 48px 0 #b3c6ec}
+  .row{display:flex;gap:16px;align-items:flex-start}
+  .face{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#f0c9a8 0 22%,transparent 23%),radial-gradient(ellipse at 50% 100%,#7c93c4 0 45%,transparent 46%),#e7ecf6}
+  .tag{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:600}
+  .tag.ok{background:var(--ok-soft);color:var(--ok)}.tag.warn{background:var(--warn-soft);color:var(--warn)}.tag.err{background:var(--err-soft);color:var(--err)}.tag.info{background:var(--pri-soft);color:var(--pri)}.tag.gray{background:var(--gray-soft);color:var(--muted)}.tag.purple{background:#f1e9fe;color:#7c3aed}
+  .toolbar{display:flex;gap:10px;align-items:center;margin-bottom:14px}
+  .toolbar .in{width:auto}
+  table{width:100%;border-collapse:collapse;background:#fff}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-size:13px;white-space:nowrap}
+  th{background:#f8f9fc;color:var(--muted);font-weight:600}
+  .score{display:flex;align-items:center;gap:8px}
+  .bar{width:60px;height:6px;border-radius:3px;background:#e5e7eb;overflow:hidden}
+  .bar i{display:block;height:100%}
+  .pager{display:flex;justify-content:space-between;align-items:center;padding:12px 4px 0;color:var(--muted);font-size:13px}
+  .pager .pg{display:flex;gap:6px}.pager .pg span{min-width:28px;height:28px;border:1px solid var(--line);border-radius:6px;display:inline-flex;align-items:center;justify-content:center;background:#fff}
+  .pager .pg span.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+  .overlay{background:rgba(17,24,39,.45);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:32px}
+  .modal{background:#fff;border-radius:12px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+  .modal .hd{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}
+  .modal .hd h3{margin:0;font-size:16px}
+  .modal .bd{padding:18px 20px}
+  .modal .ft{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}
+  .cam{height:300px;border-radius:12px;background:#111827;display:flex;align-items:center;justify-content:center;position:relative}
+  .cam .oval{width:180px;height:230px;border:3px dashed #60a5fa;border-radius:50%}
+  .cam .msg{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:#fff;font-weight:600}
+  .steps{display:flex;gap:10px;margin-top:14px}
+  .steps div{flex:1;border:1px solid var(--line);border-radius:8px;padding:8px;text-align:center;font-size:12px}
+  .steps div.done{background:var(--ok-soft);border-color:#b6e3c3;color:var(--ok)}
+  .steps div.cur{background:var(--pri-soft);border-color:#bcd0f7;color:var(--pri);font-weight:600}
+  .cmp td{white-space:normal}
+  .cmp .mis{color:var(--err);font-weight:600}
+  .kv{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+  .kv div{background:#f8f9fc;border:1px solid var(--line);border-radius:8px;padding:10px}
+  .kv small{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}
+  .kv b{font-size:15px}
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px}
+  .tabs span{padding:8px 14px;color:var(--muted);font-weight:600}
+  .tabs span.on{color:var(--pri);border-bottom:2px solid var(--pri)}
+</style>
+</head>
+<body>
+
+<!-- ============ MÀN 1: GỬI HỒ SƠ KYC (KHÁCH HÀNG) ============ -->
+<section class="view" id="viewSubmit">
+  <div class="topbar">
+    <div><div class="crumb">Tài khoản / Xác thực danh tính</div><h1>Xác thực danh tính (eKYC)</h1></div>
+  </div>
+  <div class="banner"><span style="font-size:20px">⚠️</span><div>Trạng thái hiện tại: <b>Chưa xác thực</b>. Bạn cần hoàn tất xác thực danh tính để sử dụng các tính năng rút tiền và chuyển khoản trên 10.000.000 VNĐ.</div></div>
+
+  <div class="card">
+    <h2><span class="num">1</span>Ảnh giấy tờ tùy thân</h2>
+    <div class="grid">
+      <div><label class="f">Loại giấy tờ <span class="req">*</span></label>
+        <div class="radio"><span><i class="dot on"></i>CCCD gắn chip</span><span><i class="dot"></i>Hộ chiếu</span></div></div>
+      <div class="span2"></div>
+      <div><label class="f">Ảnh mặt trước <span class="req">*</span></label>
+        <div class="upload done"><div class="idimg"></div><div style="font-size:12px">cccd_truoc.jpg · 1.8 MB <span style="color:var(--err)">✕</span></div></div></div>
+      <div><label class="f">Ảnh mặt sau <span class="req">*</span></label>
+        <div class="upload"><div class="ic">⬆️</div><div><b style="color:var(--pri)">Chọn ảnh</b> hoặc kéo thả vào đây</div><div style="font-size:12px">JPG, PNG · tối đa 5 MB</div></div></div>
+      <div style="display:flex;flex-direction:column;justify-content:flex-end;gap:8px">
+        <div class="hint">Chụp rõ nét, đủ 4 góc, không lóa sáng. Hệ thống sẽ tự động trích xuất thông tin từ ảnh.</div>
+        <button class="btn pri" disabled>🔍 Trích xuất thông tin</button></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">2</span>Thông tin cá nhân <span class="tag info" style="margin-left:6px">Tự động điền từ ảnh, có thể chỉnh sửa</span></h2>
+    <div class="grid">
+      <div><label class="f">Số giấy tờ <span class="req">*</span></label><div class="in ph">Nhập số CCCD (12 chữ số)</div></div>
+      <div class="span2"><label class="f">Họ và tên <span class="req">*</span></label><div class="in ph">Nhập họ và tên theo giấy tờ</div></div>
+      <div><label class="f">Ngày sinh <span class="req">*</span></label><div class="in date ph">dd/mm/yyyy</div></div>
+      <div><label class="f">Giới tính <span class="req">*</span></label><div class="in sel ph">Chọn giới tính</div></div>
+      <div><label class="f">Quốc tịch <span class="req">*</span></label><div class="in sel">Việt Nam</div></div>
+      <div><label class="f">Ngày cấp <span class="req">*</span></label><div class="in date ph">dd/mm/yyyy</div></div>
+      <div><label class="f">Ngày hết hạn <span class="req">*</span></label><div class="in date ph">dd/mm/yyyy</div>
+        <div class="hint"><i class="chk"></i> Không thời hạn</div></div>
+      <div><label class="f">Nơi cấp</label><div class="in sel ph">Chọn nơi cấp</div></div>
+      <div class="span3"><label class="f">Địa chỉ thường trú <span class="req">*</span></label><textarea class="in" placeholder="Nhập địa chỉ thường trú theo giấy tờ"></textarea><div class="hint" style="text-align:right">0/255</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="num">3</span>Xác thực khuôn mặt</h2>
+    <div class="row">
+      <div class="face" style="opacity:.35"></div>
+      <div style="flex:1">
+        <div style="font-weight:600;margin-bottom:4px">Chưa thực hiện</div>
+        <div class="hint" style="margin-bottom:10px">Hệ thống sẽ mở camera và yêu cầu bạn thực hiện một số thao tác (quay trái, quay phải, chớp mắt) để xác minh người thật. Thời gian khoảng 15 giây.</div>
+        <button class="btn pri">📷 Bắt đầu xác thực khuôn mặt</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+    <div><i class="chk"></i>&nbsp; Tôi đồng ý cho phép xử lý dữ liệu cá nhân (ảnh giấy tờ, hình ảnh khuôn mặt) cho mục đích xác thực danh tính theo <a href="#" style="color:var(--pri)">Chính sách bảo vệ dữ liệu cá nhân</a>.</div>
+    <div class="actions"><button class="btn">Hủy</button><button class="btn pri">Gửi xác thực</button></div>
+  </div>
+</section>
+
+<!-- ============ POPUP: XÁC THỰC KHUÔN MẶT (LIVENESS) ============ -->
+<section class="view" id="modalLiveness" style="padding:0">
+  <div class="overlay"><div class="modal" style="max-width:620px">
+    <div class="hd"><h3>Xác thực khuôn mặt</h3><span style="font-size:18px;color:var(--muted)">✕</span></div>
+    <div class="bd">
+      <div class="cam"><div class="oval"></div><div class="msg">Từ từ quay mặt sang TRÁI</div>
+        <div style="position:absolute;top:12px;right:14px;color:#fff;font-size:13px">⏱ 00:09</div></div>
+      <div class="steps"><div class="done">✓ Nhìn thẳng</div><div class="cur">Quay trái</div><div>Quay phải</div><div>Chớp mắt</div></div>
+      <div class="hint" style="margin-top:10px">Giữ khuôn mặt trong khung, đủ ánh sáng, không đeo kính râm hoặc khẩu trang.</div>
+    </div>
+    <div class="ft"><button class="btn">Hủy</button><button class="btn">↻ Thực hiện lại</button><button class="btn pri" disabled>Xác nhận</button></div>
+  </div></div>
+</section>
+
+<!-- ============ MÀN 2: DANH SÁCH HỒ SƠ KYC (NHÂN VIÊN) ============ -->
+<section class="view" id="viewList">
+  <div class="topbar">
+    <div><div class="crumb">Quản trị / Tuân thủ / Hồ sơ KYC</div><h1>Danh sách hồ sơ KYC</h1></div>
+    <button class="btn">⬇ Xuất file</button>
+  </div>
+  <div class="card" style="padding:14px 16px">
+    <div class="toolbar">
+      <div class="in ph" style="width:300px">🔎&nbsp; Tìm theo mã hồ sơ, tên, số điện thoại</div>
+      <div class="in sel" style="width:190px">Trạng thái: Chờ duyệt</div>
+      <div class="in sel" style="width:170px">Loại giấy tờ: Tất cả</div>
+      <div class="in date" style="width:250px">01/10/2026 - 13/10/2026</div>
+      <button class="btn ghost">Xóa bộ lọc</button>
+    </div>
+    <table>
+      <thead><tr><th>Mã hồ sơ</th><th>Khách hàng</th><th>Loại giấy tờ</th><th>Số giấy tờ</th><th>Khớp khuôn mặt</th><th>Kết quả tự động</th><th>Trạng thái</th><th>Ngày gửi</th><th>Người xử lý</th><th>Hành động</th></tr></thead>
+      <tbody>
+        <tr><td><a style="color:var(--pri)">KYC-2026-001284</a></td><td>Nguyễn Văn An<br><span class="hint">0912***678</span></td><td>CCCD</td><td>001******123</td><td><div class="score"><div class="bar"><i style="width:78%;background:var(--warn)"></i></div>78%</div></td><td><span class="tag warn">Cần duyệt thủ công</span></td><td><span class="tag info">Chờ duyệt</span></td><td>13/10/2026 09:12</td><td>—</td><td><button class="btn sm">Xem</button> <button class="btn sm pri">Duyệt</button></td></tr>
+        <tr><td><a style="color:var(--pri)">KYC-2026-001281</a></td><td>Trần Thị Bình<br><span class="hint">0987***210</span></td><td>Hộ chiếu</td><td>C12****89</td><td><div class="score"><div class="bar"><i style="width:81%;background:var(--warn)"></i></div>81%</div></td><td><span class="tag warn">Sai lệch dữ liệu</span></td><td><span class="tag info">Chờ duyệt</span></td><td>13/10/2026 08:47</td><td>—</td><td><button class="btn sm">Xem</button> <button class="btn sm pri">Duyệt</button></td></tr>
+        <tr><td><a style="color:var(--pri)">KYC-2026-001276</a></td><td>Lê Hoàng Cường<br><span class="hint">0903***455</span></td><td>CCCD</td><td>079******456</td><td><div class="score"><div class="bar"><i style="width:96%;background:var(--ok)"></i></div>96%</div></td><td><span class="tag ok">Đạt</span></td><td><span class="tag ok">Đã xác thực</span></td><td>12/10/2026 16:30</td><td>Hệ thống</td><td><button class="btn sm">Xem</button></td></tr>
+        <tr><td><a style="color:var(--pri)">KYC-2026-001270</a></td><td>Phạm Minh Đức<br><span class="hint">0868***901</span></td><td>CCCD</td><td>036******789</td><td><div class="score"><div class="bar"><i style="width:42%;background:var(--err)"></i></div>42%</div></td><td><span class="tag err">Không đạt</span></td><td><span class="tag err">Bị từ chối</span></td><td>12/10/2026 14:05</td><td>Hệ thống</td><td><button class="btn sm">Xem</button></td></tr>
+        <tr><td><a style="color:var(--pri)">KYC-2026-001265</a></td><td>Võ Thu Hà<br><span class="hint">0934***332</span></td><td>CCCD</td><td>048******012</td><td><div class="score"><div class="bar"><i style="width:74%;background:var(--warn)"></i></div>74%</div></td><td><span class="tag warn">Cần duyệt thủ công</span></td><td><span class="tag purple">Cần bổ sung</span></td><td>12/10/2026 10:18</td><td>hoa.nt</td><td><button class="btn sm">Xem</button></td></tr>
+      </tbody>
+    </table>
+    <div class="pager"><div>Hiển thị 1–5 / 128 hồ sơ · <span class="in sel" style="display:inline-flex;width:90px;height:28px">20 / trang</span></div><div class="pg"><span>‹</span><span class="on">1</span><span>2</span><span>3</span><span>…</span><span>7</span><span>›</span></div></div>
+  </div>
+</section>
+
+<!-- ============ POPUP: DUYỆT HỒ SƠ KYC ============ -->
+<section class="view" id="modalReview" style="padding:0">
+  <div class="overlay"><div class="modal" style="max-width:1040px">
+    <div class="hd"><h3>Duyệt hồ sơ KYC · KYC-2026-001284 <span class="tag info" style="margin-left:8px">Chờ duyệt</span></h3><span style="font-size:18px;color:var(--muted)">✕</span></div>
+    <div class="bd">
+      <div class="kv">
+        <div><small>Khớp khuôn mặt</small><b style="color:var(--warn)">78%</b> <span class="hint">(ngưỡng tự duyệt 85%)</span></div>
+        <div><small>Kiểm tra người thật (Liveness)</small><b style="color:var(--ok)">Đạt</b></div>
+        <div><small>Chất lượng ảnh giấy tờ</small><b style="color:var(--ok)">Tốt</b></div>
+        <div><small>Thời gian chờ duyệt</small><b>3 giờ 12 phút</b> <span class="hint">/ SLA 24 giờ</span></div>
+      </div>
+      <div class="tabs"><span class="on">Thông tin hồ sơ</span><span>Lịch sử xử lý (2)</span></div>
+      <div class="row">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div><div class="hint">Mặt trước</div><div class="idimg"></div></div>
+          <div><div class="hint">Mặt sau</div><div class="idimg" style="filter:hue-rotate(20deg)"></div></div>
+          <div><div class="hint">Ảnh khuôn mặt</div><div class="face"></div></div>
+        </div>
+        <div style="flex:1">
+          <table class="cmp">
+            <thead><tr><th>Trường thông tin</th><th>Khách hàng khai báo</th><th>Trích xuất từ ảnh (OCR)</th></tr></thead>
+            <tbody>
+              <tr><td>Số giấy tờ</td><td>001******123 <a style="color:var(--pri);font-size:12px">👁 Hiện</a></td><td>001******123</td></tr>
+              <tr><td>Họ và tên</td><td class="mis">NGUYỄN VĂN AN</td><td class="mis">NGUYỄN VĂN ÂN</td></tr>
+              <tr><td>Ngày sinh</td><td>15/04/1995</td><td>15/04/1995</td></tr>
+              <tr><td>Giới tính</td><td>Nam</td><td>Nam</td></tr>
+              <tr><td>Ngày cấp / hết hạn</td><td>20/06/2021 – 15/04/2035</td><td>20/06/2021 – 15/04/2035</td></tr>
+              <tr><td>Địa chỉ thường trú</td><td>Số 12 ngõ 45 Trần Duy Hưng, Cầu Giấy, Hà Nội</td><td>Số 12 ngõ 45 Trần Duy Hưng, Cầu Giấy, Hà Nội</td></tr>
+            </tbody>
+          </table>
+          <div class="grid" style="grid-template-columns:1fr 2fr;margin-top:14px">
+            <div><label class="f">Lý do <span class="req">*</span></label><div class="in sel ph">Chọn lý do</div><div class="hint">Bắt buộc khi Từ chối hoặc Yêu cầu bổ sung</div></div>
+            <div><label class="f">Ghi chú gửi khách hàng</label><textarea class="in" placeholder="Nhập ghi chú (tối đa 500 ký tự)"></textarea></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ft" style="justify-content:space-between">
+      <button class="btn">Đóng</button>
+      <div class="actions"><button class="btn danger">✕ Từ chối</button><button class="btn warn">↺ Yêu cầu bổ sung</button><button class="btn ok">✓ Phê duyệt</button></div>
+    </div>
+  </div></div>
+</section>
+
+<script>
+  function show(){var id=(location.hash||'#viewSubmit').slice(1);document.querySelectorAll('.view').forEach(function(v){v.classList.toggle('active',v.id===id)})}
+  window.addEventListener('hashchange',show);show();
+</script>
+</body>
+</html>

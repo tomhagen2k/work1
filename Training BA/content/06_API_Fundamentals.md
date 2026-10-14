@@ -18,6 +18,9 @@ API hoạt động dựa trên mô hình **Client - Server**:
 - **Nhà bếp (Đóng vai trò là Server):** Là nơi chứa nguyên liệu (Dữ liệu) và thực hiện quá trình chế biến (Xử lý logic).
 - **Người bồi bàn (Đóng vai trò là API):** Là cầu nối trung gian. Bồi bàn sẽ tiếp nhận yêu cầu (Order) từ Khách hàng, mang yêu cầu đó truyền đạt lại cho Nhà bếp. Sau khi Bếp nấu xong, Bồi bàn sẽ mang món ăn (Kết quả) trả lại chính xác cho Khách hàng.
 
+![Hình 6.1: Ẩn dụ Nhà hàng mô phỏng cơ chế hoạt động của API](images/06_01_an_du_nha_hang_api.png)
+*Hình 6.1: Mô hình Client - Server thông qua ẩn dụ Khách hàng, Bồi bàn (API) và Nhà bếp (Server)*
+
 ---
 
 ## 2. Cấu trúc Giao tiếp: Request và Response
@@ -43,6 +46,9 @@ Sau khi Server tiếp nhận và xử lý xong Request, nó sẽ trả về mộ
    - **Nhóm 5xx (Lỗi từ phía Server):** Client gửi yêu cầu đúng, nhưng Server gặp sự cố nội bộ không thể xử lý.
 2. **Body (Dữ liệu trả về):** Kết quả dữ liệu mà Server xuất ra để trả lại cho Client (Nếu có).
 
+![Hình 6.2: Cấu trúc chi tiết của một gói tin Request và Response](images/06_02_cau_truc_request_response.png)
+*Hình 6.2: 4 thành phần cốt lõi của Request và 2 thành phần chính của Response trong giao tiếp API*
+
 ### 2.3. Ví dụ minh họa (Áp dụng ẩn dụ Nhà hàng)
 Để làm rõ các khái niệm kỹ thuật khô khan ở phần 2.1 và 2.2, hãy cùng ánh xạ chúng vào ví dụ Nhà hàng:
 
@@ -58,6 +64,9 @@ Sau khi Server tiếp nhận và xử lý xong Request, nó sẽ trả về mộ
 - Trạng thái **401 Unauthorized**: Khách chưa xuất trình thẻ VIP nên không được phép gọi món đặc biệt này.
 - Trạng thái **404 Not Found**: Khách gọi món "Pizza", nhưng nhà hàng này không hề bán Pizza (Endpoint không tồn tại).
 - Trạng thái **500 Internal Server Error**: Khách gọi đúng món "Phở Bò", nhưng nhà bếp đang bị mất điện, không thể nấu được.
+
+![Hình 6.3: Bảng tra cứu các nhóm mã trạng thái HTTP Status Code](images/06_03_ma_trang_thai_http.png)
+*Hình 6.3: Phân loại và ý nghĩa các nhóm mã trạng thái HTTP Status Code (2xx, 4xx, 5xx)*
 
 ---
 
@@ -87,6 +96,9 @@ Data Mapping là quá trình BA xác định rõ ràng sự liên kết giữa D
 **Ví dụ minh họa Data Mapping:**
 - Bạn đang thiết kế một màn hình Ứng dụng Thời tiết. Trên bản thiết kế, bạn vẽ một ô hiển thị văn bản mang tên "Nhiệt độ hiện tại".
 - Trong tài liệu Đặc tả (SRS), bạn phải thực hiện Data Mapping bằng cách viết rõ yêu cầu cho Đội ngũ Lập trình (Developer): *"Hệ thống cần trích xuất giá trị từ trường `nhiet_do` trong tệp JSON trả về, sau đó hiển thị giá trị này vào ô [Nhiệt độ hiện tại] trên giao diện, đồng thời nối thêm ký tự '°C' ở phía sau"*.
+
+![Hình 6.4: Kỹ thuật Data Mapping từ tệp dữ liệu JSON lên Giao diện người dùng](images/06_04_data_mapping_json_to_ui.png)
+*Hình 6.4: Mô phỏng trực quan cách BA thực hiện Data Mapping từ dữ liệu JSON của API sang Giao diện UI*
 
 ---
 

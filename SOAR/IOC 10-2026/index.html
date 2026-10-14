@@ -1,0 +1,3525 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOAR - Quản lý Tích hợp & Ban hành IoC</title>
+  <link rel="stylesheet" href="./kbq-fonts.css" onerror="this.onerror=null;">
+  <link rel="stylesheet" href="./index-DtxS5_Uj.css" onerror="this.onerror=null;">
+  <style>
+    :root {
+      --bg-base: #1a1c23;
+      --bg-surface: #1e212b;
+      --bg-surface-2: #252936;
+      --bg-card: #202430;
+      --bg-card-hover: #2a2e3d;
+      --bg-input: #15171f;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-strong: #33384a;
+      --text-primary: #ffffff;
+      --text-secondary: #dcdfe8;
+      --text-muted: #8a8fa8;
+      --text-placeholder: #5c627a;
+      --primary: #0066ff;
+      --primary-hover: #005ce6;
+      --primary-bg: rgba(0, 102, 255, 0.15);
+      --success: #52c41a;
+      --success-bg: rgba(82, 196, 26, 0.15);
+      --warning: #faad14;
+      --warning-bg: rgba(250, 173, 20, 0.15);
+      --danger: #ff4d4f;
+      --danger-bg: rgba(255, 77, 79, 0.15);
+      --purple: #9254de;
+      --purple-bg: rgba(146, 84, 222, 0.15);
+      --cyan: #13c2c2;
+      --cyan-bg: rgba(19, 194, 194, 0.15);
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --radius-xl: 12px;
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-secondary);
+      font-family: var(--font-family);
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-x: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb { background: #2e3344; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3f465c; }
+
+    /* Top Navbar */
+    .top-navbar {
+      height: 52px;
+      background: #171921;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 50;
+      flex-shrink: 0;
+    }
+    .brand-section { display: flex; align-items: center; gap: 12px; }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .brand-logo img { height: 26px; width: auto; }
+    .main-nav { display: flex; align-items: center; gap: 4px; margin-left: 16px; }
+    .nav-item {
+      padding: 6px 11px;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .nav-item:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.05); }
+    .nav-item.active { background: #004ecc; color: #fff; }
+    .nav-right-actions { display: flex; align-items: center; gap: 10px; }
+    .icon-badge-btn {
+      position: relative;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-md);
+    }
+    .icon-badge-btn:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-primary); }
+    .badge-count {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: var(--danger);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 10px;
+      padding: 0 4px;
+      min-width: 14px;
+      height: 14px;
+      line-height: 14px;
+      text-align: center;
+    }
+    .badge-count.orange { background: #fa8c16; }
+    .avatar-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: var(--radius-md);
+    }
+    .avatar-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #0050b3;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    .user-info-text { text-align: left; line-height: 1.2; }
+    .user-name { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+    .user-role { font-size: 10px; color: var(--text-muted); }
+
+    /* Layout Body */
+    .app-layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Left Sidebar */
+    .sidebar {
+      width: 230px;
+      background: #171922;
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+      user-select: none;
+    }
+    .sidebar-section { padding: 12px 8px; }
+    .sidebar-menu { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .sidebar-item:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-primary);
+    }
+    .sidebar-item.active {
+      background: #0052cc;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .sidebar-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .sidebar-subtext { font-size: 11px; padding: 6px 12px 2px; color: #5a6078; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* Main Container */
+    .main-viewport {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      background: var(--bg-base);
+      padding: 18px 24px;
+    }
+
+    /* Page Header */
+    .page-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+    .search-box {
+      position: relative;
+      min-width: 320px;
+      flex: 1;
+      max-width: 440px;
+    }
+    .search-box input {
+      width: 100%;
+      height: 36px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 0 34px 0 34px;
+      color: var(--text-primary);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2); }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .clear-search-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: none;
+    }
+
+    .select-filter {
+      height: 36px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 0 12px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      outline: none;
+      cursor: pointer;
+      min-width: 150px;
+    }
+    .select-filter:focus { border-color: var(--primary); }
+
+    .btn-tool {
+      height: 36px;
+      width: 36px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-tool:hover { color: var(--text-primary); border-color: #4a5168; background: var(--bg-surface-2); }
+
+    .btn-primary {
+      height: 36px;
+      background: var(--primary);
+      border: 1px solid var(--primary);
+      color: #fff;
+      font-weight: 500;
+      padding: 0 16px;
+      border-radius: var(--radius-lg);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    /* Title Row */
+    .title-summary-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .title-main {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .title-badge-count {
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 400;
+    }
+    .updated-time-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Table Styles */
+    .table-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      overflow-x: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    thead th {
+      background: #191b24;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+    tbody tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      transition: background 0.15s ease;
+    }
+    tbody tr:hover {
+      background: #232734;
+    }
+    tbody td {
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+    .code-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #58a6ff;
+      font-weight: 500;
+    }
+
+    /* IoC View Tabs in Modal */
+    .ioc-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .ioc-tab-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .ioc-tab-btn.active {
+      background: #0052cc;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .ioc-tab-badge {
+      padding: 1px 6px;
+      border-radius: 10px;
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.15);
+      color: inherit;
+    }
+    .ioc-tab-btn.active .ioc-tab-badge {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .badge-warning { background: rgba(250, 173, 20, 0.12); color: #faad14; border: 1px solid rgba(250, 173, 20, 0.25); }
+    .badge-info { background: rgba(22, 119, 255, 0.12); color: #1677ff; border: 1px solid rgba(22, 119, 255, 0.25); }
+    .badge-success { background: rgba(82, 196, 26, 0.12); color: #52c41a; border: 1px solid rgba(82, 196, 26, 0.25); }
+    .badge-danger { background: rgba(255, 77, 79, 0.12); color: #ff4d4f; border: 1px solid rgba(255, 77, 79, 0.25); }
+    .badge-purple { background: rgba(146, 84, 222, 0.12); color: #b37feb; border: 1px solid rgba(146, 84, 222, 0.25); }
+    .badge-cyan { background: rgba(19, 194, 194, 0.12); color: #36cfc9; border: 1px solid rgba(19, 194, 194, 0.25); }
+    .badge-rejected { background: rgba(255, 77, 79, 0.12); color: #ff7875; border: 1px solid rgba(255, 77, 79, 0.25); }
+
+    /* Platform Tag */
+    .platform-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      background: #262b3a;
+      border: 1px solid #363d52;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #e2e5f0;
+      font-weight: 500;
+    }
+
+    /* Action buttons in row */
+    .row-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-action-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .btn-action-icon:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+      border-color: #3b4255;
+    }
+    .btn-approve-action {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      background: rgba(0, 102, 255, 0.15);
+      border: 1px solid rgba(0, 102, 255, 0.35);
+      color: #4096ff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .btn-approve-action:hover {
+      background: #0066ff;
+      color: #fff;
+      border-color: #0066ff;
+    }
+    .btn-retry-action {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      background: rgba(250, 173, 20, 0.15);
+      border: 1px solid rgba(250, 173, 20, 0.35);
+      color: #faad14;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .btn-retry-action:hover {
+      background: #faad14;
+      color: #000;
+      border-color: #faad14;
+    }
+
+    /* Pagination */
+    .table-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border-color);
+      gap: 12px;
+      background: #191b24;
+    }
+    .pagination-bar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .page-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+    .page-btn:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-primary); }
+    .page-btn.active {
+      background: #0052cc;
+      color: #fff;
+      font-weight: 600;
+      border-color: #0052cc;
+    }
+    .page-select {
+      height: 28px;
+      background: #1f2330;
+      border: 1px solid #363d52;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 12px;
+      padding: 0 6px;
+      outline: none;
+    }
+
+    /* Modal Backdrop */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 10, 15, 0.72);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+    .modal-dialog {
+      background: #1d212d;
+      border: 1px solid #31374a;
+      border-radius: 12px;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6);
+      width: 100%;
+      max-width: 960px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalSlideIn 0.2s ease;
+    }
+    .modal-dialog.modal-sm { max-width: 520px; }
+    .modal-dialog.modal-xl { max-width: 1080px; }
+
+    @keyframes modalSlideIn {
+      from { transform: scale(0.97) translateY(10px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #191c26;
+    }
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .modal-close-btn:hover { background: rgba(255, 255, 255, 0.08); color: var(--text-primary); }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      background: #191c26;
+    }
+
+    /* Form Inputs */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    .form-label .req { color: var(--danger); margin-left: 2px; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      height: 36px;
+      background: #141720;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 0 12px;
+      color: var(--text-primary);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-textarea {
+      height: 84px;
+      padding: 8px 12px;
+      resize: vertical;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+    }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* Inner Filter Bar in Modal */
+    .ioc-filter-card {
+      background: #171a24;
+      border: 1px solid #2b3042;
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .ioc-filter-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1.3fr 1fr 1.3fr;
+      gap: 10px;
+      align-items: center;
+    }
+    .helper-text-hint {
+      font-size: 11px;
+      color: #8c93a8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Selection bar */
+    .selection-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: #151924;
+      border: 1px solid #2c3346;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .btn-link-action {
+      background: transparent;
+      border: none;
+      color: #4096ff;
+      cursor: pointer;
+      text-decoration: underline;
+      font-size: 12px;
+    }
+    .btn-link-action:hover { color: #69b1ff; }
+
+    /* Button styles */
+    .btn-secondary {
+      height: 36px;
+      background: #252a38;
+      border: 1px solid #3c445c;
+      color: var(--text-secondary);
+      font-weight: 500;
+      padding: 0 16px;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: #2f3547; color: #fff; }
+    .btn-danger-outline {
+      height: 36px;
+      background: rgba(255, 77, 79, 0.1);
+      border: 1px solid rgba(255, 77, 79, 0.4);
+      color: #ff4d4f;
+      font-weight: 500;
+      padding: 0 16px;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    .btn-danger-outline:hover { background: #ff4d4f; color: #fff; }
+    .btn-danger {
+      height: 36px;
+      background: #ff4d4f;
+      border: 1px solid #ff4d4f;
+      color: #fff;
+      font-weight: 500;
+      padding: 0 16px;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-danger:hover { background: #ff7875; border-color: #ff7875; }
+    .btn-purple {
+      height: 36px;
+      background: #722ed1;
+      border: 1px solid #722ed1;
+      color: #fff;
+      font-weight: 500;
+      padding: 0 16px;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-purple:hover { background: #853be0; }
+
+    /* Detail overview grid */
+    .detail-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      background: #171a24;
+      border: 1px solid #292f42;
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .summary-item { display: flex; flex-direction: column; gap: 3px; }
+    .summary-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+    .summary-value { font-size: 13px; color: var(--text-primary); font-weight: 500; }
+
+    /* KPI Stats Row */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .kpi-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+    .kpi-card:hover {
+      border-color: #3b4358;
+      background: #222634;
+    }
+    .kpi-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .kpi-title {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .kpi-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 2px;
+    }
+
+    /* Switch toggle */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 32px;
+      height: 18px;
+      vertical-align: middle;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #353b4d;
+      transition: .2s;
+      border-radius: 18px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .2s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #52c41a;
+    }
+    input:checked + .slider:before {
+      transform: translateX(14px);
+    }
+
+    /* Dropzone for file upload */
+    .file-dropzone {
+      border: 2px dashed #3a4256;
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      background: #141722;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .file-dropzone:hover {
+      border-color: var(--primary);
+      background: rgba(0, 102, 255, 0.05);
+    }
+
+    .main-view-container {
+      width: 100%;
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .toast-msg {
+      pointer-events: auto;
+      background: #202533;
+      border: 1px solid #363e54;
+      border-left: 4px solid var(--primary);
+      padding: 12px 18px;
+      border-radius: 6px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      color: #fff;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: toastSlide 0.3s ease;
+    }
+    .toast-msg.toast-success { border-left-color: var(--success); }
+    .toast-msg.toast-error { border-left-color: var(--danger); }
+    .toast-msg.toast-warning { border-left-color: var(--warning); }
+    @keyframes toastSlide {
+      from { transform: translateX(50px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="top-navbar">
+    <div class="brand-section">
+      <a href="#" class="brand-logo">
+        <img src="./logo_dark_theme.svg" alt="NCS Logo" onerror="this.outerHTML='<span style=\'font-weight:800;color:#0066ff;font-size:18px;\'>NCS</span>';">
+      </a>
+      <nav class="main-nav">
+        <a class="nav-item">Trang chủ</a>
+        <a class="nav-item">Bảng điều khiển</a>
+        <a class="nav-item">Báo cáo</a>
+        <a class="nav-item">Kịch bản</a>
+        <a class="nav-item">Sự việc</a>
+        <a class="nav-item">Công việc</a>
+        <a class="nav-item">Cảnh báo</a>
+        <a class="nav-item">Đối sánh phát hiện</a>
+        <a class="nav-item">Giám sát hệ thống</a>
+        <a class="nav-item active">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Quản trị
+        </a>
+      </nav>
+    </div>
+
+    <div class="nav-right-actions">
+      <button class="icon-badge-btn" title="Thông báo">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="badge-count">4</span>
+      </button>
+      <button class="icon-badge-btn" title="Nhiệm vụ">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span class="badge-count orange">7</span>
+      </button>
+      <button class="icon-badge-btn" title="Mục yêu thích">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </button>
+      <button class="icon-badge-btn" title="Chế độ giao diện">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+
+      <div class="avatar-btn">
+        <div class="avatar-circle">T</div>
+        <div class="user-info-text">
+          <div class="user-name">tomhagen</div>
+          <div class="user-role">Quản trị viên</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- App Layout -->
+  <div class="app-layout">
+
+    <!-- Left Sidebar: Menu Quản trị -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-subtext">Hệ thống</div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Lực lượng bảo vệ
+          </li>
+          <li class="sidebar-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Bản quyền
+          </li>
+          <li class="sidebar-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Phòng ban
+          </li>
+          <li class="sidebar-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Nhóm quyền
+          </li>
+          <li class="sidebar-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Người dùng
+          </li>
+          <li class="sidebar-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            Khách hàng
+          </li>
+        </ul>
+
+        <div class="sidebar-subtext" style="margin-top: 14px;">Phản ứng & Tích hợp</div>
+        <ul class="sidebar-menu">
+          <!-- Screen 1: Quản lý tích hợp IoC -->
+          <li class="sidebar-item active" id="menuItemIntegration" onclick="switchMainView('integration')" style="cursor: pointer;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            Quản lý tích hợp IoC
+          </li>
+          <!-- Screen 2: Danh sách loại trừ IoC (MỚI) -->
+          <li class="sidebar-item" id="menuItemExclusion" onclick="switchMainView('exclusion')" style="cursor: pointer;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+            Danh sách loại trừ IoC
+          </li>
+          <li class="sidebar-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Nguồn tích hợp
+          </li>
+          <li class="sidebar-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+            SLA
+          </li>
+          <li class="sidebar-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Danh mục
+          </li>
+          <li class="sidebar-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Cấu hình hệ thống
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-viewport">
+
+      <!-- ======================================================== -->
+      <!-- VIEW 1: QUẢN LÝ TÍCH HỢP & THU HỒI IOC (GIỮ NGUYÊN 100%) -->
+      <!-- ======================================================== -->
+      <div id="viewIocIntegration" class="main-view-container">
+        <!-- Action & Filter Bar -->
+        <div class="page-header-row">
+          <div class="filter-group">
+            <!-- Search box -->
+            <div class="search-box">
+              <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="mainSearchInput" placeholder="Tìm kiếm theo Mã yêu cầu, Tiêu đề, Người tạo...">
+              <button class="clear-search-btn" id="mainSearchClearBtn">✕</button>
+            </div>
+
+            <!-- Platform Filter -->
+            <select class="select-filter" id="filterPlatform">
+              <option value="ALL">Tất cả nền tảng</option>
+              <option value="Palo Alto NGFW">Palo Alto NGFW</option>
+              <option value="Fortinet FortiGate">Fortinet FortiGate</option>
+              <option value="CrowdStrike EDR">CrowdStrike EDR</option>
+              <option value="F5 BIG-IP WAF">F5 BIG-IP WAF</option>
+            </select>
+
+            <!-- Type Filter -->
+            <select class="select-filter" id="filterType">
+              <option value="ALL">Tất cả loại yêu cầu</option>
+              <option value="Tích hợp">Tích hợp</option>
+              <option value="Thu hồi">Thu hồi</option>
+            </select>
+
+            <!-- Status Filter -->
+            <select class="select-filter" id="filterStatus">
+              <option value="ALL">Tất cả trạng thái</option>
+              <option value="Chờ phê duyệt">Chờ phê duyệt</option>
+              <option value="Đang tích hợp">Đang tích hợp</option>
+              <option value="Hoàn thành">Hoàn thành</option>
+              <option value="Lỗi">Lỗi</option>
+              <option value="Từ chối">Từ chối</option>
+            </select>
+
+            <!-- Reset Filter Button -->
+            <button class="btn-tool" id="btnResetFilters" title="Đặt lại bộ lọc">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+            </button>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <!-- Setting Playbook Button -->
+            <button class="btn-secondary" id="btnOpenPlaybookSettingModal" title="Cấu hình Playbook thực thi khi yêu cầu được duyệt" style="display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 12px; font-size: 13px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              <span>Playbook thực thi:</span>
+              <strong id="btnPlaybookCodeBadge" style="color: #52c41a; font-family: 'JetBrains Mono', monospace; font-size: 12px; background: rgba(82, 196, 26, 0.15); padding: 1px 7px; border-radius: 4px; border: 1px solid rgba(82, 196, 26, 0.3);">PB-IOC-01</strong>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--text-muted); margin-left: 2px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </button>
+
+            <!-- Create Button -->
+            <button class="btn-primary" id="btnOpenCreateModal">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Tạo yêu cầu ban hành
+            </button>
+          </div>
+        </div>
+
+        <!-- Title & Live Count Row -->
+        <div class="title-summary-row">
+          <div class="title-main">
+            Danh sách yêu cầu tích hợp & thu hồi
+            <span class="title-badge-count" id="totalRecordLabel">45</span>
+          </div>
+        </div>
+
+        <!-- Main Data Table -->
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 50px; text-align: center; white-space: nowrap;">STT</th>
+                <th style="white-space: nowrap;">Mã yêu cầu</th>
+                <th>Tiêu đề yêu cầu</th>
+                <th style="white-space: nowrap;">Loại yêu cầu</th>
+                <th style="white-space: nowrap;">Nền tảng tích hợp</th>
+                <th style="text-align: center; white-space: nowrap;">Số lượng IoC</th>
+                <th>Kết quả</th>
+                <th style="white-space: nowrap;">Trạng thái</th>
+                <th style="white-space: nowrap;">Người tạo</th>
+                <th style="white-space: nowrap;">Người duyệt</th>
+                <th style="text-align: center; width: 130px; white-space: nowrap;">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="requestTableBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+
+          <!-- Table Pagination -->
+          <div class="table-footer">
+            <div class="pagination-bar">
+              <button class="page-btn" id="prevPageBtn" title="Trang trước">❮</button>
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">3</button>
+              <button class="page-btn" id="nextPageBtn" title="Trang sau">❯</button>
+            </div>
+            <select class="page-select">
+              <option>10 / Trang</option>
+              <option>20 / Trang</option>
+              <option>50 / Trang</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- VIEW 2: QUẢN LÝ DANH SÁCH LOẠI TRỪ IOC (MỚI - Ý D)       -->
+      <!-- ======================================================== -->
+      <div id="viewIocExclusion" class="main-view-container" style="display: none;">
+        <!-- Action & Filter Bar -->
+        <div class="page-header-row">
+          <div class="filter-group">
+            <!-- Search box -->
+            <div class="search-box">
+              <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="exclSearchInput" placeholder="Tìm theo giá trị, lý do loại trừ, mã...">
+              <button class="clear-search-btn" id="exclSearchClearBtn">✕</button>
+            </div>
+
+            <!-- Type Filter -->
+            <select class="select-filter" id="exclTypeFilter">
+              <option value="ALL">Tất cả loại chỉ số</option>
+              <option value="IPv4">Địa chỉ IPv4</option>
+              <option value="IPv4_CIDR">Dải IPv4 (CIDR)</option>
+              <option value="Domain">Tên miền (Domain)</option>
+              <option value="Wildcard_Domain">Tên miền đại diện (*)</option>
+              <option value="URL">Địa chỉ URL</option>
+              <option value="SHA256">Mã băm (SHA256)</option>
+              <option value="Email">Địa chỉ Email</option>
+            </select>
+
+            <!-- Status Filter -->
+            <select class="select-filter" id="exclStatusFilter">
+              <option value="ALL">Tất cả trạng thái</option>
+              <option value="ACTIVE">Kích hoạt</option>
+              <option value="PAUSED">Tạm dừng</option>
+            </select>
+
+            <!-- Reset Filter Button -->
+            <button class="btn-tool" id="btnResetExclFilters" title="Đặt lại bộ lọc">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+            </button>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <!-- Import Button -->
+            <button class="btn-secondary" id="btnOpenImportExclModal" style="display: inline-flex; align-items: center; gap: 6px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Nhập từ file
+            </button>
+
+            <!-- Add Button -->
+            <button class="btn-primary" id="btnOpenCreateExclModal">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Thêm loại trừ mới
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Summary Cards -->
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background: rgba(0, 102, 255, 0.15); color: #2f80ed;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <div class="kpi-title">Tổng bản ghi loại trừ</div>
+              <div class="kpi-value" id="kpiExclTotal">10</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background: rgba(82, 196, 26, 0.15); color: #52c41a;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+              <div class="kpi-title">Đang kích hoạt</div>
+              <div class="kpi-value" id="kpiExclActive" style="color: #52c41a;">9</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon" style="background: rgba(250, 173, 20, 0.15); color: #faad14;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="10" y1="15" x2="10" y2="9"/><line x1="14" y1="15" x2="14" y2="9"/></svg>
+            </div>
+            <div>
+              <div class="kpi-title">Tạm dừng</div>
+              <div class="kpi-value" id="kpiExclPaused" style="color: #faad14;">1</div>
+            </div>
+          </div>
+          <div class="kpi-card" style="cursor: pointer;" id="btnViewAuditLogsCard" title="Xem chi tiết nhật ký các lượt đã tự động ngăn chặn">
+            <div class="kpi-icon" style="background: rgba(255, 77, 79, 0.15); color: #ff4d4f;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+            </div>
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span class="kpi-title">Đã ngăn chặn ghi nhận</span>
+                <span style="font-size: 11px; color: #4096ff; text-decoration: underline;">Xem nhật ký ↗</span>
+              </div>
+              <div class="kpi-value" id="kpiExclHits" style="color: #ff7875;">1.842 lượt</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Title & Live Count Row -->
+        <div class="title-summary-row">
+          <div class="title-main">
+            Danh sách loại trừ dấu hiệu tấn công
+            <span class="title-badge-count" id="exclRecordCount">10</span>
+          </div>
+        </div>
+
+        <!-- Exclusion Data Table -->
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 50px; text-align: center; white-space: nowrap;">STT</th>
+                <th style="white-space: nowrap;">Mã loại trừ</th>
+                <th>Giá trị loại trừ</th>
+                <th style="white-space: nowrap;">Loại chỉ số</th>
+                <th>Lý do loại trừ</th>
+                <th style="white-space: nowrap;">Thời hạn hiệu lực</th>
+                <th style="text-align: center; white-space: nowrap;">Lượt ngăn chặn</th>
+                <th style="text-align: center; white-space: nowrap;">Trạng thái</th>
+                <th style="white-space: nowrap;">Người tạo</th>
+                <th style="text-align: center; width: 100px; white-space: nowrap;">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="exclTableBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+
+          <!-- Table Pagination -->
+          <div class="table-footer">
+            <div class="pagination-bar" id="exclPaginationBar">
+              <!-- Rendered by JS -->
+            </div>
+            <select class="page-select" id="exclPageSizeSelect">
+              <option value="5">5 / Trang</option>
+              <option value="10" selected>10 / Trang</option>
+              <option value="20">20 / Trang</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: CẤU HÌNH PLAYBOOK THỰC THI KHI DUYỆT YÊU CẦU       -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="playbookSettingModal" style="z-index: 1200;">
+    <div class="modal-dialog" style="max-width: 630px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          Cấu hình Playbook thực thi khi phê duyệt
+        </div>
+        <button class="modal-close-btn" id="btnClosePlaybookSettingModal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="background: rgba(0, 102, 255, 0.08); border: 1px solid rgba(0, 102, 255, 0.2); border-radius: 6px; padding: 12px 14px; font-size: 12px; color: #dcdfe8; margin-bottom: 16px; line-height: 1.5;">
+          ℹ️ Khi một yêu cầu tích hợp hoặc thu hồi được người có thẩm quyền <strong>phê duyệt</strong>, hệ thống SOAR sẽ tự động gọi và thực thi <strong>duy nhất 1 Playbook</strong> được chỉ định bên dưới để thực hiện yêu cầu.
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Chọn Playbook thực thi (Chọn duy nhất 1 kịch bản) <span class="req">*</span></label>
+          <select class="form-select" id="selectIntegrationPlaybook">
+            <option value="PB-IOC-01" selected>[PB-IOC-01] Playbook phân phối & ban hành IoC đa nền tảng tự động (Mặc định)</option>
+            <option value="PB-IOC-02">[PB-IOC-02] Playbook đồng bộ danh sách đen Threat Intelligence sang Firewall & EDR</option>
+            <option value="PB-IOC-03">[PB-IOC-03] Playbook thực thi tích hợp khẩn cấp & xác thực kết nối ngoại vi</option>
+            <option value="PB-IOC-04">[PB-IOC-04] Playbook thu hồi & giải phóng bộ lọc IoC đa nền tảng</option>
+          </select>
+        </div>
+
+        <!-- Selected Playbook Info Card -->
+        <div id="playbookDetailCard" style="background: #141722; border: 1px solid #2b3244; border-radius: 8px; padding: 14px; margin-top: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="code-text" id="pbCardCode" style="color: #52c41a; font-weight: 600; font-size: 13px;">PB-IOC-01</span>
+              <span id="pbCardTitle" style="font-weight: 600; color: #fff; font-size: 13px;">Phân phối & Ban hành IoC đa nền tảng tự động</span>
+            </div>
+            <span class="badge badge-success" id="pbCardStatus">Hoạt động</span>
+          </div>
+          <div style="display: flex; gap: 20px; font-size: 11px; color: var(--text-secondary); border-top: 1px solid #232734; padding-top: 12px;">
+            <div>Phiên bản: <strong style="color: #fff;" id="pbCardVersion">v2.4</strong></div>
+            <div>Số bước thực thi: <strong style="color: #4096ff;" id="pbCardSteps">8 nodes</strong></div>
+            <div>Chế độ chạy: <strong style="color: #52c41a;">Tự động (Event Triggered)</strong></div>
+            <div>Cập nhật: <span id="pbCardUpdated">28/09/2026 bởi admin</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btnCancelPlaybookSetting">Hủy</button>
+        <button class="btn-primary" id="btnSavePlaybookSetting">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Lưu cấu hình
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 1: TẠO YÊU CẦU BAN HÀNH (CREATE REQUEST MODAL)     -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="createModal">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Tạo yêu cầu ban hành IoC
+        </div>
+        <button class="modal-close-btn" id="btnCloseCreateModal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Form Top: Tiêu đề & Chọn nền tảng -->
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Tiêu đề yêu cầu <span class="req">*</span></label>
+            <input type="text" class="form-input" id="createTitleInput" placeholder="Nhập tiêu đề yêu cầu">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nền tảng tích hợp <span class="req">*</span></label>
+            <select class="form-select" id="createPlatformSelect">
+              <option value="Palo Alto NGFW">Palo Alto NGFW</option>
+              <option value="Fortinet FortiGate">Fortinet FortiGate</option>
+              <option value="CrowdStrike EDR">CrowdStrike EDR</option>
+              <option value="F5 BIG-IP WAF">F5 BIG-IP WAF</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Bộ lọc tra cứu danh sách IoC -->
+        <div class="ioc-filter-card">
+          <div style="font-weight: 600; font-size: 13px; color: #fff; display: flex; align-items: center; justify-content: space-between;">
+            <span>Bộ lọc danh sách IoC tích hợp</span>
+            <span class="helper-text-hint">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Dữ liệu trạng thái lọc động theo Nền tảng được chọn
+            </span>
+          </div>
+
+          <div class="ioc-filter-grid">
+            <!-- Search IoC -->
+            <div class="form-group">
+              <label class="form-label" style="font-size: 11px;">Tìm kiếm IoC</label>
+              <input type="text" class="form-input" id="iocSearchInput" placeholder="Nhập để tìm kiếm">
+            </div>
+
+            <!-- Date range: Từ ngày - Đến ngày -->
+            <div class="form-group">
+              <label class="form-label" style="font-size: 11px;">Hạn của IoC (Từ ngày - Đến ngày)</label>
+              <div style="display: flex; gap: 6px;">
+                <input type="date" class="form-input" id="iocDateFrom" style="font-size: 11px; padding: 0 6px;">
+                <input type="date" class="form-input" id="iocDateTo" style="font-size: 11px; padding: 0 6px;">
+              </div>
+            </div>
+
+            <!-- IoC Type Filter -->
+            <div class="form-group">
+              <label class="form-label" style="font-size: 11px;">Loại IoC</label>
+              <select class="form-select" id="iocTypeFilter">
+                <option value="ALL">Tất cả loại IoC</option>
+                <option value="IPv4">IPv4</option>
+                <option value="Domain">Domain</option>
+                <option value="URL">URL</option>
+                <option value="SHA256">SHA256</option>
+              </select>
+            </div>
+
+            <!-- Status Enforce Filter -->
+            <div class="form-group">
+              <label class="form-label" style="font-size: 11px;" id="iocEnforcedFilterLabel">Trạng thái trên Palo Alto NGFW</label>
+              <select class="form-select" id="iocEnforcedFilter">
+                <option value="ALL">Tất cả</option>
+                <option value="NOT_ENFORCED">Chưa tích hợp</option>
+                <option value="ENFORCED">Đã tích hợp</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Toolbar chế độ xem bảng IoC -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px; margin-bottom: 2px;">
+          <div style="display: flex; gap: 4px; background: #151822; padding: 3px; border-radius: 6px; border: 1px solid #2b3244;">
+            <button type="button" class="ioc-tab-btn active" id="tabViewAllIocs">
+              Tất cả IoC
+              <span class="ioc-tab-badge" id="countAllIocs">12</span>
+            </button>
+            <button type="button" class="ioc-tab-btn" id="tabViewSelectedIocs">
+              Đã chọn
+              <span class="ioc-tab-badge" id="countSelectedIocsTab">0</span>
+            </button>
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted);">
+            Đang hiển thị: <span style="color: #fff; font-weight: 500;" id="viewingModeText">Tất cả IoC</span>
+          </div>
+        </div>
+
+        <!-- Bảng danh sách IoC -->
+        <div class="table-container" style="max-height: 320px; overflow-y: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 40px; text-align: center;">
+                  <input type="checkbox" id="selectAllIocCheckbox" title="Chọn/Bỏ chọn tất cả trên trang này">
+                </th>
+                <th style="width: 45px; text-align: center;">STT</th>
+                <th>Giá trị IoC</th>
+                <th>Loại IoC</th>
+                <th>Lần thấy gần nhất</th>
+                <th>Ngày hết hạn</th>
+                <th>Trạng thái tích hợp</th>
+              </tr>
+            </thead>
+            <tbody id="iocPickerTableBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+
+          <!-- Table Pagination giống như màn hình Danh sách -->
+          <div class="table-footer">
+            <div class="pagination-bar" id="iocPaginationBar">
+              <!-- Rendered by JS -->
+            </div>
+            <select class="page-select" id="iocPageSizeSelect">
+              <option value="5">5 / Trang</option>
+              <option value="10" selected>10 / Trang</option>
+              <option value="20">20 / Trang</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Selection count & clear all -->
+        <div class="selection-bar">
+          <div>
+            <span style="color: #fff; font-weight: 600;" id="iocSelectedCountText">Đã chọn: 0 IoC</span>
+            <span style="color: var(--text-muted); font-size: 12px; margin-left: 8px;">(Tối thiểu 1 IoC, tối đa 1.000 IoC)</span>
+          </div>
+          <button class="btn-link-action" id="btnClearAllSelectionBtn">Bỏ chọn tất cả</button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btnCancelCreateModal">Hủy</button>
+        <button class="btn-primary" id="btnSubmitCreateRequest">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Gửi phê duyệt
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL XÁC NHẬN KHI THAY ĐỔI NỀN TẢNG (PLATFORM CHANGE)  -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="confirmChangePlatformModal" style="z-index: 1100;">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <div class="modal-title" style="color: #faad14;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Xác nhận đổi nền tảng tích hợp
+        </div>
+        <button class="modal-close-btn" id="btnDismissChangePlatformModal">✕</button>
+      </div>
+      <div class="modal-body" style="font-size: 13px; line-height: 1.6; color: #dcdfe8;">
+        Việc thay đổi nền tảng tích hợp sẽ làm thay đổi danh sách dữ liệu tương thích và <strong style="color: #ff4d4f;">hủy toàn bộ các IoC bạn đã chọn</strong> trước đó.<br><br>
+        Bạn có chắc chắn muốn thay đổi sang nền tảng mới không?
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btnCancelChangePlatform">Hủy bỏ</button>
+        <button class="btn-primary" id="btnConfirmChangePlatform" style="background: #d46b08; border-color: #d46b08;">Đồng ý đổi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 2: CHI TIẾT YÊU CẦU (DETAIL MODAL)                 -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-header">
+        <div class="modal-title" id="detailModalTitle">
+          Chi tiết yêu cầu tích hợp - REQ-2026-0042
+        </div>
+        <button class="modal-close-btn" id="btnCloseDetailModal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Summary Box -->
+        <div class="detail-summary-grid">
+          <div class="summary-item">
+            <span class="summary-label">Mã yêu cầu</span>
+            <span class="summary-value code-text" id="detailReqCode">REQ-2026-0042</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Loại yêu cầu</span>
+            <span class="summary-value" id="detailReqType"><span class="badge badge-info">Tích hợp</span></span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Nền tảng tích hợp</span>
+            <span class="summary-value" id="detailReqPlatform">Palo Alto NGFW</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Trạng thái</span>
+            <span class="summary-value" id="detailReqStatus"><span class="badge badge-success">Hoàn thành</span></span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Người tạo</span>
+            <span class="summary-value" id="detailReqCreator">tomhagen (01/10/2026 09:30)</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Người duyệt</span>
+            <span class="summary-value" id="detailReqApprover">admin (01/10/2026 09:45)</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Số lượng IoC</span>
+            <span class="summary-value" id="detailReqCount">45 IoC</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Kết quả xử lý</span>
+            <span class="summary-value" id="detailReqResult" style="font-weight: 600; color: #52c41a;">42 Thành công / 3 Lỗi</span>
+          </div>
+        </div>
+
+        <!-- Box lý do thu hồi (chỉ hiện khi loại yêu cầu là Thu hồi) -->
+        <div id="detailRevokeReasonBox" style="display: none; background: rgba(146, 84, 222, 0.1); border: 1px solid rgba(146, 84, 222, 0.3); border-radius: 8px; padding: 10px 14px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #b37feb; font-weight: 600; margin-bottom: 4px;">Lý do thu hồi</div>
+          <div id="detailRevokeReasonText" style="color: #fff; font-size: 13px;">Chiến dịch tấn công đã kết thúc, tiến hành gỡ bỏ chặn lọc để tránh ảnh hưởng hệ thống.</div>
+        </div>
+
+        <!-- Box lý do từ chối (chỉ hiện khi trạng thái là Từ chối) -->
+        <div id="detailRejectReasonBox" style="display: none; background: rgba(255, 77, 79, 0.1); border: 1px solid rgba(255, 77, 79, 0.3); border-radius: 8px; padding: 10px 14px;">
+          <div style="font-size: 11px; text-transform: uppercase; color: #ff4d4f; font-weight: 600; margin-bottom: 4px;">Lý do từ chối phê duyệt</div>
+          <div id="detailRejectReasonText" style="color: #fff; font-size: 13px;">-</div>
+        </div>
+
+        <!-- Bảng danh sách chi tiết từng IoC -->
+        <div style="font-weight: 600; color: #fff; font-size: 13px; margin-top: 4px;">Danh sách kết quả chi tiết từng IoC:</div>
+        <div class="table-container" style="max-height: 320px; overflow-y: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 50px; text-align: center;">STT</th>
+                <th>Giá trị IoC</th>
+                <th>Loại IoC</th>
+                <th>Ngày hết hạn</th>
+                <th>Trạng thái</th>
+                <th>Lý do lỗi (nếu có)</th>
+              </tr>
+            </thead>
+            <tbody id="detailIocTableBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Footer với nút bấm ngữ cảnh -->
+      <div class="modal-footer" id="detailModalFooter">
+        <!-- Rendered dynamically depending on status -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 3: TẠO YÊU CẦU THU HỒI (REVOKE REASON POPUP)      -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="revokeModal" style="z-index: 1200;">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <div class="modal-title" style="color: #b37feb;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+          Tạo yêu cầu thu hồi chặn lọc
+        </div>
+        <button class="modal-close-btn" id="btnCloseRevokeModal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="background: #151822; padding: 12px; border-radius: 6px; font-size: 12px; border: 1px solid #2b3244;">
+          <div>Thu hồi theo yêu cầu gốc: <strong style="color: #58a6ff;" id="revokeSourceCode">REQ-2026-0042</strong></div>
+          <div style="margin-top: 4px;">Nền tảng đích: <strong style="color: #fff;" id="revokeSourcePlatform">Palo Alto NGFW</strong></div>
+          <div style="margin-top: 4px;">Số lượng IoC thu hồi: <strong style="color: #faad14;" id="revokeSourceCount">45 IoC</strong></div>
+        </div>
+
+        <div class="form-group" style="margin-top: 6px;">
+          <label class="form-label">Lý do thu hồi <span class="req">*</span></label>
+          <textarea class="form-textarea" id="revokeReasonInput" placeholder="Nhập lý do thu hồi (VD: Phát hiện IP đối tác bị chặn nhầm; chiến dịch tấn công đã kết thúc...)"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btnCancelRevokeModal">Hủy</button>
+        <button class="btn-purple" id="btnSubmitRevokeRequest">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+          Tạo yêu cầu thu hồi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 4: XÁC NHẬN TỪ CHỐI YÊU CẦU (REJECT REASON POPUP)  -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="rejectReasonModal" style="z-index: 1250;">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <div class="modal-title" style="color: #ff4d4f;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+          Từ chối yêu cầu ban hành
+        </div>
+        <button class="modal-close-btn" id="btnCloseRejectModal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="background: #151822; padding: 12px; border-radius: 6px; font-size: 12px; border: 1px solid #2b3244;">
+          <div>Mã yêu cầu: <strong style="color: #58a6ff;" id="rejectReqCode">REQ-2026-0044</strong></div>
+          <div style="margin-top: 4px;">Tiêu đề: <strong style="color: #fff;" id="rejectReqTitle">Đẩy BlackCat Hash & IP C2 khẩn cấp</strong></div>
+          <div style="margin-top: 4px;">Nền tảng: <strong style="color: #fff;" id="rejectReqPlatform">CrowdStrike EDR</strong></div>
+        </div>
+
+        <div class="form-group" style="margin-top: 6px;">
+          <label class="form-label">Lý do từ chối <span class="req">*</span></label>
+          <textarea class="form-textarea" id="rejectReasonInput" rows="3" placeholder="Nhập lý do từ chối phê duyệt (VD: Danh sách IoC chưa qua xác minh; Trùng lặp chính sách chặn...)"></textarea>
+          <div id="rejectReasonError" style="display: none; color: #ff4d4f; font-size: 11px; margin-top: 4px;">Vui lòng nhập lý do từ chối!</div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btnCancelRejectModal">Hủy</button>
+        <button class="btn-danger" id="btnConfirmReject">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Xác nhận
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: THÊM MỚI / CHỈNH SỬA LOẠI TRỪ (CREATE/EDIT EXCL)   -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="createEditExclModal" style="z-index: 1200;">
+    <div class="modal-dialog" style="max-width: 650px;">
+      <div class="modal-header">
+        <div class="modal-title" id="createEditExclModalTitle">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Thêm bản ghi loại trừ IoC
+        </div>
+        <button class="modal-close-btn" id="btnCloseCreateEditExclModal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="exclEditRecordId" value="">
+        
+        <div class="form-group">
+          <label class="form-label">Loại chỉ số <span class="req">*</span></label>
+          <select class="form-select" id="exclFormType">
+            <option value="IPv4">Địa chỉ IPv4</option>
+            <option value="IPv4_CIDR" selected>Dải IPv4 (CIDR)</option>
+            <option value="Domain">Tên miền (Domain)</option>
+            <option value="Wildcard_Domain">Tên miền đại diện (*.domain)</option>
+            <option value="URL">Địa chỉ URL</option>
+            <option value="SHA256">Mã băm tệp tin (SHA256)</option>
+            <option value="Email">Địa chỉ Thư điện tử (Email)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Giá trị loại trừ <span class="req">*</span></label>
+          <input type="text" class="form-input" id="exclFormValue" placeholder="VD: 10.0.0.0/8 hoặc 192.168.1.0/24">
+          <div id="exclFormValueHint" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+            Hỗ trợ dải mạng định dạng CIDR, ví dụ: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Thời hạn hiệu lực <span class="req">*</span></label>
+          <div style="display: flex; gap: 20px; align-items: center; margin-top: 4px;">
+            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer; color: #fff;">
+              <input type="radio" name="exclValidityType" value="FOREVER" checked id="radioExclForever"> Vô thời hạn
+            </label>
+            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer; color: #fff;">
+              <input type="radio" name="exclValidityType" value="TIMED" id="radioExclTimed"> Có thời hạn
+            </label>
+          </div>
+          <div id="exclExpiryInputContainer" style="display: none; margin-top: 8px;">
+            <input type="datetime-local" class="form-input" id="exclFormExpiryDate" style="max-width: 260px;">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Lý do loại trừ <span class="req">*</span></label>
+          <textarea class="form-textarea" id="exclFormReason" rows="3" placeholder="Nêu rõ lý do loại trừ (VD: Phân vùng mạng máy chủ Core Banking; Tránh chặn nhầm khi feed OSINT trả về)"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Trạng thái áp dụng</label>
+          <div style="display: flex; align-items: center; gap: 10px; margin-top: 6px;">
+            <label class="switch">
+              <input type="checkbox" id="exclFormStatusToggle" checked>
+              <span class="slider"></span>
+            </label>
+            <span id="exclFormStatusLabel" style="font-size: 13px; color: #52c41a; font-weight: 500;">Kích hoạt</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btnCancelCreateEditExclModal">Hủy</button>
+        <button class="btn-primary" id="btnSaveExclRecord">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Lưu thông tin
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: XÁC NHẬN XÓA LOẠI TRỪ (DELETE EXCL MODAL)          -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="deleteExclModal" style="z-index: 1250;">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <div class="modal-title" style="color: #ff4d4f;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          Xác nhận xóa bản ghi loại trừ
+        </div>
+        <button class="modal-close-btn" id="btnCloseDeleteExclModal">✕</button>
+      </div>
+      <div class="modal-body" style="font-size: 13px; line-height: 1.6; color: #dcdfe8;">
+        <div>Bạn có chắc chắn muốn xóa bản ghi loại trừ <strong style="color: #fff;" id="deleteExclTargetCode">EXCL-2026-001</strong> (<span class="code-text" id="deleteExclTargetValue">10.0.0.0/8</span>) không?</div>
+        <div style="margin-top: 10px; background: rgba(255, 77, 79, 0.1); border: 1px solid rgba(255, 77, 79, 0.25); border-radius: 6px; padding: 10px; color: #ff7875; font-size: 12px;">
+          ⚠️ <strong>Cảnh báo an ninh mạng:</strong> Sau khi xóa, hệ thống sẽ tiếp nhận và cho phép xử lý lại các dấu hiệu tấn công thuộc chỉ số này bình thường nếu có nguồn cấp phát hiện.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btnCancelDeleteExclModal">Hủy bỏ</button>
+        <button class="btn-danger" id="btnConfirmDeleteExcl">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+          Xóa bản ghi
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: NHẬP LOẠI TRỪ TỪ FILE (IMPORT EXCL MODAL)          -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="importExclModal" style="z-index: 1200;">
+    <div class="modal-dialog" style="max-width: 580px;">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Nhập danh sách loại trừ từ tập tin
+        </div>
+        <button class="modal-close-btn" id="btnCloseImportExclModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="file-dropzone" id="exclFileDropzone">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#4096ff" stroke-width="1.8" style="margin-bottom: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div style="font-size: 14px; font-weight: 600; color: #fff;">Kéo thả tập tin vào đây hoặc bấm để chọn</div>
+          <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Hỗ trợ định dạng Excel (.xlsx, .xls) hoặc CSV (.csv). Kích thước tối đa 10MB.</div>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px; background: #171b26; padding: 10px 14px; border-radius: 6px; border: 1px solid #2b3345;">
+          <div style="font-size: 12px; color: var(--text-muted);">
+            Tải tệp tin mẫu chuẩn để nhập dữ liệu hàng loạt:
+          </div>
+          <button class="btn-link-action" id="btnDownloadExclTemplate" style="font-size: 12px; display: inline-flex; align-items: center; gap: 4px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Tải file mẫu (.xlsx)
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btnCancelImportExclModal">Hủy</button>
+        <button class="btn-primary" id="btnSubmitImportExcl">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          Nhập dữ liệu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: NHẬT KÝ NGĂN CHẶN TỰ ĐỘNG (AUDIT LOG MODAL)        -->
+  <!-- ======================================================== -->
+  <div class="modal-overlay" id="auditLogExclModal" style="z-index: 1200;">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-header">
+        <div class="modal-title" style="color: #ff7875;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          Nhật ký tự động ngăn chặn IoC thuộc danh sách loại trừ
+        </div>
+        <button class="modal-close-btn" id="btnCloseAuditLogExclModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="background: rgba(0, 102, 255, 0.1); border: 1px solid rgba(0, 102, 255, 0.25); border-radius: 6px; padding: 10px 14px; font-size: 12px; color: #dcdfe8;">
+          Hệ thống SOAR tự động đối soát các dấu hiệu tấn công đến từ ThreatFeed, Cảnh báo SIEM và thao tác thủ công. Bất kỳ chỉ số nào thuộc danh sách loại trừ sẽ bị <strong>từ chối tiếp nhận (Dropped)</strong> và ghi lại nhật ký tại đây.
+        </div>
+
+        <div class="table-container" style="max-height: 400px; overflow-y: auto; margin-top: 10px;">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 50px; text-align: center;">STT</th>
+                <th>Thời điểm</th>
+                <th>Giá trị IoC bị chặn</th>
+                <th>Loại chỉ số</th>
+                <th>Quy tắc loại trừ khớp</th>
+                <th>Nguồn cấp phát hiện</th>
+                <th>Hành động xử lý</th>
+              </tr>
+            </thead>
+            <tbody id="auditLogTableBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btnCloseAuditLogExclModal2">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT LOGIC                                         -->
+  <!-- ======================================================== -->
+  <script>
+    // --- Mock Data: Kho IoC ---
+    const MOCK_IOC_DATABASE = [
+      { id: 1, value: "185.220.101.5", type: "IPv4", lastSeen: "2026-09-28 00:00", expire: "2026-10-15 00:00", platforms: { "Palo Alto NGFW": true, "Fortinet FortiGate": true, "CrowdStrike EDR": false, "F5 BIG-IP WAF": false } },
+      { id: 2, value: "194.26.29.112", type: "IPv4", lastSeen: "2026-09-29 11:20", expire: "2026-10-20 00:00", platforms: { "Palo Alto NGFW": true, "Fortinet FortiGate": false, "CrowdStrike EDR": true, "F5 BIG-IP WAF": false } },
+      { id: 3, value: "evil-c2-update.org", type: "Domain", lastSeen: "2026-09-30 08:45", expire: "2026-10-05 12:00", platforms: { "Palo Alto NGFW": false, "Fortinet FortiGate": false, "CrowdStrike EDR": true, "F5 BIG-IP WAF": true } },
+      { id: 4, value: "203.0.113.195", type: "IPv4", lastSeen: "2026-09-27 15:10", expire: "2026-09-28 00:00", platforms: { "Palo Alto NGFW": false, "Fortinet FortiGate": false, "CrowdStrike EDR": false, "F5 BIG-IP WAF": false } },
+      { id: 5, value: "45.148.10.66", type: "IPv4", lastSeen: "2026-09-29 17:00", expire: "2026-10-18 00:00", platforms: { "Palo Alto NGFW": false, "Fortinet FortiGate": true, "CrowdStrike EDR": false, "F5 BIG-IP WAF": false } },
+      { id: 6, value: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", type: "SHA256", lastSeen: "2026-09-25 09:00", expire: "2026-12-31 23:59", platforms: { "Palo Alto NGFW": false, "Fortinet FortiGate": false, "CrowdStrike EDR": true, "F5 BIG-IP WAF": false } },
+      { id: 7, value: "login-verify-account.top", type: "Domain", lastSeen: "2026-09-30 22:15", expire: "2026-10-02 18:00", platforms: { "Palo Alto NGFW": false, "Fortinet FortiGate": false, "CrowdStrike EDR": false, "F5 BIG-IP WAF": false } },
+      { id: 8, value: "103.225.10.88", type: "IPv4", lastSeen: "2026-10-01 02:30", expire: "2026-10-25 00:00", platforms: { "Palo Alto NGFW": false, "Fortinet FortiGate": false, "CrowdStrike EDR": false, "F5 BIG-IP WAF": false } },
+      { id: 9, value: "http://malicious-drop.biz/payload.bin", type: "URL", lastSeen: "2026-09-28 14:00", expire: "2026-10-08 00:00", platforms: { "Palo Alto NGFW": false, "Fortinet FortiGate": false, "CrowdStrike EDR": false, "F5 BIG-IP WAF": false } },
+      { id: 10, value: "89.248.165.70", type: "IPv4", lastSeen: "2026-09-26 18:40", expire: "2026-09-30 00:00", platforms: { "Palo Alto NGFW": false, "Fortinet FortiGate": false, "CrowdStrike EDR": false, "F5 BIG-IP WAF": false } },
+      { id: 11, value: "198.51.100.44", type: "IPv4", lastSeen: "2026-09-29 07:15", expire: "2026-11-01 00:00", platforms: { "Palo Alto NGFW": false, "Fortinet FortiGate": false, "CrowdStrike EDR": false, "F5 BIG-IP WAF": false } },
+      { id: 12, value: "sync-gateway-cdn.xyz", type: "Domain", lastSeen: "2026-09-30 19:50", expire: "2026-10-12 00:00", platforms: { "Palo Alto NGFW": false, "Fortinet FortiGate": false, "CrowdStrike EDR": false, "F5 BIG-IP WAF": false } }
+    ];
+
+    // --- Mock Data: Danh sách Yêu cầu ---
+    let requestsData = [
+      {
+        id: "REQ-2026-0044",
+        title: "Đẩy BlackCat Hash & IP C2 khẩn cấp",
+        type: "Tích hợp",
+        platform: "CrowdStrike EDR",
+        count: 12,
+        result: "-",
+        status: "Chờ phê duyệt",
+        creator: "vinhduong",
+        createdAt: "01/10/2026 11:00",
+        approver: "-",
+        approvedAt: "-",
+        revokeReason: "",
+        iocs: [
+          { value: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", type: "SHA256", expire: "2026-12-31 23:59", status: "Chưa xử lý", error: "" },
+          { value: "evil-c2-update.org", type: "Domain", expire: "2026-10-05 12:00", status: "Chưa xử lý", error: "" },
+          { value: "194.26.29.112", type: "IPv4", expire: "2026-10-20 00:00", status: "Chưa xử lý", error: "" }
+        ]
+      },
+      {
+        id: "REQ-2026-0041",
+        title: "Chặn Botnet Scanner quét cổng",
+        type: "Tích hợp",
+        platform: "Fortinet FortiGate",
+        count: 30,
+        result: "0 Thành công / 30 Lỗi",
+        status: "Lỗi",
+        creator: "admin3",
+        createdAt: "30/09/2026 16:00",
+        approver: "admin",
+        approvedAt: "30/09/2026 16:10",
+        revokeReason: "",
+        iocs: [
+          { value: "45.148.10.66", type: "IPv4", expire: "2026-10-18 00:00", status: "Thất bại", error: "Device API Authentication Expired (HTTP 401)" },
+          { value: "185.220.101.5", type: "IPv4", expire: "2026-10-15 00:00", status: "Thất bại", error: "Device API Authentication Expired (HTTP 401)" }
+        ]
+      },
+      {
+        id: "REQ-2026-0042",
+        title: "Chặn C2 APT29 xâm nhập nội bộ",
+        type: "Tích hợp",
+        platform: "Palo Alto NGFW",
+        count: 45,
+        result: "42 Thành công / 3 Lỗi",
+        status: "Hoàn thành",
+        creator: "tomhagen",
+        createdAt: "01/10/2026 09:30",
+        approver: "admin",
+        approvedAt: "01/10/2026 09:45",
+        revokeReason: "",
+        iocs: [
+          { value: "185.220.101.5", type: "IPv4", expire: "2026-10-15 00:00", status: "Đã tích hợp", error: "" },
+          { value: "194.26.29.112", type: "IPv4", expire: "2026-10-20 00:00", status: "Đã tích hợp", error: "" },
+          { value: "evil-c2-update.org", type: "Domain", expire: "2026-10-05 12:00", status: "Thất bại", error: "Không hỗ trợ định dạng FQDN trên thiết bị này" },
+          { value: "203.0.113.195", type: "IPv4", expire: "2026-09-28 00:00", status: "Thất bại", error: "Timeout kết nối thiết bị khi đẩy policy" }
+        ]
+      },
+      {
+        id: "REQ-2026-0043",
+        title: "Thu hồi chặn lọc C2 APT29 do nghi ngờ IP đối tác",
+        type: "Thu hồi",
+        platform: "Palo Alto NGFW",
+        count: 45,
+        result: "45 Thành công / 0 Lỗi",
+        status: "Hoàn thành",
+        creator: "tomhagen",
+        createdAt: "01/10/2026 10:15",
+        approver: "admin",
+        approvedAt: "01/10/2026 10:30",
+        revokeReason: "Phát hiện có dải IP dịch vụ đối tác bị gom nhầm vào danh sách chặn, tiến hành gỡ bỏ để khôi phục kết nối.",
+        iocs: [
+          { value: "185.220.101.5", type: "IPv4", expire: "2026-10-15 00:00", status: "Đã thu hồi", error: "" },
+          { value: "194.26.29.112", type: "IPv4", expire: "2026-10-20 00:00", status: "Đã thu hồi", error: "" }
+        ]
+      },
+      {
+        id: "REQ-2026-0045",
+        title: "Chặn Ransomware IP đợt 2",
+        type: "Tích hợp",
+        platform: "Palo Alto NGFW",
+        count: 20,
+        result: "Đang xử lý...",
+        status: "Đang tích hợp",
+        creator: "tomhagen",
+        createdAt: "01/10/2026 11:30",
+        approver: "admin",
+        approvedAt: "01/10/2026 11:35",
+        revokeReason: "",
+        iocs: [
+          { value: "103.225.10.88", type: "IPv4", expire: "2026-10-25 00:00", status: "Đang xử lý", error: "" }
+        ]
+      }
+    ];
+
+    // --- State variables ---
+    let selectedIocIds = new Set();
+    let currentPendingPlatform = "Palo Alto NGFW";
+    let activeDetailItem = null;
+    let iocTableViewMode = "ALL"; // "ALL" or "SELECTED_ONLY"
+    let iocCurrentPage = 1;
+    let iocPageSize = 10;
+
+    // --- Helpers: Toast ---
+    function showToast(text, type = "info") {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      toast.className = `toast-msg toast-${type}`;
+      let icon = "ℹ️";
+      if (type === "success") icon = "✅";
+      if (type === "error") icon = "❌";
+      if (type === "warning") icon = "⚠️";
+      toast.innerHTML = `<span>${icon}</span><span>${text}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateX(50px)";
+        toast.style.transition = "all 0.3s ease";
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // --- Render Main Table ---
+    function renderMainTable() {
+      const searchVal = document.getElementById("mainSearchInput").value.trim().toLowerCase();
+      const platformVal = document.getElementById("filterPlatform").value;
+      const typeVal = document.getElementById("filterType").value;
+      const statusVal = document.getElementById("filterStatus").value;
+
+      const tbody = document.getElementById("requestTableBody");
+      tbody.innerHTML = "";
+
+      const filtered = requestsData.filter(item => {
+        const matchSearch = !searchVal || 
+          item.id.toLowerCase().includes(searchVal) ||
+          item.title.toLowerCase().includes(searchVal) ||
+          item.creator.toLowerCase().includes(searchVal);
+        const matchPlatform = platformVal === "ALL" || item.platform === platformVal;
+        const matchType = typeVal === "ALL" || item.type === typeVal;
+        const matchStatus = statusVal === "ALL" || item.status === statusVal;
+        return matchSearch && matchPlatform && matchType && matchStatus;
+      });
+
+      document.getElementById("totalRecordLabel").textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; color: var(--text-muted); padding: 36px 0;">Không tìm thấy yêu cầu nào phù hợp với bộ lọc</td></tr>`;
+        return;
+      }
+
+      filtered.forEach((item, index) => {
+        const tr = document.createElement("tr");
+
+        // Type badge
+        let typeBadge = item.type === "Tích hợp" 
+          ? `<span class="badge badge-info"><span class="badge-dot"></span>Tích hợp</span>` 
+          : `<span class="badge badge-purple"><span class="badge-dot"></span>Thu hồi</span>`;
+
+        // Status badge
+        let statusBadge = "";
+        if (item.status === "Chờ phê duyệt") {
+          statusBadge = `<span class="badge badge-warning"><span class="badge-dot"></span>Chờ phê duyệt</span>`;
+        } else if (item.status === "Đang tích hợp") {
+          statusBadge = `<span class="badge badge-info"><span class="badge-dot" style="animation: pulse 1s infinite;"></span>Đang tích hợp</span>`;
+        } else if (item.status === "Hoàn thành") {
+          statusBadge = `<span class="badge badge-success"><span class="badge-dot"></span>Hoàn thành</span>`;
+        } else if (item.status === "Lỗi") {
+          statusBadge = `<span class="badge badge-danger"><span class="badge-dot"></span>Lỗi</span>`;
+        } else if (item.status === "Từ chối") {
+          statusBadge = `<span class="badge badge-rejected"><span class="badge-dot"></span>Từ chối</span>`;
+        }
+
+        // Action column rules
+        let actionContent = `<div class="row-actions" style="justify-content: center;">`;
+
+        if (item.status === "Chờ phê duyệt") {
+          // Chỉ có button icon Phê duyệt (nhấn vào mở popup chi tiết)
+          actionContent += `
+            <button class="btn-approve-action" onclick="openDetailModal('${item.id}')" title="Phê duyệt">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+          `;
+        } else if (item.status === "Lỗi") {
+          // Có icon Xem chi tiết + icon Thực thi lại
+          actionContent += `
+            <button class="btn-action-icon" onclick="openDetailModal('${item.id}')" title="Xem chi tiết">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <button class="btn-retry-action" onclick="retryRequest('${item.id}')" title="Thực thi lại">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+            </button>
+          `;
+        } else {
+          // Các trạng thái khác: chỉ có Xem chi tiết
+          actionContent += `
+            <button class="btn-action-icon" onclick="openDetailModal('${item.id}')" title="Xem chi tiết">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          `;
+        }
+        actionContent += `</div>`;
+
+        tr.innerHTML = `
+          <td style="text-align: center; color: var(--text-muted); white-space: nowrap;">${index + 1}</td>
+          <td style="white-space: nowrap;"><span class="code-text" style="cursor: pointer;" onclick="openDetailModal('${item.id}')">${item.id}</span></td>
+          <td style="font-weight: 500; color: #fff;">${item.title}</td>
+          <td style="white-space: nowrap;">${typeBadge}</td>
+          <td style="white-space: nowrap;"><span class="platform-tag">${item.platform}</span></td>
+          <td style="text-align: center; font-weight: 600; white-space: nowrap;">${item.count}</td>
+          <td>${item.result}</td>
+          <td style="white-space: nowrap;">${statusBadge}</td>
+          <td style="font-size: 12px; line-height: 1.4; white-space: nowrap;">
+            <div style="color: #fff; font-weight: 500; white-space: nowrap;">${item.creator}</div>
+            <div style="color: var(--text-muted); font-size: 11px; white-space: nowrap;">${item.createdAt}</div>
+          </td>
+          <td style="font-size: 12px; line-height: 1.4; white-space: nowrap;">
+            <div style="color: #fff; font-weight: 500; white-space: nowrap;">${item.approver}</div>
+            <div style="color: var(--text-muted); font-size: 11px; white-space: nowrap;">${item.approvedAt}</div>
+          </td>
+          <td style="white-space: nowrap;">${actionContent}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // --- Main Filters Event Listeners ---
+    document.getElementById("mainSearchInput").addEventListener("input", (e) => {
+      document.getElementById("mainSearchClearBtn").style.display = e.target.value ? "block" : "none";
+      renderMainTable();
+    });
+    document.getElementById("mainSearchClearBtn").addEventListener("click", () => {
+      document.getElementById("mainSearchInput").value = "";
+      document.getElementById("mainSearchClearBtn").style.display = "none";
+      renderMainTable();
+    });
+    document.getElementById("filterPlatform").addEventListener("change", renderMainTable);
+    document.getElementById("filterType").addEventListener("change", renderMainTable);
+    document.getElementById("filterStatus").addEventListener("change", renderMainTable);
+    document.getElementById("btnResetFilters").addEventListener("click", () => {
+      document.getElementById("mainSearchInput").value = "";
+      document.getElementById("mainSearchClearBtn").style.display = "none";
+      document.getElementById("filterPlatform").value = "ALL";
+      document.getElementById("filterType").value = "ALL";
+      document.getElementById("filterStatus").value = "ALL";
+      renderMainTable();
+      showToast("Đã đặt lại toàn bộ bộ lọc", "info");
+    });
+
+    // --- Action: Thực thi lại từ bảng chính ---
+    function retryRequest(id) {
+      const item = requestsData.find(r => r.id === id);
+      if (!item) return;
+      item.status = "Đang tích hợp";
+      item.result = "Đang xử lý lại...";
+      renderMainTable();
+      showToast(`Đang thực thi lại yêu cầu ${id}...`, "warning");
+
+      // Giả lập sau 2.5s thì hoàn thành
+      setTimeout(() => {
+        item.status = "Hoàn thành";
+        item.result = `${item.count} Thành công / 0 Lỗi`;
+        renderMainTable();
+        showToast(`Yêu cầu ${id} đã thực thi lại thành công!`, "success");
+      }, 2500);
+    }
+
+    // --- MODAL 1: TẠO YÊU CẦU BAN HÀNH LOGIC ---
+    const createModal = document.getElementById("createModal");
+    const createPlatformSelect = document.getElementById("createPlatformSelect");
+
+    document.getElementById("btnOpenCreateModal").addEventListener("click", () => {
+      document.getElementById("createTitleInput").value = "";
+      createPlatformSelect.value = "Palo Alto NGFW";
+      currentPendingPlatform = "Palo Alto NGFW";
+      selectedIocIds.clear();
+      iocCurrentPage = 1;
+      setIocTableViewMode("ALL");
+      updateSelectedIocCounter();
+      updatePlatformLabelInModal("Palo Alto NGFW");
+      renderIocPickerTable();
+      createModal.classList.add("active");
+    });
+
+    function closeCreateModal() {
+      createModal.classList.remove("active");
+    }
+    document.getElementById("btnCloseCreateModal").addEventListener("click", closeCreateModal);
+    document.getElementById("btnCancelCreateModal").addEventListener("click", closeCreateModal);
+
+    function updatePlatformLabelInModal(platformName) {
+      document.getElementById("iocEnforcedFilterLabel").textContent = `Trạng thái trên ${platformName}`;
+    }
+
+    // --- Platform Select Change with Confirmation ---
+    const confirmChangePlatformModal = document.getElementById("confirmChangePlatformModal");
+    let targetPlatformToSwitch = "";
+
+    createPlatformSelect.addEventListener("change", (e) => {
+      const newPlatform = e.target.value;
+      if (selectedIocIds.size > 0) {
+        // Đã chọn bản ghi ➔ Cần xác nhận
+        targetPlatformToSwitch = newPlatform;
+        // Tạm thời revert về giá trị cũ trên select cho đến khi confirm
+        createPlatformSelect.value = currentPendingPlatform;
+        confirmChangePlatformModal.classList.add("active");
+      } else {
+        // Chưa chọn gì ➔ đổi luôn
+        currentPendingPlatform = newPlatform;
+        updatePlatformLabelInModal(newPlatform);
+        renderIocPickerTable();
+      }
+    });
+
+    document.getElementById("btnConfirmChangePlatform").addEventListener("click", () => {
+      currentPendingPlatform = targetPlatformToSwitch;
+      createPlatformSelect.value = targetPlatformToSwitch;
+      selectedIocIds.clear(); // Hủy toàn bộ IoC đã chọn
+      updateSelectedIocCounter();
+      updatePlatformLabelInModal(targetPlatformToSwitch);
+      renderIocPickerTable();
+      confirmChangePlatformModal.classList.remove("active");
+      showToast("Đã chuyển nền tảng và đặt lại danh sách IoC đã chọn", "info");
+    });
+
+    document.getElementById("btnCancelChangePlatform").addEventListener("click", () => {
+      confirmChangePlatformModal.classList.remove("active");
+    });
+    document.getElementById("btnDismissChangePlatformModal").addEventListener("click", () => {
+      confirmChangePlatformModal.classList.remove("active");
+    });
+
+    // --- Render Bảng IoC trong Modal ---
+    function renderIocPickerTable() {
+      const platform = currentPendingPlatform;
+      const searchVal = document.getElementById("iocSearchInput").value.trim().toLowerCase();
+      const dateFrom = document.getElementById("iocDateFrom").value;
+      const dateTo = document.getElementById("iocDateTo").value;
+      const typeFilter = document.getElementById("iocTypeFilter").value;
+      const enforceFilter = document.getElementById("iocEnforcedFilter").value;
+
+      const tbody = document.getElementById("iocPickerTableBody");
+      tbody.innerHTML = "";
+
+      const filtered = MOCK_IOC_DATABASE.filter(ioc => {
+        // Mode: Chỉ hiển thị IoC đã chọn
+        if (iocTableViewMode === "SELECTED_ONLY" && !selectedIocIds.has(ioc.id)) {
+          return false;
+        }
+
+        // Search
+        if (searchVal && !ioc.value.toLowerCase().includes(searchVal) && !ioc.type.toLowerCase().includes(searchVal)) {
+          return false;
+        }
+
+        // Type filter
+        if (typeFilter !== "ALL" && ioc.type !== typeFilter) {
+          return false;
+        }
+
+        // Date range
+        const expDate = new Date(ioc.expire.replace(" ", "T"));
+        if (dateFrom && expDate < new Date(dateFrom)) return false;
+        if (dateTo && expDate > new Date(dateTo + "T23:59:59")) return false;
+
+        // Enforce status on current platform
+        const isEnforced = !!ioc.platforms[platform];
+        if (enforceFilter === "ENFORCED" && !isEnforced) return false;
+        if (enforceFilter === "NOT_ENFORCED" && isEnforced) return false;
+
+        return true;
+      });
+
+      // Pagination calculation
+      const totalItems = filtered.length;
+      const totalPages = Math.ceil(totalItems / iocPageSize) || 1;
+      if (iocCurrentPage > totalPages) iocCurrentPage = totalPages;
+      if (iocCurrentPage < 1) iocCurrentPage = 1;
+
+      const startIndex = (iocCurrentPage - 1) * iocPageSize;
+      const endIndex = Math.min(startIndex + iocPageSize, totalItems);
+      const pageData = filtered.slice(startIndex, endIndex);
+
+      if (totalItems === 0) {
+        const emptyMsg = iocTableViewMode === "SELECTED_ONLY" 
+          ? "Chưa có IoC nào được chọn để hiển thị" 
+          : "Không có IoC nào phù hợp với điều kiện lọc";
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 24px 0;">${emptyMsg}</td></tr>`;
+        renderIocPagination(0, 1);
+        return;
+      }
+
+      pageData.forEach((ioc, index) => {
+        const tr = document.createElement("tr");
+        const isChecked = selectedIocIds.has(ioc.id);
+        const isEnforced = !!ioc.platforms[platform];
+        const enforceBadge = isEnforced 
+          ? `<span class="badge badge-success">Đã tích hợp</span>` 
+          : `<span class="badge" style="background:#262a38;color:#9499ad;">Chưa tích hợp</span>`;
+
+        tr.innerHTML = `
+          <td style="text-align: center;">
+            <input type="checkbox" class="ioc-checkbox" data-id="${ioc.id}" ${isChecked ? "checked" : ""}>
+          </td>
+          <td style="text-align: center; color: var(--text-muted);">${startIndex + index + 1}</td>
+          <td><span class="code-text" style="color: #fff;">${ioc.value}</span></td>
+          <td><span class="platform-tag" style="padding: 1px 6px;">${ioc.type}</span></td>
+          <td style="color: var(--text-muted); font-size: 12px;">${ioc.lastSeen}</td>
+          <td style="color: var(--text-secondary);">${ioc.expire}</td>
+          <td>${enforceBadge}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Check if all items on current page are checked
+      const allCurrentChecked = pageData.length > 0 && pageData.every(ioc => selectedIocIds.has(ioc.id));
+      document.getElementById("selectAllIocCheckbox").checked = allCurrentChecked;
+
+      // Bind checkbox change
+      tbody.querySelectorAll(".ioc-checkbox").forEach(cb => {
+        cb.addEventListener("change", (e) => {
+          const id = parseInt(e.target.getAttribute("data-id"));
+          if (e.target.checked) {
+            if (selectedIocIds.size >= 1000) {
+              alert("Mỗi yêu cầu tích hợp chỉ cho phép tối đa 1.000 IoC!");
+              e.target.checked = false;
+              return;
+            }
+            selectedIocIds.add(id);
+          } else {
+            selectedIocIds.delete(id);
+          }
+          updateSelectedIocCounter();
+        });
+      });
+
+      // Render pagination controls
+      renderIocPagination(totalItems, totalPages);
+    }
+
+    // Render pagination controls for IoC Table
+    function renderIocPagination(totalItems, totalPages) {
+      const container = document.getElementById("iocPaginationBar");
+      if (!container) return;
+      container.innerHTML = "";
+
+      // Prev Button
+      const prevBtn = document.createElement("button");
+      prevBtn.className = "page-btn";
+      prevBtn.innerHTML = "❮";
+      prevBtn.title = "Trang trước";
+      prevBtn.disabled = iocCurrentPage <= 1;
+      if (iocCurrentPage <= 1) prevBtn.style.opacity = "0.4";
+      prevBtn.addEventListener("click", () => {
+        if (iocCurrentPage > 1) {
+          iocCurrentPage--;
+          renderIocPickerTable();
+        }
+      });
+      container.appendChild(prevBtn);
+
+      // Page number buttons
+      for (let p = 1; p <= totalPages; p++) {
+        const pageBtn = document.createElement("button");
+        pageBtn.className = `page-btn ${p === iocCurrentPage ? "active" : ""}`;
+        pageBtn.textContent = p;
+        pageBtn.addEventListener("click", () => {
+          iocCurrentPage = p;
+          renderIocPickerTable();
+        });
+        container.appendChild(pageBtn);
+      }
+
+      // Next Button
+      const nextBtn = document.createElement("button");
+      nextBtn.className = "page-btn";
+      nextBtn.innerHTML = "❯";
+      nextBtn.title = "Trang sau";
+      nextBtn.disabled = iocCurrentPage >= totalPages;
+      if (iocCurrentPage >= totalPages) nextBtn.style.opacity = "0.4";
+      nextBtn.addEventListener("click", () => {
+        if (iocCurrentPage < totalPages) {
+          iocCurrentPage++;
+          renderIocPickerTable();
+        }
+      });
+      container.appendChild(nextBtn);
+    }
+
+    // Page size change in IoC table
+    document.getElementById("iocPageSizeSelect").addEventListener("change", (e) => {
+      iocPageSize = parseInt(e.target.value);
+      iocCurrentPage = 1;
+      renderIocPickerTable();
+    });
+
+    // Chuyển đổi giữa Xem tất cả và Xem đã chọn
+    function setIocTableViewMode(mode) {
+      iocTableViewMode = mode;
+      iocCurrentPage = 1;
+      const tabAll = document.getElementById("tabViewAllIocs");
+      const tabSelected = document.getElementById("tabViewSelectedIocs");
+      const textHint = document.getElementById("viewingModeText");
+
+      if (mode === "ALL") {
+        tabAll.classList.add("active");
+        tabSelected.classList.remove("active");
+        textHint.textContent = "Tất cả IoC";
+      } else {
+        tabAll.classList.remove("active");
+        tabSelected.classList.add("active");
+        textHint.textContent = `Chỉ ${selectedIocIds.size} IoC đã chọn`;
+      }
+      renderIocPickerTable();
+    }
+
+    document.getElementById("tabViewAllIocs").addEventListener("click", () => setIocTableViewMode("ALL"));
+    document.getElementById("tabViewSelectedIocs").addEventListener("click", () => setIocTableViewMode("SELECTED_ONLY"));
+
+    // Select all on current page
+    document.getElementById("selectAllIocCheckbox").addEventListener("change", (e) => {
+      const checked = e.target.checked;
+      const cbs = document.querySelectorAll("#iocPickerTableBody .ioc-checkbox");
+      cbs.forEach(cb => {
+        const id = parseInt(cb.getAttribute("data-id"));
+        if (checked) {
+          if (selectedIocIds.size < 1000) selectedIocIds.add(id);
+        } else {
+          selectedIocIds.delete(id);
+        }
+        cb.checked = checked && selectedIocIds.has(id);
+      });
+      updateSelectedIocCounter();
+    });
+
+    // Clear all selection button
+    document.getElementById("btnClearAllSelectionBtn").addEventListener("click", () => {
+      selectedIocIds.clear();
+      document.getElementById("selectAllIocCheckbox").checked = false;
+      document.querySelectorAll("#iocPickerTableBody .ioc-checkbox").forEach(cb => cb.checked = false);
+      updateSelectedIocCounter();
+      showToast("Đã bỏ chọn tất cả IoC", "info");
+    });
+
+    function updateSelectedIocCounter() {
+      const count = selectedIocIds.size;
+      document.getElementById("iocSelectedCountText").textContent = `Đã chọn: ${count} IoC`;
+      document.getElementById("countSelectedIocsTab").textContent = count;
+      document.getElementById("countAllIocs").textContent = MOCK_IOC_DATABASE.length;
+
+      const submitBtn = document.getElementById("btnSubmitCreateRequest");
+      if (count === 0) {
+        submitBtn.style.opacity = "0.5";
+        submitBtn.style.cursor = "not-allowed";
+      } else {
+        submitBtn.style.opacity = "1";
+        submitBtn.style.cursor = "pointer";
+      }
+
+      // Nếu đang xem ở chế độ chỉ xem đã chọn, render lại để cập nhật danh sách
+      if (iocTableViewMode === "SELECTED_ONLY") {
+        renderIocPickerTable();
+      }
+    }
+
+    // Filter events in modal
+    document.getElementById("iocSearchInput").addEventListener("input", () => { iocCurrentPage = 1; renderIocPickerTable(); });
+    document.getElementById("iocDateFrom").addEventListener("change", () => { iocCurrentPage = 1; renderIocPickerTable(); });
+    document.getElementById("iocDateTo").addEventListener("change", () => { iocCurrentPage = 1; renderIocPickerTable(); });
+    document.getElementById("iocTypeFilter").addEventListener("change", () => { iocCurrentPage = 1; renderIocPickerTable(); });
+    document.getElementById("iocEnforcedFilter").addEventListener("change", () => { iocCurrentPage = 1; renderIocPickerTable(); });
+
+    // Submit Create Request
+    document.getElementById("btnSubmitCreateRequest").addEventListener("click", () => {
+      const title = document.getElementById("createTitleInput").value.trim();
+      if (!title) {
+        alert("Vui lòng nhập Tiêu đề yêu cầu!");
+        document.getElementById("createTitleInput").focus();
+        return;
+      }
+      if (selectedIocIds.size === 0) {
+        alert("Cần chọn ít nhất 1 IoC để thực hiện tích hợp!");
+        return;
+      }
+      if (selectedIocIds.size > 1000) {
+        alert("Mỗi yêu cầu chỉ cho phép tối đa 1.000 IoC. Vui lòng giảm bớt số lượng!");
+        return;
+      }
+
+      const platform = createPlatformSelect.value;
+      const count = selectedIocIds.size;
+      const reqId = `REQ-2026-00${requestsData.length + 42}`;
+
+      // Build iocs list
+      const chosenIocs = [];
+      MOCK_IOC_DATABASE.forEach(ioc => {
+        if (selectedIocIds.has(ioc.id)) {
+          chosenIocs.push({
+            value: ioc.value,
+            type: ioc.type,
+            expire: ioc.expire,
+            status: "Chưa xử lý",
+            error: ""
+          });
+        }
+      });
+
+      const newReq = {
+        id: reqId,
+        title: title,
+        type: "Tích hợp",
+        platform: platform,
+        count: count,
+        result: "-",
+        status: "Chờ phê duyệt",
+        creator: "tomhagen",
+        createdAt: "01/10/2026 11:52",
+        approver: "-",
+        approvedAt: "-",
+        revokeReason: "",
+        iocs: chosenIocs
+      };
+
+      requestsData.unshift(newReq);
+      renderMainTable();
+      closeCreateModal();
+      showToast(`Đã tạo yêu cầu tích hợp ${reqId} thành công (Trạng thái: Chờ phê duyệt)`, "success");
+    });
+
+    // --- MODAL 2: CHI TIẾT YÊU CẦU LOGIC ---
+    const detailModal = document.getElementById("detailModal");
+
+    function openDetailModal(id) {
+      const item = requestsData.find(r => r.id === id);
+      if (!item) return;
+      activeDetailItem = item;
+
+      document.getElementById("detailModalTitle").textContent = `Chi tiết yêu cầu ${item.type.toLowerCase()} - ${item.id}`;
+      document.getElementById("detailReqCode").textContent = item.id;
+      document.getElementById("detailReqType").innerHTML = item.type === "Tích hợp"
+        ? `<span class="badge badge-info">Tích hợp</span>`
+        : `<span class="badge badge-purple">Thu hồi</span>`;
+      document.getElementById("detailReqPlatform").textContent = item.platform;
+
+      let statusBadge = "";
+      if (item.status === "Chờ phê duyệt") statusBadge = `<span class="badge badge-warning">Chờ phê duyệt</span>`;
+      else if (item.status === "Đang tích hợp") statusBadge = `<span class="badge badge-info">Đang tích hợp</span>`;
+      else if (item.status === "Hoàn thành") statusBadge = `<span class="badge badge-success">Hoàn thành</span>`;
+      else if (item.status === "Lỗi") statusBadge = `<span class="badge badge-danger">Lỗi</span>`;
+      else if (item.status === "Từ chối") statusBadge = `<span class="badge badge-rejected">Từ chối</span>`;
+      document.getElementById("detailReqStatus").innerHTML = statusBadge;
+
+      document.getElementById("detailReqCreator").textContent = `${item.creator} (${item.createdAt})`;
+      document.getElementById("detailReqApprover").textContent = item.approver !== "-" ? `${item.approver} (${item.approvedAt})` : "Chưa phê duyệt";
+      document.getElementById("detailReqCount").textContent = `${item.count} IoC`;
+      document.getElementById("detailReqResult").textContent = item.result;
+
+      // Revoke reason box
+      const reasonBox = document.getElementById("detailRevokeReasonBox");
+      if (item.type === "Thu hồi" && item.revokeReason) {
+        reasonBox.style.display = "block";
+        document.getElementById("detailRevokeReasonText").textContent = item.revokeReason;
+      } else {
+        reasonBox.style.display = "none";
+      }
+
+      // Reject reason box
+      const rejectBox = document.getElementById("detailRejectReasonBox");
+      if (item.status === "Từ chối") {
+        rejectBox.style.display = "block";
+        const reason = item.rejectReason || (item.result && item.result.startsWith("Từ chối:") ? item.result.replace("Từ chối:", "").trim() : "Không đủ điều kiện phê duyệt");
+        document.getElementById("detailRejectReasonText").textContent = reason;
+      } else {
+        rejectBox.style.display = "none";
+      }
+
+      // Render IoC results table
+      const tbody = document.getElementById("detailIocTableBody");
+      tbody.innerHTML = "";
+      if (!item.iocs || item.iocs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">Không có dữ liệu chi tiết IoC</td></tr>`;
+      } else {
+        item.iocs.forEach((ioc, index) => {
+          const tr = document.createElement("tr");
+
+          let statusCol = "";
+          if (ioc.status === "Đã tích hợp" || ioc.status === "Đã thu hồi") {
+            statusCol = `<span class="badge badge-success">${ioc.status}</span>`;
+          } else if (ioc.status === "Thất bại") {
+            statusCol = `<span class="badge badge-danger">Thất bại</span>`;
+          } else {
+            statusCol = `<span class="badge" style="background:#262a38;color:#9aa0b6;">${ioc.status}</span>`;
+          }
+
+          tr.innerHTML = `
+            <td style="text-align: center; color: var(--text-muted);">${index + 1}</td>
+            <td><span class="code-text" style="color: #fff;">${ioc.value}</span></td>
+            <td><span class="platform-tag" style="padding: 1px 6px;">${ioc.type}</span></td>
+            <td style="color: var(--text-secondary);">${ioc.expire}</td>
+            <td>${statusCol}</td>
+            <td style="color: #ff7875; font-size: 12px;">${ioc.error ? ioc.error : "-"}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // Render Footer Buttons
+      renderDetailFooter(item);
+
+      detailModal.classList.add("active");
+    }
+
+    function renderDetailFooter(item) {
+      const footer = document.getElementById("detailModalFooter");
+      footer.innerHTML = "";
+
+      // 1. Trường hợp Chờ phê duyệt: Nút Từ chối & Phê duyệt
+      if (item.status === "Chờ phê duyệt") {
+        footer.innerHTML = `
+          <button class="btn-danger-outline" onclick="openRejectModal('${item.id}')">Từ chối</button>
+          <button class="btn-primary" onclick="approveRequest('${item.id}')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Phê duyệt & Thực thi
+          </button>
+          <button class="btn-secondary" onclick="closeDetailModal()">Đóng</button>
+        `;
+      } 
+      // 2. Trường hợp Tích hợp & Hoàn thành: Có nút Tạo yêu cầu thu hồi
+      else if (item.type === "Tích hợp" && item.status === "Hoàn thành") {
+        footer.innerHTML = `
+          <button class="btn-purple" onclick="openRevokeModal('${item.id}')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+            Tạo yêu cầu thu hồi
+          </button>
+          <button class="btn-secondary" onclick="closeDetailModal()">Đóng</button>
+        `;
+      } 
+      // 3. Trường hợp Lỗi: Có nút Thực thi lại
+      else if (item.status === "Lỗi") {
+        footer.innerHTML = `
+          <button class="btn-primary" onclick="retryRequestFromDetail('${item.id}')" style="background:#faad14; border-color:#faad14; color:#000;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+            Thực thi lại
+          </button>
+          <button class="btn-secondary" onclick="closeDetailModal()">Đóng</button>
+        `;
+      } 
+      // 4. Các trường hợp khác
+      else {
+        footer.innerHTML = `
+          <button class="btn-secondary" onclick="closeDetailModal()">Đóng</button>
+        `;
+      }
+    }
+
+    function closeDetailModal() {
+      detailModal.classList.remove("active");
+    }
+    document.getElementById("btnCloseDetailModal").addEventListener("click", closeDetailModal);
+
+    // --- Action: Phê duyệt từ popup ---
+    function approveRequest(id) {
+      const item = requestsData.find(r => r.id === id);
+      if (!item) return;
+      const pb = PLAYBOOK_DATABASE[selectedPlaybookId] || { code: "PB-IOC-01", name: "Playbook phân phối IoC" };
+      item.status = "Đang tích hợp";
+      item.approver = "admin";
+      item.approvedAt = "01/10/2026 11:55";
+      item.result = `Đang chạy [${pb.code}]...`;
+      closeDetailModal();
+      renderMainTable();
+      showToast(`Đã phê duyệt yêu cầu ${id}. Đang kích hoạt Playbook [${pb.code}: ${pb.name}]...`, "info");
+
+      setTimeout(() => {
+        item.status = "Hoàn thành";
+        item.result = `${item.count} Thành công / 0 Lỗi`;
+        item.iocs.forEach(ioc => {
+          ioc.status = item.type === "Tích hợp" ? "Đã tích hợp" : "Đã thu hồi";
+        });
+        renderMainTable();
+        showToast(`Playbook [${pb.code}] đã hoàn tất tích hợp cho yêu cầu ${id}!`, "success");
+      }, 3000);
+    }
+
+    // --- MODAL: TỪ CHỐI YÊU CẦU LOGIC ---
+    const rejectReasonModal = document.getElementById("rejectReasonModal");
+    let currentRejectReqId = null;
+
+    function openRejectModal(id) {
+      const item = requestsData.find(r => r.id === id);
+      if (!item) return;
+      currentRejectReqId = id;
+      document.getElementById("rejectReqCode").textContent = item.id;
+      document.getElementById("rejectReqTitle").textContent = item.title;
+      document.getElementById("rejectReqPlatform").textContent = item.platform;
+      document.getElementById("rejectReasonInput").value = "";
+      document.getElementById("rejectReasonError").style.display = "none";
+      rejectReasonModal.classList.add("active");
+      setTimeout(() => {
+        document.getElementById("rejectReasonInput").focus();
+      }, 100);
+    }
+
+    function closeRejectModal() {
+      rejectReasonModal.classList.remove("active");
+      currentRejectReqId = null;
+    }
+
+    document.getElementById("btnCloseRejectModal").addEventListener("click", closeRejectModal);
+    document.getElementById("btnCancelRejectModal").addEventListener("click", closeRejectModal);
+    document.getElementById("rejectReasonInput").addEventListener("input", () => {
+      document.getElementById("rejectReasonError").style.display = "none";
+    });
+
+    document.getElementById("btnConfirmReject").addEventListener("click", () => {
+      const reason = document.getElementById("rejectReasonInput").value.trim();
+      if (!reason) {
+        document.getElementById("rejectReasonError").style.display = "block";
+        document.getElementById("rejectReasonInput").focus();
+        return;
+      }
+      const item = requestsData.find(r => r.id === currentRejectReqId);
+      if (!item) return;
+
+      const now = new Date();
+      const pad = n => String(n).padStart(2, "0");
+      const timeStr = `${pad(now.getDate())}/${pad(now.getMonth()+1)}/${now.getFullYear()} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+      item.status = "Từ chối";
+      item.approver = "admin";
+      item.approvedAt = timeStr;
+      item.result = `Từ chối: ${reason}`;
+      item.rejectReason = reason;
+
+      closeRejectModal();
+      closeDetailModal();
+      renderMainTable();
+      showToast(`Đã từ chối yêu cầu ${item.id} (Trạng thái: Từ chối)`, "error");
+    });
+
+    // --- Action: Thực thi lại từ popup chi tiết ---
+    function retryRequestFromDetail(id) {
+      closeDetailModal();
+      retryRequest(id);
+    }
+
+    // --- MODAL 3: TẠO YÊU CẦU THU HỒI LOGIC ---
+    const revokeModal = document.getElementById("revokeModal");
+    let sourceReqForRevoke = null;
+
+    function openRevokeModal(id) {
+      const item = requestsData.find(r => r.id === id);
+      if (!item) return;
+      sourceReqForRevoke = item;
+
+      document.getElementById("revokeSourceCode").textContent = item.id;
+      document.getElementById("revokeSourcePlatform").textContent = item.platform;
+      document.getElementById("revokeSourceCount").textContent = `${item.count} IoC`;
+      document.getElementById("revokeReasonInput").value = "";
+
+      revokeModal.classList.add("active");
+    }
+
+    function closeRevokeModal() {
+      revokeModal.classList.remove("active");
+    }
+    document.getElementById("btnCloseRevokeModal").addEventListener("click", closeRevokeModal);
+    document.getElementById("btnCancelRevokeModal").addEventListener("click", closeRevokeModal);
+
+    // Submit Revoke Request
+    document.getElementById("btnSubmitRevokeRequest").addEventListener("click", () => {
+      const reason = document.getElementById("revokeReasonInput").value.trim();
+      if (!reason) {
+        alert("Vui lòng nhập Lý do thu hồi!");
+        document.getElementById("revokeReasonInput").focus();
+        return;
+      }
+
+      const newRevokeReqId = `REQ-2026-00${requestsData.length + 42}`;
+      const revokeReq = {
+        id: newRevokeReqId,
+        title: `Thu hồi: ${sourceReqForRevoke.title}`,
+        type: "Thu hồi",
+        platform: sourceReqForRevoke.platform,
+        count: sourceReqForRevoke.count,
+        result: "-",
+        status: "Chờ phê duyệt",
+        creator: "tomhagen",
+        createdAt: "01/10/2026 11:56",
+        approver: "-",
+        approvedAt: "-",
+        revokeReason: reason,
+        iocs: sourceReqForRevoke.iocs.map(ioc => ({
+          value: ioc.value,
+          type: ioc.type,
+          expire: ioc.expire,
+          status: "Chờ thu hồi",
+          error: ""
+        }))
+      };
+
+      requestsData.unshift(revokeReq);
+      closeRevokeModal();
+      closeDetailModal();
+      renderMainTable();
+      showToast(`Đã tạo yêu cầu thu hồi ${newRevokeReqId} (Trạng thái: Chờ phê duyệt)`, "success");
+    });
+
+    // ========================================================
+    // CẤU HÌNH PLAYBOOK THỰC THI KHI PHÊ DUYỆT (PLAYBOOK SETTING)
+    // ========================================================
+    const PLAYBOOK_DATABASE = {
+      "PB-IOC-01": {
+        code: "PB-IOC-01",
+        name: "Phân phối & Ban hành IoC đa nền tảng tự động",
+        status: "Hoạt động",
+        version: "v2.4",
+        steps: "8 nodes",
+        updated: "28/09/2026 bởi admin",
+        desc: "Tự động trích xuất danh sách IoC từ yêu cầu được phê duyệt, chuẩn hóa định dạng tương ứng từng nền tảng (Palo Alto, Fortinet, CrowdStrike, F5), thực thi các node API đẩy dữ liệu và ghi nhận trạng thái hoàn thành."
+      },
+      "PB-IOC-02": {
+        code: "PB-IOC-02",
+        name: "Đồng bộ IoC qua API Firewall & EDR tập trung",
+        status: "Hoạt động",
+        version: "v1.8",
+        steps: "6 nodes",
+        updated: "15/09/2026 bởi vinhduong",
+        desc: "Gọi các endpoint API của NGFW và CrowdStrike Falcon để cập nhật dynamic blocklist. Hỗ trợ rollback tự động nếu bất kỳ node nào gặp sự cố timeout."
+      },
+      "PB-IOC-03": {
+        code: "PB-IOC-03",
+        name: "Ban hành IoC khẩn cấp & Tự động kiểm tra kết nối",
+        status: "Hoạt động",
+        version: "v3.0",
+        steps: "10 nodes",
+        updated: "20/09/2026 bởi tomhagen",
+        desc: "Thực thi ban hành độ ưu tiên cao (Priority P1), kích hoạt kiểm tra tình trạng kết nối API trước và sau khi thêm rule chặn vào policy thiết bị."
+      },
+      "PB-IOC-04": {
+        code: "PB-IOC-04",
+        name: "Thu hồi & Xóa bộ lọc IoC đa nền tảng",
+        status: "Hoạt động",
+        version: "v2.1",
+        steps: "7 nodes",
+        updated: "18/09/2026 bởi superadmin",
+        desc: "Chuyên dụng cho các yêu cầu Thu hồi: Giải phóng IoC khỏi danh sách chặn của các thiết bị bảo mật, khôi phục cấu hình và đóng sự việc liên quan."
+      }
+    };
+
+    let selectedPlaybookId = "PB-IOC-01";
+
+    const modalPlaybookSetting = document.getElementById("playbookSettingModal");
+    const selectIntegrationPlaybook = document.getElementById("selectIntegrationPlaybook");
+
+    function updatePlaybookCard(pbId) {
+      const pb = PLAYBOOK_DATABASE[pbId];
+      if (!pb) return;
+      document.getElementById("pbCardCode").textContent = pb.code;
+      document.getElementById("pbCardTitle").textContent = pb.name;
+      document.getElementById("pbCardStatus").textContent = pb.status;
+      document.getElementById("pbCardVersion").textContent = pb.version;
+      document.getElementById("pbCardSteps").textContent = pb.steps;
+      document.getElementById("pbCardUpdated").textContent = pb.updated;
+    }
+
+    if (selectIntegrationPlaybook) {
+      selectIntegrationPlaybook.addEventListener("change", (e) => {
+        updatePlaybookCard(e.target.value);
+      });
+    }
+
+    document.getElementById("btnOpenPlaybookSettingModal").addEventListener("click", () => {
+      selectIntegrationPlaybook.value = selectedPlaybookId;
+      updatePlaybookCard(selectedPlaybookId);
+      modalPlaybookSetting.classList.add("active");
+    });
+
+    document.getElementById("btnClosePlaybookSettingModal").addEventListener("click", () => {
+      modalPlaybookSetting.classList.remove("active");
+    });
+
+    document.getElementById("btnCancelPlaybookSetting").addEventListener("click", () => {
+      modalPlaybookSetting.classList.remove("active");
+    });
+
+    document.getElementById("btnSavePlaybookSetting").addEventListener("click", () => {
+      selectedPlaybookId = selectIntegrationPlaybook.value;
+      document.getElementById("btnPlaybookCodeBadge").textContent = selectedPlaybookId;
+      modalPlaybookSetting.classList.remove("active");
+      const pb = PLAYBOOK_DATABASE[selectedPlaybookId];
+      showToast(`Đã lưu cấu hình Playbook thực thi: ${pb.code} - ${pb.name}`, "success");
+    });
+
+    // ========================================================
+    // QUẢN LÝ DANH SÁCH LOẠI TRỪ IOC (EXCLUSION LIST LOGIC)
+    // ========================================================
+    let exclusionData = [
+      {
+        id: "EXCL-2026-001",
+        value: "10.0.0.0/8",
+        type: "IPv4_CIDR",
+        typeLabel: "Dải IPv4 (CIDR)",
+        category: "Hạ tầng mạng nội bộ / DMZ",
+        reason: "Dải mạng nội bộ Private IP (RFC 1918) toàn cơ quan. Ngăn feed chặn nhầm LAN.",
+        validUntil: "Vô thời hạn",
+        hits: 684,
+        status: "ACTIVE",
+        creator: "superadmin",
+        createdAt: "15/01/2026 08:30"
+      },
+      {
+        id: "EXCL-2026-002",
+        value: "192.168.0.0/16",
+        type: "IPv4_CIDR",
+        typeLabel: "Dải IPv4 (CIDR)",
+        category: "Hạ tầng mạng nội bộ / DMZ",
+        reason: "Dải mạng máy chủ phân vùng DMZ và máy trạm nội bộ.",
+        validUntil: "Vô thời hạn",
+        hits: 412,
+        status: "ACTIVE",
+        creator: "superadmin",
+        createdAt: "15/01/2026 08:30"
+      },
+      {
+        id: "EXCL-2026-003",
+        value: "8.8.8.8",
+        type: "IPv4",
+        typeLabel: "IPv4",
+        category: "Dịch vụ công cộng tin cậy",
+        reason: "Public DNS Google, máy chủ phân giải tên miền dùng chung.",
+        validUntil: "Vô thời hạn",
+        hits: 153,
+        status: "ACTIVE",
+        creator: "tomhagen",
+        createdAt: "20/02/2026 14:15"
+      },
+      {
+        id: "EXCL-2026-004",
+        value: "1.1.1.1",
+        type: "IPv4",
+        typeLabel: "IPv4",
+        category: "Dịch vụ công cộng tin cậy",
+        reason: "Public DNS Cloudflare, tin cậy phân giải tên miền.",
+        validUntil: "Vô thời hạn",
+        hits: 89,
+        status: "ACTIVE",
+        creator: "tomhagen",
+        createdAt: "20/02/2026 14:20"
+      },
+      {
+        id: "EXCL-2026-005",
+        value: "*.bocongan.gov.vn",
+        type: "Wildcard_Domain",
+        typeLabel: "Tên miền đại diện (*)",
+        category: "Hạ tầng mạng nội bộ / DMZ",
+        reason: "Tên miền cổng thông tin điện tử và dịch vụ công của cơ quan.",
+        validUntil: "Vô thời hạn",
+        hits: 247,
+        status: "ACTIVE",
+        creator: "superadmin",
+        createdAt: "10/03/2026 09:00"
+      },
+      {
+        id: "EXCL-2026-006",
+        value: "*.microsoft.com",
+        type: "Wildcard_Domain",
+        typeLabel: "Tên miền đại diện (*)",
+        category: "Dịch vụ công cộng tin cậy",
+        reason: "Dịch vụ cập nhật bản vá hệ điều hành Windows Update và Cloud.",
+        validUntil: "Vô thời hạn",
+        hits: 120,
+        status: "ACTIVE",
+        creator: "admin5",
+        createdAt: "12/04/2026 11:30"
+      },
+      {
+        id: "EXCL-2026-007",
+        value: "svchost.exe (SHA256: e3b0c442...)",
+        type: "SHA256",
+        typeLabel: "Mã băm (SHA256)",
+        category: "Phần mềm / Ứng dụng chuẩn",
+        reason: "File nhị phân tiến trình hệ điều hành Windows chuẩn NSRL Whitelist.",
+        validUntil: "Vô thời hạn",
+        hits: 78,
+        status: "ACTIVE",
+        creator: "admin5",
+        createdAt: "15/05/2026 16:45"
+      },
+      {
+        id: "EXCL-2026-008",
+        value: "103.142.108.50",
+        type: "IPv4",
+        typeLabel: "IPv4",
+        category: "Hạ tầng đối tác liên kết",
+        reason: "Cổng thanh toán trung gian Napas tích hợp liên ngân hàng.",
+        validUntil: "Vô thời hạn",
+        hits: 45,
+        status: "ACTIVE",
+        creator: "tomhagen",
+        createdAt: "01/06/2026 10:00"
+      },
+      {
+        id: "EXCL-2026-009",
+        value: "172.20.10.0/24",
+        type: "IPv4_CIDR",
+        typeLabel: "Dải IPv4 (CIDR)",
+        category: "Hạ tầng đối tác liên kết",
+        reason: "Dải IP máy chủ diễn tập Pentest của đội kiểm thử bảo mật đợt 3/2026.",
+        validUntil: "31/10/2026 23:59",
+        hits: 95,
+        status: "ACTIVE",
+        creator: "vinhduong",
+        createdAt: "15/09/2026 15:30"
+      },
+      {
+        id: "EXCL-2026-010",
+        value: "scanner-test.lan",
+        type: "Domain",
+        typeLabel: "Tên miền (Domain)",
+        category: "Hạ tầng mạng nội bộ / DMZ",
+        reason: "Máy chủ kiểm thử quét an ninh mạng nội bộ Lab SOC.",
+        validUntil: "15/10/2026 18:00",
+        hits: 12,
+        status: "PAUSED",
+        creator: "vinhduong",
+        createdAt: "20/09/2026 10:15"
+      }
+    ];
+
+    const MOCK_INTERCEPT_LOGS = [
+      { time: "02/10/2026 10:12:45", ioc: "10.15.2.105", type: "IPv4", matchedRule: "EXCL-2026-001 (10.0.0.0/8)", source: "AlienVault OTX ThreatFeed", action: "Đã ngăn chặn ghi nhận (Dropped)" },
+      { time: "02/10/2026 09:45:10", ioc: "portal.bocongan.gov.vn", type: "Domain", matchedRule: "EXCL-2026-005 (*.bocongan.gov.vn)", source: "Trích xuất Cảnh báo SIEM", action: "Đã ngăn chặn ghi nhận (Dropped)" },
+      { time: "02/10/2026 08:30:22", ioc: "8.8.8.8", type: "IPv4", matchedRule: "EXCL-2026-003 (8.8.8.8)", source: "Virustotal Threat Feed", action: "Đã ngăn chặn ghi nhận (Dropped)" },
+      { time: "01/10/2026 22:15:05", ioc: "192.168.10.44", type: "IPv4", matchedRule: "EXCL-2026-002 (192.168.0.0/16)", source: "Suricata NIDS Alert", action: "Đã ngăn chặn ghi nhận (Dropped)" },
+      { time: "01/10/2026 17:50:18", ioc: "update.microsoft.com", type: "Domain", matchedRule: "EXCL-2026-006 (*.microsoft.com)", source: "MISP Community Feed", action: "Đã ngăn chặn ghi nhận (Dropped)" }
+    ];
+
+    let exclCurrentPage = 1;
+    let exclPageSize = 10;
+    let currentDeleteExclId = null;
+
+    // View switching between Integration and Exclusion
+    function switchMainView(viewName) {
+      const viewIntegration = document.getElementById("viewIocIntegration");
+      const viewExclusion = document.getElementById("viewIocExclusion");
+      const menuIntegration = document.getElementById("menuItemIntegration");
+      const menuExclusion = document.getElementById("menuItemExclusion");
+
+      if (viewName === "exclusion") {
+        viewIntegration.style.display = "none";
+        viewExclusion.style.display = "block";
+        menuIntegration.classList.remove("active");
+        menuExclusion.classList.add("active");
+        renderExclusionTable();
+      } else {
+        viewIntegration.style.display = "block";
+        viewExclusion.style.display = "none";
+        menuIntegration.classList.add("active");
+        menuExclusion.classList.remove("active");
+        renderMainTable();
+      }
+    }
+
+    // Render Exclusion Table
+    function renderExclusionTable() {
+      const tbody = document.getElementById("exclTableBody");
+      if (!tbody) return;
+      tbody.innerHTML = "";
+
+      const searchVal = document.getElementById("exclSearchInput").value.trim().toLowerCase();
+      const typeFilter = document.getElementById("exclTypeFilter").value;
+      const statusFilter = document.getElementById("exclStatusFilter").value;
+
+      const filtered = exclusionData.filter(item => {
+        if (searchVal && !item.value.toLowerCase().includes(searchVal) && !item.reason.toLowerCase().includes(searchVal) && !item.id.toLowerCase().includes(searchVal)) {
+          return false;
+        }
+        if (typeFilter !== "ALL" && item.type !== typeFilter) return false;
+        if (statusFilter !== "ALL" && item.status !== statusFilter) return false;
+        return true;
+      });
+
+      // Update KPIs
+      const activeCount = exclusionData.filter(i => i.status === "ACTIVE").length;
+      const pausedCount = exclusionData.filter(i => i.status !== "ACTIVE").length;
+      const totalHits = exclusionData.reduce((acc, cur) => acc + cur.hits, 0);
+
+      document.getElementById("kpiExclTotal").textContent = exclusionData.length;
+      document.getElementById("kpiExclActive").textContent = activeCount;
+      document.getElementById("kpiExclPaused").textContent = pausedCount;
+      document.getElementById("kpiExclHits").textContent = `${totalHits.toLocaleString()} lượt`;
+      document.getElementById("exclRecordCount").textContent = filtered.length;
+
+      // Pagination
+      const totalItems = filtered.length;
+      const totalPages = Math.ceil(totalItems / exclPageSize) || 1;
+      if (exclCurrentPage > totalPages) exclCurrentPage = totalPages;
+      if (exclCurrentPage < 1) exclCurrentPage = 1;
+
+      const startIndex = (exclCurrentPage - 1) * exclPageSize;
+      const pageData = filtered.slice(startIndex, startIndex + exclPageSize);
+
+      if (totalItems === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: var(--text-muted); padding: 32px 0;">Không tìm thấy bản ghi loại trừ nào phù hợp với điều kiện lọc</td></tr>`;
+        renderExclPagination(0, 1);
+        return;
+      }
+
+      pageData.forEach((item, index) => {
+        const tr = document.createElement("tr");
+
+        let typeBadge = "";
+        if (item.type === "IPv4" || item.type === "IPv4_CIDR") typeBadge = `<span class="badge badge-info">${item.typeLabel}</span>`;
+        else if (item.type === "Domain" || item.type === "Wildcard_Domain") typeBadge = `<span class="badge badge-purple">${item.typeLabel}</span>`;
+        else if (item.type === "SHA256") typeBadge = `<span class="badge badge-cyan">${item.typeLabel}</span>`;
+        else typeBadge = `<span class="badge badge-warning">${item.typeLabel}</span>`;
+
+        const isChecked = item.status === "ACTIVE";
+
+        tr.innerHTML = `
+          <td style="text-align: center; color: var(--text-muted); white-space: nowrap;">${startIndex + index + 1}</td>
+          <td style="white-space: nowrap;"><span class="code-text">${item.id}</span></td>
+          <td style="white-space: nowrap;"><strong style="color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 13px;">${item.value}</strong></td>
+          <td style="white-space: nowrap;">${typeBadge}</td>
+          <td style="font-size: 12px; color: #dcdfe8; max-width: 280px;" title="${item.reason}">${item.reason}</td>
+          <td style="white-space: nowrap; font-size: 12px; color: ${item.validUntil === "Vô thời hạn" ? "#52c41a" : "#faad14"};">${item.validUntil}</td>
+          <td style="text-align: center; white-space: nowrap;">
+            <span style="font-weight: 600; color: #ff7875; background: rgba(255, 77, 79, 0.12); padding: 2px 8px; border-radius: 10px; font-size: 12px;">${item.hits}</span>
+          </td>
+          <td style="text-align: center; white-space: nowrap;">
+            <label class="switch" title="${isChecked ? 'Đang kích hoạt - Click để tạm dừng' : 'Đang tạm dừng - Click để kích hoạt'}">
+              <input type="checkbox" ${isChecked ? "checked" : ""} onchange="toggleExclStatus('${item.id}', this.checked)">
+              <span class="slider"></span>
+            </label>
+          </td>
+          <td style="font-size: 12px; line-height: 1.4; white-space: nowrap;">
+            <div style="color: #fff; font-weight: 500;">${item.creator}</div>
+            <div style="color: var(--text-muted); font-size: 11px;">${item.createdAt}</div>
+          </td>
+          <td style="text-align: center; white-space: nowrap;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+              <button class="btn-action-icon" onclick="openEditExclModal('${item.id}')" title="Chỉnh sửa">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+              <button class="btn-action-icon" onclick="openDeleteExclModal('${item.id}')" title="Xóa bản ghi" style="color: #ff7875;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      renderExclPagination(totalItems, totalPages);
+    }
+
+    function renderExclPagination(totalItems, totalPages) {
+      const bar = document.getElementById("exclPaginationBar");
+      if (!bar) return;
+      bar.innerHTML = "";
+
+      const prevBtn = document.createElement("button");
+      prevBtn.className = "page-btn";
+      prevBtn.innerHTML = "❮";
+      prevBtn.disabled = exclCurrentPage <= 1;
+      if (exclCurrentPage <= 1) prevBtn.style.opacity = "0.4";
+      prevBtn.onclick = () => { if (exclCurrentPage > 1) { exclCurrentPage--; renderExclusionTable(); } };
+      bar.appendChild(prevBtn);
+
+      for (let p = 1; p <= totalPages; p++) {
+        const btn = document.createElement("button");
+        btn.className = `page-btn ${p === exclCurrentPage ? "active" : ""}`;
+        btn.textContent = p;
+        btn.onclick = () => { exclCurrentPage = p; renderExclusionTable(); };
+        bar.appendChild(btn);
+      }
+
+      const nextBtn = document.createElement("button");
+      nextBtn.className = "page-btn";
+      nextBtn.innerHTML = "❯";
+      nextBtn.disabled = exclCurrentPage >= totalPages;
+      if (exclCurrentPage >= totalPages) nextBtn.style.opacity = "0.4";
+      nextBtn.onclick = () => { if (exclCurrentPage < totalPages) { exclCurrentPage++; renderExclusionTable(); } };
+      bar.appendChild(nextBtn);
+    }
+
+    // Toggle exclusion status
+    function toggleExclStatus(id, isChecked) {
+      const item = exclusionData.find(i => i.id === id);
+      if (!item) return;
+      item.status = isChecked ? "ACTIVE" : "PAUSED";
+      renderExclusionTable();
+      showToast(isChecked ? `Đã kích hoạt loại trừ ${id}` : `Đã tạm dừng áp dụng loại trừ ${id}`, isChecked ? "success" : "warning");
+    }
+
+    // Exclusion filter events
+    document.getElementById("exclSearchInput").addEventListener("input", (e) => {
+      document.getElementById("exclSearchClearBtn").style.display = e.target.value ? "block" : "none";
+      exclCurrentPage = 1;
+      renderExclusionTable();
+    });
+    document.getElementById("exclSearchClearBtn").addEventListener("click", () => {
+      document.getElementById("exclSearchInput").value = "";
+      document.getElementById("exclSearchClearBtn").style.display = "none";
+      exclCurrentPage = 1;
+      renderExclusionTable();
+    });
+    document.getElementById("exclTypeFilter").addEventListener("change", () => { exclCurrentPage = 1; renderExclusionTable(); });
+    document.getElementById("exclStatusFilter").addEventListener("change", () => { exclCurrentPage = 1; renderExclusionTable(); });
+    document.getElementById("exclPageSizeSelect").addEventListener("change", (e) => {
+      exclPageSize = parseInt(e.target.value);
+      exclCurrentPage = 1;
+      renderExclusionTable();
+    });
+    document.getElementById("btnResetExclFilters").addEventListener("click", () => {
+      document.getElementById("exclSearchInput").value = "";
+      document.getElementById("exclSearchClearBtn").style.display = "none";
+      document.getElementById("exclTypeFilter").value = "ALL";
+      document.getElementById("exclStatusFilter").value = "ALL";
+      exclCurrentPage = 1;
+      renderExclusionTable();
+      showToast("Đã đặt lại bộ lọc danh sách loại trừ", "info");
+    });
+
+    // Create / Edit Exclusion Modal
+    const modalCreateEditExcl = document.getElementById("createEditExclModal");
+    const exclFormType = document.getElementById("exclFormType");
+    const exclFormValue = document.getElementById("exclFormValue");
+    const exclFormValueHint = document.getElementById("exclFormValueHint");
+    const radioExclForever = document.getElementById("radioExclForever");
+    const radioExclTimed = document.getElementById("radioExclTimed");
+    const exclExpiryInputContainer = document.getElementById("exclExpiryInputContainer");
+
+    exclFormType.addEventListener("change", () => {
+      const type = exclFormType.value;
+      if (type === "IPv4") {
+        exclFormValue.placeholder = "VD: 8.8.8.8 hoặc 192.168.1.10";
+        exclFormValueHint.textContent = "Nhập địa chỉ IPv4 cụ thể cần loại trừ.";
+      } else if (type === "IPv4_CIDR") {
+        exclFormValue.placeholder = "VD: 10.0.0.0/8 hoặc 192.168.0.0/16";
+        exclFormValueHint.textContent = "Hỗ trợ dải mạng định dạng CIDR, ví dụ: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16.";
+      } else if (type === "Domain") {
+        exclFormValue.placeholder = "VD: company.gov.vn hoặc portal.internal.lan";
+        exclFormValueHint.textContent = "Khớp chính xác tên miền cụ thể.";
+      } else if (type === "Wildcard_Domain") {
+        exclFormValue.placeholder = "VD: *.bocongan.gov.vn hoặc *.microsoft.com";
+        exclFormValueHint.textContent = "Tên miền đại diện có dấu *, tự động khớp toàn bộ tên miền con (subdomain).";
+      } else if (type === "SHA256") {
+        exclFormValue.placeholder = "VD: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+        exclFormValueHint.textContent = "Mã băm SHA256 (64 ký tự hex) của file nhị phân hợp lệ.";
+      } else if (type === "URL") {
+        exclFormValue.placeholder = "VD: https://portal.company.gov.vn/login";
+        exclFormValueHint.textContent = "Đường dẫn URL hạ tầng dịch vụ nội bộ.";
+      } else if (type === "Email") {
+        exclFormValue.placeholder = "VD: noreply@company.gov.vn hoặc *@partner.com";
+        exclFormValueHint.textContent = "Địa chỉ hoặc tên miền email hợp lệ.";
+      }
+    });
+
+    radioExclForever.addEventListener("change", () => {
+      exclExpiryInputContainer.style.display = "none";
+    });
+    radioExclTimed.addEventListener("change", () => {
+      exclExpiryInputContainer.style.display = "block";
+    });
+
+    function openCreateExclModal() {
+      document.getElementById("createEditExclModalTitle").innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Thêm bản ghi loại trừ IoC
+      `;
+      document.getElementById("exclEditRecordId").value = "";
+      exclFormType.value = "IPv4_CIDR";
+      exclFormValue.value = "";
+      exclFormType.dispatchEvent(new Event("change"));
+      radioExclForever.checked = true;
+      exclExpiryInputContainer.style.display = "none";
+      document.getElementById("exclFormReason").value = "";
+      document.getElementById("exclFormStatusToggle").checked = true;
+      document.getElementById("exclFormStatusLabel").textContent = "Kích hoạt";
+      document.getElementById("exclFormStatusLabel").style.color = "#52c41a";
+      modalCreateEditExcl.classList.add("active");
+    }
+
+    function openEditExclModal(id) {
+      const item = exclusionData.find(i => i.id === id);
+      if (!item) return;
+
+      document.getElementById("createEditExclModalTitle").innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Chỉnh sửa bản ghi loại trừ (${item.id})
+      `;
+      document.getElementById("exclEditRecordId").value = item.id;
+      exclFormType.value = item.type;
+      exclFormType.dispatchEvent(new Event("change"));
+      exclFormValue.value = item.value;
+
+      if (item.validUntil === "Vô thời hạn") {
+        radioExclForever.checked = true;
+        exclExpiryInputContainer.style.display = "none";
+      } else {
+        radioExclTimed.checked = true;
+        exclExpiryInputContainer.style.display = "block";
+        document.getElementById("exclFormExpiryDate").value = item.validUntil.replace(" ", "T");
+      }
+
+      document.getElementById("exclFormReason").value = item.reason;
+      const isActive = item.status === "ACTIVE";
+      document.getElementById("exclFormStatusToggle").checked = isActive;
+      document.getElementById("exclFormStatusLabel").textContent = isActive ? "Kích hoạt" : "Tạm dừng";
+      document.getElementById("exclFormStatusLabel").style.color = isActive ? "#52c41a" : "#faad14";
+      modalCreateEditExcl.classList.add("active");
+    }
+
+    const exclFormStatusToggle = document.getElementById("exclFormStatusToggle");
+    const exclFormStatusLabel = document.getElementById("exclFormStatusLabel");
+    if (exclFormStatusToggle && exclFormStatusLabel) {
+      exclFormStatusToggle.addEventListener("change", (e) => {
+        if (e.target.checked) {
+          exclFormStatusLabel.textContent = "Kích hoạt";
+          exclFormStatusLabel.style.color = "#52c41a";
+        } else {
+          exclFormStatusLabel.textContent = "Tạm dừng";
+          exclFormStatusLabel.style.color = "#faad14";
+        }
+      });
+    }
+
+    function closeCreateEditExclModal() {
+      modalCreateEditExcl.classList.remove("active");
+    }
+
+    document.getElementById("btnOpenCreateExclModal").addEventListener("click", openCreateExclModal);
+    document.getElementById("btnCloseCreateEditExclModal").addEventListener("click", closeCreateEditExclModal);
+    document.getElementById("btnCancelCreateEditExclModal").addEventListener("click", closeCreateEditExclModal);
+
+    // Save exclusion record
+    document.getElementById("btnSaveExclRecord").addEventListener("click", () => {
+      const editId = document.getElementById("exclEditRecordId").value;
+      const val = exclFormValue.value.trim();
+      const reason = document.getElementById("exclFormReason").value.trim();
+
+      if (!val) {
+        alert("Vui lòng nhập Giá trị loại trừ!");
+        exclFormValue.focus();
+        return;
+      }
+      if (!reason) {
+        alert("Vui lòng nhập Lý do loại trừ!");
+        document.getElementById("exclFormReason").focus();
+        return;
+      }
+
+      const type = exclFormType.value;
+      const typeLabel = exclFormType.options[exclFormType.selectedIndex].text;
+      const isForever = radioExclForever.checked;
+      let validUntil = "Vô thời hạn";
+      if (!isForever) {
+        const d = document.getElementById("exclFormExpiryDate").value;
+        validUntil = d ? d.replace("T", " ") : "31/12/2026 23:59";
+      }
+      const status = document.getElementById("exclFormStatusToggle").checked ? "ACTIVE" : "PAUSED";
+
+      if (editId) {
+        const item = exclusionData.find(i => i.id === editId);
+        if (item) {
+          item.type = type;
+          item.typeLabel = typeLabel;
+          item.value = val;
+          item.validUntil = validUntil;
+          item.reason = reason;
+          item.status = status;
+          showToast(`Đã cập nhật bản ghi loại trừ ${editId}`, "success");
+        }
+      } else {
+        const newId = `EXCL-2026-0${exclusionData.length + 1}`;
+        const newRecord = {
+          id: newId,
+          value: val,
+          type: type,
+          typeLabel: typeLabel,
+          reason: reason,
+          validUntil: validUntil,
+          hits: 0,
+          status: status,
+          creator: "tomhagen",
+          createdAt: "02/10/2026 10:30"
+        };
+        exclusionData.unshift(newRecord);
+        showToast(`Đã thêm mới bản ghi loại trừ ${newId}`, "success");
+      }
+
+      closeCreateEditExclModal();
+      renderExclusionTable();
+    });
+
+    // Delete Modal
+    const modalDeleteExcl = document.getElementById("deleteExclModal");
+    function openDeleteExclModal(id) {
+      const item = exclusionData.find(i => i.id === id);
+      if (!item) return;
+      currentDeleteExclId = id;
+      document.getElementById("deleteExclTargetCode").textContent = item.id;
+      document.getElementById("deleteExclTargetValue").textContent = item.value;
+      modalDeleteExcl.classList.add("active");
+    }
+    function closeDeleteExclModal() {
+      modalDeleteExcl.classList.remove("active");
+      currentDeleteExclId = null;
+    }
+    document.getElementById("btnCloseDeleteExclModal").addEventListener("click", closeDeleteExclModal);
+    document.getElementById("btnCancelDeleteExclModal").addEventListener("click", closeDeleteExclModal);
+    document.getElementById("btnConfirmDeleteExcl").addEventListener("click", () => {
+      if (!currentDeleteExclId) return;
+      exclusionData = exclusionData.filter(i => i.id !== currentDeleteExclId);
+      closeDeleteExclModal();
+      renderExclusionTable();
+      showToast(`Đã xóa bản ghi loại trừ thành công`, "error");
+    });
+
+    // Import Modal
+    const modalImportExcl = document.getElementById("importExclModal");
+    document.getElementById("btnOpenImportExclModal").addEventListener("click", () => {
+      modalImportExcl.classList.add("active");
+    });
+    document.getElementById("btnCloseImportExclModal").addEventListener("click", () => {
+      modalImportExcl.classList.remove("active");
+    });
+    document.getElementById("btnCancelImportExclModal").addEventListener("click", () => {
+      modalImportExcl.classList.remove("active");
+    });
+    document.getElementById("btnDownloadExclTemplate").addEventListener("click", () => {
+      showToast("Đang tải xuống file mẫu: Mau_Danh_Sach_Loai_Tru_IoC.xlsx", "info");
+    });
+    document.getElementById("exclFileDropzone").addEventListener("click", () => {
+      showToast("Đã chọn tập tin: Danh_sach_IP_Ha_Tang_Noi_Bo_2026.xlsx (12 bản ghi)", "info");
+    });
+    document.getElementById("btnSubmitImportExcl").addEventListener("click", () => {
+      // Giả lập nhập thành công 2 bản ghi mới
+      const newRec1 = {
+        id: `EXCL-2026-0${exclusionData.length + 1}`,
+        value: "10.80.0.0/16",
+        type: "IPv4_CIDR",
+        typeLabel: "Dải IPv4 (CIDR)",
+        category: "Hạ tầng mạng nội bộ / DMZ",
+        reason: "Import từ file: Dải mạng phân vùng máy chủ Data Warehouse.",
+        validUntil: "Vô thời hạn",
+        hits: 0,
+        status: "ACTIVE",
+        creator: "tomhagen",
+        createdAt: "02/10/2026 10:35"
+      };
+      exclusionData.unshift(newRec1);
+      modalImportExcl.classList.remove("active");
+      renderExclusionTable();
+      showToast("Đã nhập thành công các bản ghi loại trừ từ tập tin!", "success");
+    });
+
+    // Audit Log Modal
+    const modalAuditLogExcl = document.getElementById("auditLogExclModal");
+    function openAuditLogExclModal() {
+      const tbody = document.getElementById("auditLogTableBody");
+      tbody.innerHTML = "";
+
+      MOCK_INTERCEPT_LOGS.forEach((log, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td style="text-align: center; color: var(--text-muted);">${index + 1}</td>
+          <td style="white-space: nowrap; font-size: 12px; color: #fff;">${log.time}</td>
+          <td><strong style="color: #ff7875; font-family: 'JetBrains Mono', monospace;">${log.ioc}</strong></td>
+          <td><span class="badge badge-info">${log.type}</span></td>
+          <td><span class="code-text" style="color: #52c41a;">${log.matchedRule}</span></td>
+          <td style="color: #dcdfe8; font-size: 12px;">${log.source}</td>
+          <td><span class="badge badge-danger">${log.action}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      modalAuditLogExcl.classList.add("active");
+    }
+    document.getElementById("btnViewAuditLogsCard").addEventListener("click", openAuditLogExclModal);
+    document.getElementById("btnCloseAuditLogExclModal").addEventListener("click", () => modalAuditLogExcl.classList.remove("active"));
+    document.getElementById("btnCloseAuditLogExclModal2").addEventListener("click", () => modalAuditLogExcl.classList.remove("active"));
+
+    // --- Init render on load ---
+    renderMainTable();
+  </script>
+</body>
+</html>
