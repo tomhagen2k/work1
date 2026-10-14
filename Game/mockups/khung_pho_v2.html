@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quy hoạch khu phố</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#1b1f24;color:#fff;font-family:"Nunito","Segoe UI",sans-serif;padding:18px}
+  .wrap{max-width:1120px}
+  h1{font-size:20px;font-weight:900;margin-bottom:4px}
+  .sub{font-size:13px;color:#aab3bd;margin-bottom:12px;line-height:1.4}
+  .bar{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+  .bar button{font:inherit;font-size:13px;font-weight:900;border:0;border-radius:18px;padding:7px 14px;background:#323944;color:#dfe5ec;cursor:pointer}
+  .bar button.on{background:#ffd84d;color:#1d2733}
+  .bar label{font-size:13px;font-weight:800;color:#dfe5ec;display:flex;gap:6px;align-items:center;cursor:pointer;margin-left:6px}
+  svg{display:block;width:100%;border-radius:8px}
+  .crops{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  .cap{font-size:12px;color:#aab3bd;margin:6px 0 4px;font-weight:800}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Quy hoạch khu phố — thử trên bản đồ màn 5 "Chọn xe"</h1>
+<div class="sub">Cùng mạng đường, cùng vị trí điểm nhiệm vụ như demo. Khác biệt chỉ nằm trong các ô phố.</div>
+<div class="bar">
+  <button id="bNew" class="on">Đề xuất v2</button><button id="bCur">Hiện tại</button>
+  <label><input type="checkbox" id="cZone"> Hiện sơ đồ khu vực</label>
+</div>
+<svg id="main"><g id="map"></g></svg>
+<div class="crops">
+  <div><div class="cap">Cận cảnh khi lái xe · phố cổ, phố chợ, công viên</div><svg id="crop1" viewBox="560 240 760 351"><use href="#map"/></svg></div>
+  <div><div class="cap">Cận cảnh khi lái xe · đại lộ, Kho A, khu ven đô</div><svg id="crop2" viewBox="60 760 760 351"><use href="#map"/></svg></div>
+</div>
+</div>
+<script>
+/* ---------- dữ liệu màn 5 (khớp demo/index.html) ---------- */
+const NS='http://www.w3.org/2000/svg',SP=350,COLS=6,ROWS=4,W=200+(COLS-1)*SP,H=200+(ROWS-1)*SP;
+const RWD={thuong:46,lon:64,dong:46,gogh:46,hem:24},RC={thuong:'#4a4f57',lon:'#3b4048',dong:'#4f4a4a',gogh:'#8a6a4a',hem:'#7d838c'};
+const X=i=>100+i*SP,Y=j=>100+j*SP,N=(i,j)=>`c${i}r${j}`;
+const row=(j,i0,i1)=>{const r=[];for(let i=i0;i<i1;i++)r.push([N(i,j),N(i+1,j)]);return r;};
+const col=(i,j0,j1)=>{const r=[];for(let j=j0;j<j1;j++)r.push([N(i,j),N(i,j+1)]);return r;};
+const TYPES={lon:[...row(3,0,5),...col(0,0,3)],dong:row(1,1,4),gogh:[...col(3,1,3),...row(2,3,5)],hem:[...col(2,0,1),...col(4,2,3)]};
+const TY={};for(const t in TYPES)TYPES[t].forEach(([a,b])=>{TY[a+'|'+b]=TY[b+'|'+a]=t;});
+const ty=(a,b)=>TY[a+'|'+b]||'thuong';
+const EDGES=[];for(let j=0;j<ROWS;j++)for(let i=0;i<COLS-1;i++)EDGES.push([i,j,i+1,j]);for(let i=0;i<COLS;i++)for(let j=0;j<ROWS-1;j++)EDGES.push([i,j,i,j+1]);
+const POINTS={KhoA:['c0r2','c0r3',.5,'Kho A','#1c7ed6',1],KhoB:['c5r0','c5r1',.5,'Kho B','#1864ab',1],Cho:['c2r0','c3r0',.5,'Chợ','#f76707'],
+  Truong:['c4r1','c4r2',.5,'Trường','#7048e8'],Nha:['c1r2','c2r2',.5,'Khu nhà','#0ca678'],Cang:['c5r2','c5r3',.5,'Cảng','#e64980']};
+const P=n=>{const m=n.match(/c(\d+)r(\d+)/);return{x:X(+m[1]),y:Y(+m[2]),i:+m[1],j:+m[2]};};
+function bRect(id){const [a,b,f]=POINTS[id],A=P(a),B=P(b),x=A.x+(B.x-A.x)*f,y=A.y+(B.y-A.y)*f;
+  if(A.y===B.y)return A.j===0?{x:x-58,y:12,w:116,h:54,px:x,py:52,lx:x,ly:84}:{x:x-58,y:y+40,w:116,h:58,px:x,py:y+72,lx:x,ly:y+116};
+  return A.i<COLS-1?{x:x+40,y:y-46,w:92,h:92,px:x+86,py:y+6,lx:x+86,ly:y+66}:{x:x-132,y:y-46,w:92,h:92,px:x-86,py:y+6,lx:x-86,ly:y+66};}
+const AVOID=Object.keys(POINTS).map(bRect);
+
+/* ---------- tiện ích vẽ (cùng phong cách demo) ---------- */
+let ROOT;
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);(p||ROOT).appendChild(e);return e;}
+function seed(n){return()=>{n|=0;n=n+0x6D2B79F5|0;let t=Math.imul(n^n>>>15,1|n);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shade(hex,p){const n=parseInt(hex.slice(1),16);const f=v=>Math.max(0,Math.min(255,Math.round(v*(1+p))));return'#'+[f(n>>16),f((n>>8)&255),f(n&255)].map(v=>v.toString(16).padStart(2,'0')).join('');}
+const pick=(a,r)=>a[Math.floor(r()*a.length)];
+const hit=(r,list,m=8)=>list.some(b=>r.x<b.x+b.w+m&&r.x+r.w+m>b.x&&r.y<b.y+b.h+m&&r.y+r.h+m>b.y);
+const SHADOW='rgba(0,0,0,.18)',WALL='#f1e9dc';
+function house(g,x,y,w,h,c){
+  el('rect',{x:x+5,y:y+6,width:w,height:h,fill:SHADOW,rx:2},g);el('rect',{x,y,width:w,height:h,fill:WALL,rx:2},g);
+  if(w>=h){el('polygon',{points:`${x-2},${y-2} ${x+w+2},${y-2} ${x+w-h/2+2},${y+h/2} ${x+h/2-2},${y+h/2}`,fill:c},g);
+    el('polygon',{points:`${x-2},${y+h+2} ${x+w+2},${y+h+2} ${x+w-h/2+2},${y+h/2} ${x+h/2-2},${y+h/2}`,fill:shade(c,-.22)},g);
+    el('polygon',{points:`${x-2},${y-2} ${x+h/2-2},${y+h/2} ${x-2},${y+h+2}`,fill:shade(c,-.1)},g);
+    el('polygon',{points:`${x+w+2},${y-2} ${x+w-h/2+2},${y+h/2} ${x+w+2},${y+h+2}`,fill:shade(c,-.32)},g);}
+  else{el('polygon',{points:`${x-2},${y-2} ${x-2},${y+h+2} ${x+w/2},${y+h-w/2+2} ${x+w/2},${y+w/2-2}`,fill:c},g);
+    el('polygon',{points:`${x+w+2},${y-2} ${x+w+2},${y+h+2} ${x+w/2},${y+h-w/2+2} ${x+w/2},${y+w/2-2}`,fill:shade(c,-.22)},g);
+    el('polygon',{points:`${x-2},${y-2} ${x+w+2},${y-2} ${x+w/2},${y+w/2-2}`,fill:shade(c,-.1)},g);
+    el('polygon',{points:`${x-2},${y+h+2} ${x+w+2},${y+h+2} ${x+w/2},${y+h-w/2+2}`,fill:shade(c,-.32)},g);}
+}
+function tree(g,x,y,r,c){c=c||'#5aa83a';
+  el('ellipse',{cx:x+4,cy:y+5,rx:r,ry:r*.85,fill:SHADOW},g);
+  const p=[];for(let i=0;i<6;i++){const a=Math.PI/3*i+Math.PI/6;p.push(`${x+r*Math.cos(a)},${y+r*Math.sin(a)}`);}
+  el('polygon',{points:p.join(' '),fill:c},g);el('polygon',{points:`${x},${y} ${p[0]} ${p[1]} ${p[2]}`,fill:shade(c,-.25)},g);}
+function flat(g,x,y,w,h,c,ht,r,o={}){
+  el('polygon',{points:`${x+w},${y} ${x+w+ht},${y+ht*1.2} ${x+w+ht},${y+h+ht*1.2} ${x+ht},${y+h+ht*1.2} ${x},${y+h}`,fill:'rgba(0,0,0,.2)'},g);
+  el('rect',{x,y,width:w,height:h,fill:shade(c,-.18),rx:1.5},g);el('rect',{x:x+3,y:y+3,width:w-6,height:h-6,fill:c,rx:1},g);
+  if(o.solar){const cols=Math.max(1,Math.floor((w*.5)/11)),rows=Math.max(1,Math.floor((h-16)/9));
+    for(let i=0;i<cols;i++)for(let j=0;j<rows;j++)el('rect',{x:x+8+i*11,y:y+8+j*9,width:9.5,height:7.5,fill:'#3d5a8a',stroke:'#7d9ccc','stroke-width':.6},g);}
+  if(o.garden&&w>40){el('rect',{x:x+w*.55,y:y+7,width:w*.45-10,height:h-14,rx:3,fill:'#7cc35a'},g);el('circle',{cx:x+w*.75,cy:y+h/2,r:4,fill:'#4f9a34'},g);}
+  if(o.ridge){for(let k=x+6;k<x+w-4;k+=7)el('line',{x1:k,y1:y+3,x2:k,y2:y+h-3,stroke:'rgba(255,255,255,.18)','stroke-width':2},g);}
+  for(let i=0;i<(o.ac||0);i++)el('rect',{x:x+5+r()*(w-16),y:y+5+r()*(h-14),width:7,height:5,fill:'#c9ced4',stroke:'#9aa1a9','stroke-width':.8},g);
+  if(o.tank){el('circle',{cx:x+w-9,cy:y+9,r:4.5,fill:'#e6e9ec',stroke:'#a5adb5','stroke-width':1.1},g);}
+}
+function car(g,x,y,ang,c,len=18){const t=el('g',{transform:`translate(${x},${y}) rotate(${ang})`},g);
+  el('rect',{x:-len/2+1,y:-4,width:len,height:10,rx:2.5,fill:'rgba(0,0,0,.2)'},t);
+  el('rect',{x:-len/2,y:-5,width:len,height:10,rx:2.5,fill:c,stroke:'rgba(0,0,0,.25)','stroke-width':1},t);
+  el('rect',{x:len/2-8,y:-3.5,width:4,height:7,rx:1,fill:'rgba(30,40,55,.55)'},t);}
+function bike(g,x,y,ang,r){const t=el('g',{transform:`translate(${x},${y}) rotate(${ang})`},g);
+  el('rect',{x:-4.5,y:-1.5,width:9,height:3,rx:1.5,fill:'#2f3640'},t);el('circle',{cx:1,cy:0,r:1.6,fill:pick(['#e03131','#1c7ed6','#f59f00','#f8f9fa'],r)},t);}
+function flowers(g,x,y,w,h,r){el('rect',{x,y,width:w,height:h,rx:3,fill:'#7a5a3e'},g);
+  for(let i=0;i<w*h/22;i++)el('circle',{cx:x+3+r()*(w-6),cy:y+3+r()*(h-6),r:1.8,fill:r()<.45?'#5aa83a':pick(['#ff8fab','#ffd43b','#ffffff','#f783ac'],r)},g);}
+function warehouse(g,x,y,w,h,c){el('rect',{x:x+6,y:y+7,width:w,height:h,fill:'rgba(0,0,0,.2)',rx:2},g);
+  el('rect',{x,y,width:w,height:h,fill:shade(c,-.12),rx:2},g);
+  const vert=h>w;
+  for(let k=(vert?x:y)+5;k<(vert?x+w:y+h)-3;k+=6)el('line',vert?{x1:k,y1:y+2,x2:k,y2:y+h-2,stroke:'rgba(255,255,255,.22)','stroke-width':2}:{x1:x+2,y1:k,x2:x+w-2,y2:k,stroke:'rgba(255,255,255,.22)','stroke-width':2},g);
+  el('line',vert?{x1:x+w/2,y1:y,x2:x+w/2,y2:y+h,stroke:shade(c,-.3),'stroke-width':3}:{x1:x,y1:y+h/2,x2:x+w,y2:y+h/2,stroke:shade(c,-.3),'stroke-width':3},g);}
+function fence(g,x1,y1,x2,y2,c){el('line',{x1,y1,x2,y2,stroke:c||'#a0835f','stroke-width':2,'stroke-dasharray':'6 4'},g);}
+
+/* ---------- quy hoạch: mỗi ô thuộc một khu vực ---------- */
+const ZONE=[['center','old','old','res','yard'],['center','res','park','east','school'],['center','res','res','east','port']];
+const ZINFO={center:['Trung tâm','#4dabf7'],old:['Phố cổ','#ff922b'],res:['Dân cư','#69db7c'],park:['Công viên','#2f9e44'],
+  east:['Ven đô','#d9a066'],yard:['Kho bãi','#adb5bd'],school:['Trường','#9775fa'],port:['Cảng','#f06595']};
+// Mặt tiền theo khu vực × loại đường: cùng loại đường thì hai bên đường giống nhau → đường "đọc" được
+const SIDE={center:{lon:'tall',thuong:'shop',dong:'shop',hem:'old',gogh:'edge'},old:{lon:'tall',thuong:'old',dong:'shop',hem:'old',gogh:'edge'},
+  res:{lon:'tall',thuong:'house',dong:'shop',hem:'old',gogh:'house'},east:{lon:'tall',thuong:'edge',dong:'shop',hem:'old',gogh:'edge'}};
+const ST={shop:{sb:0,d:52,w:[22,32],gap:[0,0],aw:.55,flat:.3,bikes:.45},old:{sb:0,d:40,w:[15,22],gap:[0,0],aw:.12,flat:.6},
+  tall:{sb:18,d:62,w:[58,92],gap:[8,14],flat:1,trees:1},house:{sb:20,d:40,w:[42,54],gap:[18,28],flat:.12,yard:1},edge:{fence:1},none:{}};
+const depth=s=>ST[s].d?ST[s].sb+ST[s].d:0;
+// Bảng màu theo khu vực — mỗi khu một họ màu
+const PAL={center:{roofs:['#b0563a','#c4623f','#9c5a3c'],flats:['#c9cfd6','#d9d2c4','#b8c4cf','#cdbfae','#e2d6c0']},
+  old:{roofs:['#c4623f','#b0563a','#a8664a','#d07a4f','#9c5a3c'],flats:['#d8cbb3','#cfc3ad','#e0d4bc']},
+  res:{roofs:['#c4623f','#8b6a52','#5b6b7d','#b0563a'],flats:['#d9d2c4']},
+  east:{roofs:['#8b6a52','#a8664a'],flats:['#8fa3b5','#9aa8b4','#a7b1ba']}};
+const AW=['#e03131','#1c7ed6','#f59f00','#2b8a3e','#e8590c'];
+
+function unitRect(side,B,p,w,sb,d){return side==='T'?{x:p,y:B.y+sb,w,h:d}:side==='B'?{x:p,y:B.y2-sb-d,w,h:d}:side==='L'?{x:B.x+sb,y:p,w:d,h:w}:{x:B.x2-sb-d,y:p,w:d,h:w};}
+function along(side,B,q,off){return side==='T'?[q,B.y+off]:side==='B'?[q,B.y2-off]:side==='L'?[B.x+off,q]:[B.x2-off,q];}
+function rowBuild(g,B,side,sn,zone,r,a0,a1){
+  const s=ST[sn],pal=PAL[zone]||PAL.res;
+  if(s.fence){const [x1,y1]=along(side,B,a0,4),[x2,y2]=along(side,B,a1,4);fence(g,x1,y1,x2,y2);
+    for(let q=a0+20;q<a1-10;q+=44)if(r()<.5){const [tx,tY]=along(side,B,q+r()*12,15);if(!hit({x:tx-9,y:tY-9,w:18,h:18},AVOID,2))tree(g,tx,tY,8+r()*3);}return;}
+  if(!s.d)return;
+  if(s.trees)for(let q=a0+16;q<a1-8;q+=36){const [tx,tY]=along(side,B,q,s.sb/2);if(!hit({x:tx-8,y:tY-8,w:16,h:16},AVOID,2))tree(g,tx,tY,7.5,'#4f9a34');}
+  let p=a0;
+  while(p<a1-6){let w=s.w[0]+r()*(s.w[1]-s.w[0]);const gap=s.gap[0]+r()*(s.gap[1]-s.gap[0]);
+    if(!s.gap[1]){if(a1-p<w+s.w[0]*.7)w=a1-p;}else{if(a1-p<s.w[0])break;w=Math.min(w,a1-p);}
+    const u=unitRect(side,B,p,w,s.sb,s.d);
+    if(!hit(u,AVOID,6)){
+      if(r()<s.flat){const tall=sn==='tall';flat(g,u.x+1,u.y+1,u.w-2,u.h-2,pick(pal.flats,r),tall?9+r()*13:4,r,
+          tall?{solar:zone!=='east'&&r()<.35,garden:zone!=='east'&&r()<.25,ac:zone==='east'?0:2,tank:r()<.4,ridge:zone==='east'}:{ac:r()<.5?1:0,tank:r()<.6});}
+      else house(g,u.x+1,u.y+1,u.w-2,u.h-2,pick(pal.roofs,r));
+      if(s.aw&&r()<s.aw){const c=pick(AW,r),a=side==='T'?{x:u.x+3,y:B.y-5,width:u.w-6,height:5}:side==='B'?{x:u.x+3,y:B.y2,width:u.w-6,height:5}:side==='L'?{x:B.x-5,y:u.y+3,width:5,height:u.h-6}:{x:B.x2,y:u.y+3,width:5,height:u.h-6};
+        el('rect',{...a,fill:c},g);}
+      if(s.bikes&&r()<s.bikes){const [bx,by]=along(side,B,p+w/2,-3.5);bike(g,bx,by,side==='T'||side==='B'?90:0,r);}
+      if(s.yard){const [a,b]=along(side,B,p+w/2,0),hor=side==='T'||side==='B';
+        el('rect',hor?{x:a-3,y:side==='T'?B.y:B.y2-s.sb,width:6,height:s.sb,fill:'#e8dcc4'}:{x:side==='L'?B.x:B.x2-s.sb,y:b-3,width:s.sb,height:6,fill:'#e8dcc4'},g);
+        if(r()<.6){const [tx,tY]=along(side,B,p+w+gap/2,s.sb+12);tree(g,tx,tY,8+r()*3);}}
+    }
+    p+=w+gap;}
+}
+
+/* ---------- lòng ô phố theo khu vực ---------- */
+function slots(I,cw,ch,r){const s=[];for(let x=I.x+6;x+cw<=I.x2-4;x+=cw)for(let y=I.y+6;y+ch<=I.y2-4;y+=ch)s.push({x,y,w:cw-8,h:ch-8});
+  for(let i=s.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[s[i],s[j]]=[s[j],s[i]];}return s;}
+const INNER={
+  // phố cổ: nhà phía sau nối dài từ dãy mặt tiền (không xếp lưới), giữa là sân chung có cây
+  old(g,I,r){const pal=PAL.old,ext=(x,y,w,h)=>r()<.65?flat(g,x,y,w,h,pick(pal.flats,r),3,r,{tank:r()<.3}):house(g,x,y,w,h,pick(pal.roofs,r));
+    for(let x=I.x;x<I.x2-12;){const w=14+r()*10,d=12+r()*16;if(r()<.7)ext(x,I.y,Math.min(w,I.x2-x),d);if(r()<.7)ext(x,I.y2-d,Math.min(w,I.x2-x),d);x+=w;}
+    for(let y=I.y+30;y<I.y2-40;){const w=14+r()*10,d=12+r()*14;if(r()<.6)ext(I.x,y,d,w);if(r()<.6)ext(I.x2-d,y,d,w);y+=w;}
+    const cx=(I.x+I.x2)/2,cy=(I.y+I.y2)/2;el('rect',{x:cx-34,y:cy-22,width:68,height:44,rx:6,fill:'#e2d8c3'},g);
+    tree(g,cx-18,cy,9);tree(g,cx+20,cy-4,8);},
+  // dân cư: vườn sau nối liền nhau, hàng rào cây ngăn lô, ít chi tiết lặt vặt
+  res(g,I,r){const midY=(I.y+I.y2)/2;
+    if(I.y2-I.y>60)el('line',{x1:I.x+8,y1:midY,x2:I.x2-8,y2:midY,stroke:'#4f9a34','stroke-width':4,'stroke-linecap':'round'},g);
+    for(let x=I.x+22;x<I.x2-14;x+=44+r()*14){tree(g,x,I.y+(midY-I.y)*.55,9+r()*3);tree(g,x+18,midY+(I.y2-midY)*.45,9+r()*3);}
+    if(r()<.7){const x=I.x+12+r()*(I.x2-I.x-70);el('rect',{x,y:midY+8,width:38,height:18,rx:5,fill:'#6cc4e8',stroke:'#f1f6f8','stroke-width':3},g);}},
+  center(g,I,r,k){if(k===1){ // bãi đỗ xe
+      el('rect',{x:I.x+6,y:I.y+6,width:I.x2-I.x-12,height:I.y2-I.y-12,rx:4,fill:'#a9adb3'},g);
+      const n=Math.floor((I.x2-I.x-20)/23);for(const yy of [I.y+10,I.y2-38])for(let i=0;i<=n;i++){const x=I.x+10+i*23;
+        el('line',{x1:x,y1:yy,x2:x,y2:yy+28,stroke:'#fff','stroke-width':1.5},g);if(i<n&&r()<.65)car(g,x+11.5,yy+14,90,pick(['#e03131','#1c7ed6','#f8f9fa','#f59f00','#2b8a3e'],r));}
+      return;}
+    el('rect',{x:I.x+4,y:I.y+4,width:I.x2-I.x-8,height:I.y2-I.y-8,rx:4,fill:'#e4dccb'},g);
+    for(let x=I.x+24;x<I.x2-8;x+=20)el('line',{x1:x,y1:I.y+4,x2:x,y2:I.y2-4,stroke:'#d6cdb9','stroke-width':1},g);
+    for(let y=I.y+24;y<I.y2-8;y+=20)el('line',{x1:I.x+4,y1:y,x2:I.x2-4,y2:y,stroke:'#d6cdb9','stroke-width':1},g);
+    const cx=(I.x+I.x2)/2,cy=(I.y+I.y2)/2;el('circle',{cx,cy,r:14,fill:'#8fd3f0',stroke:'#fff','stroke-width':3},g);el('circle',{cx,cy,r:4,fill:'#fff'},g);
+    [[I.x+18,I.y+18],[I.x2-18,I.y+18],[I.x+18,I.y2-18],[I.x2-18,I.y2-18]].forEach(([x,y])=>{el('circle',{cx:x,cy:y,r:10,fill:'#b8ad97'},g);tree(g,x,y,8);});},
+  east(g,I,r){const w=I.x2-I.x,h=I.y2-I.y;
+    // ruộng rau
+    const fx=I.x+8,fy=I.y+8,fw=w*.55,fh=h-16;
+    el('rect',{x:fx,y:fy,width:fw,height:fh,rx:3,fill:'#b08a5e'},g);
+    for(let x=fx+4;x<fx+fw-3;x+=8)el('line',{x1:x,y1:fy+4,x2:x,y2:fy+fh-4,stroke:'#7cc35a','stroke-width':4,'stroke-linecap':'round'},g);
+    house(g,I.x+w*.66,I.y+12,Math.min(44,w*.28),30,'#8b6a52');
+    el('ellipse',{cx:I.x+w*.78,cy:I.y+h*.62,rx:22,ry:14,fill:'#c8ad84'},g);
+    tree(g,I.x2-14,I.y2-14,10);tree(g,I.x+w*.7,I.y2-16,9);}
+};
+const FULL={
+  park(g,B,r){const cx=(B.x+B.x2)/2,cy=(B.y+B.y2)/2,w=B.x2-B.x,h=B.y2-B.y;
+    el('ellipse',{cx:B.x+w*.3,cy:B.y+h*.7,rx:w*.19,ry:h*.13,fill:'#6cc4e8',stroke:'#d9f1fa','stroke-width':4},g);
+    const Pth={fill:'none',stroke:'#e8dcc4','stroke-width':8,'stroke-linecap':'round'};
+    el('path',{d:`M${B.x+14} ${cy-20} Q${cx-50} ${cy-40} ${cx} ${cy} Q${cx+50} ${cy+40} ${B.x2-14} ${cy+20}`,...Pth},g);
+    el('path',{d:`M${cx+16} ${B.y+14} Q${cx+30} ${cy-50} ${cx} ${cy} Q${cx-26} ${cy+60} ${cx-10} ${B.y2-14}`,...Pth},g);
+    el('circle',{cx,cy,r:20,fill:'#e8dcc4'},g);el('circle',{cx,cy,r:12,fill:'#8fd3f0',stroke:'#fff','stroke-width':2.5},g);el('circle',{cx,cy,r:3.5,fill:'#fff'},g);
+    el('rect',{x:B.x+w*.62,y:B.y+28,width:62,height:44,rx:8,fill:'#f4c98b'},g);el('rect',{x:B.x+w*.62+8,y:B.y+36,width:20,height:7,rx:2,fill:'#e03131'},g);
+    el('circle',{cx:B.x+w*.62+46,cy:B.y+56,r:8,fill:'none',stroke:'#1c7ed6','stroke-width':3},g);
+    flowers(g,B.x+w*.6,B.y2-48,56,14,r);
+    // hàng cây bao quanh công viên nối tiếp hàng cây đại lộ
+    for(let q=B.x+16;q<B.x2-8;q+=34){tree(g,q,B.y+11,8,'#4f9a34');tree(g,q,B.y2-11,8,'#4f9a34');}
+    for(let q=B.y+45;q<B.y2-38;q+=34){tree(g,B.x+11,q,8,'#4f9a34');tree(g,B.x2-11,q,8,'#4f9a34');}
+    [[cx-60,cy+30],[cx+70,cy-30],[cx+40,cy+70],[cx-80,cy-70]].forEach(([x,y])=>tree(g,x,y,11,'#6bb848'));},
+  yard(g,B,r){el('rect',{x:B.x+6,y:B.y+6,width:B.x2-B.x-12,height:B.y2-B.y-12,rx:3,fill:'#d2cfc6'},g);
+    el('rect',{x:B.x+6,y:B.y+6,width:B.x2-B.x-12,height:B.y2-B.y-12,rx:3,fill:'none',stroke:'#8a8f96','stroke-width':2,'stroke-dasharray':'6 4'},g);
+    warehouse(g,B.x+20,B.y+22,110,92,'#8fa3b5');warehouse(g,B.x+20,B.y+150,110,110,'#9aa8b4');
+    for(let i=0;i<3;i++)car(g,B.x+150,B.y+48+i*26,0,pick(['#f8f9fa','#1c7ed6'],r),26);
+    for(let i=0;i<6;i++)el('rect',{x:B.x+146+(i%3)*12,y:B.y+190+Math.floor(i/3)*12,width:9,height:9,fill:'#b0855a',stroke:'#8b6a42','stroke-width':1},g);},
+  port(g,B,r){el('rect',{x:B.x+4,y:B.y+4,width:B.x2-B.x-8,height:B.y2-B.y-8,rx:3,fill:'#cfccc3'},g);
+    const cs=['#e03131','#1c7ed6','#f59f00','#2b8a3e','#e8590c','#5f3dc4'];
+    for(let rr=0;rr<6;rr++)for(let k=0;k<4;k++){if(r()<.18)continue;const x=B.x+16+k*42,y=B.y+20+rr*40;
+      const c=pick(cs,r);el('rect',{x:x+3,y:y+3,width:36,height:14,fill:'rgba(0,0,0,.2)'},g);el('rect',{x,y,width:36,height:14,fill:c,stroke:shade(c,-.3),'stroke-width':1},g);
+      for(let l=x+5;l<x+34;l+=5)el('line',{x1:l,y1:y+2,x2:l,y2:y+12,stroke:shade(c,-.18),'stroke-width':1},g);}
+    el('line',{x1:B.x+186,y1:B.y+10,x2:B.x+186,y2:B.y2-10,stroke:'#f2c94c','stroke-width':3},g);el('line',{x1:B.x+10,y1:B.y+10,x2:B.x+10,y2:B.y2-10,stroke:'#f2c94c','stroke-width':3},g);
+    el('rect',{x:B.x+8,y:B.y+128,width:182,height:12,fill:'none',stroke:'#e8a33d','stroke-width':4},g);},
+  school(g,B,r){const w=B.x2-B.x;
+    el('rect',{x:B.x+5,y:B.y+5,width:w-10,height:B.y2-B.y-10,rx:4,fill:'none',stroke:'#f1f3f5','stroke-width':2,'stroke-dasharray':'4 4'},g);
+    const fx=B.x+122,fy=B.y+16,fw=w-138,fh=B.y2-B.y-32;
+    for(let i=0;i<8;i++)el('rect',{x:fx,y:fy+i*fh/8,width:fw,height:fh/8,fill:i%2?'#5fb847':'#6cc552'},g);
+    const L={fill:'none',stroke:'#fff','stroke-width':2};el('rect',{x:fx+5,y:fy+5,width:fw-10,height:fh-10,...L},g);
+    el('line',{x1:fx+5,y1:fy+fh/2,x2:fx+fw-5,y2:fy+fh/2,...L},g);el('circle',{cx:fx+fw/2,cy:fy+fh/2,r:16,...L},g);
+    house(g,B.x+14,B.y+18,92,40,'#e8590c');house(g,B.x+14,B.y2-60,92,40,'#e8590c');
+    for(let q=B.y+16;q<B.y2-10;q+=40)tree(g,B.x2-9,q+6,7,'#4f9a34');}
+};
+
+/* ---------- vẽ bản đồ ---------- */
+function roads(){
+  EDGES.forEach(([i,j,i2,j2])=>{const t=ty(N(i,j),N(i2,j2));el('line',{x1:X(i),y1:Y(j),x2:X(i2),y2:Y(j2),stroke:'#dfe2d9','stroke-width':RWD[t]+14,'stroke-linecap':'square'});});
+  EDGES.forEach(([i,j,i2,j2])=>{const t=ty(N(i,j),N(i2,j2));el('line',{x1:X(i),y1:Y(j),x2:X(i2),y2:Y(j2),stroke:RC[t],'stroke-width':RWD[t],'stroke-linecap':'square'});});
+  const r=seed(7);
+  EDGES.forEach(([i,j,i2,j2])=>{const t=ty(N(i,j),N(i2,j2)),A={x:X(i),y:Y(j)},u={x:(X(i2)-A.x)/SP,y:(Y(j2)-A.y)/SP},px=-u.y,py=u.x;
+    const p=(d,o)=>({x:A.x+u.x*d+px*o,y:A.y+u.y*d+py*o});
+    if(t==='thuong'||t==='dong'){const s=p(36,0),e=p(SP-36,0);el('line',{x1:s.x,y1:s.y,x2:e.x,y2:e.y,stroke:'#f6f6f2','stroke-width':2,'stroke-dasharray':'12 12',opacity:.6});}
+    if(t==='lon')[-2.5,2.5].forEach(o=>{const s=p(40,o),e=p(SP-40,o);el('line',{x1:s.x,y1:s.y,x2:e.x,y2:e.y,stroke:'#ffd43b','stroke-width':2});});
+    if(t==='dong'){const ang=Math.atan2(u.y,u.x)*180/Math.PI;for(let d=70;d<SP-60;d+=70+r()*30){const q=p(d,r()<.5?-11:11);car(ROOT,q.x,q.y,ang,pick(['#e03131','#f59f00','#1c7ed6','#ae3ec9','#f8f9fa'],r));}}
+    if(t==='gogh')for(let d=55;d<SP-50;d+=45){const q=p(d+r()*12,(r()-.5)*26);el('ellipse',{cx:q.x,cy:q.y,rx:5+r()*3,ry:3+r()*2,fill:'#5d4330',opacity:.6});}
+  });}
+function grass(){el('rect',{x:0,y:0,width:W,height:H,fill:'#8fd16a'});const r=seed(3);for(let i=0;i<W*H/2300;i++)el('circle',{cx:r()*W,cy:r()*H,r:1+r()*1.6,fill:'#a8e07f'});}
+function clipG(B,id){const cp=el('clipPath',{id});el('rect',{x:B.x-7,y:B.y-7,width:B.x2-B.x+14,height:B.y2-B.y+14},cp);return el('g',{'clip-path':`url(#${id})`});}
+function blockOf(bi,bj){const t=ty(N(bi,bj),N(bi+1,bj)),b=ty(N(bi,bj+1),N(bi+1,bj+1)),l=ty(N(bi,bj),N(bi,bj+1)),rr=ty(N(bi+1,bj),N(bi+1,bj+1)),hw=k=>RWD[k]/2+7;
+  return{x:X(bi)+hw(l),y:Y(bj)+hw(t),x2:X(bi+1)-hw(rr),y2:Y(bj+1)-hw(b),T:t,B:b,L:l,R:rr};}
+function drawNew(){
+  grass();roads();
+  for(let bj=0;bj<ROWS-1;bj++)for(let bi=0;bi<COLS-1;bi++){const z=ZONE[bj][bi],B=blockOf(bi,bj),r=seed(100+bi*17+bj*31),g=clipG(B,`k${bi}_${bj}`);
+    if(FULL[z]){FULL[z](g,B,r);continue;}
+    const s={T:SIDE[z][B.T],B:SIDE[z][B.B],L:SIDE[z][B.L],R:SIDE[z][B.R]},dT=depth(s.T),dB=depth(s.B),dL=depth(s.L),dR=depth(s.R);
+    INNER[z](g,{x:B.x+dL,y:B.y+dT,x2:B.x2-dR,y2:B.y2-dB},r,bj);
+    rowBuild(g,B,'T',s.T,z,r,B.x,B.x2);rowBuild(g,B,'B',s.B,z,r,B.x,B.x2);
+    rowBuild(g,B,'L',s.L,z,r,B.y+dT,B.y2-dB);rowBuild(g,B,'R',s.R,z,r,B.y+dT,B.y2-dB);}
+  // vùng ngoài bản đồ nối tiếp khu bên trong: phố cổ phía bắc, đại lộ phía tây/nam, đồng ruộng phía đông
+  const r=seed(900),top=Y(0)-30,bot=Y(ROWS-1)+39,left=X(0)-39,right=X(COLS-1)+30;
+  let g=clipG({x:left+7,y:-7,x2:right-7,y2:top},'oN');
+  rowBuild(g,{x:left,y:-60,x2:1140,y2:top},'B','old','old',r,left+8,1140);rowBuild(g,{x:1160,y:-60,x2:1490,y2:top},'B','house','res',r,1170,1490);
+  g=clipG({x:-7,y:bot,x2:W+7,y2:H+7},'oS');
+  rowBuild(g,{x:-10,y:bot,x2:1140,y2:H+60},'T','tall','center',r,0,1140);rowBuild(g,{x:1160,y:bot,x2:W,y2:H+60},'T','tall','east',r,1170,right);
+  g=clipG({x:-7,y:-7,x2:left,y2:H+7},'oW');rowBuild(g,{x:-60,y:0,x2:left,y2:H},'R','tall','center',r,10,bot-10);
+  g=clipG({x:right,y:-7,x2:W+7,y2:H+7},'oE');
+  for(let y=0;y<H;y+=58){el('rect',{x:right+16,y:y+6,width:W-right-10,height:50,fill:y%116?'#a9d36e':'#b5da7a'},g);}
+  for(let y=0;y<H;y+=34)tree(g,right+8,y+10,8,'#4f9a34');
+  for(let x=1510;x<right;x+=60){el('rect',{x,y:6,width:52,height:top-12,fill:'#a9d36e'},ROOT);}
+  marks();}
+function drawCur(){ // tái hiện cách vẽ hiện tại của demo
+  grass();const r=seed(11);
+  for(let i=0;i<COLS-1;i++)for(let j=0;j<ROWS-1;j++){const x0=100+i*SP+44,y0=100+j*SP+44,cw=(SP-88)/2;
+    for(let a=0;a<2;a++)for(let b=0;b<2;b++){const w=60+r()*50,h=40+r()*45,x=x0+a*cw+(cw-w)*r(),y=y0+b*cw+(cw-h)*r();
+      if(!hit({x,y,w,h},AVOID,10))house(ROOT,x,y,w,h,pick(['#c4623f','#5b6b7d','#8b6a52','#4f7a5a','#b0563a','#6d5f8a'],r));else tree(ROOT,x+w/2,y+h/2,12);}}
+  for(let x=20;x<W;x+=95){if(r()>.35&&!hit({x,y:10,w:58,h:46},AVOID,10))house(ROOT,x,12,58,44,pick(['#c4623f','#5b6b7d','#8b6a52','#4f7a5a'],r));else tree(ROOT,x+25,40,11);
+    if(r()>.35)house(ROOT,x,H-60,58,44,pick(['#c4623f','#5b6b7d','#8b6a52','#4f7a5a'],r));else tree(ROOT,x+25,H-34,11);}
+  for(let y=150;y<H-150;y+=80){tree(ROOT,40,y+r()*30,11);tree(ROOT,W-40,y+r()*30,11);}
+  roads();marks();}
+function marks(){Object.keys(POINTS).forEach(id=>{const [,, ,name,col,kho]=POINTS[id],b=bRect(id);
+    kho?warehouse(ROOT,b.x,b.y,b.w,b.h,col):house(ROOT,b.x,b.y,b.w,b.h,shade(col,-.05));});
+  Object.keys(POINTS).forEach(id=>{const [,, ,name,col,kho]=POINTS[id],b=bRect(id),x=b.px,y=b.py;
+    el('ellipse',{cx:x,cy:y+15,rx:11,ry:4,fill:'rgba(0,0,0,.25)'});
+    kho?el('rect',{x:x-14,y:y-14,width:28,height:28,rx:6,fill:col,stroke:'#fff','stroke-width':3}):el('circle',{cx:x,cy:y,r:15,fill:col,stroke:'#fff','stroke-width':3});
+    el('path',{d:kho?`M${x} ${y+4} V${y-7} M${x-5} ${y-2} L${x} ${y-7} L${x+5} ${y-2}`:`M${x} ${y-7} V${y+4} M${x-5} ${y-1} L${x} ${y+4} L${x+5} ${y-1}`,fill:'none',stroke:'#fff','stroke-width':2.6,'stroke-linecap':'round'});
+    const t=el('text',{x:b.lx,y:b.ly,'text-anchor':'middle','font-size':17,'font-weight':900,fill:'#fff',stroke:'#1d2733','stroke-width':4,'paint-order':'stroke','font-family':'Nunito'});t.textContent=name;});}
+function zones(){const g=el('g',{});
+  for(let bj=0;bj<ROWS-1;bj++)for(let bi=0;bi<COLS-1;bi++){const B=blockOf(bi,bj),[n,c]=ZINFO[ZONE[bj][bi]];
+    el('rect',{x:B.x,y:B.y,width:B.x2-B.x,height:B.y2-B.y,fill:c,'fill-opacity':.55,stroke:c,'stroke-width':4},g);
+    const t=el('text',{x:(B.x+B.x2)/2,y:(B.y+B.y2)/2+10,'text-anchor':'middle','font-size':30,'font-weight':900,fill:'#fff',stroke:'#1d2733','stroke-width':5,'paint-order':'stroke','font-family':'Nunito'},g);t.textContent=n;}}
+
+let MODE=/cur/.test(location.hash)?'cur':'new',ZON=/zone/.test(location.hash);
+function render(){ROOT=document.getElementById('map');ROOT.innerHTML='';document.getElementById('main').setAttribute('viewBox',`0 0 ${W} ${H}`);
+  MODE==='new'?drawNew():drawCur();if(ZON)zones();
+  document.getElementById('bNew').classList.toggle('on',MODE==='new');document.getElementById('bCur').classList.toggle('on',MODE==='cur');document.getElementById('cZone').checked=ZON;}
+document.getElementById('bNew').onclick=()=>{MODE='new';render();};document.getElementById('bCur').onclick=()=>{MODE='cur';render();};
+document.getElementById('cZone').onchange=e=>{ZON=e.target.checked;render();};
+render();
+</script>
+</body>
+</html>

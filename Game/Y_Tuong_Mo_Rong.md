@@ -71,3 +71,18 @@
 | YT-01-Q1 | Có thử cấp độ A trong demo không? |
 | YT-01-Q2 | Bức tranh hoàn chỉnh cuối chương có thêm phần thưởng khác không (lưu ảnh, chia sẻ, huy hiệu)? |
 | YT-01-Q3 | Có đổi tên/nội dung nhiệm vụ theo câu chuyện xây dựng khu vực không? |
+
+---
+
+## YT-02. Mỗi chương một chủ đề khung cảnh
+
+| Thông tin | Nội dung |
+|---|---|
+| Người đề xuất | BA |
+| Ngày ghi nhận | 14/10/2026 |
+| Trạng thái | BA đã chọn 5 chủ đề, dùng tên hư cấu, kỳ quan lộ dần (14/10/2026); đang làm mockup New York về đêm, Ai Cập, Santorini. Chi tiết: [Chu_De_Khung_Canh.md](Chu_De_Khung_Canh.md) |
+
+### Mô tả (theo BA)
+- Mỗi chương dùng khung cảnh của một vùng khác nhau (vd New York ban đêm sáng đèn, Brazil với kỳ quan thế giới, đường phố sa mạc…).
+- Mỗi khung cảnh thể hiện nét đặc trưng: kiến trúc nhà, cảnh quan, màu sắc, biểu tượng.
+- Vẫn giữ góc nhìn từ trên xuống; chi tiết trong ô phố không ảnh hưởng đường đi.

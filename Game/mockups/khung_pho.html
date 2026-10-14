@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Đề xuất ô phố</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#1b1f24;color:#fff;font-family:"Nunito","Segoe UI",sans-serif;padding:18px}
+  h1{font-size:20px;font-weight:900;margin-bottom:4px}
+  .sub{font-size:13px;color:#aab3bd;margin-bottom:14px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:1120px}
+  .card{background:#262b32;border-radius:10px;padding:10px}
+  .card h2{font-size:15px;font-weight:900;margin-bottom:2px}
+  .card p{font-size:12px;color:#c4ccd4;line-height:1.35;margin-bottom:8px;min-height:32px}
+  .card svg{width:100%;display:block;border-radius:6px}
+  .wide{max-width:1120px;margin-top:14px}
+  .wide svg{width:100%;display:block;border-radius:6px}
+  .tag{display:inline-block;font-size:11px;font-weight:900;background:#ffd84d;color:#1d2733;border-radius:8px;padding:1px 7px;margin-left:6px;vertical-align:2px}
+</style>
+</head>
+<body>
+<h1>Đề xuất hiển thị ô phố — góc nhìn từ trên xuống</h1>
+<div class="sub">Mỗi ô dùng đúng kích thước trong demo (khoảng cách giao lộ 350, đường 46, vỉa hè 7). Mọi chi tiết nằm trong ô phố, không chạm vào đường.</div>
+<div class="grid" id="grid"></div>
+<div class="wide card"><h2>Ghép thử trên một khu 4×2 <span class="tag">Khuyến nghị: B + C xen kẽ, A ở rìa</span></h2>
+<p>Ô nhà phố (B) làm nền, cứ vài ô có một ô chức năng (C) làm mốc ghi nhớ; ô sân vườn (A) ở rìa khu. Có ghim điểm nhiệm vụ để kiểm tra ký hiệu vẫn nổi bật.</p>
+<svg id="combo"></svg></div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+const PAL={grass:'#8fd16a',dot:'#a8e07f',road:'#4a4f57',walk:'#dfe2d9',line:'#f6f6f2',wall:'#f1e9dc',tree:'#5aa83a',treeD:'#3f8526',
+  roofs:['#c4623f','#5b6b7d','#8b6a52','#4f7a5a','#b0563a','#6d5f8a'],shadow:'rgba(0,0,0,.18)'};
+const SP=350,RW=46,WK=7,S=SP-RW-2*WK; // S = cạnh ô phố = 290
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e;}
+function seed(n){return()=>{n|=0;n=n+0x6D2B79F5|0;let t=Math.imul(n^n>>>15,1|n);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function shade(hex,p){const n=parseInt(hex.slice(1),16);const f=v=>Math.max(0,Math.min(255,Math.round(v*(1+p))));return'#'+[f(n>>16),f((n>>8)&255),f(n&255)].map(v=>v.toString(16).padStart(2,'0')).join('');}
+
+// ---- vật thể dùng chung (cùng phong cách demo) ----
+function house(g,x,y,w,h,c){
+  el('rect',{x:x+5,y:y+6,width:w,height:h,fill:PAL.shadow,rx:2},g);el('rect',{x,y,width:w,height:h,fill:PAL.wall,rx:2},g);
+  if(w>=h){el('polygon',{points:`${x-2},${y-2} ${x+w+2},${y-2} ${x+w-h/2+2},${y+h/2} ${x+h/2-2},${y+h/2}`,fill:c},g);
+    el('polygon',{points:`${x-2},${y+h+2} ${x+w+2},${y+h+2} ${x+w-h/2+2},${y+h/2} ${x+h/2-2},${y+h/2}`,fill:shade(c,-.22)},g);
+    el('polygon',{points:`${x-2},${y-2} ${x+h/2-2},${y+h/2} ${x-2},${y+h+2}`,fill:shade(c,-.1)},g);
+    el('polygon',{points:`${x+w+2},${y-2} ${x+w-h/2+2},${y+h/2} ${x+w+2},${y+h+2}`,fill:shade(c,-.32)},g);}
+  else{el('polygon',{points:`${x-2},${y-2} ${x-2},${y+h+2} ${x+w/2},${y+h-w/2+2} ${x+w/2},${y+w/2-2}`,fill:c},g);
+    el('polygon',{points:`${x+w+2},${y-2} ${x+w+2},${y+h+2} ${x+w/2},${y+h-w/2+2} ${x+w/2},${y+w/2-2}`,fill:shade(c,-.22)},g);
+    el('polygon',{points:`${x-2},${y-2} ${x+w+2},${y-2} ${x+w/2},${y+w/2-2}`,fill:shade(c,-.1)},g);
+    el('polygon',{points:`${x-2},${y+h+2} ${x+w+2},${y+h+2} ${x+w/2},${y+h-w/2+2}`,fill:shade(c,-.32)},g);}
+}
+function tree(g,x,y,r,c){c=c||PAL.tree;
+  el('ellipse',{cx:x+4,cy:y+5,rx:r,ry:r*.85,fill:PAL.shadow},g);
+  const p=[];for(let i=0;i<6;i++){const a=Math.PI/3*i+Math.PI/6;p.push(`${x+r*Math.cos(a)},${y+r*Math.sin(a)}`);}
+  el('polygon',{points:p.join(' '),fill:c},g);el('polygon',{points:`${x},${y} ${p[0]} ${p[1]} ${p[2]}`,fill:shade(c,-.25)},g);
+}
+function car(g,x,y,ang,c){const t=el('g',{transform:`translate(${x},${y}) rotate(${ang})`},g);
+  el('rect',{x:-8,y:-4,width:18,height:10,rx:2.5,fill:'rgba(0,0,0,.2)'},t);
+  el('rect',{x:-9,y:-5,width:18,height:10,rx:2.5,fill:c,stroke:'rgba(0,0,0,.25)','stroke-width':1},t);
+  el('rect',{x:1,y:-3.5,width:4,height:7,rx:1,fill:'rgba(30,40,55,.55)'},t);}
+function bike(g,x,y,ang){const t=el('g',{transform:`translate(${x},${y}) rotate(${ang})`},g);
+  el('rect',{x:-4.5,y:-1.5,width:9,height:3,rx:1.5,fill:'#2f3640'},t);el('circle',{cx:1,cy:0,r:1.6,fill:['#e03131','#1c7ed6','#f59f00'][Math.abs(Math.round(x+y))%3]},t);}
+function flowers(g,x,y,w,h,rnd){el('rect',{x,y,width:w,height:h,rx:3,fill:'#7a5a3e'},g);
+  const cs=['#ff8fab','#ffd43b','#ffffff','#f783ac'];for(let i=0;i<w*h/22;i++)el('circle',{cx:x+3+rnd()*(w-6),cy:y+3+rnd()*(h-6),r:1.8,fill:rnd()<.45?'#5aa83a':cs[Math.floor(rnd()*4)]},g);}
+function flat(g,x,y,w,h,c,ht,rnd,opt={}){ // nhà mái bằng: bóng đổ dài theo chiều cao
+  el('polygon',{points:`${x+w},${y} ${x+w+ht},${y+ht*1.2} ${x+w+ht},${y+h+ht*1.2} ${x+ht},${y+h+ht*1.2} ${x},${y+h}`,fill:'rgba(0,0,0,.2)'},g);
+  el('rect',{x,y,width:w,height:h,fill:shade(c,-.18),rx:1.5},g);
+  el('rect',{x:x+3,y:y+3,width:w-6,height:h-6,fill:c,rx:1},g);
+  if(opt.solar){const sx=x+8,sy=y+8,cols=Math.floor((w*.55)/11),rows=Math.floor((h-16)/9);
+    for(let i=0;i<cols;i++)for(let j=0;j<rows;j++)el('rect',{x:sx+i*11,y:sy+j*9,width:9.5,height:7.5,fill:'#3d5a8a',stroke:'#7d9ccc','stroke-width':.6},g);}
+  if(opt.garden){el('rect',{x:x+w*.55,y:y+8,width:w*.45-10,height:h-16,rx:3,fill:'#7cc35a'},g);
+    for(let i=0;i<3;i++)el('circle',{cx:x+w*.62+rnd()*(w*.3-10),cy:y+14+rnd()*(h-28),r:4,fill:'#4f9a34'},g);}
+  const n=opt.ac??3;for(let i=0;i<n;i++)el('rect',{x:x+6+rnd()*(w-18),y:y+6+rnd()*(h-16),width:8,height:6,fill:'#c9ced4',stroke:'#9aa1a9','stroke-width':.8},g);
+  if(opt.tank){el('circle',{cx:x+w-11,cy:y+11,r:5.5,fill:'#e6e9ec',stroke:'#a5adb5','stroke-width':1.2},g);el('circle',{cx:x+w-11,cy:y+11,r:2,fill:'#a5adb5'},g);}
+}
+function hedge(g,x1,y1,x2,y2){el('line',{x1,y1,x2,y2,stroke:'#4f9a34','stroke-width':5,'stroke-linecap':'round'},g);}
+function lawn(g,x,y,w,h,rnd,c){el('rect',{x,y,width:w,height:h,fill:c||PAL.grass},g);for(let i=0;i<w*h/2300;i++)el('circle',{cx:x+rnd()*w,cy:y+rnd()*h,r:1+rnd()*1.6,fill:PAL.dot},g);}
+
+// ---- các phương án ô phố: (g, x0, y0, rnd) ----
+const STYLES={
+  now(g,x0,y0,rnd){lawn(g,x0,y0,S,S,rnd);const cw=S/2;
+    for(let a=0;a<2;a++)for(let b=0;b<2;b++){const w=60+rnd()*50,h=40+rnd()*45;
+      house(g,x0+a*cw+(cw-w)*rnd(),y0+b*cw+(cw-h)*rnd(),Math.min(w,cw-6),Math.min(h,cw-6),PAL.roofs[Math.floor(rnd()*6)]);}
+    for(let i=0;i<3;i++)tree(g,x0+30+rnd()*(S-60),y0+30+rnd()*(S-60),8);},
+
+  // A — khu dân cư sân vườn: 4 lô, hàng rào cây, lối xe, sân sau
+  garden(g,x0,y0,rnd){lawn(g,x0,y0,S,S,rnd);const L=S/2;
+    hedge(g,x0+L,y0+10,x0+L,y0+S-10);hedge(g,x0+10,y0+L,x0+L-30,y0+L);hedge(g,x0+L+30,y0+L,x0+S-10,y0+L);
+    for(let a=0;a<2;a++)for(let b=0;b<2;b++){const lx=x0+a*L,ly=y0+b*L,top=b===0;
+      const w=70+rnd()*14,h=48,hx=lx+(a?L-w-22:22),hy=top?ly+26:ly+L-26-h;
+      const dx=a?lx+14:lx+L-30; // lối xe sát rìa lô
+      el('rect',{x:dx,y:top?ly:hy+h-4,width:18,height:top?hy+h-ly-4:ly+L-(hy+h-4),fill:'#d3d6cc'},g);
+      if(rnd()<.8)car(g,dx+9,top?ly+14:ly+L-14,90,['#e03131','#1c7ed6','#f8f9fa','#f59f00'][Math.floor(rnd()*4)]);
+      el('rect',{x:hx+w/2-3,y:top?ly:hy+h,width:6,height:top?hy-ly:ly+L-hy-h,fill:'#e8dcc4'},g); // lối đi bộ
+      house(g,hx,hy,w,h,PAL.roofs[(a*2+b+1)%6]);
+      const by=top?hy+h+12:ly+14; // sân sau
+      if((a+b)%2===0){el('rect',{x:hx+8,y:by,width:40,height:22,rx:5,fill:'#6cc4e8',stroke:'#f1f6f8','stroke-width':3},g);
+        el('rect',{x:hx+52,y:by+4,width:12,height:6,rx:1,fill:'#fff'},g);}
+      else flowers(g,hx+6,by+2,46,14,rnd);
+      tree(g,a?lx+L-20:lx+20,top?ly+L-22:ly+22,10);}
+  },
+
+  // B — dãy nhà phố liền kề + ngõ và sân chung ở giữa
+  rows(g,x0,y0,rnd){lawn(g,x0,y0,S,S,rnd,'#a5c98a');const D=58;
+    el('rect',{x:x0+D,y:y0+D,width:S-2*D,height:S-2*D,fill:PAL.grass},g);
+    const gap=[S/2-9,S/2+9]; // ngõ ở cạnh dưới
+    el('rect',{x:x0+gap[0],y:y0+S-D-30,width:18,height:D+30,fill:'#d9cfb9'},g);
+    el('rect',{x:x0+S/2-34,y:y0+S/2-30,width:68,height:60,rx:6,fill:'#e2d8c3'},g);
+    el('circle',{cx:x0+S/2,cy:y0+S/2,r:12,fill:'#7cc35a',stroke:'#c9bea6','stroke-width':3},g);tree(g,x0+S/2,y0+S/2,9);
+    [[-24,-20],[24,-20],[-24,20],[24,20]].forEach(([dx,dy])=>el('rect',{x:x0+S/2+dx-5,y:y0+S/2+dy-2,width:10,height:4,rx:1,fill:'#8b6a52'},g));
+    const roofC=()=>PAL.roofs[Math.floor(rnd()*6)];
+    const unit=(x,y,w,h,side)=>{ // một căn nhà ống
+      if(rnd()<.35){flat(g,x+1,y+1,w-2,h-2,['#d8d2c4','#c7cdd3','#e2c9a8'][Math.floor(rnd()*3)],4,rnd,{ac:1,tank:rnd()<.7});}
+      else house(g,x+1,y+1,w-2,h-2,roofC());
+      if(rnd()<.45){const cs=['#e03131','#1c7ed6','#f59f00','#2b8a3e'],c=cs[Math.floor(rnd()*4)];// mái hiên cửa hàng
+        const a=side==='T'?{x:x+3,y:y-4,width:w-6,height:5}:side==='B'?{x:x+3,y:y+h-1,width:w-6,height:5}:side==='L'?{x:x-4,y:y+3,width:5,height:h-6}:{x:x+w-1,y:y+3,width:5,height:h-6};
+        el('rect',{...a,fill:c},g);}};
+    for(let x=0;x<S;){const w=Math.min(24+rnd()*12,S-x);if(S-x-w<18){unit(x0+x,y0,S-x,D,'T');break;}unit(x0+x,y0,w,D,'T');x+=w;}
+    for(let x=0;x<S;){let w=Math.min(24+rnd()*12,S-x);if(S-x-w<18)w=S-x;
+      if(x+w>gap[0]&&x<gap[1]){if(x<gap[0]){unit(x0+x,y0+S-D,gap[0]-x,D,'B');}x=gap[1];continue;}
+      unit(x0+x,y0+S-D,w,D,'B');x+=w;}
+    for(const [sx,side] of [[0,'L'],[S-D,'R']])for(let y=D;y<S-D;){let h=Math.min(24+rnd()*12,S-D-y);if(S-D-y-h<18)h=S-D-y;unit(x0+sx,y0+y,D,h,side);y+=h;}
+    tree(g,x0+D+16,y0+D+16,9);tree(g,x0+S-D-16,y0+D+18,8);tree(g,x0+D+18,y0+S-D-16,8);
+  },
+
+  // C1 — công viên: lối đi cong, hồ, đài phun nước, ghế
+  park(g,x0,y0,rnd){lawn(g,x0,y0,S,S,rnd,'#93d46f');const cx=x0+S/2,cy=y0+S/2;
+    el('ellipse',{cx:x0+82,cy:y0+200,rx:58,ry:40,fill:'#6cc4e8',stroke:'#d9f1fa','stroke-width':4},g);
+    for(let i=0;i<5;i++)el('circle',{cx:x0+60+rnd()*44,cy:y0+186+rnd()*28,r:3,fill:'#5aa83a'},g);
+    const P={fill:'none',stroke:'#e8dcc4','stroke-width':10,'stroke-linecap':'round'};
+    el('path',{d:`M${x0} ${y0+70} Q${cx-40} ${y0+80} ${cx} ${cy} T${x0+S} ${y0+S-60}`,...P},g);
+    el('path',{d:`M${cx+20} ${y0} Q${cx+10} ${y0+60} ${cx} ${cy} Q${cx-10} ${cy+70} ${cx+40} ${y0+S}`,...P},g);
+    el('circle',{cx,cy,r:22,fill:'#e8dcc4'},g);el('circle',{cx,cy,r:13,fill:'#8fd3f0',stroke:'#fff','stroke-width':2.5},g);el('circle',{cx,cy,r:4,fill:'#fff'},g);
+    [[cx-34,cy-10,0],[cx+30,cy+14,0],[cx-8,cy+36,90]].forEach(([x,y,a])=>el('rect',{x:x-6,y:y-2,width:12,height:4,rx:1,fill:'#8b6a52',transform:`rotate(${a} ${x} ${y})`},g));
+    // sân chơi
+    el('rect',{x:x0+190,y:y0+40,width:70,height:50,rx:8,fill:'#f4c98b'},g);
+    el('rect',{x:x0+198,y:y0+48,width:22,height:8,rx:2,fill:'#e03131'},g);el('circle',{cx:x0+242,cy:y0+70,r:9,fill:'none',stroke:'#1c7ed6','stroke-width':3},g);
+    el('rect',{x:x0+202,y:y0+68,width:6,height:16,fill:'#f59f00'},g);
+    flowers(g,x0+190,y0+120,60,16,rnd);
+    const T=[[30,30],[60,22],[24,120],[150,30],[250,150],[262,240],[200,260],[140,250],[170,200],[110,130],[260,110]];
+    T.forEach(([x,y],i)=>tree(g,x0+x,y0+y,9+rnd()*5,i%3?PAL.tree:'#6bb848'));
+  },
+
+  // C2 — sân bóng + bãi đỗ xe
+  sport(g,x0,y0,rnd){lawn(g,x0,y0,S,S,rnd);
+    const fx=x0+18,fy=y0+14,fw=S-36,fh=140;
+    for(let i=0;i<8;i++)el('rect',{x:fx+i*fw/8,y:fy,width:fw/8,height:fh,fill:i%2?'#5fb847':'#6cc552'},g);
+    const L={fill:'none',stroke:'#fff','stroke-width':2.2};
+    el('rect',{x:fx+6,y:fy+6,width:fw-12,height:fh-12,...L},g);el('line',{x1:fx+fw/2,y1:fy+6,x2:fx+fw/2,y2:fy+fh-6,...L},g);
+    el('circle',{cx:fx+fw/2,cy:fy+fh/2,r:18,...L},g);
+    el('rect',{x:fx+6,y:fy+fh/2-26,width:28,height:52,...L},g);el('rect',{x:fx+fw-34,y:fy+fh/2-26,width:28,height:52,...L},g);
+    // bãi đỗ xe (màu sáng hơn đường để không bị nhầm là đường đi)
+    const py=y0+176,ph=S-176-12;el('rect',{x:x0+12,y:py,width:S-24,height:ph,rx:4,fill:'#a9adb3'},g);
+    const cs=['#e03131','#1c7ed6','#f8f9fa','#f59f00','#2b8a3e','#ae3ec9'];
+    for(let r=0;r<2;r++)for(let i=0;i<11;i++){const x=x0+22+i*23,y=r?py+ph-34:py+6;
+      el('line',{x1:x,y1:y,x2:x,y2:y+28,stroke:'#fff','stroke-width':1.5},g);
+      if(i<10&&rnd()<.6)car(g,x+11.5,y+14,90,cs[Math.floor(rnd()*6)]);}
+    el('rect',{x:x0+12,y:py+ph/2-5,width:S-24,height:10,fill:'#7cc35a'},g);
+    for(let i=0;i<5;i++)tree(g,x0+40+i*55,py+ph/2,7);
+  },
+
+  // D — tòa nhà mái bằng cao tầng: bóng đổ theo chiều cao, chi tiết trên mái
+  tower(g,x0,y0,rnd){el('rect',{x:x0,y:y0,width:S,height:S,fill:'#e4dccb'},g);
+    for(let i=1;i<10;i++){el('line',{x1:x0+i*29,y1:y0,x2:x0+i*29,y2:y0+S,stroke:'#d6cdb9','stroke-width':1},g);el('line',{x1:x0,y1:y0+i*29,x2:x0+S,y2:y0+i*29,stroke:'#d6cdb9','stroke-width':1},g);}
+    flat(g,x0+24,y0+22,120,100,'#9fb3c8',22,rnd,{solar:true,ac:2,tank:true});
+    flat(g,x0+170,y0+30,92,150,'#d9c6a5',14,rnd,{garden:true,ac:3});
+    flat(g,x0+30,y0+168,110,92,'#c9a0a0',10,rnd,{ac:4,tank:true});
+    for(let i=0;i<6;i++){const x=x0+16+i*52;el('circle',{cx:x,cy:y0+S-10,r:9,fill:'#b8ad97'},g);tree(g,x,y0+S-10,7);}
+    flowers(g,x0+170,y0+206,92,20,rnd);
+    for(let i=0;i<3;i++)el('rect',{x:x0+176+i*30,y:y0+240,width:18,height:18,rx:9,fill:'#f8f9fa',stroke:'#e03131','stroke-width':2},g); // ô dù quán cà phê
+  },
+};
+
+// ---- khung vẽ một ô có đường bao quanh ----
+function frame(svg,cols,rows,styles,seedN){const M=RW/2+WK; // lề = nửa đường + vỉa hè
+  const Wd=cols*SP,Ht=rows*SP;svg.setAttribute('viewBox',`0 0 ${Wd} ${Ht}`);
+  el('rect',{x:0,y:0,width:Wd,height:Ht,fill:PAL.road},svg);
+  for(let i=0;i<=cols;i++)el('line',{x1:i*SP,y1:0,x2:i*SP,y2:Ht,stroke:PAL.line,'stroke-width':2,'stroke-dasharray':'12 12',opacity:.6},svg);
+  for(let j=0;j<=rows;j++)el('line',{x1:0,y1:j*SP,x2:Wd,y2:j*SP,stroke:PAL.line,'stroke-width':2,'stroke-dasharray':'12 12',opacity:.6},svg);
+  for(let i=0;i<cols;i++)for(let j=0;j<rows;j++){const st=styles[j*cols+i],rnd=seed(seedN+i*7+j*13);
+    el('rect',{x:i*SP+RW/2,y:j*SP+RW/2,width:SP-RW,height:SP-RW,fill:PAL.walk},svg);
+    const g=el('g',{},svg);const cp=el('clipPath',{id:'c'+seedN+'_'+i+'_'+j},svg);el('rect',{x:i*SP+M-6,y:j*SP+M-6,width:S+12,height:S+12},cp);
+    g.setAttribute('clip-path',`url(#c${seedN}_${i}_${j})`);STYLES[st](g,i*SP+M,j*SP+M,rnd);}
+}
+const LIST=[
+  ['now','Hiện tại','Đối chiếu: 4 nhà rời trên bãi cỏ trống.'],
+  ['garden','A · Khu dân cư sân vườn','Chia 4 lô bằng hàng rào cây; mỗi nhà có lối xe, xe đậu, hồ bơi hoặc bồn hoa ở sân sau.'],
+  ['rows','B · Dãy nhà phố','Nhà ống liền kề sát vỉa hè, mái ngói xen mái bằng có bồn nước, mái hiên cửa hàng; giữa là ngõ và sân chung.'],
+  ['park','C1 · Công viên (mốc)','Lối đi cong, hồ, đài phun nước, sân chơi, nhiều cây — dễ nhớ khi tìm đường.'],
+  ['sport','C2 · Sân bóng + bãi xe (mốc)','Sân cỏ kẻ vạch; bãi đỗ màu sáng hơn mặt đường để không bị nhầm là đường đi.'],
+  ['tower','D · Tòa nhà cao tầng','Mái bằng có pin mặt trời, máy lạnh, vườn mái; bóng đổ dài theo chiều cao; quảng trường lát gạch.'],
+];
+const grid=document.getElementById('grid');
+LIST.forEach(([k,t,d],n)=>{const c=document.createElement('div');c.className='card';c.innerHTML=`<h2>${t}</h2><p>${d}</p>`;
+  const s=document.createElementNS(NS,'svg');c.appendChild(s);grid.appendChild(c);frame(s,1,1,[k],11+n*5);});
+
+// ---- ghép thử 4×2 + ghim nhiệm vụ ----
+const combo=document.getElementById('combo');
+frame(combo,4,2,['garden','rows','park','rows','rows','tower','rows','sport'],101);
+function pinMark(x,y,col,kho,name){
+  el('ellipse',{cx:x,cy:y+16,rx:12,ry:4,fill:'rgba(0,0,0,.25)'},combo);
+  if(kho)el('rect',{x:x-15,y:y-15,width:30,height:30,rx:6,fill:col,stroke:'#fff','stroke-width':3},combo);
+  else el('circle',{cx:x,cy:y,r:16,fill:col,stroke:'#fff','stroke-width':3},combo);
+  el('path',{d:kho?`M${x} ${y+4} V${y-7} M${x-5} ${y-2} L${x} ${y-7} L${x+5} ${y-2}`:`M${x} ${y-7} V${y+4} M${x-5} ${y-1} L${x} ${y+4} L${x+5} ${y-1}`,fill:'none',stroke:'#fff','stroke-width':2.6,'stroke-linecap':'round'},combo);
+  const t=el('text',{x,y:y+36,'text-anchor':'middle','font-size':17,'font-weight':900,fill:'#fff',stroke:'#1d2733','stroke-width':4,'paint-order':'stroke','font-family':'Nunito'},combo);t.textContent=name;}
+pinMark(SP*1.5,SP-RW/2-28,'#1c7ed6',true,'Kho A');
+pinMark(SP*3.5,2*SP-RW/2-28,'#e8590c',false,'Siêu thị');
+pinMark(SP*2+RW/2+28,SP*0.5,'#d6336c',false,'Tiệm hoa');
+</script>
+</body>
+</html>
