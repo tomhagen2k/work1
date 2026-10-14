@@ -25,7 +25,7 @@ LEVELS = [
     dict(id='L3', name='Đường lớn & đường đông', grid=(5, 4), vehicles=['van'],
          start=('c0r3', 'c0r2', .2),
          types={'lon': row(3, 0, 4) + col(0, 1, 3) + col(4, 1, 3),
-                'dong': row(1, 0, 4)},
+                'dong': row(1, 0, 4) + row(0, 1, 3)},
          points={'KhoA': ('c0r0', 'c0r1', .5), 'Cho': ('c4r1', 'c4r2', .5),
                  'KhoB': ('c4r0', 'c4r1', .5), 'Truong': ('c0r1', 'c0r2', .5)},
          missions=[dict(id='Cho', **{'from': 'KhoA'}, to='Cho', qty=3),
@@ -38,9 +38,9 @@ LEVELS = [
          points={'KhoA': ('c1r0', 'c2r0', .5), 'KhoB': ('c4r3', 'c5r3', .5),
                  'BenhVien': ('c4r0', 'c5r0', .5), 'Truong': ('c0r2', 'c0r3', .5),
                  'Cho': ('c2r2', 'c3r2', .5), 'Nha': ('c5r1', 'c5r2', .5)},
-         missions=[dict(id='BenhVien', **{'from': 'KhoA'}, to='BenhVien', qty=1, dl=40),
+         missions=[dict(id='BenhVien', **{'from': 'KhoA'}, to='BenhVien', qty=1, dl=38),
                    dict(id='Cho', **{'from': 'KhoA'}, to='Cho', qty=2),
-                   dict(id='Truong', **{'from': 'KhoB'}, to='Truong', qty=2, dl=85),
+                   dict(id='Truong', **{'from': 'KhoB'}, to='Truong', qty=2, dl=78),
                    dict(id='Nha', **{'from': 'KhoB'}, to='Nha', qty=2)]),
 
     dict(id='L5', name='Chọn xe', grid=(6, 4), vehicles=['may', 'van', 'tai'],
@@ -55,5 +55,5 @@ LEVELS = [
          missions=[dict(id='Cho', **{'from': 'KhoA'}, to='Cho', qty=2),
                    dict(id='Nha', **{'from': 'KhoA'}, to='Nha', qty=2),
                    dict(id='Cang', **{'from': 'KhoB'}, to='Cang', qty=3),
-                   dict(id='Truong', **{'from': 'KhoB'}, to='Truong', qty=1, dl=60)]),
+                   dict(id='Truong', **{'from': 'KhoB'}, to='Truong', qty=1)]),
 ]

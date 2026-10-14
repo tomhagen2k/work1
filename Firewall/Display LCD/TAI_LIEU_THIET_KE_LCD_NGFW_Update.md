@@ -483,7 +483,7 @@ Bất kỳ hook nào lỗi, hết giờ, hoặc thư mục hook rỗng → **kh�
               ┌───────────────┴───────────────┐
      trùng ngôn ngữ đang dùng          ngôn ngữ khác
               │                               ▼
-     "Already in use" 1,5 s     [Xác nhận – bằng NGÔN NGỮ ĐÍCH] ─[<] / hết giờ─▶ về Chọn ngôn ngữ
+     "Already in use" 1,5 s     [Xác nhận – NGÔN NGỮ HIỆN TẠI ] ─[<] / hết giờ─▶ về Chọn ngôn ngữ
               │                               │ [>]
               ▼                               ▼
      về Chọn ngôn ngữ              [Lưu panel-lang] ── lỗi ──▶ [Lưu thất bại 3 s, giữ ngôn ngữ cũ]
@@ -496,8 +496,8 @@ Bất kỳ hook nào lỗi, hết giờ, hoặc thư mục hook rỗng → **kh�
 ```
 
 **Quy tắc:**
-- Tên hai lựa chọn **luôn viết bằng chính ngôn ngữ đó** (`English`, `Tieng Viet`) ở cả hai giao diện, để người không đọc được ngôn ngữ hiện tại vẫn tìm được lựa chọn của mình. Dấu `*` đánh dấu ngôn ngữ đang dùng; con trỏ mặc định đứng ở ngôn ngữ đang dùng.
-- Màn hình xác nhận và màn hình "đã đổi" hiển thị **bằng ngôn ngữ đích** (ngôn ngữ vừa chọn).
+- Tên hai lựa chọn **dùng chung cho cả hai giao diện**: `English` và `Vietnamese`. Người lỡ chuyển sang ngôn ngữ mình không đọc được vẫn nhận ra `English` để quay lại. Dấu `*` đánh dấu ngôn ngữ đang dùng; con trỏ mặc định đứng ở ngôn ngữ đang dùng.
+- Màn hình xác nhận hiển thị **bằng ngôn ngữ hiện tại** (đúng ngôn ngữ người dùng đang thao tác), nhất quán với các màn hình xác nhận khác ở mục 6. Màn hình "đã đổi" hiển thị **bằng ngôn ngữ mới** để người dùng thấy ngay kết quả.
 - Phím ở màn hình xác nhận: `[ ▶ ]` = đồng ý, `[ ◀ ]` = huỷ (quay lại màn hình chọn). Hết giờ = huỷ. Không lặp phím (mục 3).
 - Khi đổi thành công: `psp-agent` ghi `panel-lang` vào `/etc/psp/psp-agent.conf` (ghi file tạm rồi đổi tên, giữ nguyên các khoá và comment khác), cập nhật `/run/psp/panel-lang` (mục 2), rồi vẽ lại mọi màn hình, kể cả slide Auto-Cycle, bằng ngôn ngữ mới.
 - Ghi file lỗi: **không** đổi ngôn ngữ (kể cả tạm trong RAM), báo lỗi bằng ngôn ngữ hiện tại.
@@ -509,19 +509,19 @@ Bất kỳ hook nào lỗi, hết giờ, hoặc thư mục hook rỗng → **kh�
 | :--- | :---: | :--- | :--- |
 | Mục trong CONTROL | 2 | `> 4. Language` | `> 4. Ngon ngu` |
 | Chọn ngôn ngữ | 1 | `--- LANGUAGE ---` | `--- NGON NGU ---` |
-| | 2 | `> English *` hoặc `> Tieng Viet` | `> English` hoặc `> Tieng Viet *` |
+| | 2 | `> English *` hoặc `> Vietnamese` | `> English` hoặc `> Vietnamese *` |
 | Chọn trùng ngôn ngữ đang dùng (1,5 s) | 1 | `Already in use` | `Dang su dung` |
 | Lỗi lưu cấu hình (3 s) | 1 / 2 | `Save failed`<br>`Language unchanged` | `Luu that bai`<br>`Ngon ngu khong doi` |
 | Bị chặn (3 s) | 1 / 2 | Theo bảng 6.0 | Theo bảng 6.0 |
 
-Xác nhận và kết quả (hiển thị bằng ngôn ngữ đích):
+Xác nhận (ngôn ngữ hiện tại) và kết quả (ngôn ngữ mới):
 
 | Chuyển | Màn hình xác nhận | Đã đổi (2 s) |
 | :--- | :--- | :--- |
-| Tiếng Anh → Tiếng Việt | `Doi sang Tieng Viet?`<br>`[>]DONG Y  [<]HUY` | `Da doi ngon ngu`<br>`Tieng Viet` |
-| Tiếng Việt → Tiếng Anh | `Switch to English?`<br>`[>]YES    [<]NO` | `Language changed`<br>`English` |
+| Tiếng Anh → Tiếng Việt | `Switch to Vietnamese`<br>`[>]YES    [<]NO` | `Da doi ngon ngu`<br>`Tieng Viet` |
+| Tiếng Việt → Tiếng Anh | `Doi sang Tieng Anh?`<br>`[>]DONG Y  [<]HUY` | `Language changed`<br>`English` |
 
-`Doi sang Tieng Viet?` dài đúng 20 ký tự.
+`Switch to Vietnamese` dài đúng 20 ký tự nên không có dấu `?` (thêm `?` là 21); dòng 2 `[>]YES    [<]NO` đã thể hiện đây là câu hỏi.
 
 ---
 
@@ -764,7 +764,7 @@ Ký hiệu repo: **KIT** = appliance-kit, **PSA** = `../lanner/psp-agent`.
 | H1 | PSA | Bảng chuỗi theo ngôn ngữ: gom mọi chuỗi tĩnh của `screens.c` / `panel.c` vào bảng `en` / `vi`; format động trong `fmt.c` tách theo ngôn ngữ (mục 7). | Mọi màn hình ở mục 4–6, 9, 10 đúng text của cả hai ngôn ngữ trên `sim`. |
 | H2 | PSA | Kiểm tra khi build cho bộ chuỗi `vi`: ASCII, ≤ 20 ký tự, không chứa từ cấm (mục 7.1); `fmt_test.c` thêm ca biên VI. | `make test` đạt với cả hai bộ chuỗi. |
 | H3 | PSA | Khoá `panel-lang` trong `cfg_defaults` / `psa_config_load` (mặc định `en`). Ghi lại file cấu hình an toàn (file tạm + đổi tên, giữ khoá và comment khác). Ghi `/run/psp/panel-lang`. | Đổi ngôn ngữ rồi khởi động lại agent → giữ ngôn ngữ mới; file cấu hình không mất khoá nào. |
-| H4 | PSA | Mục 6.4: `M_CTRL_4`, màn hình chọn, xác nhận 1 bước bằng ngôn ngữ đích, kiểm tra trước theo 6.0, về CONTROL mục 4. | Mọi nhánh của 6.4 chạy đúng trên `sim` (kể cả lỗi ghi file, hết giờ, `panel-control=no/pin`). |
+| H4 | PSA | Mục 6.4: `M_CTRL_4`, màn hình chọn, xác nhận 1 bước bằng ngôn ngữ hiện tại, kiểm tra trước theo 6.0, về CONTROL mục 4. | Mọi nhánh của 6.4 chạy đúng trên `sim` (kể cả lỗi ghi file, hết giờ, `panel-control=no/pin`). |
 | H5 | PSA + KIT | Hook `psp-panel` (D2) đọc `/run/psp/panel-lang` và ghi màn hình 6.1 / 6.2 theo ngôn ngữ. | Reboot / poweroff với `panel-lang=vi` hiện màn hình tiếng Việt **[XÁC MINH]** `/run` còn đọc được. |
 
 ### 11.4. Thứ tự và phụ thuộc

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Mẫu popup tạm dừng</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:844px;height:390px;overflow:hidden;font-family:"Nunito","Segoe UI",sans-serif}
+  #s{position:relative;width:844px;height:390px;overflow:hidden}
+  #bg{position:absolute;inset:0;background:url(demo_v3_man4.png) center/844px 390px}
+  .dim{position:absolute;inset:0}
+  .pop{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#2d3440;text-align:center}
+  .btn{display:flex;align-items:center;justify-content:center;gap:6px;border-radius:16px;font-weight:900;font-size:14px;padding:10px 16px}
+  .go{background:#37c26b;color:#fff;box-shadow:0 4px 0 #24995a}
+  .alt{background:rgba(255,255,255,.85);color:#2d3440;border:2px solid rgba(0,0,0,.08);box-shadow:0 3px 0 rgba(0,0,0,.12)}
+  .h{font-size:20px;font-weight:900}
+  .sub{font-size:11.5px;font-weight:800;opacity:.75}
+  .ms{display:flex;gap:8px;justify-content:center;margin:8px 0 10px}
+  .m{background:rgba(255,255,255,.12);border-radius:10px;padding:5px 8px;font-size:11px;font-weight:900;color:#fff;min-width:66px}
+  .m i{display:block;height:4px;border-radius:2px;background:rgba(255,255,255,.2);margin-top:4px;overflow:hidden}
+  .m i b{display:block;height:100%}
+  .ic{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:22px;font-weight:900}
+  .lbl{font-size:10px;font-weight:900;margin-top:4px}
+</style>
+</head>
+<body><div id="s"><div id="bg"></div><div id="ov"></div></div>
+<script>
+const V=new URLSearchParams(location.search).get('v')||'1',ov=document.getElementById('ov'),bg=document.getElementById('bg');
+if(V==='1'){ // kính mờ sáng
+  bg.style.filter='blur(2px)';
+  ov.innerHTML=`<div class="dim" style="background:rgba(15,20,28,.35)"></div>
+  <div class="pop" style="width:270px;padding:16px 18px;border-radius:22px;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,.25)">
+    <div class="h">⏸ Tạm dừng</div><div class="sub" style="margin:2px 0 12px">Thời gian còn lại 1:52</div>
+    <div class="btn go" style="font-size:16px;padding:12px">▶ Tiếp tục</div>
+    <div style="display:flex;gap:8px;margin-top:8px"><div class="btn alt" style="flex:1">↻ Chơi lại</div><div class="btn alt" style="flex:1">⌂ Trang chủ</div></div>
+  </div>`;
+}
+if(V==='2'){ // tối trong suốt + tóm tắt nhiệm vụ
+  ov.innerHTML=`<div class="dim" style="background:rgba(15,20,28,.45)"></div>
+  <div class="pop" style="width:330px;padding:14px 16px;border-radius:20px;background:rgba(25,32,42,.72);backdrop-filter:blur(6px);color:#fff;border:1px solid rgba(255,255,255,.15)">
+    <div class="h">Tạm dừng</div><div class="sub">Màn 4 · Hạn giao · còn 1:52</div>
+    <div class="ms">
+      <div class="m">Bệnh viện<br>0/1 · hạn 0:38<i><b style="width:0%;background:#ff6b6b"></b></i></div>
+      <div class="m">Chợ<br>0/2<i><b style="width:0%;background:#ff922b"></b></i></div>
+      <div class="m">Trường<br>0/2 · hạn 1:18<i><b style="width:0%;background:#9775fa"></b></i></div>
+      <div class="m">Khu nhà<br>0/2<i><b style="width:0%;background:#20c997"></b></i></div>
+    </div>
+    <div style="display:flex;gap:8px"><div class="btn go" style="flex:1.4">▶ Tiếp tục</div><div class="btn alt" style="flex:1;background:rgba(255,255,255,.15);color:#fff">↻ Chơi lại</div><div class="btn alt" style="flex:1;background:rgba(255,255,255,.15);color:#fff">⌂ Trang chủ</div></div>
+  </div>`;
+}
+if(V==='3'){ // gọn nhẹ: chỉ 3 nút tròn
+  ov.innerHTML=`<div class="dim" style="background:rgba(15,20,28,.3)"></div>
+  <div class="pop" style="padding:12px 18px 10px;border-radius:26px;background:rgba(255,255,255,.65);backdrop-filter:blur(8px);box-shadow:0 8px 24px rgba(0,0,0,.2)">
+    <div class="sub" style="margin-bottom:8px;font-size:12px">⏸ Đã tạm dừng · còn 1:52</div>
+    <div style="display:flex;gap:18px;align-items:flex-start">
+      <div><div class="ic" style="background:#fff;color:#2d3440;box-shadow:0 3px 0 rgba(0,0,0,.15)">↻</div><div class="lbl">Chơi lại</div></div>
+      <div><div class="ic" style="width:70px;height:70px;background:#37c26b;color:#fff;box-shadow:0 4px 0 #24995a;font-size:28px">▶</div><div class="lbl">Tiếp tục</div></div>
+      <div><div class="ic" style="background:#fff;color:#2d3440;box-shadow:0 3px 0 rgba(0,0,0,.15)">⌂</div><div class="lbl">Trang chủ</div></div>
+    </div>
+  </div>`;
+}
+</script></body></html>

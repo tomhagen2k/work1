@@ -15,7 +15,9 @@ STYLE = {
 }
 NAMES = {'KhoA': 'Kho A', 'KhoB': 'Kho B', 'Sieu': 'Siêu thị', 'Hoa': 'Tiệm hoa', 'Dong': 'Phía Đông',
          'Bac': 'Phía Bắc', 'Tay': 'Phía Tây', 'Cho': 'Chợ', 'Truong': 'Trường', 'BenhVien': 'Bệnh viện',
-         'Nha': 'Khu nhà', 'Cang': 'Cảng'}
+         'Nha': 'Khu nhà', 'Cang': 'Cảng', 'BaiVL': 'Bãi vật liệu', 'KhoTong': 'Kho tổng', 'XuongGo': 'Xưởng gỗ',
+         'TiemBanh': 'Tiệm bánh', 'TruongHoc': 'Trường học', 'NhaVH': 'Nhà văn hóa', 'NhaTre': 'Nhà trẻ', 'ChoMoi': 'Chợ mới',
+         'KhuNha': 'Khu nhà ở', 'CongVien': 'Công viên'}
 
 
 def gen(lv):
@@ -31,7 +33,7 @@ def gen(lv):
         for j in range(rows - 1):
             edges[key(f'c{i}r{j}', f'c{i}r{j+1}')] = 'thuong'
     for e in lv.get('remove', []):
-        edges.pop(key(*e))
+        edges.pop(key(*e), None)
     for t, lst in lv.get('types', {}).items():
         for e in lst:
             edges[key(*e)] = t

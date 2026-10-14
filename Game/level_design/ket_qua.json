@@ -108,7 +108,7 @@
  },
  "L3": {
   "van": {
-   "opt": 62.425925925925924,
+   "opt": 62.629629629629626,
    "naive": 96.96913580246913,
    "naive_fail": null,
    "path": [
@@ -128,7 +128,7 @@
      "lấy Truong"
     ],
     [
-     62.4,
+     62.6,
      "Truong",
      "giao Truong"
     ]
@@ -247,7 +247,7 @@
   "may": {
    "opt": 142.16666666666669,
    "naive": 154.83333333333334,
-   "naive_fail": "trễ hạn Truong",
+   "naive_fail": null,
    "path": [
     [
      6.0,
@@ -414,49 +414,49 @@
    ]
   },
   "van": {
-   "opt": 98.87037037037037,
+   "opt": 92.79629629629628,
    "naive": 120.86419753086419,
-   "naive_fail": "trễ hạn Truong",
+   "naive_fail": null,
    "path": [
     [
      7.8,
      "KhoA",
+     "lấy Nha"
+    ],
+    [
+     18.0,
+     "Nha",
+     "giao Nha"
+    ],
+    [
+     28.6,
+     "KhoA",
      "lấy Cho"
     ],
     [
-     27.0,
+     47.8,
      "Cho",
      "giao Cho"
     ],
     [
-     40.7,
+     61.5,
      "KhoB",
      "lấy Truong"
     ],
     [
-     50.0,
+     70.7,
      "Truong",
      "giao Truong"
     ],
     [
-     61.3,
+     82.0,
      "KhoB",
      "lấy Cang"
     ],
     [
-     72.0,
+     92.8,
      "Cang",
      "giao Cang"
-    ],
-    [
-     90.2,
-     "KhoA",
-     "lấy Nha"
-    ],
-    [
-     98.9,
-     "Nha",
-     "giao Nha"
     ]
    ],
    "naive_log": [
@@ -508,39 +508,39 @@
    ]
   },
   "tai": {
-   "opt": 129.85897435897436,
+   "opt": 100.19230769230771,
    "naive": 112.69230769230771,
-   "naive_fail": "trễ hạn Truong",
+   "naive_fail": null,
    "path": [
     [
-     38.4,
-     "KhoB",
-     "lấy Cang+Truong"
-    ],
-    [
-     50.7,
-     "Truong",
-     "giao Truong"
-    ],
-    [
-     66.5,
-     "Cang",
-     "giao Cang"
-    ],
-    [
-     92.9,
+     12.5,
      "KhoA",
      "lấy Cho+Nha"
     ],
     [
-     104.3,
+     26.4,
      "Nha",
      "giao Nha"
     ],
     [
-     129.9,
+     51.9,
      "Cho",
      "giao Cho"
+    ],
+    [
+     72.1,
+     "KhoB",
+     "lấy Cang+Truong"
+    ],
+    [
+     84.3,
+     "Truong",
+     "giao Truong"
+    ],
+    [
+     100.2,
+     "Cang",
+     "giao Cang"
     ]
    ],
    "naive_log": [

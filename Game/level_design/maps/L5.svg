@@ -71,7 +71,7 @@
 <text x="975.0" y="58.0" text-anchor="middle" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Chợ ← Kho A</text>
 <circle cx="1500.0" cy="625.0" r="26" fill="#f76707" stroke="#fff" stroke-width="5"/>
 <text x="1500.0" y="634.0" text-anchor="middle" font-size="26" fill="#fff">1</text>
-<text x="1534.0" y="633.0" text-anchor="start" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Trường · hạn 60s ← Kho B</text>
+<text x="1534.0" y="633.0" text-anchor="start" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Trường ← Kho B</text>
 <circle cx="625.0" cy="800.0" r="26" fill="#f76707" stroke="#fff" stroke-width="5"/>
 <text x="625.0" y="809.0" text-anchor="middle" font-size="26" fill="#fff">2</text>
 <text x="625.0" y="758.0" text-anchor="middle" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Khu nhà ← Kho A</text>

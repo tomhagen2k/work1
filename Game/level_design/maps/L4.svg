@@ -68,10 +68,10 @@
 <text x="1675.0" y="1108.0" text-anchor="middle" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Kho B</text>
 <circle cx="1675.0" cy="100.0" r="26" fill="#f76707" stroke="#fff" stroke-width="5"/>
 <text x="1675.0" y="109.0" text-anchor="middle" font-size="26" fill="#fff">1</text>
-<text x="1675.0" y="58.0" text-anchor="middle" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Bệnh viện · hạn 40s ← Kho A</text>
+<text x="1675.0" y="58.0" text-anchor="middle" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Bệnh viện · hạn 38s ← Kho A</text>
 <circle cx="100.0" cy="975.0" r="26" fill="#f76707" stroke="#fff" stroke-width="5"/>
 <text x="100.0" y="984.0" text-anchor="middle" font-size="26" fill="#fff">2</text>
-<text x="134.0" y="983.0" text-anchor="start" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Trường · hạn 85s ← Kho B</text>
+<text x="134.0" y="983.0" text-anchor="start" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Trường · hạn 78s ← Kho B</text>
 <circle cx="975.0" cy="800.0" r="26" fill="#f76707" stroke="#fff" stroke-width="5"/>
 <text x="975.0" y="809.0" text-anchor="middle" font-size="26" fill="#fff">2</text>
 <text x="975.0" y="758.0" text-anchor="middle" font-size="26" fill="#1d2733" stroke="#fff" stroke-width="7" paint-order="stroke">Chợ ← Kho A</text>

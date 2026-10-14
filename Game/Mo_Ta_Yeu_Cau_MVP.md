@@ -2,10 +2,11 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 1.0 — cập nhật sau phản hồi demo lần 4 (phương án A tại điểm nhiệm vụ) |
+| Phiên bản | 1.5 — thêm Chương 2 (bản đồ xây dựng dần) |
 | Ngày | 14/10/2026 |
 | Nguồn | Tài liệu ý tưởng game (mục 1–21), flowchart vòng chơi, ảnh tham chiếu giao diện, phản hồi xác nhận của BA |
 | Mục đích | Cơ sở tham chiếu để thiết kế giao diện và viết tài liệu (BRD/SRS/GDD). Không thay thế BRD/SRS. |
+| Ý tưởng chờ xem xét | [Y_Tuong_Mo_Rong.md](Y_Tuong_Mo_Rong.md) — chưa phải yêu cầu |
 
 **Quy ước đánh dấu nguồn gốc yêu cầu**
 
@@ -62,13 +63,21 @@ Thử thách đến từ:
 | D-22 | **Bỏ đường một chiều** khỏi MVP. Mọi đoạn đường đều hai chiều. Các yêu cầu CT-22, TC-08, TC-33 không còn áp dụng; CT-23 bỏ phần "trừ đường một chiều". | [XN] phản hồi demo 3 |
 | D-23 | **Tự dừng và hỏi tại điểm nhiệm vụ.** Xe vào vùng đỗ mà có ít nhất một việc làm được → **tự dừng**. Hàng cần giao → **tự giao**. Còn việc cần chọn (lấy hàng, đón khách, đổi xe) → hiện **bảng hỏi**, trong lúc hỏi **đồng hồ dừng**. Hết việc → xe **tự chạy tiếp**. Không có việc làm được → xe đi qua bình thường. | [XN] Q-44 → Q-47 |
 | D-24 | **Bỏ nút Dừng và Đi** (không còn ý nghĩa khi xe tự dừng tại điểm). | [XN] Q-48 |
+| D-25 | **Màn chơi demo:** 5 màn tăng dần (Làm quen → Chia chuyến → Đường lớn & đông → Hạn giao → Chọn xe); trang chủ chọn màn tự do. Chi tiết: [level_design/Thiet_Ke_5_Man.md](level_design/Thiet_Ke_5_Man.md). | [XN] Q-50, Q-54 |
+| D-26 | **Loại đường:** thường, lớn, đông, gồ ghề, hẻm (chỉ xe máy); hệ số tốc độ khác nhau theo xe. Thể hiện bằng **ký hiệu + hình ảnh mặt đường**, chú giải định tính; **không hiện số giây** trên đường. | [XN] Q-51, Q-53, bỏ K6 |
+| D-27 | **Giảm chi tiết trên đường:** mỗi dải đường liền cùng loại chỉ có **1 biển báo**; giảm xe trang trí/ổ gà; **không vẽ vùng đỗ** (xe tự dừng nên không cần). | [XN] phản hồi demo 5 |
+| D-28 | **Ký hiệu điểm trên bản đồ và mini map:** điểm lấy hàng/đón khách = ô vuông, mũi tên ▲ đi lên; điểm giao/trả = hình tròn, mũi tên ▼ đi xuống. Mini map thể hiện trạng thái: **vòng vàng** = đang chở hàng tới điểm đó; **xám + ✓** = đã xong (kho hết hàng / điểm đã giao đủ). | [XN] phản hồi demo 5 / [GĐ] cách thể hiện cụ thể |
+| D-29 | **Màn hình danh sách màn (PA3):** cột trái là danh sách **chương** (tiến độ, cơ chế của chương, chương chưa có ghi "Sắp có"); bên phải là **con đường leo từ dưới lên** của chương đang chọn, mỗi tầng 2 màn, đỉnh có cờ "Hết chương". Nút màn: đã đạt (xanh, ✓, thời gian tốt nhất), màn tiếp theo (viền vàng, xe đậu cạnh), có cơ chế mới (huy hiệu "!"). Bấm màn → thẻ thông tin bên phải → "Chơi" → màn chuẩn bị. Demo mở hết các màn. Ảnh mẫu: [mockups/danh_sach_man_3.png](mockups/danh_sach_man_3.png). | [XN] Q-55 / [GĐ] Q-56 → Q-58 theo đề xuất |
+| D-30 | Nút quay về ở màn kết quả, tạm dừng, chuẩn bị đổi tên thành **"Trang chủ"**. | [XN] phản hồi demo 6 |
+| D-31 | **Popup tạm dừng:** popup nhỏ giữa màn hình, nền trong suốt mờ; bản đồ phía sau phủ tối nhẹ, vẫn nhìn thấy; thời gian game dừng. Một dòng "⏸ Đã tạm dừng · còn mm:ss" và **3 nút tròn chỉ có biểu tượng, không có chữ**: Chơi lại · **Tiếp tục** (to nhất, ở giữa) · Trang chủ. Tiếp tục → đóng popup, chơi tiếp. Chơi lại / Trang chủ → hỏi "Bỏ lượt đang chơi?" với 2 nút ✕ / ✓. | [XN] Q-59 / [GĐ] Q-60 hỏi xác nhận |
+| D-32 | **Chương 2 · Khu đô thị mới** (thử nghiệm YT-01 phương án B): một bản đồ chung có nhà sẵn, vùng mở rộng dần, mỗi màn thắng hoàn thành một công trình + công trình nhỏ mọc thêm, cảnh quay sau màn hình Hoàn thành, bức tranh toàn khu sau màn cuối; chơi lại hiện đúng trạng thái lúc mới tới màn. Chi tiết: [level_design/Thiet_Ke_Chuong_2.md](level_design/Thiet_Ke_Chuong_2.md). Chương 1 giữ nguyên. | [XN] YT-01, C2-Q1 → Q5 |
 | D-08 | Nhiên liệu/pin, gia tốc, phanh: ngoài MVP. | [XN] |
 | D-09 | Giao thông xác định, dự đoán được (chỉ còn yếu tố tĩnh: hạn chế loại xe, ngõ cụt). | [XN] / D-21, D-22 |
 | D-10 | Màn thiết kế thủ công, kiểm tra khả năng hoàn thành trước khi phát hành. | [XN] |
 | D-11 | Không có nhiệm vụ phụ. | [XN] |
 | D-12 | Bản đồ lớn dần theo độ khó; camera bám xe; mini map luôn hiển thị. | [XN] |
 | D-13 | Chạm mini map → bản đồ toàn màn, **dừng thời gian**, **không giới hạn** số lần. | [XN] Q-06, Q-26 |
-| D-14 | Pause ẩn bản đồ. | [XN] |
+| D-14 | ~~Pause ẩn bản đồ.~~ → **Thay bằng D-31** (bản đồ vẫn hiện mờ phía sau popup). | [XN] Q-11 → thay bởi Q-59 |
 | D-15 | **Mọi thao tác không thực hiện được đều không phản hồi** — kể cả khi có đường nhưng bị cấm. | [XN] Q-09, Q-22 |
 
 ---
@@ -178,7 +187,7 @@ flowchart TD
 
 | ID | Yêu cầu | Nguồn |
 |---|---|---|
-| HD-01 | Mỗi điểm nhiệm vụ / điểm đổi xe có **vùng đỗ** hiển thị rõ trên đường. | [XN] |
+| HD-01 | Mỗi điểm nhiệm vụ / điểm đổi xe có vùng đỗ trên đường (dùng cho logic tự dừng, **không hiển thị** — D-27). | [XN] |
 | HD-02 | Xe vào vùng đỗ và tại đó có **ít nhất một việc làm được** → xe **tự dừng**. | [XN] Q-44 |
 | HD-03 | Tại vùng đỗ **không có việc nào làm được** (kho đã lấy hết hàng, xe đầy, không có hàng giao cho điểm này, xe sai nhóm…) → xe **đi qua bình thường**, không dừng, không hỏi. | [XN] Q-44 (T2, T4) |
 | HD-04 | Việc tự dừng **không làm mất** hướng đã chọn cho giao lộ kế tiếp. | [XN] (T9) |
@@ -243,7 +252,7 @@ flowchart TD
 | TG-02 | Thời hạn riêng: tuyệt đối hoặc tương đối (tính từ sự kiện). | [XN] |
 | TG-03 | Quá thời hạn riêng → thua ngay. | [XN] |
 | TG-04 | Hoàn thành đúng bằng thời hạn được chấp nhận (≤). | [XN] |
-| TG-05 | Pause: toàn bộ thời gian game dừng; bản đồ bị ẩn. | [XN] |
+| TG-05 | Pause: toàn bộ thời gian game dừng; bản đồ **vẫn hiện, phủ tối nhẹ** (D-31). | [XN] Q-59 |
 | TG-06 | Bản đồ lớn: toàn bộ thời gian game dừng; hiển thị bản đồ toàn màn kèm vị trí xe; **không giới hạn** số lần mở. | [XN] Q-26 |
 
 ### 7.1. Thứ tự xử lý trong một bước mô phỏng
@@ -434,7 +443,7 @@ Hiện không còn câu hỏi mở. Các giả định **[GĐ]** khác trong tà
 | TC-05 | Nhiệm vụ quá hạn riêng | Không đạt ngay — F-02 | D-03 |
 | TC-08 | ~~Trong vùng nhận lệnh, bấm rẽ vào đường một chiều ngược hướng~~ (bỏ — D-22) | Nút không sáng; bấm không phản hồi; xe đi thẳng (hoặc tự dừng nếu không có hướng thẳng) | CT-05, CT-06 |
 | TC-09 | ~~Xe đến đèn đỏ~~ (bỏ — D-21) | Xe tự dừng; thời gian chờ tính vào đồng hồ tổng; đèn xanh xe tự chạy tiếp | CT-10, CT-12 |
-| TC-10 | Nhấn Pause | Thời gian game dừng, bản đồ bị ẩn | TG-05 |
+| TC-10 | Nhấn Pause | Thời gian game dừng; popup nhỏ hiện, bản đồ vẫn thấy mờ phía sau; Tiếp tục → chơi tiếp đúng thời gian cũ; Chơi lại/Trang chủ → hỏi xác nhận | TG-05, D-31 |
 | TC-11 | Chơi lại sau thất bại | Khôi phục toàn bộ trạng thái ban đầu | 10 |
 | TC-12 | Hoàn thành đúng thời điểm hết hạn | Đạt | TG-04 |
 | TC-13 | Nhiệm vụ phụ thuộc chưa đủ điều kiện | Không kích hoạt; không xuất hiện trong bảng hỏi | HD-03 |
@@ -536,3 +545,7 @@ Hiện không còn câu hỏi mở. Các giả định **[GĐ]** khác trong tà
 | Q-47 | Hết việc tại điểm → xe tự chạy tiếp | 1.0 |
 | Q-48 | Bỏ nút Dừng, Đi | 1.0 |
 | Q-49 | Quay đầu bất kỳ lúc nào, xong tự chạy tiếp | 1.0 |
+| Q-50 → Q-54 | 5 màn demo, thông số xe/đường, màn 5 cho 2 xe đạt, ký hiệu loại đường, chọn màn tự do | 1.1 |
+| Phản hồi demo 5 | Ít biển báo hơn, bỏ hiển thị vùng đỗ, ký hiệu ▲/▼ trên mini map (D-27, D-28) | 1.2 |
+| Q-55 | Màn hình danh sách màn theo PA3 (chương bên trái, đường leo trong chương) | 1.3 |
+| Q-59 | Popup tạm dừng PA3, chỉ biểu tượng không có chữ; bỏ "Pause ẩn bản đồ" | 1.4 |

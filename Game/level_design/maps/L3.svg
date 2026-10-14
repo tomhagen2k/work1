@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1320" font-family="Segoe UI,Arial" font-weight="700">
 <rect width="1600" height="1320" fill="#e9f5df"/>
 <line x1="100" y1="100" x2="450" y2="100" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
-<line x1="450" y1="100" x2="800" y2="100" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
-<line x1="800" y1="100" x2="1150" y2="100" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
+<line x1="450" y1="100" x2="800" y2="100" stroke="#e8590c" stroke-width="26" stroke-linecap="round"/>
+<line x1="800" y1="100" x2="1150" y2="100" stroke="#e8590c" stroke-width="26" stroke-linecap="round"/>
 <line x1="1150" y1="100" x2="1500" y2="100" stroke="#6b7280" stroke-width="26" stroke-linecap="round"/>
 <line x1="100" y1="450" x2="450" y2="450" stroke="#e8590c" stroke-width="26" stroke-linecap="round"/>
 <line x1="450" y1="450" x2="800" y2="450" stroke="#e8590c" stroke-width="26" stroke-linecap="round"/>
