@@ -92,28 +92,51 @@
   #hCard .tag{background:#fff3bf;color:#8a6d00;border-radius:8px;padding:2px 7px;font-size:10px}
   #hCard .ok{background:#d3f9d8;color:#2b8a3e;border-radius:8px;padding:2px 7px;font-size:10px}
   #hCard .cta{margin-top:6px}
-  #prep{background:rgba(25,32,40,.6);padding:12px;gap:12px;align-items:stretch}
-  #prep .mapbox{flex:1;border-radius:14px;overflow:hidden;border:3px solid #fff;background:#8fd16a}
-  #prep .mapbox>svg,#mapv .mapbox>svg{width:100%;height:100%;display:block}
-  #prep .side{width:270px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;overflow:auto}
-  #prep h2{font-size:16px;font-weight:900}
-  #prep .meta{font-size:11px;font-weight:800;color:#5c6573}
-  #prep .mi{border:1.5px solid #e6e9ee;border-left:5px solid;border-radius:9px;padding:4px 8px;font-size:11px;font-weight:800}
-  #prep .mi small{color:#e03131;font-weight:900}
-  #prep .sec{font-size:10px;font-weight:900;color:#7b8494;letter-spacing:.4px;margin-top:2px}
-  #vehs{display:flex;gap:6px}
-  .vh{flex:1;border:2px solid #e3e6ea;border-radius:10px;padding:5px 6px;font-size:10px;font-weight:800;color:#5c6573;background:#fff;text-align:left}
-  .vh b{display:block;font-size:12px;color:#2d3440}
-  .vh.on{border-color:#37c26b;background:#ebfbee}
-  #pLegend{position:absolute;left:8px;bottom:8px;right:8px;display:grid;grid-template-columns:1fr 1fr;gap:3px 10px;background:rgba(255,255,255,.94);border-radius:10px;padding:6px 8px}
-  #pLegend:empty{display:none}
-  .lg{display:flex;align-items:center;gap:6px;font-size:9.5px;font-weight:800;color:#2d3440;line-height:1.2}
-  .lg svg{flex:none}
-  #prep .row{display:flex;gap:8px;margin-top:auto}
-  #mapv{background:rgba(25,32,40,.8);align-items:center;justify-content:center}
-  #mapv .mapbox{width:700px;height:360px;border-radius:14px;overflow:hidden;border:3px solid #fff;position:relative;background:#8fd16a}
-  #mapv .tag{position:absolute;left:10px;top:10px;background:rgba(20,28,38,.85);color:#fff;font-size:11px;font-weight:900;padding:4px 10px;border-radius:10px}
-  #mapv .close{position:absolute;right:10px;top:10px}
+  /* bản đồ lớn: phóng to/thu nhỏ/kéo (D-33) — dùng ở màn chuẩn bị và khi mở bản đồ lúc chơi */
+  .mview{position:absolute;overflow:hidden;background:#8fd16a;touch-action:none;cursor:grab}
+  .mview.drag{cursor:grabbing}
+  .mview>svg{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
+  .fullmap use{--pin:0}
+  .mtool{position:absolute;z-index:2;display:flex;gap:6px}
+  .zbox{right:8px;bottom:8px}
+  .zb{width:36px;height:36px;border-radius:12px;background:#fff;color:#2d3440;box-shadow:0 2px 0 rgba(0,0,0,.2);display:grid;place-items:center}
+  .zb svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+  .zb.dis{opacity:.35}
+  .lgd{left:8px;bottom:8px;flex-wrap:wrap;gap:4px 10px;align-items:center;background:rgba(255,255,255,.94);border-radius:12px;padding:6px 10px;box-shadow:0 2px 0 rgba(0,0,0,.15)}
+  .lgd:empty{display:none}
+  .li{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:900;color:#2d3440;white-space:nowrap;cursor:pointer}
+  .li i{flex:none;width:18px;border-radius:2px;display:inline-block}
+  .tip{position:absolute;left:8px;bottom:52px;z-index:3;display:none;align-items:center;gap:8px;background:#1d2733;color:#fff;font-size:12px;font-weight:800;line-height:1.3;padding:6px 10px;border-radius:10px;max-width:320px}
+  .tip.on{display:flex}
+  .tip svg{flex:none}
+  /* màn chuẩn bị (PA2 — D-34): bản đồ bên trái, nhiệm vụ ghi ngay dưới điểm giao; cột phải hẹp chỉ còn tên màn, thời gian, xe, nút */
+  #prep{background:#8fd16a}
+  #pMap{left:0;top:0;bottom:0;right:156px}
+  #pUI{position:absolute;right:0;top:0;bottom:0;width:156px;z-index:5;display:flex;flex-direction:column;gap:6px;color:#2d3440;background:#fff;padding:10px 10px 12px;box-shadow:-3px 0 10px rgba(0,0,0,.18)}
+  #pUI .sec{font-size:12px;font-weight:900;color:#7b8494;letter-spacing:.4px}
+  .ph{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+  .ph small{font-size:12px;font-weight:900;color:#1c7ed6;letter-spacing:.3px}
+  .ptime{background:#1d2733;color:#fff;border-radius:12px;padding:2px 10px;font-size:15px;font-weight:900;white-space:nowrap}
+  .pn{font-size:18px;font-weight:900;line-height:1.15}
+  .pi{font-size:12px;font-weight:800;color:#5c6573;line-height:1.3}
+  .vrow{display:flex;flex-direction:column;gap:6px}
+  .vb{border:2px solid #e3e6ea;border-radius:12px;background:#fff;display:flex;align-items:center;gap:8px;padding:4px 8px;font-size:12px;font-weight:900;color:#2d3440;min-height:40px}
+  .vb.on{border-color:#37c26b;background:#ebfbee}
+  .vb svg{pointer-events:none}
+  .vinfo{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:#5c6573}
+  .vinfo b{color:#2d3440}
+  .pbtn{display:flex;gap:8px;align-items:center;margin-top:auto}
+  .pbtn .cta{flex:1;font-size:15px;padding:11px 4px}
+  .rb.sm{width:46px;height:46px;flex:none}
+  .rb.sm svg{width:22px;height:22px}
+  /* bản đồ lớn khi đang chơi */
+  #mapv{background:rgba(25,32,40,.8)}
+  #vMap{left:8px;top:8px;right:8px;bottom:8px;border-radius:14px;box-shadow:0 0 0 3px #fff}
+  #vMap .vtag{left:8px;top:8px;background:rgba(20,28,38,.85);color:#fff;font-size:12px;font-weight:900;padding:5px 10px;border-radius:10px}
+  #vMap .vclose{right:8px;top:8px}
+  #vMap .lgd{flex-direction:column;align-items:flex-start}
+  #vMap .zbox{flex-direction:column}
+  #vMap .tip{left:150px;bottom:8px}
   #pausev{background:rgba(15,20,28,.32);align-items:center;justify-content:center}
   #pausev .pp{padding:12px 20px 14px;border-radius:26px;background:rgba(255,255,255,.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 8px 24px rgba(0,0,0,.2);text-align:center}
   #pausev .pt{font-size:12px;font-weight:800;color:#2d3440;opacity:.8;margin-bottom:10px}
@@ -172,23 +195,16 @@
   </div>
 
   <div class="ov" id="prep">
-    <div class="mapbox" style="position:relative"><svg class="fullmap" preserveAspectRatio="xMidYMid meet"><use href="#static"/><g class="carmark"></g></svg><div id="pLegend"></div></div>
-    <div class="panel side">
-      <h2 id="pTitle"></h2>
-      <div class="meta" id="pMeta"></div>
-      <div class="sec">NHIỆM VỤ</div>
-      <div id="pList" style="display:flex;flex-direction:column;gap:4px"></div>
-      <div class="sec" id="vehSec">CHỌN XE</div>
-      <div id="vehs"></div>
-      <div class="row"><button class="cta alt sm" id="bHome1">← Trang chủ</button><button class="cta" id="bStart" style="flex:1">Bắt đầu</button></div>
-    </div>
+    <div class="mview" id="pMap"><svg class="fullmap" preserveAspectRatio="xMidYMid meet"><use href="#static"/></svg>
+      <div class="mtool lgd" id="pLeg"></div><div class="mtool zbox"></div><div class="tip" id="pTip"></div></div>
+    <div id="pUI"></div>
   </div>
 
   <div class="ov" id="mapv">
-    <div class="mapbox"><svg class="fullmap" preserveAspectRatio="xMidYMid meet"><use href="#static"/><g class="carmark"></g></svg>
-      <span class="tag">⏸ Thời gian đang dừng</span>
-      <button class="cta alt sm close" id="bMapClose">Đóng</button>
-    </div>
+    <div class="mview" id="vMap"><svg class="fullmap" preserveAspectRatio="xMidYMid meet"><use href="#static"/></svg>
+      <span class="mtool vtag">⏸ Thời gian đang dừng</span>
+      <button class="cta alt sm mtool vclose" id="bMapClose">Đóng</button>
+      <div class="mtool lgd" id="vLeg"></div><div class="mtool zbox"></div><div class="tip" id="vTip"></div></div>
   </div>
 
   <div class="ov" id="pausev">
@@ -328,8 +344,10 @@ function glyph(parent,kind,x,y,s,stroke){
 function pin(x,y,col,kho){
   el('ellipse',{cx:x,cy:y+2,rx:8,ry:3.5,fill:'rgba(0,0,0,.25)'});
   el('path',{d:`M${x} ${y} C ${x-5} ${y-9} ${x-15} ${y-16} ${x-15} ${y-27} A 15 15 0 1 1 ${x+15} ${y-27} C ${x+15} ${y-16} ${x+5} ${y-9} ${x} ${y}Z`,fill:col,stroke:'#fff','stroke-width':3});
-  glyph(ST,kho?'up':'down',x,y-27,1.05);
+  glyph(TARGET,kho?'up':'down',x,y-27,1.05);
 }
+// Ghim + nhãn của điểm nằm trong một lớp riêng: bản đồ lớn (.fullmap) ẩn lớp này và vẽ ký hiệu cỡ cố định thay thế
+function pinLayer(f){const T=TARGET,g=el('g',{style:'opacity:var(--pin,1)'});TARGET=g;f();TARGET=T;}
 function label(x,y,t,anchor){const e=el('text',{x,y,'text-anchor':anchor||'middle','font-size':14,'font-weight':900,'font-family':'Nunito,Segoe UI',fill:'#2d3440',stroke:'#fff','stroke-width':4,'paint-order':'stroke'});e.textContent=t;}
 // Ký hiệu biển báo cho loại đường (dùng cả trên bản đồ và chú giải)
 function signSVG(type,parent,x,y,r){
@@ -413,7 +431,8 @@ function drawStatic(){
     const off=RW[r.t]/2+20;
     if(r.h)signSVG(r.t,ST,x0+d,y0-off,12);else signSVG(r.t,ST,x0+off,y0+d,12);});
   // công trình + ghim (không còn vẽ vùng đỗ — xe tự dừng)
-  ZONES.forEach(z=>{const b=buildingRect(z);house(b.x,b.y,b.w,b.h,shade(z.col,-.05));pin(b.px,b.py,z.col,z.kho);label(b.lx,b.ly,z.name);});
+  ZONES.forEach(z=>{const b=buildingRect(z);house(b.x,b.y,b.w,b.h,shade(z.col,-.05));});
+  pinLayer(()=>ZONES.forEach(z=>{const b=buildingRect(z);pin(b.px,b.py,z.col,z.kho);label(b.lx,b.ly,z.name);}));
 }
 // Vẽ bản đồ Chương 2 theo trạng thái xây dựng. opts: region [c1,r1], built[5], constructing (chỉ số công trình đang xây hoặc -1), pins
 function drawChapter(opts){
@@ -501,13 +520,13 @@ function drawChapter(opts){
         else if(id==='ChoMoi'){[-7,-1,5].forEach(dx=>el('rect',{x:dx,y:-6,width:5,height:12,fill:dx===-1?'#fff':'#e8590c',stroke:'#e8590c','stroke-width':1},g));}
         else{el('path',{d:'M-7 3 Q-7 -7 0 -7 Q7 -7 7 3Z',fill:'#f783ac'},g);el('rect',{x:-8,y:3,width:16,height:4,rx:2,fill:'#c2255c'},g);}}}});
   // ghim + nhãn các điểm của màn (chỉ khi chơi)
-  if(opts.pins)ZONES.forEach(z=>{const b=bR(z.id);pin(b.px,b.py,z.col,z.kho);label(b.lx,b.ly,z.name);});
+  if(opts.pins)pinLayer(()=>ZONES.forEach(z=>{const b=bR(z.id);pin(b.px,b.py,z.col,z.kho);label(b.lx,b.ly,z.name);}));
 }
 function buildMinimap(){
   const box=document.getElementById('mm');box.innerHTML='';
   mmSvg=document.createElementNS(NS,'svg');mmSvg.setAttribute('viewBox',`-20 -20 ${W+40} ${H+40}`);mmSvg.setAttribute('preserveAspectRatio','xMidYMid meet');box.appendChild(mmSvg);
   el('rect',{x:-20,y:-20,width:W+40,height:H+40,fill:'#9ad877'},mmSvg);
-  const MC={thuong:PAL.road,lon:'#1f6feb',dong:'#e8590c',gogh:'#8d6e63',hem:'#b8bcc2'},MW={thuong:40,lon:56,dong:40,gogh:40,hem:22};
+  const MC={thuong:PAL.road,...RCOL},MW={thuong:40,lon:56,dong:40,gogh:40,hem:22};
   if(LV.region){const [cols,rows]=LV.grid;for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
     if(i<cols-1&&!getE(`c${i}r${j}`,`c${i+1}r${j}`))el('line',{x1:N[`c${i}r${j}`].x,y1:N[`c${i}r${j}`].y,x2:N[`c${i+1}r${j}`].x,y2:N[`c${i+1}r${j}`].y,stroke:'#cdb48a','stroke-width':22},mmSvg);
     if(j<rows-1&&!getE(`c${i}r${j}`,`c${i}r${j+1}`))el('line',{x1:N[`c${i}r${j}`].x,y1:N[`c${i}r${j}`].y,x2:N[`c${i}r${j+1}`].x,y2:N[`c${i}r${j+1}`].y,stroke:'#cdb48a','stroke-width':22},mmSvg);}}
@@ -528,6 +547,8 @@ function buildMinimap(){
 }
 
 /* ======================= Đồ thị đường ======================= */
+// Màu loại đường trên bản đồ thu nhỏ (minimap, bản đồ lớn khi thu nhỏ, chú giải)
+const RCOL={lon:'#1f6feb',dong:'#e8590c',gogh:'#8d6e63',hem:'#b8bcc2'};
 const unit=(p,q)=>{const dx=q.x-p.x,dy=q.y-p.y,l=Math.hypot(dx,dy);return{x:dx/l,y:dy/l};};
 const getE=(u,v)=>E.find(e=>(e.a===u&&e.b===v)||(e.a===v&&e.b===u));
 const factor=e=>ROAD[e.type].f[VK];
@@ -708,18 +729,18 @@ function render(){
   const cx=Math.max(0,Math.min(W-844,fx-422)),cy=Math.max(0,Math.min(H-390,fy-215));
   $('cam').setAttribute('transform',`translate(${-cx},${-cy})`);
   mmView.setAttribute('x',cx);mmView.setAttribute('y',cy);
-  for(const z of ZONES){const r=mmZ[z.id];if(!r)continue;let st;
-    if(z.kho){st=G.M.some(m=>m.from===z.id&&m.picked<m.qty)?'on':'done';}
-    else{const ms=G.M.filter(m=>m.to===z.id);st=ms.every(m=>m.delivered>=m.qty)?'done':ms.some(m=>m.onboard>0)?'carry':'on';}
+  for(const z of ZONES){const r=mmZ[z.id];if(!r)continue;const st=zState(z);
     if(st!==r.state){r.state=st;r.shape.setAttribute('fill',st==='done'?'#adb5bd':r.col);r.ring.setAttribute('opacity',st==='carry'?1:0);
       r.gl.setAttribute('opacity',st==='done'?0:1);r.ok.setAttribute('opacity',st==='done'?1:0);}}mmCar.setAttribute('cx',d.x);mmCar.setAttribute('cy',d.y);
-  document.querySelectorAll('.carmark').forEach(g=>g.setAttribute('transform',`translate(${d.x},${d.y})`));
   const left=LV.T0-G.t;$('timer').innerHTML=`${I.clock}${fmt(left)}`;$('timer').classList.toggle('warn',left<=10&&G.state==='play');
   renderMissions();
   const v=G.state==='play'?validDirs():{};
   for(const dir in DBTN){const b=$(DBTN[dir]);b.classList.toggle('glow',!!v[dir]&&c.cmd!==dir);b.classList.toggle('sel',c.cmd===dir);}
   $('bUturn').classList.toggle('dim',G.state!=='play'||!!c.busy);
 }
+// Trạng thái điểm (D-28): kho còn hàng 'on' / hết 'done'; điểm giao 'on' / đang chở hàng tới 'carry' / giao đủ 'done'
+function zState(z){if(z.kho)return G.M.some(m=>m.from===z.id&&m.picked<m.qty)?'on':'done';
+  const ms=G.M.filter(m=>m.to===z.id);return ms.every(m=>m.delivered>=m.qty)?'done':ms.some(m=>m.onboard>0)?'carry':'on';}
 let lastMis='';
 function renderMissions(){
   const html=G.M.map(m=>{const p=m.delivered/m.qty,cc=2*Math.PI*22,done=m.delivered>=m.qty;let dd='',warn=false;
@@ -735,7 +756,8 @@ function renderAsk(){
 }
 
 /* ======================= Trang chủ & chuẩn bị ======================= */
-function show(id){['home','prep','mapv','pausev','result','cutv'].forEach(o=>$(o).classList.toggle('on',o===id));}
+function show(id){['home','prep','mapv','pausev','result','cutv'].forEach(o=>$(o).classList.toggle('on',o===id));
+  if(id==='prep')prepView();if(id==='mapv')vPlay.refresh('play',[0,52,0,146]);}
 let HCH=0,HSEL=null;
 function renderHome(){
   $('chList').innerHTML=CHAPTERS.map((c,i)=>{const lv=c.levels||[],done=lv.filter(k=>getBest(k)!==null).length;
@@ -798,24 +820,113 @@ function drawHomeMap(){
     <button class="cta" id="bPlay">Chơi</button>`;
 }
 function legendSVG(type){const s=document.createElementNS(NS,'svg');s.setAttribute('width',26);s.setAttribute('height',26);s.setAttribute('viewBox','-13 -13 26 26');signSVG(type,s,0,0,11);return s.outerHTML;}
-function pointLegend(kind,col,txt){const s=document.createElementNS(NS,'svg');s.setAttribute('width',22);s.setAttribute('height',22);s.setAttribute('viewBox','-12 -12 24 24');
-  if(kind==='up')el('rect',{x:-10,y:-10,width:20,height:20,rx:5,fill:col},s);else el('circle',{r:10,fill:col},s);glyph(s,kind,0,0,.95);
-  return `<div class="lg">${s.outerHTML}<span><b>${txt}</b></span></div>`;}
 function openLevel(i){
   buildLevel(i);buildCarLayer();
   if(!LV.vehicles.includes(VK))VK=LV.vehicles.includes('van')?'van':LV.vehicles[0];
   reset();renderPrep();show('prep');
 }
+/* ---------- Màn chuẩn bị (PA2 — D-34): nhiệm vụ ghi ngay trên bản đồ (xem buildMarks), cột phải: tên màn, thời gian, xe, nút ---------- */
+const HOMEIC='<svg viewBox="0 0 28 28"><path d="M5 13 L14 5 L23 13 M8 11 V23 H20 V11 M12 23 V17 H16 V23"/></svg>';
+function vehIcon(k){const s=document.createElementNS(NS,'svg');s.setAttribute('viewBox','-37 -15 74 30');s.setAttribute('width',40);s.setAttribute('height',16);drawVehicle(s,k);return s.outerHTML;}
+function vehHTML(){const v=VEH[VK];
+  if(LV.vehicles.length<2)return `<div class="vinfo">${vehIcon(VK)}<span><b>${v.name}</b><br>chở ${v.cap} kiện</span></div>`;
+  return `<div class="sec">CHỌN XE</div><div class="vrow">${LV.vehicles.map(k=>`<button class="vb ${k===VK?'on':''}" data-veh="${k}">${vehIcon(k)}<span>${VEH[k].name}</span></button>`).join('')}</div>`+
+    `<div class="vinfo">${v.spd} · chở ${v.cap} kiện${v.note?' · '+v.note:''}</div>`;}
+function hasClosed(){return !!LV.region&&(LV.region[0]<LV.grid[0]-1||LV.region[1]<LV.grid[1]-1);}
+function legendHTML(){const used=[...new Set(E.map(e=>e.type))].filter(t=>RCOL[t]),bar=(c,h)=>`<i style="background:${c};height:${h}px"></i>`;
+  return used.map(t=>`<span class="li" data-t="${t}">${bar(RCOL[t],{lon:7,dong:5,gogh:5,hem:3}[t])}${ROAD[t].name}</span>`).join('')+
+    (hasClosed()?`<span class="li" data-t="closed">${bar('#c9a66b',6)}Chưa thông xe</span>`:'');}
+function legendTip(e,tipId){const li=e.target.closest('.li');if(!li)return;e.preventDefault();const t=li.dataset.t,tip=$(tipId);
+  tip.innerHTML=t==='closed'?'<span><b>Chưa thông xe</b> — đường đang làm, chưa đi được; sẽ thông ở các màn sau</span>':`${legendSVG(t)}<span><b>${ROAD[t].name}</b> — ${ROAD[t].desc}</span>`;
+  tip.classList.add('on');clearTimeout(tip._t);tip._t=setTimeout(()=>tip.classList.remove('on'),3000);}
 function renderPrep(){
-  $('pTitle').textContent=`Màn ${LVI+1} · ${LV.name}`;
-  $('pMeta').textContent=`⏱ ${fmt(LV.T0)} · ${LV.intro}`;
+  const chN=CHAPTERS.findIndex(c=>c.levels&&c.levels.includes(LVI))+1;
+  $('pUI').innerHTML=`<div class="ph"><small>MÀN ${LVI+1} · CHƯƠNG ${chN}</small><span class="ptime">⏱ ${fmt(LV.T0)}</span></div><div class="pn">${LV.name}</div>`+
+    `<div class="pi">Nhiệm vụ ghi ngay trên bản đồ</div>`+vehHTML()+
+    `<div class="pbtn"><button class="rb sm" data-act="home" aria-label="Trang chủ">${HOMEIC}</button><button class="cta" data-act="start">Bắt đầu</button></div>`;
+  $('pLeg').innerHTML=$('vLeg').innerHTML=legendHTML();
+}
+function prepView(){vPrep.refresh('prep',[0,0,46,0]);}
+
+/* ---------- Bộ xem bản đồ lớn: kéo để di chuyển, chụm 2 ngón / con lăn / nút +− để phóng to thu nhỏ (D-33) ----------
+   Giới hạn (Q-61): thu nhỏ nhất = thấy toàn bộ bản đồ; phóng to nhất = MAX_ZOOM lần tỉ lệ khi lái xe. Mỗi lần mở về khung nhìn ban đầu (Q-62).
+   Ký hiệu điểm, tên điểm, vị trí xe vẽ cỡ cố định trên màn hình nên luôn đọc được. Màu loại đường hiện rõ khi thu nhỏ, mờ dần khi phóng to. */
+const ZI={in:'<svg viewBox="0 0 20 20"><path d="M10 4 V16 M4 10 H16"/></svg>',out:'<svg viewBox="0 0 20 20"><path d="M4 10 H16"/></svg>',
+  fit:'<svg viewBox="0 0 20 20"><path d="M3 7 V3 H7 M13 3 H17 V7 M17 13 V17 H13 M7 17 H3 V13"/></svg>'};
+const MARGIN=14,MAX_ZOOM=2; // MAX_ZOOM: phóng to tối đa so với tỉ lệ khi lái xe (1 = bằng lúc lái xe)
+function makeViewer(id){
+  const box=$(id),svg=box.querySelector('svg'),rg=el('g',{},svg),og=el('g',{},svg),zb=box.querySelector('.zbox');
+  zb.innerHTML=`<button class="zb" data-z="in" aria-label="Phóng to">${ZI.in}</button><button class="zb" data-z="out" aria-label="Thu nhỏ">${ZI.out}</button><button class="zb" data-z="fit" aria-label="Xem toàn bộ">${ZI.fit}</button>`;
+  const v={s:1,x:0,y:0,smin:1,smax:1,ins:[0,0,0,0],items:[]};
+  const bw=()=>box.clientWidth,bh=()=>box.clientHeight,cl=(a,lo,hi)=>Math.max(lo,Math.min(hi,a));
+  v.apply=()=>{const [t,r,b,l]=v.ins,uw=(bw()-l-r)/v.s,uh=(bh()-t-b)/v.s;
+    // giữ bản đồ (cộng lề 14px) trong phần khung không bị che; bản đồ nhỏ hơn khung thì căn giữa
+    const m=MARGIN/v.s;
+    v.x=W+2*m<=uw?-l/v.s-(uw-W)/2:cl(v.x,-m-l/v.s,W+m-uw-l/v.s);
+    v.y=H+2*m<=uh?-t/v.s-(uh-H)/2:cl(v.y,-m-t/v.s,H+m-uh-t/v.s);
+    svg.setAttribute('viewBox',`${v.x} ${v.y} ${bw()/v.s} ${bh()/v.s}`);
+    v.items.forEach(it=>it.g.setAttribute('transform',`translate(${it.x},${it.y}) scale(${1/v.s})`));
+    rg.setAttribute('opacity',(cl((.5-v.s)/.15,0,1)*.9).toFixed(2));
+    zb.children[0].classList.toggle('dis',v.s>=v.smax*.999);zb.children[1].classList.toggle('dis',v.s<=v.smin*1.001);
+    v.layout();};
+  // Xếp nhãn: mỗi khối chữ thử 4 chỗ quanh ký hiệu (dưới, trên, phải, trái), chọn chỗ ít chồng lên ký hiệu/nhãn khác
+  // và ít tràn ra ngoài phần khung nhìn thấy; tính lại mỗi khi phóng/kéo vì chữ giữ cỡ cố định còn khoảng cách thì đổi.
+  v.layout=()=>{const [t,r,b,l]=v.ins,X1=bw()-r,Y1=bh()-b,R=(x0,y0,x1,y1)=>({x0,y0,x1,y1});
+    const P=v.items.map(it=>({it,x:(it.x-v.x)*v.s,y:(it.y-v.y)*v.s})),obs=P.map(p=>R(p.x-17,p.y-17,p.x+17,p.y+17));
+    P.forEach(p=>{if(p.it.car)obs.push(R(p.x+10,p.y-9,p.x+32,p.y+7));});
+    const ov=(a,o)=>Math.max(0,Math.min(a.x1,o.x1)-Math.max(a.x0,o.x0))*Math.max(0,Math.min(a.y1,o.y1)-Math.max(a.y0,o.y0));
+    P.filter(p=>p.it.lab).map(p=>{const bb=p.it.lab.getBBox();p.w=bb.width+6;p.h=bb.y+bb.height+3;return p;}).sort((a,c)=>c.h-a.h).forEach(p=>{
+      const {w,h}=p;let best=null;
+      [[0,17],[0,-17-h],[17+w/2,-h/2],[-17-w/2,-h/2]].forEach(([dx,dy],k)=>{const a=R(p.x+dx-w/2,p.y+dy,p.x+dx+w/2,p.y+dy+h);
+        let sc=k*4+(Math.max(0,l-a.x0)+Math.max(0,a.x1-X1)+Math.max(0,t-a.y0)+Math.max(0,a.y1-Y1))*h;
+        obs.forEach(o=>sc+=ov(a,o));if(!best||sc<best.sc)best={sc,dx,dy,a};});
+      p.it.lab.setAttribute('transform',`translate(${best.dx},${best.dy})`);obs.push(best.a);});};
+  v.zoomAt=(px,py,f)=>{const s2=cl(v.s*f,v.smin,v.smax),wx=v.x+px/v.s,wy=v.y+py/v.s;v.s=s2;v.x=wx-px/s2;v.y=wy-py/s2;v.apply();};
+  v.fitTo=(x0,y0,x1,y1)=>{const [t,r,b,l]=v.ins,uw=bw()-l-r,uh=bh()-t-b;v.s=cl(Math.min((uw-2*MARGIN)/(x1-x0),(uh-2*MARGIN)/(y1-y0)),v.smin,v.smax);
+    v.x=(x0+x1)/2-(uw/2+l)/v.s;v.y=(y0+y1)/2-(uh/2+t)/v.s;v.apply();};
+  // khung nhìn ban đầu: vùng đang thông xe của màn (Chương 2) hoặc toàn bộ bản đồ
+  v.home=()=>{const R=LV.region;R?v.fitTo(0,0,Math.min(W,100+R[0]*SP+175),Math.min(H,100+R[1]*SP+175)):v.fitTo(0,0,W,H);};
+  v.refresh=(mode,ins)=>{v.ins=ins;const [t,r,b,l]=ins;
+    v.smin=Math.min((bw()-l-r-2*MARGIN)/W,(bh()-t-b-2*MARGIN)/H);v.smax=MAX_ZOOM;
+    rg.innerHTML='';const RWm={lon:30,dong:22,gogh:22,hem:12};
+    E.forEach(e=>{if(RCOL[e.type])el('line',{x1:N[e.a].x,y1:N[e.a].y,x2:N[e.b].x,y2:N[e.b].y,stroke:RCOL[e.type],'stroke-width':RWm[e.type]},rg);});
+    buildMarks(v,og,mode);v.home();};
+  const P=new Map();
+  const loc=e=>{const r=box.getBoundingClientRect(),k=r.width/box.offsetWidth;return{x:(e.clientX-r.left)/k,y:(e.clientY-r.top)/k};};
+  box.addEventListener('pointerdown',e=>{
+    const z=e.target.closest('.zb');if(z){e.preventDefault();z.dataset.z==='fit'?v.home():v.zoomAt(bw()/2,bh()/2,z.dataset.z==='in'?1.6:1/1.6);return;}
+    if(e.target.closest('button,.mtool'))return;
+    e.preventDefault();try{box.setPointerCapture(e.pointerId);}catch(_){}P.set(e.pointerId,loc(e));box.classList.add('drag');});
+  box.addEventListener('pointermove',e=>{const q=P.get(e.pointerId);if(!q)return;const p=loc(e);
+    if(P.size===1){v.x-=(p.x-q.x)/v.s;v.y-=(p.y-q.y)/v.s;v.apply();}
+    else{let o=null;P.forEach((val,k)=>{if(k!==e.pointerId)o=val;});
+      const d0=Math.hypot(q.x-o.x,q.y-o.y)||1,d1=Math.hypot(p.x-o.x,p.y-o.y)||1,m0={x:(q.x+o.x)/2,y:(q.y+o.y)/2},m1={x:(p.x+o.x)/2,y:(p.y+o.y)/2};
+      const wx=v.x+m0.x/v.s,wy=v.y+m0.y/v.s;v.s=cl(v.s*d1/d0,v.smin,v.smax);v.x=wx-m1.x/v.s;v.y=wy-m1.y/v.s;v.apply();}
+    P.set(e.pointerId,p);});
+  const up=e=>{P.delete(e.pointerId);if(!P.size)box.classList.remove('drag');};
+  box.addEventListener('pointerup',up);box.addEventListener('pointercancel',up);
+  box.addEventListener('wheel',e=>{e.preventDefault();const p=loc(e);v.zoomAt(p.x,p.y,e.deltaY<0?1.25:.8);},{passive:false});
+  box.addEventListener('dblclick',e=>{if(e.target.closest('button,.mtool'))return;const p=loc(e);v.zoomAt(p.x,p.y,1.6);});
+  return v;
+}
+// Ký hiệu cỡ cố định trên bản đồ lớn: ▲ kho (vuông), ● điểm giao (tròn), tên điểm, vị trí xe.
+// 'prep': dưới tên điểm giao ghi nhiệm vụ (×số kiện, nơi lấy, hạn); 'play': hiện trạng thái (vòng vàng = đang chở hàng tới, xám ✓ = xong).
+function buildMarks(v,og,mode){
+  og.innerHTML='';v.items=[];const add=(x,y,o)=>{const g=el('g',{},og);v.items.push(Object.assign({g,x,y},o));return g;};
+  const tx=(g,t,y,o)=>{const e=el('text',Object.assign({x:0,y,'text-anchor':'middle','font-size':12.5,'font-weight':900,'font-family':'Nunito,Segoe UI',fill:'#1d2733',stroke:'#fff','stroke-width':3.5,'stroke-linejoin':'round','paint-order':'stroke'},o||{}),g);e.textContent=t;return e;};
   const site=LV.chapter===2?CH2.sites[LV.stage]:null;
-  $('pList').innerHTML=G.M.map(m=>`<div class="mi" style="border-left-color:${m.col}">${m.src} → ${m.name}${m.to===site?' (công trình)':''} · ${m.qty} kiện${m.dl?` <small>· hạn ${fmt(m.dl)}</small>`:''}</div>`).join('');
-  const multi=LV.vehicles.length>1;$('vehSec').style.display=$('vehs').style.display=multi?'':'none';
-  $('vehs').innerHTML=LV.vehicles.map(k=>{const v=VEH[k];return`<button class="vh ${k===VK?'on':''}" data-k="${k}"><b>${v.name}</b>${v.spd} · chở ${v.cap} kiện${v.note?'<br>'+v.note:''}</button>`;}).join('');
-  const used=[...new Set(E.map(e=>e.type))].filter(t=>t!=='thuong');
-  $('pLegend').innerHTML=pointLegend('up','#1c7ed6','Điểm lấy hàng')+pointLegend('down','#f76707','Điểm giao hàng (vòng vàng = đang chở hàng tới)')+
-    used.map(t=>`<div class="lg">${legendSVG(t)}<span><b>${ROAD[t].name}</b> — ${ROAD[t].desc}</span></div>`).join('');
+  ZONES.forEach(z=>{const b=buildingRect(z),st=mode==='play'?zState(z):'on',col=st==='done'?'#adb5bd':z.col,lab=el('g',{});
+    const g=add(b.px,b.py-26,{lab});
+    if(st==='carry')el('circle',{r:18,fill:'none',stroke:'#ffd43b','stroke-width':4},g);
+    if(z.kho)el('rect',{x:-12,y:-12,width:24,height:24,rx:6,fill:col,stroke:'#fff','stroke-width':2.5},g);else el('circle',{r:12.5,fill:col,stroke:'#fff','stroke-width':2.5},g);
+    if(st==='done')el('path',{d:'M-5.5 0 L-1.5 4 L5.5 -4.5',fill:'none',stroke:'#fff','stroke-width':2.8,'stroke-linecap':'round','stroke-linejoin':'round'},g);
+    else glyph(g,z.kho?'up':'down',0,0,1);
+    g.appendChild(lab);
+    const nm=tx(lab,z.name,12);
+    if(mode==='prep'&&z.id===site){const sp=el('tspan',{fill:'#c77c00','font-size':12},nm);sp.textContent=' · công trình';}
+    if(mode==='prep'&&!z.kho)G.M.filter(m=>m.to===z.id).forEach((m,i)=>tx(lab,`×${m.qty} từ ${m.src}${m.dl?' · hạn '+fmt(m.dl):''}`,27+i*14,{'font-size':12,fill:m.dl?'#c92a2a':'#3b4350'}));});
+  const c=add(G.disp.x,G.disp.y,{car:true});el('circle',{r:9,fill:'#fff',stroke:'#e8590c','stroke-width':4},c);
+  tx(c,'Xe',4.5,{x:14,'text-anchor':'start',fill:'#e8590c'});
 }
 function startGame(){G.state='play';show(null);}
 let pendingAct=null;
@@ -832,14 +943,17 @@ function restart(){reset();renderPrep();show('prep');}
 const tap=(id,fn)=>$(id).addEventListener('pointerdown',e=>{e.preventDefault();fn();});
 for(const k in DBTN)tap(DBTN[k],()=>cTurn(k));
 tap('bUturn',cUturn);tap('bPause',pauseGame);tap('mm',mapView);tap('bMapClose',resume);tap('bResume',resume);
-tap('bStart',startGame);tap('bRestart1',()=>askConfirm(restart));tap('bRestart2',restart);
+tap('bRestart1',()=>askConfirm(restart));tap('bRestart2',restart);
 tap('bYes',()=>{const f=pendingAct;pendingAct=null;f&&f();});tap('bNo',()=>{pendingAct=null;pauseUI();});
-['bHome1','bHome3','bHome4'].forEach(b=>tap(b,goHome));
+['bHome3','bHome4'].forEach(b=>tap(b,goHome));
 tap('bCut',startCut);tap('bSkip',finishCut);tap('bNext',()=>openLevel(LVI+1));tap('bHome2',()=>askConfirm(goHome));
 $('chList').addEventListener('pointerdown',e=>{const b=e.target.closest('.chp');if(!b)return;e.preventDefault();HCH=+b.dataset.c;HSEL=null;renderHome();});
 $('hMap').addEventListener('pointerdown',e=>{const g=e.target.closest('.nd');if(!g)return;e.preventDefault();HSEL=+g.dataset.k;drawHomeMap();});
 $('hCard').addEventListener('pointerdown',e=>{if(!e.target.closest('#bPlay'))return;e.preventDefault();openLevel(HSEL);});
-$('vehs').addEventListener('pointerdown',e=>{const b=e.target.closest('.vh');if(!b)return;e.preventDefault();VK=b.dataset.k;reset();renderPrep();});
+$('prep').addEventListener('pointerdown',e=>{const b=e.target.closest('[data-act],[data-veh]');if(!b)return;e.preventDefault();
+  if(b.dataset.veh){VK=b.dataset.veh;reset();renderPrep();return;}
+  if(b.dataset.act==='start')startGame();else if(b.dataset.act==='home')goHome();});
+$('pLeg').addEventListener('pointerdown',e=>legendTip(e,'pTip'));$('vLeg').addEventListener('pointerdown',e=>legendTip(e,'vTip'));
 $('askO').addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(!b)return;e.preventDefault();const i=+b.dataset.i;i<0?askSkip():askChoose(i);});
 addEventListener('keydown',e=>{
   if(!G)return;const k=e.key;
@@ -855,18 +969,19 @@ addEventListener('keydown',e=>{
 });
 
 /* ======================= Khung hình ======================= */
-function fit(){const s=Math.min(innerWidth/844,innerHeight/390);$('stage').style.transform=`scale(${s})`;}
+function fit(){const s=/real/.test(location.hash)?548/844:Math.min(innerWidth/844,innerHeight/390);$('stage').style.transform=`scale(${s})`;}
 addEventListener('resize',fit);fit();
 const DT=1/60;let acc=0,last=performance.now();
 function loop(now){acc+=Math.min(.25,(now-last)/1000);last=now;
   while(acc>=DT){if(G&&G.state==='play')step(DT);else if(G&&G.state==='cut')stepCut(DT);acc-=DT;}
   render();requestAnimationFrame(loop);}
+const vPrep=makeViewer('pMap'),vPlay=makeViewer('vMap');
 // dựng sẵn màn 1 phía sau trang chủ
 buildLevel(0);buildCarLayer();reset();G.state='home';
 renderHome();show('home');
 // mở thẳng một màn qua địa chỉ, ví dụ index.html#lv=3
 const hc=location.hash.match(/ch=(\d)/);if(hc&&CHAPTERS[+hc[1]-1]){HCH=+hc[1]-1;HSEL=null;renderHome();}
-const hm=location.hash.match(/lv=(\d+)/);if(hm&&LEVELS[+hm[1]-1]){openLevel(+hm[1]-1);if(/play/.test(location.hash))startGame();if(/pause/.test(location.hash))pauseGame();
+const hm=location.hash.match(/lv=(\d+)/);if(hm&&LEVELS[+hm[1]-1]){openLevel(+hm[1]-1);if(/play/.test(location.hash))startGame();if(/pause/.test(location.hash))pauseGame();if(/[&#]map/.test(location.hash))mapView();
   if(/win/.test(location.hash)){startGame();G.M.forEach(m=>{m.picked=m.delivered=m.qty;});step(1/60);startCut();if(/cutend/.test(location.hash))finishCut();}}
 requestAnimationFrame(loop);
 </script>

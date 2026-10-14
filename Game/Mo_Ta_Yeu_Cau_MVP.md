@@ -2,7 +2,7 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 1.5 — thêm Chương 2 (bản đồ xây dựng dần) |
+| Phiên bản | 1.8 — chốt giới hạn phóng bản đồ (Q-61, Q-62) và chuẩn cỡ chữ/nút (Q-64) |
 | Ngày | 14/10/2026 |
 | Nguồn | Tài liệu ý tưởng game (mục 1–21), flowchart vòng chơi, ảnh tham chiếu giao diện, phản hồi xác nhận của BA |
 | Mục đích | Cơ sở tham chiếu để thiết kế giao diện và viết tài liệu (BRD/SRS/GDD). Không thay thế BRD/SRS. |
@@ -71,6 +71,8 @@ Thử thách đến từ:
 | D-30 | Nút quay về ở màn kết quả, tạm dừng, chuẩn bị đổi tên thành **"Trang chủ"**. | [XN] phản hồi demo 6 |
 | D-31 | **Popup tạm dừng:** popup nhỏ giữa màn hình, nền trong suốt mờ; bản đồ phía sau phủ tối nhẹ, vẫn nhìn thấy; thời gian game dừng. Một dòng "⏸ Đã tạm dừng · còn mm:ss" và **3 nút tròn chỉ có biểu tượng, không có chữ**: Chơi lại · **Tiếp tục** (to nhất, ở giữa) · Trang chủ. Tiếp tục → đóng popup, chơi tiếp. Chơi lại / Trang chủ → hỏi "Bỏ lượt đang chơi?" với 2 nút ✕ / ✓. | [XN] Q-59 / [GĐ] Q-60 hỏi xác nhận |
 | D-32 | **Chương 2 · Khu đô thị mới** (thử nghiệm YT-01 phương án B): một bản đồ chung có nhà sẵn, vùng mở rộng dần, mỗi màn thắng hoàn thành một công trình + công trình nhỏ mọc thêm, cảnh quay sau màn hình Hoàn thành, bức tranh toàn khu sau màn cuối; chơi lại hiện đúng trạng thái lúc mới tới màn. Chi tiết: [level_design/Thiet_Ke_Chuong_2.md](level_design/Thiet_Ke_Chuong_2.md). Chương 1 giữ nguyên. | [XN] YT-01, C2-Q1 → Q5 |
+| D-33 | **Bản đồ lớn phóng to / thu nhỏ / kéo** — bản đồ mở từ mini map khi đang chơi, và bản đồ ở màn chuẩn bị. Kéo một ngón để di chuyển khung nhìn; chụm/mở hai ngón, con lăn chuột hoặc nút **＋ / −** để phóng; nút **⤢** về khung nhìn ban đầu. **Giới hạn:** thu nhỏ nhất = thấy toàn bộ bản đồ; phóng to nhất = **to hơn lúc lái xe** — demo đặt gấp 2 lần tỉ lệ khi lái xe (tham số cấu hình `MAX_ZOOM`, [GĐ] giá trị 2); không kéo được ra khỏi bản đồ; nút đã chạm giới hạn hiện mờ. Ký hiệu điểm (▲ kho vuông / ● điểm giao tròn, trạng thái theo D-28), tên điểm và vị trí xe **giữ cỡ cố định trên màn hình** nên đọc được ở mọi mức phóng. Khi thu nhỏ, đường đặc biệt được tô màu giống mini map; phóng to dần thì lớp màu mờ đi để thấy hình thật của đường và biển báo. Chú giải loại đường: chạm để xem mô tả. Mỗi lần mở bắt đầu từ khung nhìn ban đầu: toàn bộ bản đồ (Chương 2: vùng đang thông xe). Ảnh mẫu: [mockups/ban_do_lon_toan_canh.png](mockups/ban_do_lon_toan_canh.png), [mockups/ban_do_lon_phong_to.png](mockups/ban_do_lon_phong_to.png). | [XN] phản hồi BA 14/10, Q-61, Q-62 |
+| D-34 | **Màn chuẩn bị (PA2):** bản đồ chiếm phần lớn màn hình (phóng to/thu nhỏ/kéo theo D-33); **nhiệm vụ ghi ngay dưới điểm giao** trên bản đồ: tên điểm (kèm "· công trình" ở Chương 2), mỗi nhiệm vụ một dòng "×số kiện từ <nơi lấy>", nhiệm vụ có hạn ghi thêm "· hạn mm:ss" màu đỏ. Khối chữ **tự chọn chỗ đặt** (dưới / trên / phải / trái ký hiệu) để không chồng lên nhau và không tràn ra ngoài khung; tính lại khi phóng/kéo. Cột phải hẹp: màn · chương, thời gian tổng, tên màn, xe (màn nhiều xe: nút chọn xe + đặc tính xe đang chọn), nút Trang chủ (biểu tượng) và **Bắt đầu**. Dưới bản đồ: chú giải loại đường + nút phóng. Bỏ danh sách nhiệm vụ dạng chữ và câu giới thiệu màn (đã có ở thẻ màn tại trang chủ). Ảnh: [mockups/demo_chuan_bi_man10.png](mockups/demo_chuan_bi_man10.png), [mockups/demo_chuan_bi_man9.png](mockups/demo_chuan_bi_man9.png). | [XN] Q-63 |
 | D-08 | Nhiên liệu/pin, gia tốc, phanh: ngoài MVP. | [XN] |
 | D-09 | Giao thông xác định, dự đoán được (chỉ còn yếu tố tĩnh: hạn chế loại xe, ngõ cụt). | [XN] / D-21, D-22 |
 | D-10 | Màn thiết kế thủ công, kiểm tra khả năng hoàn thành trước khi phát hành. | [XN] |
@@ -114,7 +116,7 @@ flowchart TD
 
 | ID | Yêu cầu | Nguồn |
 |---|---|---|
-| GL-01 | Đồng hồ chưa chạy; xem bản đồ không giới hạn thời gian; kéo/phóng to-thu nhỏ được. | [XN] / [SL] |
+| GL-01 | Đồng hồ chưa chạy; xem bản đồ không giới hạn thời gian; kéo/phóng to-thu nhỏ được (D-33). | [XN] |
 | GL-02 | Hiển thị: điểm xuất phát, điểm lấy/giao hàng, điểm đón/trả khách (kèm vùng đỗ), đường hạn chế theo loại xe. | [XN] |
 | GL-03 | Hiển thị danh sách nhiệm vụ, thời hạn từng nhiệm vụ, thời gian tổng. | [XN] |
 | GL-04 | Chọn xe: hiển thị các xe được phép trong màn và đặc tính (xem mục 9). | [XN] |
@@ -144,8 +146,8 @@ flowchart TD
 | Lên / Xuống / Trái / Phải | Chọn hướng đi (theo màn hình) tại giao lộ khi xe trong vùng nhận lệnh; **sáng lên** khi hướng đó khả dụng | [XN] D-19 |
 | Quay đầu | Quay đầu xe; tốn thời gian cố định (xem CT-21) | [XN] Q-24 |
 | ~~Hành động~~ | ~~Nút hành động cố định~~ → thay bằng **bảng hỏi** tại điểm nhiệm vụ (D-23) | Q-44 |
-| Pause | Tạm dừng, ẩn bản đồ | [XN] |
-| Mini map | Hiển thị toàn bộ bản đồ; chạm để mở bản đồ toàn màn, dừng thời gian | [XN] D-20 |
+| Pause | Tạm dừng (popup nhỏ, bản đồ vẫn thấy mờ phía sau) | [XN] D-31 |
+| Mini map | Hiển thị toàn bộ bản đồ; chạm để mở bản đồ lớn (phóng to/thu nhỏ/kéo được), dừng thời gian | [XN] D-20, D-33 |
 
 ### 4.2. Rẽ tại giao lộ
 
@@ -349,9 +351,9 @@ PASS = all_missions_completed
 
 | ID | Màn hình | Nội dung chính | Nguồn |
 |---|---|---|---|
-| UI-01 | Chuẩn bị | Bản đồ (kéo/phóng to), điểm xuất phát, điểm nhiệm vụ + vùng đỗ, biển báo, danh sách nhiệm vụ + thời hạn, thời gian tổng, chọn xe (kèm đặc tính), chú giải, nút Bắt đầu, nút Luật màn | [XN] |
+| UI-01 | Chuẩn bị | Bản đồ (kéo/phóng to — D-33), điểm xuất phát, điểm nhiệm vụ, danh sách nhiệm vụ + thời hạn, thời gian tổng, chọn xe (kèm đặc tính), chú giải, nút Bắt đầu, nút Luật màn. **Bố cục cho điện thoại theo D-34** (nhiệm vụ ghi trên bản đồ). | [XN] D-34 |
 | UI-02 | Đang chơi | **Vùng trên**: đồng hồ tổng, trạng thái nhiệm vụ (ưu tiên nhiệm vụ sắp hết hạn), mini map, xe hiện tại + số kiện/số khách đang chở trên sức chứa (vd: 2/3), nút Pause. **Vùng giữa**: bản đồ 3D, camera bám xe. **Góc dưới**: 4 nút hướng, Quay đầu. | [XN] |
-| UI-03 | Bản đồ lớn | Bản đồ toàn màn, vị trí xe, điểm nhiệm vụ còn lại, điểm đổi xe, nút Đóng; chỉ báo "Thời gian đang dừng" | [XN] |
+| UI-03 | Bản đồ lớn | Bản đồ toàn màn, vị trí xe, điểm nhiệm vụ còn lại, điểm đổi xe, nút Đóng; chỉ báo "Thời gian đang dừng"; phóng to/thu nhỏ/kéo, chú giải loại đường (D-33) | [XN] |
 | UI-04 | Pause | Màn che bản đồ, nút Tiếp tục / Chơi lại / Thoát | [XN] / [GĐ] các nút |
 | UI-05 | Đạt | Thông báo hoàn thành, thời gian hoàn thành, thời gian tốt nhất (đánh dấu kỷ lục mới), nút Màn tiếp / Chơi lại | [XN] |
 | UI-06 | Không đạt | Nguyên nhân cụ thể (F-xx), gợi ý dựa trên dữ liệu lượt chơi, nút Chơi lại / Về danh sách màn | [XN] |
@@ -368,6 +370,7 @@ PASS = all_missions_completed
 | UI-11 | Không hiển thị mũi tên đánh số dọc lề đường. | [XN] |
 | UI-12 | Tham khảo: 3D low-poly nhìn từ trên xuống, nền cỏ, đường xám có vỉa hè, nhà/cây làm cảnh quan, ghim cho điểm nhiệm vụ, nút tròn trắng ở góc. | [XN] |
 | UI-13 | Không có nút tốc độ game (x1, x2). | [GĐ] |
+| UI-14 | Thiết kế cho điện thoại nằm ngang (khung logic 844×390): chữ **tối thiểu 12px**, nút bấm **tối thiểu ~44px**; không nội dung nào bị che hoặc cắt (ví dụ nút Bắt đầu ở màn có 4 nhiệm vụ + 3 xe). Áp dụng cho **mọi màn hình**. Kiểm tra trên máy thật hoặc thêm `&real` vào địa chỉ demo để xem gần đúng kích thước điện thoại 6,1". | [XN] Q-64 |
 
 ### 11.2. Hướng giao diện đã chọn (màn hình đang chơi)
 
@@ -385,6 +388,7 @@ PASS = all_missions_completed
 
 | ID | Câu hỏi | Đề xuất của Claude |
 |---|---|---|
+
 Hiện không còn câu hỏi mở. Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 
 ---
@@ -484,6 +488,14 @@ Hiện không còn câu hỏi mở. Các giả định **[GĐ]** khác trong tà
 | TC-49 | Bấm "Đi tiếp" rồi vẫn ở trong vùng đỗ | Không hỏi lại; xe chạy ra khỏi vùng | HD-16 |
 | TC-50 | Đã "Đi tiếp", ra khỏi vùng, quay đầu và vào lại vùng | Hỏi lại bình thường | HD-16 |
 | TC-51 | Đã chọn hướng cho giao lộ kế tiếp, rồi xe tự dừng ở vùng đỗ | Sau khi chạy tiếp, xe vẫn rẽ theo hướng đã chọn | HD-04 |
+| TC-52 | Mở bản đồ lớn, phóng to liên tục (chụm 2 ngón / nút ＋ / con lăn) | Dừng ở mức gấp 2 lần tỉ lệ khi lái xe (to hơn lúc lái xe); nút ＋ hiện mờ | D-33, Q-61 |
+| TC-53 | Thu nhỏ liên tục | Dừng ở mức thấy toàn bộ bản đồ; nút − hiện mờ; đang toàn cảnh thì kéo không làm bản đồ trôi | D-33 |
+| TC-54 | Đang phóng to, kéo mạnh về một phía | Bản đồ dừng ở mép, không lộ vùng ngoài bản đồ quá lề | D-33 |
+| TC-55 | Ở mọi mức phóng | Ký hiệu điểm, tên điểm, vị trí xe giữ nguyên cỡ trên màn hình (chữ ≥ 12px) | D-33, UI-14 |
+| TC-56 | Phóng to, đóng bản đồ, mở lại | Mở lại ở khung nhìn ban đầu; trong lúc xem thời gian vẫn dừng | D-33, TG-06 |
+| TC-57 | Màn chuẩn bị của màn có 4 nhiệm vụ + 3 xe, khung 844×390 | Nút Bắt đầu và Trang chủ hiện đủ, không bị cắt; chữ ≥ 12px | UI-01, UI-14 |
+| TC-58 | Màn chuẩn bị có nhiều điểm giao gần nhau (vd màn 9: Bệnh viện 2 nhiệm vụ, Khu nhà ở sát mép dưới) | Mỗi điểm giao hiện đủ tên, số kiện, nơi lấy, hạn; các khối chữ không chồng nhau, không bị che bởi chú giải | D-34 |
+| TC-59 | Ở màn chuẩn bị, phóng to rồi thu nhỏ | Khối chữ đổi chỗ đặt khi cần để vẫn không chồng nhau | D-34 |
 
 > Đã bỏ: TC-06 (nhiệm vụ phụ), TC-07 (nhiên liệu), TC-18 (va chạm).
 
@@ -549,3 +561,9 @@ Hiện không còn câu hỏi mở. Các giả định **[GĐ]** khác trong tà
 | Phản hồi demo 5 | Ít biển báo hơn, bỏ hiển thị vùng đỗ, ký hiệu ▲/▼ trên mini map (D-27, D-28) | 1.2 |
 | Q-55 | Màn hình danh sách màn theo PA3 (chương bên trái, đường leo trong chương) | 1.3 |
 | Q-59 | Popup tạm dừng PA3, chỉ biểu tượng không có chữ; bỏ "Pause ẩn bản đồ" | 1.4 |
+| YT-01 | Chương 2 xây dựng dần (D-32) | 1.5 |
+| Phản hồi demo 6 | Bản đồ lớn phóng to/thu nhỏ/kéo có giới hạn (D-33); màn chuẩn bị gọn cho điện thoại — 3 phương án chờ chọn (Q-63) | 1.6 |
+| Q-63 | Màn chuẩn bị theo PA2 — nhiệm vụ ghi ngay trên bản đồ (D-34) | 1.7 |
+| Q-61 | Thu nhỏ tối đa = toàn bộ bản đồ; phóng to tối đa phải to hơn lúc lái xe (demo: gấp 2) | 1.8 |
+| Q-62 | Mỗi lần mở bản đồ lớn về toàn cảnh | 1.8 |
+| Q-64 | Chữ tối thiểu 12px, nút tối thiểu ~44px — chuẩn chung mọi màn hình | 1.8 |
