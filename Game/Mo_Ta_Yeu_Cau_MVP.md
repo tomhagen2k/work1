@@ -2,8 +2,8 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 1.8 — chốt giới hạn phóng bản đồ (Q-61, Q-62) và chuẩn cỡ chữ/nút (Q-64) |
-| Ngày | 14/10/2026 |
+| Phiên bản | 1.9 — bổ sung vật phẩm Thêm giờ và kim cương (D-35 → D-39, mục 17) |
+| Ngày | 15/10/2026 |
 | Nguồn | Tài liệu ý tưởng game (mục 1–21), flowchart vòng chơi, ảnh tham chiếu giao diện, phản hồi xác nhận của BA |
 | Mục đích | Cơ sở tham chiếu để thiết kế giao diện và viết tài liệu (BRD/SRS/GDD). Không thay thế BRD/SRS. |
 | Ý tưởng chờ xem xét | [Y_Tuong_Mo_Rong.md](Y_Tuong_Mo_Rong.md) — chưa phải yêu cầu |
@@ -73,6 +73,11 @@ Thử thách đến từ:
 | D-32 | **Chương 2 · Khu đô thị mới** (thử nghiệm YT-01 phương án B): một bản đồ chung có nhà sẵn, vùng mở rộng dần, mỗi màn thắng hoàn thành một công trình + công trình nhỏ mọc thêm, cảnh quay sau màn hình Hoàn thành, bức tranh toàn khu sau màn cuối; chơi lại hiện đúng trạng thái lúc mới tới màn. Chi tiết: [level_design/Thiet_Ke_Chuong_2.md](level_design/Thiet_Ke_Chuong_2.md). Chương 1 giữ nguyên. | [XN] YT-01, C2-Q1 → Q5 |
 | D-33 | **Bản đồ lớn phóng to / thu nhỏ / kéo** — bản đồ mở từ mini map khi đang chơi, và bản đồ ở màn chuẩn bị. Kéo một ngón để di chuyển khung nhìn; chụm/mở hai ngón, con lăn chuột hoặc nút **＋ / −** để phóng; nút **⤢** về khung nhìn ban đầu. **Giới hạn:** thu nhỏ nhất = thấy toàn bộ bản đồ; phóng to nhất = **to hơn lúc lái xe** — demo đặt gấp 2 lần tỉ lệ khi lái xe (tham số cấu hình `MAX_ZOOM`, [GĐ] giá trị 2); không kéo được ra khỏi bản đồ; nút đã chạm giới hạn hiện mờ. Ký hiệu điểm (▲ kho vuông / ● điểm giao tròn, trạng thái theo D-28), tên điểm và vị trí xe **giữ cỡ cố định trên màn hình** nên đọc được ở mọi mức phóng. Khi thu nhỏ, đường đặc biệt được tô màu giống mini map; phóng to dần thì lớp màu mờ đi để thấy hình thật của đường và biển báo. Chú giải loại đường: chạm để xem mô tả. Mỗi lần mở bắt đầu từ khung nhìn ban đầu: toàn bộ bản đồ (Chương 2: vùng đang thông xe). Ảnh mẫu: [mockups/ban_do_lon_toan_canh.png](mockups/ban_do_lon_toan_canh.png), [mockups/ban_do_lon_phong_to.png](mockups/ban_do_lon_phong_to.png). | [XN] phản hồi BA 14/10, Q-61, Q-62 |
 | D-34 | **Màn chuẩn bị (PA2):** bản đồ chiếm phần lớn màn hình (phóng to/thu nhỏ/kéo theo D-33); **nhiệm vụ ghi ngay dưới điểm giao** trên bản đồ: tên điểm (kèm "· công trình" ở Chương 2), mỗi nhiệm vụ một dòng "×số kiện từ <nơi lấy>", nhiệm vụ có hạn ghi thêm "· hạn mm:ss" màu đỏ. Khối chữ **tự chọn chỗ đặt** (dưới / trên / phải / trái ký hiệu) để không chồng lên nhau và không tràn ra ngoài khung; tính lại khi phóng/kéo. Cột phải hẹp: màn · chương, thời gian tổng, tên màn, xe (màn nhiều xe: nút chọn xe + đặc tính xe đang chọn), nút Trang chủ (biểu tượng) và **Bắt đầu**. Dưới bản đồ: chú giải loại đường + nút phóng. Bỏ danh sách nhiệm vụ dạng chữ và câu giới thiệu màn (đã có ở thẻ màn tại trang chủ). Ảnh: [mockups/demo_chuan_bi_man10.png](mockups/demo_chuan_bi_man10.png), [mockups/demo_chuan_bi_man9.png](mockups/demo_chuan_bi_man9.png). | [XN] Q-63 |
+| D-35 | **Vật phẩm & kim cương đưa vào MVP.** Demo: thanh toán **mô phỏng** (không trừ tiền thật). Chi tiết mục 17. | [XN] VP-Q1, phản hồi BA 15/10 (M1) |
+| D-36 | **Hết thời gian tổng → gợi ý Thêm giờ (+30 giây)** thay vì thua ngay: dùng vật phẩm có sẵn, mua bằng 20 kim cương, hoặc mua kim cương; **tối đa 2 lần mỗi lượt chơi**. Chấp nhận việc màn dễ trở nên dễ qua khi dùng vật phẩm (vật phẩm chủ yếu dành cho màn khó). | [XN] VP-Q2, luồng mục 4, M2 |
+| D-37 | Thắng có dùng Thêm giờ: vẫn **Đạt**, mở màn sau, **lưu thời gian** như bình thường. | [XN] VP-Q3 |
+| D-38 | **Kim cương:** +5 khi thắng màn; gói nạp 20.000đ → 100 · **50.000đ → 275** · 100.000đ → 600 · 500.000đ → 3.500. Vật phẩm Thêm giờ giá 20 kim cương. | [XN] / bảng giá theo đề xuất |
+| D-39 | Mua thành công → **lưu kim cương và vật phẩm trên máy người dùng**. | [XN] M3 — rủi ro xem 17.5 |
 | D-08 | Nhiên liệu/pin, gia tốc, phanh: ngoài MVP. | [XN] |
 | D-09 | Giao thông xác định, dự đoán được (chỉ còn yếu tố tĩnh: hạn chế loại xe, ngõ cụt). | [XN] / D-21, D-22 |
 | D-10 | Màn thiết kế thủ công, kiểm tra khả năng hoàn thành trước khi phát hành. | [XN] |
@@ -336,12 +341,12 @@ PASS = all_missions_completed
 
 | Mã | Điều kiện thua | Nguồn |
 |---|---|---|
-| F-01 | Hết thời gian tổng, còn nhiệm vụ chưa hoàn thành | [XN] |
+| F-01 | Hết thời gian tổng, còn nhiệm vụ chưa hoàn thành — **trước khi thua hiện gợi ý Thêm giờ** (D-36); chọn "Chịu thua" hoặc đã dùng đủ 2 lần → thua | [XN] |
 | F-02 | Nhiệm vụ quá thời hạn riêng | [XN] |
 | F-03 | Khách bị hủy (hết thời gian chờ đón) | [XN] |
 | F-04 | Không còn khả năng hoàn thành (chỉ khi xác định chắc chắn) | [XN] |
 
-- Trạng thái: `READY → PLAYING ⇄ PAUSED / MAP_VIEW / ASKING → WON / LOST → RESULTS → (RESTARTING → READY)` **[XN]**
+- Trạng thái: `READY → PLAYING ⇄ PAUSED / MAP_VIEW / ASKING / TIME_UP → WON / LOST → RESULTS → (RESTARTING → READY)` **[XN]** — `TIME_UP`: đồng hồ dừng, hiện gợi ý Thêm giờ (D-36)
 - Chơi lại: khôi phục thời gian, xe xuất phát (hủy mọi lần đổi xe), sức chứa, nhiệm vụ, đèn; không xóa màn đã mở khóa và thời gian tốt nhất. **[XN]**
 - Thời gian tốt nhất: lưu khi Đạt và tốt hơn kỷ lục cũ; lưu theo màn, không phân biệt xe **[GĐ]**; không tính thời gian Pause/bản đồ lớn **[SL]**.
 
@@ -389,7 +394,15 @@ PASS = all_missions_completed
 | ID | Câu hỏi | Đề xuất của Claude |
 |---|---|---|
 
-Hiện không còn câu hỏi mở. Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
+| VP-Q4 | Thêm giờ có cứu đơn **trễ hạn riêng** (F-02) không? | Không — chỉ cứu hết thời gian tổng (đang làm theo **[GĐ]**) |
+| VP-Q5 | Có cho dùng Thêm giờ **chủ động** khi chưa hết giờ? | Không (đang làm theo **[GĐ]**) |
+| VP-Q6 | Có kho vật phẩm? Nhận vật phẩm ngoài mua? | Có kho; **tặng 1 vật phẩm ở lần hết giờ đầu tiên** (đang làm theo **[GĐ]**) |
+| VP-Q7 | Sau này có thêm loại vật phẩm khác? | Thiết kế cửa hàng/kho dạng danh sách để thêm dễ |
+| VP-Q8 | +5 kim cương mỗi lần thắng hay **chỉ lần đầu** thắng mỗi màn? | Chỉ lần đầu — chống cày màn dễ (đang làm theo **[GĐ]**) |
+| VP-Q9 | Tặng kim cương khi mới chơi? | Chưa tặng (bản thử bắt đầu 0 kim cương) |
+| VP-Q11 | Số kim cương hiện ở đâu? | Trang chủ (góc trên phải, chạm mở cửa hàng), màn kết quả, popup hết giờ; **không hiện trên màn chơi** (đang làm theo **[GĐ]**) |
+
+Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 
 ---
 
@@ -408,9 +421,9 @@ Hiện không còn câu hỏi mở. Các giả định **[GĐ]** khác trong tà
 | 7.1 | Gia tốc, phanh, nhiên liệu | Bỏ khỏi MVP |
 | 8.2 | Đường tắc nghẽn mô phỏng bằng xe | Chỉ dùng hệ số tốc độ |
 | 8.6 | Va chạm | **Hoãn** cùng xe NPC, chướng ngại |
-| 10.2–10.4 | Điểm, sao, phần thưởng tiền tệ | **Bỏ**; thay bằng thời gian tốt nhất |
+| 10.2–10.4 | Điểm, sao, phần thưởng tiền tệ | Điểm, sao: **bỏ** (thay bằng thời gian tốt nhất). Phần thưởng tiền tệ: **thay** bằng kim cương (D-38) |
 | 12.3 | Màn hình thắng có điểm, sao, va chạm | Sửa theo UI-05 |
-| 13, 14 | Bảng xếp hạng, kinh tế trong game | Sau MVP; xếp hạng theo thời gian hoàn thành |
+| 13, 14 | Bảng xếp hạng, kinh tế trong game | Bảng xếp hạng: sau MVP. Kinh tế: **kim cương + vật phẩm Thêm giờ vào MVP** (D-35) |
 | 16 | "Điểm số, hệ thống sao và lưu thành tích" | Đổi thành "Kết quả Đạt/Không đạt, lưu tiến trình và thời gian tốt nhất" |
 | 18 | Điều khiển lập tuyến trước | **Thay** bằng D-01, D-02 |
 | 21 | Nút tăng tốc, giảm tốc | **Bỏ** |
@@ -431,8 +444,9 @@ Hiện không còn câu hỏi mở. Các giả định **[GĐ]** khác trong tà
 - [ ] Kết quả Đạt/Không đạt, nguyên nhân thua rõ ràng, Chơi lại
 - [ ] Lưu tiến trình và thời gian tốt nhất mỗi màn
 - [ ] Khoảng 10 màn thiết kế và kiểm thử thủ công
+- [ ] Kim cương, vật phẩm Thêm giờ, gợi ý khi hết giờ, cửa hàng (demo: thanh toán mô phỏng) — D-35 → D-39
 
-**Ngoài MVP:** xe NPC, chướng ngại, va chạm, nhiên liệu/pin, điểm & sao, nhiệm vụ phụ, nhiều xe, giao thông ngẫu nhiên, bản đồ tự sinh, bảng xếp hạng, cửa hàng, sự kiện trực tuyến.
+**Ngoài MVP:** xe NPC, chướng ngại, va chạm, nhiên liệu/pin, điểm & sao, nhiệm vụ phụ, nhiều xe, giao thông ngẫu nhiên, bản đồ tự sinh, bảng xếp hạng, thanh toán thật & tài khoản/lưu trực tuyến, sự kiện trực tuyến.
 
 ---
 
@@ -496,6 +510,20 @@ Hiện không còn câu hỏi mở. Các giả định **[GĐ]** khác trong tà
 | TC-57 | Màn chuẩn bị của màn có 4 nhiệm vụ + 3 xe, khung 844×390 | Nút Bắt đầu và Trang chủ hiện đủ, không bị cắt; chữ ≥ 12px | UI-01, UI-14 |
 | TC-58 | Màn chuẩn bị có nhiều điểm giao gần nhau (vd màn 9: Bệnh viện 2 nhiệm vụ, Khu nhà ở sát mép dưới) | Mỗi điểm giao hiện đủ tên, số kiện, nơi lấy, hạn; các khối chữ không chồng nhau, không bị che bởi chú giải | D-34 |
 | TC-59 | Ở màn chuẩn bị, phóng to rồi thu nhỏ | Khối chữ đổi chỗ đặt khi cần để vẫn không chồng nhau | D-34 |
+| TC-60 | Hết thời gian tổng, còn đơn chưa giao, chưa dùng Thêm giờ lần nào | Đồng hồ dừng; hiện popup "Hết giờ!" kèm số đơn/kiện còn lại; chưa chuyển màn Không đạt | D-36 |
+| TC-61 | Hết giờ lần đầu tiên từ khi cài game, kho vật phẩm trống | Được tặng 1 vật phẩm; nút chính "Dùng +30 giây" | VP-Q6 [GĐ] |
+| TC-62 | Chọn "Dùng +30 giây" | Kho −1; đồng hồ +30 giây; xe chạy tiếp từ đúng trạng thái cũ | D-36 |
+| TC-63 | Không có vật phẩm, có ≥ 20 kim cương | Nút chính "Mua & dùng +30 giây · 20"; chọn → −20 kim cương, +30 giây | D-36, D-38 |
+| TC-64 | Không có vật phẩm, < 20 kim cương | Nút chính "Mua kim cương" → mở cửa hàng; đồng hồ vẫn dừng; mua xong quay lại popup | D-36 |
+| TC-65 | Đã dùng 2 lần Thêm giờ, hết giờ lần nữa | Thua ngay (F-01), ghi rõ đã dùng 2/2 lần | D-36 |
+| TC-66 | Chọn "Chịu thua" | Màn Không đạt (F-01) | D-36 |
+| TC-67 | Đơn quá hạn riêng khi còn vật phẩm | Thua ngay (F-02), không gợi ý Thêm giờ | VP-Q4 [GĐ] |
+| TC-68 | Thắng màn lần đầu | +5 kim cương, hiện ở màn kết quả | D-38, VP-Q8 [GĐ] |
+| TC-69 | Thắng lại màn đã thắng | Không nhận thêm kim cương | VP-Q8 [GĐ] |
+| TC-70 | Thắng có dùng Thêm giờ | Đạt, mở màn sau, lưu thời gian; màn kết quả ghi "Đã thêm giờ ×n" | D-37 |
+| TC-71 | Mua gói kim cương (mô phỏng), xác nhận | Cộng đúng số kim cương của gói; số dư lưu trên máy, mở lại game vẫn còn | D-38, D-39 |
+| TC-72 | Mua gói, chọn Hủy ở bước xác nhận | Không cộng kim cương | D-38 |
+| TC-73 | Mua vật phẩm ở cửa hàng khi < 20 kim cương | Không mua được, báo "Chưa đủ kim cương" | D-38 |
 
 > Đã bỏ: TC-06 (nhiệm vụ phụ), TC-07 (nhiên liệu), TC-18 (va chạm).
 
@@ -567,3 +595,62 @@ Hiện không còn câu hỏi mở. Các giả định **[GĐ]** khác trong tà
 | Q-61 | Thu nhỏ tối đa = toàn bộ bản đồ; phóng to tối đa phải to hơn lúc lái xe (demo: gấp 2) | 1.8 |
 | Q-62 | Mỗi lần mở bản đồ lớn về toàn cảnh | 1.8 |
 | Q-64 | Chữ tối thiểu 12px, nút tối thiểu ~44px — chuẩn chung mọi màn hình | 1.8 |
+| VP-Q1 → Q3, M1 → M3 | Vật phẩm Thêm giờ & kim cương vào MVP, thanh toán mô phỏng ở demo; tối đa 2 lần/lượt; thắng nhờ vật phẩm vẫn Đạt và lưu thời gian; gói 50k → 275; lưu dữ liệu trên máy | 1.9 |
+
+---
+
+## 17. Vật phẩm & kim cương (D-35 → D-39)
+
+Bản thử: [mockups/proto_trai_nghiem.html](mockups/proto_trai_nghiem.html) — ảnh [hết giờ, có vật phẩm](mockups/tn_het_gio_dung_vat_pham.jpg) · [hết giờ, thiếu kim cương](mockups/tn_het_gio_mua_kim_cuong.jpg) · [cửa hàng](mockups/tn_cua_hang.jpg).
+
+### 17.1. Tham số (giá trị khởi tạo, chỉnh qua cấu hình)
+
+| Tham số | Giá trị | Nguồn |
+|---|---|---|
+| Vật phẩm Thêm giờ | +30 giây vào đồng hồ tổng | [XN] |
+| Giá vật phẩm | 20 kim cương | [XN] |
+| Số lần Thêm giờ tối đa mỗi lượt chơi | 2 | [XN] VP-Q2 |
+| Thưởng thắng màn | 5 kim cương — chỉ lần đầu thắng mỗi màn | [XN] 5 kim cương / [GĐ] chỉ lần đầu (VP-Q8) |
+
+### 17.2. Gói kim cương
+
+| Giá | Kim cương | Thêm so với gói nhỏ nhất | Nguồn |
+|---|---|---|---|
+| 20.000đ | 100 | — | [XN] |
+| 50.000đ | **275** | +10% | [XN] theo đề xuất |
+| 100.000đ | 600 | +20% | [XN] |
+| 500.000đ | 3.500 | +40% (nhãn "Lợi nhất") | [XN] |
+
+> Giá thật phải khớp bậc giá của App Store / Google Play; nền tảng thu phí trên mỗi giao dịch. **[SL]**
+
+### 17.3. Gợi ý khi hết giờ
+
+| ID | Yêu cầu | Nguồn |
+|---|---|---|
+| VP-01 | Đồng hồ tổng về 0:00, còn đơn chưa giao, số lần Thêm giờ đã dùng < 2 → **dừng thời gian**, hiện popup "Hết giờ!" ghi số đơn và số kiện còn lại. | [XN] D-36 |
+| VP-02 | Nút chính theo thứ tự ưu tiên: có vật phẩm → **"Dùng +30 giây"** (ghi số đang có); không có vật phẩm nhưng đủ 20 kim cương → **"Mua & dùng +30 giây · 20"**; không đủ → **"Mua kim cương"** (mở cửa hàng, thời gian vẫn dừng, mua xong quay lại popup). Nút phụ **"Chịu thua"** → Không đạt (F-01). | [XN] luồng mục 4 |
+| VP-03 | Cuối popup ghi số kim cương, số vật phẩm và "Thêm giờ lần n/2". | [GĐ] |
+| VP-04 | Dùng xong: đồng hồ +30 giây, đóng popup, chơi tiếp từ đúng trạng thái cũ (xe, hàng, lệnh rẽ không đổi). | [SL] |
+| VP-05 | Đã dùng đủ 2 lần → hết giờ là thua ngay, lý do ghi rõ đã dùng 2/2 lần. | [XN] D-36 |
+| VP-06 | Đơn quá hạn riêng (F-02) **không** được cứu bằng Thêm giờ. | [GĐ] VP-Q4 |
+| VP-07 | Lần hết giờ đầu tiên (từ khi cài game) được **tặng 1 vật phẩm**. | [GĐ] VP-Q6 |
+| VP-08 | Không dùng Thêm giờ chủ động khi chưa hết giờ. | [GĐ] VP-Q5 |
+
+### 17.4. Kim cương, kho vật phẩm, cửa hàng
+
+| ID | Yêu cầu | Nguồn |
+|---|---|---|
+| VP-10 | Trang chủ hiện số kim cương và số vật phẩm ở góc trên phải; chạm → mở cửa hàng. Màn chơi **không** hiện số kim cương. | [GĐ] VP-Q11 |
+| VP-11 | Cửa hàng: 4 gói kim cương (mục 17.2) và vật phẩm Thêm giờ (mua bằng 20 kim cương, vào kho). | [XN] / [GĐ] có kho |
+| VP-12 | Mua gói: bước xác nhận → thành công cộng kim cương. Demo: **thanh toán mô phỏng**, ghi rõ không trừ tiền thật. | [XN] D-35 |
+| VP-13 | Màn kết quả khi thắng: hiện "+5 kim cương thưởng lần đầu" (nếu có) và "Đã thêm giờ ×n" (nếu có). | [GĐ] |
+| VP-14 | Kim cương, vật phẩm, danh sách màn đã nhận thưởng **lưu trên máy** người dùng. | [XN] D-39 |
+
+### 17.5. Rủi ro khi lưu trên máy (D-39)
+
+| Rủi ro | Mức | Cách giảm (khi làm bản phát hành thật) |
+|---|---|---|
+| Gỡ game, đổi máy, xóa dữ liệu → **mất kim cương đã mua**; cửa hàng ứng dụng không tự khôi phục hàng tiêu hao | Cao (dễ bị khiếu nại, hoàn tiền) | Đồng bộ qua lưu trữ đám mây của nền tảng (iCloud, Google Play Games) hoặc tài khoản riêng |
+| Dữ liệu trên máy dễ bị chỉnh sửa để có kim cương miễn phí | Trung bình | Xác thực giao dịch (tối thiểu trên máy, tốt hơn qua máy chủ); mã hóa dữ liệu lưu |
+| Quy định phát hành game có thanh toán tại Việt Nam | Cần kiểm tra | Bộ phận pháp lý xác nhận trước khi phát hành |
+

@@ -88,7 +88,7 @@
   .chp .soonTag{float:right;font-size:9px;background:#868e96;color:#fff;border-radius:6px;padding:1px 5px}
   #hMap{position:absolute;left:200px;top:0;width:644px;height:390px}
   #hMap .nd{cursor:pointer}
-  #hCard{position:absolute;right:12px;top:40px;width:214px;padding:11px 12px;display:flex;flex-direction:column;gap:4px}
+  #hCard{position:absolute;right:12px;top:56px;width:214px;padding:11px 12px;display:flex;flex-direction:column;gap:4px}
   #hCard .n{font-size:10px;font-weight:900;color:#1c7ed6}
   #hCard .t{font-size:16px;font-weight:900;line-height:1.15}
   #hCard .d{font-size:11px;font-weight:800;color:#6b7686;line-height:1.35}
@@ -258,6 +258,47 @@
   #pick{position:fixed;left:50%;bottom:2px;transform:translateX(-50%);z-index:200;background:rgba(20,28,38,.88);color:#fff;border-radius:10px;padding:3px 6px;font:800 10px Nunito,sans-serif;display:flex;gap:4px;align-items:center;border:1px dashed #ffd84d;white-space:nowrap}
   #pick button{font:900 10px Nunito,sans-serif;border:0;border-radius:7px;padding:2px 6px;background:#3a4350;color:#fff;cursor:pointer;white-space:nowrap}
   #pick button.on{background:#ffd84d;color:#1d2733}
+
+  /* ===== BẢN THỬ: kim cương & vật phẩm Thêm giờ ===== */
+  .gem{width:16px;height:16px;flex:none;vertical-align:-3px}
+  #wallet{position:absolute;right:12px;top:8px;z-index:6;min-height:40px;display:flex;gap:10px;align-items:center;background:rgba(20,28,38,.88);color:#fff;border-radius:20px;padding:4px 6px 4px 12px;font-size:15px;font-weight:900;box-shadow:0 3px 0 rgba(0,0,0,.2)}
+  #wallet .it{display:flex;align-items:center;gap:4px}
+  #wallet .pl{width:30px;height:30px;border-radius:50%;background:#37c26b;display:grid;place-items:center;font-size:20px;line-height:1}
+  #tov{background:rgba(15,20,28,.45);align-items:center;justify-content:center}
+  .tp{width:390px;padding:16px 20px 14px;border-radius:24px;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 8px 28px rgba(0,0,0,.3);text-align:center;color:#2d3440;display:flex;flex-direction:column;gap:10px;align-items:stretch}
+  .tp .tt{font-size:26px;font-weight:900;color:#e03131}
+  .tp .ts{font-size:14px;font-weight:800;color:#495057}
+  .tp .cta{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px}
+  .tp .cta small{font-size:12px;font-weight:900;opacity:.9;display:flex;align-items:center;gap:3px;background:rgba(0,0,0,.15);border-radius:9px;padding:2px 7px}
+  .cta.gold small{background:rgba(0,0,0,.12)}
+  .tp .tf{font-size:12.5px;font-weight:800;color:#6b7686;display:flex;gap:6px;justify-content:center;align-items:center}
+  #shopv{z-index:40;background:rgba(15,20,28,.45);align-items:center;justify-content:center}
+  .sp{width:680px;max-height:370px;border-radius:22px;background:#fff;box-shadow:0 8px 28px rgba(0,0,0,.3);padding:10px 14px 12px;display:flex;flex-direction:column;gap:8px;color:#2d3440}
+  .wbal{display:flex;gap:10px;align-items:center;font-size:15px;font-weight:900;background:#f1f3f5;border-radius:14px;padding:5px 12px}
+  .wbal span{display:flex;gap:4px;align-items:center}
+  .shh{font-size:12px;font-weight:900;color:#7b8494;letter-spacing:.4px}
+  .packs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .pack{position:relative;border:2px solid #e9ecef;border-radius:16px;padding:12px 8px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;background:linear-gradient(#f3fbff,#fff)}
+  .pack .g svg{width:34px;height:34px}
+  .pack b{font-size:20px;font-weight:900}
+  .pack .bon{position:absolute;top:-9px;right:8px;background:#e03131;color:#fff;font-size:11px;font-weight:900;border-radius:8px;padding:1px 7px}
+  .pack .best{position:absolute;top:-9px;left:8px;background:#f59f00;color:#fff;font-size:11px;font-weight:900;border-radius:8px;padding:1px 7px}
+  .pack .cta{width:100%;min-height:40px;padding:6px 4px;font-size:14px}
+  .itemr{display:flex;align-items:center;gap:12px;border:2px solid #e9ecef;border-radius:16px;padding:8px 10px}
+  .itemr .ii{width:44px;height:44px;border-radius:12px;background:#fff3bf;display:grid;place-items:center;font-size:24px}
+  .itemr b{display:block;font-size:15px;font-weight:900}.itemr small{display:block;font-size:12px;font-weight:800;color:#6b7686}
+  .itemr .cta{margin-left:auto;display:flex;gap:4px;align-items:center;min-height:44px}
+  .snote{font-size:12px;font-weight:800;color:#6b7686;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .snote a{color:#1c7ed6;cursor:pointer;text-decoration:underline}
+  #payv{z-index:50;background:rgba(15,20,28,.5);align-items:center;justify-content:center}
+  .pay{width:330px;background:#fff;border-radius:20px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center;color:#2d3440}
+  .pay b{font-size:17px;font-weight:900}.pay small{font-size:12px;font-weight:800;color:#e8590c}
+  .pay #payT{font-size:15px;font-weight:900;display:flex;gap:6px;align-items:center}
+  .pay .btnrow .cta{min-height:44px}
+  #toast{position:absolute;left:50%;top:10px;transform:translateX(-50%) translateY(-10px);z-index:60;background:rgba(20,28,38,.92);color:#fff;font-size:14px;font-weight:900;border-radius:14px;padding:8px 14px;opacity:0;pointer-events:none;transition:.25s;display:flex;gap:6px;align-items:center}
+  #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+  #timer.plus{background:#2b8a3e!important;transition:background .3s}
+  .rw{background:#e7f5ff;color:#1864ab;border-radius:8px;padding:2px 8px;font-size:12px;font-weight:900;display:inline-flex;gap:4px;align-items:center}
   #rotate{display:none;position:fixed;inset:0;background:#1b1f24;color:#fff;z-index:99;align-items:center;justify-content:center;text-align:center;font-weight:900;font-size:18px;padding:30px}
   @media (orientation:portrait) and (max-width:700px){#rotate{display:flex}}
 </style>
@@ -291,6 +332,7 @@
     <div id="hLeft"><div class="brand">Giao Hàng<small>BẢN DEMO</small></div><div id="chList" style="display:flex;flex-direction:column;gap:8px"></div></div>
     <svg id="hMap" viewBox="0 0 644 390"></svg>
     <div class="panel" id="hCard"></div>
+    <button id="wallet" aria-label="Kim cương và vật phẩm"></button>
   </div>
 
   <div class="ov" id="prep">
@@ -314,6 +356,11 @@
   </div>
 
   <div class="ov" id="infov"><div class="ip"><div class="ih"><b id="iTitle"></b><span class="itag" id="iTag"></span><button class="rb sm ix" id="bInfoX" aria-label="Đóng"><svg viewBox="0 0 28 28"><path d="M8 8 L20 20 M20 8 L8 20"/></svg></button></div><div class="ib" id="iBody"></div></div></div>
+
+  <div class="ov" id="tov"><div class="tp"><div class="tt">⏰ Hết giờ!</div><div class="ts" id="toLeft"></div><div style="display:flex;flex-direction:column;gap:8px" id="toBtns"></div><div class="tf" id="toFoot"></div></div></div>
+  <div class="ov" id="shopv"><div class="sp"><div class="ih"><b>🛒 Cửa hàng</b><span class="wbal" id="sBal"></span><button class="rb sm ix" id="bShopX" aria-label="Đóng"><svg viewBox="0 0 28 28"><path d="M8 8 L20 20 M20 8 L8 20"/></svg></button></div><div id="sBody" style="display:flex;flex-direction:column;gap:8px"></div></div></div>
+  <div class="ov" id="payv"><div class="pay"><b>Thanh toán mô phỏng</b><div id="payT"></div><small>Bản thử — không trừ tiền thật</small><div class="btnrow"><button class="cta alt" id="bPayNo">Hủy</button><button class="cta" id="bPayYes">Xác nhận</button></div></div></div>
+  <div id="toast"></div>
 
   <div class="ov" id="result">
     <div class="panel"><h2 id="rTitle"></h2><div class="why" id="rWhy"></div><div class="st" id="rStat"></div><div id="rRec"></div>
@@ -744,7 +791,7 @@ function step(dt){
   }
   if(G.M.every(m=>m.delivered>=m.qty))return end(true);
   for(const m of G.M)if(m.dl&&G.t>m.dl&&m.delivered<m.qty)return end(false,`Đơn ${m.src} → ${m.name} đã quá hạn ${fmt(m.dl)} (mới giao ${m.delivered}/${m.qty} kiện).`);
-  if(G.t>=LV.T0){G.t=LV.T0;return end(false,`Hết thời gian. Còn ${G.M.filter(m=>m.delivered<m.qty).map(m=>m.name).join(', ')} chưa giao đủ.`);}
+  if(G.t>=T0()){G.t=T0();if((G.ext||0)<MAX_EXT){timeUp();return;}return end(false,`Hết thời gian (đã dùng ${MAX_EXT}/${MAX_EXT} lần thêm giờ). Còn ${G.M.filter(m=>m.delivered<m.qty).map(m=>m.name).join(', ')} chưa giao đủ.`);}
 }
 function getBest(i){try{const v=parseFloat(localStorage.getItem(`demo_best_L${i+1}`));return isNaN(v)?null:v;}catch(e){return null;}}
 function end(win,why){
@@ -752,8 +799,8 @@ function end(win,why){
   if(win&&(best===null||t<best)){rec=true;best=t;try{localStorage.setItem(`demo_best_L${LVI+1}`,t);}catch(e){}}
   $('rTitle').textContent=win?'Hoàn thành!':'Không đạt';$('rTitle').style.color=win?'#2b8a3e':'#2d3440';
   $('rWhy').textContent=win?'':why;
-  $('rStat').textContent=win?`${V().name} · thời gian ${fmt(t)} · còn lại ${fmt(LV.T0-t)}`:`${V().name} · đã chơi ${fmt(t)}`;
-  $('rRec').innerHTML=win?`<span class="rec">${rec?'Kỷ lục mới: ':'Tốt nhất: '}${fmt(best)}</span>`:'';
+  $('rStat').textContent=win?`${V().name} · thời gian ${fmt(t)} · còn lại ${fmt(T0()-t)}`:`${V().name} · đã chơi ${fmt(t)}`;
+  $('rRec').innerHTML=(win?`<span class="rec">${rec?'Kỷ lục mới: ':'Tốt nhất: '}${fmt(best)}</span>`:'')+winReward(win);
   const cut=win&&LV.chapter===2;$('bCut').style.display=cut?'':'none';
   show('result');
   if(cut){const tok=G;setTimeout(()=>{if(G===tok&&G.state==='won'&&$('result').classList.contains('on'))startCut();},2200);}
@@ -835,7 +882,7 @@ function render(){
   for(const z of ZONES){const r=mmZ[z.id];if(!r)continue;const st=zState(z);
     if(st!==r.state){r.state=st;r.shape.setAttribute('fill',st==='done'?'#adb5bd':r.col);r.ring.setAttribute('opacity',st==='carry'?1:0);
       r.gl.setAttribute('opacity',st==='done'?0:1);r.ok.setAttribute('opacity',st==='done'?1:0);}}mmCar.setAttribute('cx',d.x);mmCar.setAttribute('cy',d.y);
-  const left=LV.T0-G.t;$('timer').innerHTML=`${I.clock}${fmt(left)}`;$('timer').classList.toggle('warn',left<=10&&G.state==='play');
+  const left=T0()-G.t;$('timer').innerHTML=`${I.clock}${fmt(left)}`;$('timer').classList.toggle('warn',left<=10&&G.state==='play');
   renderMissions();
   const v=G.state==='play'?validDirs():{};
   const hd=G.state==='wait'?heading(c.from,c.to):null;
@@ -862,7 +909,7 @@ function renderAsk(){
 }
 
 /* ======================= Trang chủ & chuẩn bị ======================= */
-function show(id){['home','prep','mapv','pausev','result','cutv','infov'].forEach(o=>$(o).classList.toggle('on',o===id));
+function show(id){['home','prep','mapv','pausev','result','cutv','infov','tov'].forEach(o=>$(o).classList.toggle('on',o===id));
   if(id==='prep')prepView();if(id==='mapv')vPlay.refresh('play',[0,52,0,146]);}
 let HCH=0,HSEL=null;
 function renderHome(){
@@ -1036,7 +1083,7 @@ function buildMarks(v,og,mode){
 }
 function startGame(){G.state='wait';show(null);} // BẢN THỬ: vào màn xe đứng yên, chờ nhấn mũi tên cùng hướng đầu xe
 let pendingAct=null;
-function pauseUI(){$('pText').textContent=pendingAct?'Bỏ lượt đang chơi?':`⏸ Đã tạm dừng · còn ${fmt(LV.T0-G.t)}`;
+function pauseUI(){$('pText').textContent=pendingAct?'Bỏ lượt đang chơi?':`⏸ Đã tạm dừng · còn ${fmt(T0()-G.t)}`;
   $('pMain').style.display=pendingAct?'none':'';$('pConfirm').style.display=pendingAct?'':'none';}
 function pauseGame(){if(G.state!=='play'&&G.state!=='wait')return;G.prevS=G.state;G.state='paused';pendingAct=null;pauseUI();show('pausev');}
 function askConfirm(fn){pendingAct=fn;pauseUI();}
@@ -1066,6 +1113,7 @@ $('askO').addEventListener('pointerdown',e=>{const b=e.target.closest('button');
 addEventListener('keydown',e=>{
   if(!G)return;const k=e.key;
   if(G.state==='ready'&&(k==='Enter'||k===' ')){startGame();return;}
+  if(G.state==='timeout'){if(k==='Enter'){const b=$('toBtns').querySelector('button');b&&toAct(b.dataset.to);}e.preventDefault();return;}
   if(G.state==='info'){if(k==='Escape'||k==='Enter')closeInfo();else if(INFO.kind==='help'&&HV==='A'&&(k==='ArrowLeft'||k==='ArrowRight')){hCard=Math.max(0,Math.min(HSEC().length-1,hCard+(k==='ArrowLeft'?-1:1)));renderInfo();}e.preventDefault();return;}
   if((G.state==='play'||G.state==='wait')&&(k==='n'||k==='N')){openInfo('mis');return;}
   if((G.state==='play'||G.state==='wait')&&(k==='h'||k==='H'||k==='?')){openInfo('help');return;}
@@ -1145,7 +1193,8 @@ function HSEC(){const lv=LV,tot=G.M.reduce((s,m)=>s+m.qty,0),used=[...new Set(E.
   {id:'road',ic:IC.road,t:'Loại đường',body:()=>roadTable()},
   {id:'time',ic:IC.clock,t:'Thời gian',ill:'time',body:()=>`<div class="hrow"><span class="hi">${IC.clock}</span><span><b>Đồng hồ đếm ngược</b><span>Hết giờ chưa giao đủ là thua. Chỉ chạy khi xe đã xuất phát.</span></span></div>
     <div class="hrow"><span class="hi" style="background:#e03131">⏱</span><span><b>Đơn có hạn ⏱</b><span>Giao xong trước khi "hạn còn" về 0:00.</span></span></div>
-    <div class="hrow"><span class="hi">${I.pause}</span><span><b>Đồng hồ đứng yên khi</b><span>Tạm dừng, xem bản đồ, nhiệm vụ, hướng dẫn, bảng hỏi.</span></span></div>`}];}
+    <div class="hrow"><span class="hi">${I.pause}</span><span><b>Đồng hồ đứng yên khi</b><span>Tạm dừng, xem bản đồ, nhiệm vụ, hướng dẫn, bảng hỏi.</span></span></div>
+    <div class="hrow"><span class="hi" style="background:#2b8a3e">+30</span><span><b>Hết giờ</b><span>Dùng vật phẩm ⏱ Thêm 30 giây (tối đa 2 lần mỗi lượt), mua bằng 20 kim cương.</span></span></div>`}];}
 const HELP={
   C:()=>{const S=HSEC(),cur=S.find(x=>x.id===hTab)||S[0];
     return`<div class="tabs"><div class="tl">${S.map(x=>`<button class="tb ${x.id===cur.id?'on':''}" data-tab="${x.id}">${x.ic}${x.t}${x.nw?'<span class="nw">MỚI</span>':''}</button>`).join('')}</div>
@@ -1163,12 +1212,66 @@ const HELP={
       <div class="col3"><h4>${IC.road}Đường & giờ</h4>${used.map(t=>`<div class="li3" style="align-items:center">${legendSVG(t)}<span><b>${ROAD[t].name}:</b> ${ROADDESC[t].toLowerCase()}</span></div>`).join('')}${L('⏱ Hạn:','giao trễ là thua ngay.')}${L('Giờ đứng yên:','khi tạm dừng, xem bản đồ, nhiệm vụ, hướng dẫn, bảng hỏi.')}</div></div>`;}};
 function renderInfo(){const k=INFO.kind;document.querySelector('.ip').classList.toggle('help',k==='help');
   $('iTitle').innerHTML=k==='mis'?`${IC.list}Nhiệm vụ · Màn ${LVI+1} ${LV.name}`:`${IC.help}Cách chơi`;
-  $('iTag').innerHTML=`<svg viewBox="0 0 28 28"><path d="M10 7 V21 M18 7 V21"/></svg>${fmt(LV.T0-G.t)}`;
+  $('iTag').innerHTML=`<svg viewBox="0 0 28 28"><path d="M10 7 V21 M18 7 V21"/></svg>${fmt(T0()-G.t)}`;
   $('iBody').innerHTML=k==='mis'?MIS[MV]():HELP[HV]();renderPick();}
 function renderPick(){const b=(g,v,cur,l)=>`<button data-g="${g}" data-v="${v}" class="${v===cur?'on':''}">${l}</button>`;
   $('pick').innerHTML=`Bản thử · Nhiệm vụ ${b('m','1',MV,'PA1')}${b('m','2',MV,'PA2')}${b('m','3',MV,'PA3')} · Hướng dẫn ${b('h','C',HV,'PA-C')}${b('h','A',HV,'PA-A')}${b('h','B',HV,'PA-B')}`;}
 $('pick').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.g==='m'){MV=t.dataset.v;if(G&&G.state==='info'&&INFO.kind!=='mis'){INFO.kind='mis';}}else{HV=t.dataset.v;hCard=0;if(G&&G.state==='info'&&INFO.kind!=='help'){INFO.kind='help';}}if(G&&G.state==='info')renderInfo();else renderPick();});
 renderPick();
+
+
+/* ======================= BẢN THỬ: kim cương & vật phẩm Thêm giờ ======================= */
+const GEM='<svg class="gem" viewBox="0 0 24 24"><path d="M6 3 H18 L22 9 L12 21 L2 9Z" fill="#4dd4f7"/><path d="M2 9 H22 M9 3 L7 9 L12 21 L17 9 L15 3" fill="none" stroke="#1c94c4" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 3 L7 9 L2 9Z" fill="#a5ecff"/></svg>';
+const PACKS=[{vnd:20000,kc:100},{vnd:50000,kc:275},{vnd:100000,kc:600},{vnd:500000,kc:3500}];
+const ITEM_PRICE=20,ITEM_SEC=30,MAX_EXT=2,WIN_KC=5,WKEY='proto_wallet_v1'; // tham số cấu hình
+const vnd=n=>n.toLocaleString('vi-VN')+'đ';
+function T0(){return LV.T0+((G&&G.bonus)||0);}
+let WAL=(()=>{try{return JSON.parse(localStorage.getItem(WKEY));}catch(e){return null;}})()||{kc:0,time:0,won:{},gift:false};
+function saveW(){try{localStorage.setItem(WKEY,JSON.stringify(WAL));}catch(e){}renderWallet();}
+function renderWallet(){$('wallet').innerHTML=`<span class="it">${GEM}${WAL.kc.toLocaleString('vi-VN')}</span><span class="it">⏱×${WAL.time}</span><span class="pl">+</span>`;}
+let toastT=null;function toast(h){const t=$('toast');t.innerHTML=h;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),1800);}
+// Hết thời gian tổng: dừng giờ, gợi ý thêm giờ (D-36)
+function timeUp(){G.state='timeout';
+  if(!WAL.gift){WAL.gift=true;WAL.time+=1;saveW();setTimeout(()=>toast('🎁 Tặng bạn 1 vật phẩm ⏱ Thêm 30 giây'),150);}
+  renderTO();show('tov');}
+function renderTO(){if(!G||G.state!=='timeout')return;const rem=G.M.filter(m=>m.delivered<m.qty),kien=rem.reduce((s,m)=>s+m.qty-m.delivered,0);
+  $('toLeft').innerHTML=`Còn <b>${rem.length} đơn · ${kien} kiện</b> chưa giao`;
+  const main=WAL.time>0?`<button class="cta" data-to="use">⏱ Dùng +30 giây <small>còn ${WAL.time}</small></button>`
+    :WAL.kc>=ITEM_PRICE?`<button class="cta" data-to="buyuse">⏱ Mua & dùng +30 giây <small>${GEM}${ITEM_PRICE}</small></button>`
+    :`<button class="cta gold" data-to="shop">${GEM} Mua kim cương <small>cần ${ITEM_PRICE}, đang có ${WAL.kc}</small></button>`;
+  $('toBtns').innerHTML=main+`<button class="cta alt" data-to="quit">Chịu thua</button>`;
+  $('toFoot').innerHTML=`<span style="display:flex;gap:3px;align-items:center">${GEM}<b>${WAL.kc}</b></span>·<span>⏱×<b>${WAL.time}</b></span>·<span>Thêm giờ lần ${(G.ext||0)+1}/${MAX_EXT}</span>`;}
+function toAct(a){if(!G||G.state!=='timeout')return;
+  if(a==='shop'){openShop();return;}
+  if(a==='quit'){G.state='play';end(false,`Hết thời gian. Còn ${G.M.filter(m=>m.delivered<m.qty).map(m=>m.name).join(', ')} chưa giao đủ.`);return;}
+  if(a==='buyuse'){if(WAL.kc<ITEM_PRICE)return;WAL.kc-=ITEM_PRICE;WAL.time+=1;}
+  if(WAL.time<=0)return;WAL.time-=1;saveW();
+  G.bonus=(G.bonus||0)+ITEM_SEC;G.ext=(G.ext||0)+1;G.state='play';show(null);
+  toast('⏱ +30 giây');$('timer').classList.add('plus');setTimeout(()=>$('timer').classList.remove('plus'),900);}
+function winReward(win){if(!win)return'';let h='';
+  if(G.ext)h+=` <span class="rw">⏱ Đã thêm giờ ×${G.ext}</span>`;
+  if(!WAL.won[LVI]){WAL.won[LVI]=1;WAL.kc+=WIN_KC;saveW();h+=` <span class="rw">+${WIN_KC} ${GEM} thưởng lần đầu</span>`;}
+  return h;}
+// Cửa hàng
+let payPack=null;
+function openShop(){renderShop();$('shopv').classList.add('on');}
+function closeShop(){$('shopv').classList.remove('on');renderTO();}
+function renderShop(){$('sBal').innerHTML=`<span>${GEM}${WAL.kc.toLocaleString('vi-VN')}</span><span>⏱×${WAL.time}</span>`;
+  $('sBody').innerHTML=`<div class="shh">KIM CƯƠNG</div><div class="packs">${PACKS.map((p,i)=>{const b=Math.round((p.kc/(p.vnd/1000*5)-1)*100);
+      return`<div class="pack">${b>0?`<span class="bon">+${b}%</span>`:''}${i===PACKS.length-1?'<span class="best">Lợi nhất</span>':''}<span class="g">${GEM}</span><b>${p.kc.toLocaleString('vi-VN')}</b><button class="cta" data-pack="${i}">${vnd(p.vnd)}</button></div>`;}).join('')}</div>
+    <div class="shh">VẬT PHẨM</div><div class="itemr"><span class="ii">⏱</span><span><b>Thêm 30 giây</b><small>Dùng khi hết giờ · tối đa ${MAX_EXT} lần mỗi lượt · đang có ${WAL.time}</small></span><button class="cta" data-item="time">Mua ${GEM}${ITEM_PRICE}</button></div>
+    <div class="snote"><span>Thắng một màn lần đầu: +${WIN_KC} ${GEM}</span><a data-reset="1">Đặt lại ví (bản thử)</a></div>`;}
+$('wallet').addEventListener('pointerdown',e=>{e.preventDefault();openShop();});
+tap('bShopX',closeShop);
+$('shopv').addEventListener('pointerdown',e=>{if(e.target.id==='shopv'){e.preventDefault();closeShop();return;}
+  const b=e.target.closest('[data-pack],[data-item],[data-reset]');if(!b)return;e.preventDefault();
+  if(b.dataset.pack){payPack=+b.dataset.pack;const p=PACKS[payPack];$('payT').innerHTML=`Gói ${GEM}${p.kc.toLocaleString('vi-VN')} · ${vnd(p.vnd)}`;$('payv').classList.add('on');}
+  else if(b.dataset.item){if(WAL.kc<ITEM_PRICE){toast(`Chưa đủ kim cương — cần ${ITEM_PRICE}`);return;}WAL.kc-=ITEM_PRICE;WAL.time+=1;saveW();renderShop();toast('Đã mua 1 ⏱ Thêm 30 giây');}
+  else if(b.dataset.reset){WAL={kc:0,time:0,won:{},gift:false};saveW();renderShop();toast('Đã đặt lại ví');}});
+tap('bPayNo',()=>$('payv').classList.remove('on'));
+tap('bPayYes',()=>{const p=PACKS[payPack];WAL.kc+=p.kc;saveW();$('payv').classList.remove('on');renderShop();toast(`Đã nhận ${p.kc.toLocaleString('vi-VN')} ${GEM}`);});
+$('toBtns').addEventListener('pointerdown',e=>{const b=e.target.closest('[data-to]');if(!b)return;e.preventDefault();toAct(b.dataset.to);});
+renderWallet();
 
 /* ======================= Khung hình ======================= */
 function fit(){const s=/real/.test(location.hash)?548/844:Math.min(innerWidth/844,innerHeight/390);$('stage').style.transform=`scale(${s})`;}
