@@ -54,5 +54,24 @@ window.VERSIONS=[
    "10_huong_dan_man4.png"
   ],
   "tag": "demo-v1.2"
+ },
+ {
+  "ver": "1.3",
+  "ngay": "15/10/2026",
+  "tai_lieu": "1.14",
+  "tom_tat": "Chương 2 cho thấy khung cảnh tiến triển — cảnh quay mới, đoạn mở màn, địa danh riêng, cụm nhà mọc, cần cẩu, cảnh kết chương và bưu thiếp; sửa lỗi nút không phản hồi",
+  "anh": [
+   "01_trang_chu.png",
+   "02_trang_chu_chuong2.png",
+   "03_chuan_bi_man4.png",
+   "04_chuan_bi_man10.png",
+   "05_dang_choi_man4.png",
+   "06_ban_do_lon_man10.png",
+   "07_tam_dung_man4.png",
+   "08_hoan_thanh_man7.png",
+   "09_nhiem_vu_man4.png",
+   "10_huong_dan_man4.png"
+  ],
+  "tag": "demo-v1.3"
  }
 ];

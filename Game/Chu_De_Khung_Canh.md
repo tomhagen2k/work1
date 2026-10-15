@@ -2,8 +2,8 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 0.3 — BA đã chốt CĐ-Q1 → Q6 (mục 7); mockup vòng 1 cho 3 chủ đề (mục 8) |
-| Ngày | 14/10/2026 |
+| Phiên bản | 0.4 — thêm mục 9: chuẩn bắt buộc cho chương xây dựng dần (HA-Q4) |
+| Ngày | 15/10/2026 |
 | Trạng thái | **Ý tưởng, chưa phải yêu cầu** (YT-02 trong [Y_Tuong_Mo_Rong.md](Y_Tuong_Mo_Rong.md)). BA đã chọn 5 chủ đề, chưa đưa vào yêu cầu MVP |
 | Căn cứ | Phản hồi BA: mỗi chương một vùng/chủ đề riêng (vd New York ban đêm, Brazil với kỳ quan, sa mạc…); bài học từ mockup ô phố v1 → v3 ([mockups/khung_pho_v3.html](mockups/khung_pho_v3.html)) |
 
@@ -328,3 +328,41 @@ Thứ tự đảm bảo **hai chương liền nhau khác nhau** về tông màu 
 | Santorini | ~7,5 | Thị trấn nằm trên mặt bằng phẳng nên chưa có cảm giác "bám vách"; nhà trắng còn đơn điệu |
 
 > Giới hạn: đây là mockup 2D (SVG) để chốt **bố cục, bảng màu, kỳ quan và quy tắc độ đọc**. Mức 9,5–10 cần đồ họa 3D low-poly thật với ánh sáng, vật liệu và chuyển động (nước, khói, đèn nhấp nháy) trong engine.
+
+---
+
+## 9. Chuẩn bắt buộc cho chương xây dựng dần (HA-Q4)
+
+BA chốt ngày 15/10/2026: mọi chương mới làm theo mô hình Chương 2 phải qua danh sách dưới đây trước khi duyệt. Nguồn: mục 5 của [Danh_Gia_Hinh_Anh_Tien_Trien_Man.md](Danh_Gia_Hinh_Anh_Tien_Trien_Man.md) (các mã P1–P10 là vấn đề đã gặp ở Chương 2). Chương 1 giữ nguyên, không áp dụng (HA-Q5).
+
+### 9.1. Khung một chương
+
+| Màn | Vai trò hình ảnh | Bắt buộc có |
+|---|---|---|
+| Màn 1 | Giới thiệu bối cảnh mới, khu nhỏ giữa vùng chưa khám phá | Bảng màu và nền khác hẳn chương trước; lô "Sắp xây" thấy được từ điểm xuất phát hoặc trong đoạn mở màn |
+| Màn 2–3 | Mở rộng đều | Mỗi màn mở **một vùng mới** và hoàn thành **một công trình**; điểm nhấn mới nằm trên tuyến đường bắt buộc |
+| Màn 4 | Khu đặc trưng | Một địa danh có quy mô lớn hơn các màn trước |
+| Màn cuối | Cao trào | Địa danh lớn nhất chương, có cảnh kết toàn cảnh, có "bưu thiếp" lưu ở Trang chủ (Chương 2: D-62) |
+
+### 9.2. Danh sách kiểm tra cho mỗi màn
+
+| # | Kiểm tra | Rút ra từ | Demo đáp ứng bằng |
+|---|---|---|---|
+| K1 | Màn này **mở vùng mới hoặc làm vùng cũ thay đổi thấy được**; không màn nào giữ nguyên vùng mà không có thay đổi khác bù vào | P5 | D-56 |
+| K2 | Có **đoạn mở màn** đưa camera qua điểm mới, hoặc điểm xuất phát gần điểm mới | P1 | D-55 |
+| K3 | Công trình đang xây / đã xây **không nằm sát mép trên hoặc phải** (dưới mini map, đồng hồ, cụm mũi tên); nếu buộc phải đặt ở mép thì camera có lề hoặc giao diện tự mờ | P6 | D-57 |
+| K4 | Công trình đã xây có **hình khối riêng**, lớn khoảng 1,5 lần nhà thường, nhận ra được khi chưa đọc nhãn | P3 | D-59 |
+| K5 | Công trình đã xây nằm **trong khu đô thị**, không đứng giữa ruộng | P5 | D-56 |
+| K6 | Cảnh quay: công trình **hiện trọn, không bị che ≥ 2 giây**; hộp thoại không đè; camera không lộ quá 15% vùng ngoài bản đồ | P2 | D-54 |
+| K7 | Mỗi màn có **câu thông xe / thông báo riêng**, và câu đó **có hình đi kèm** | P4 | D-54, D-56 |
+| K8 | Nhà phát triển mọc **thành cụm, có hiệu ứng mọc**, không rải ngẫu nhiên | P7 | D-60 |
+| K9 | Màn chuẩn bị không có nhãn chồng nhau | P10 | D-58 |
+| K10 | Trang trí không nằm trên mặt đường, không trùng màu loại đường (cam, xanh dương đậm), không có chuyển động gần ngã tư | N9 | D-57 |
+
+### 9.3. Cách kiểm chứng
+
+1. **Bộ ảnh cố định mỗi màn**, khung 844×390: (a) màn chuẩn bị; (b) 3 giây sau khi xuất phát; (c) lúc công trình hiện ra; (d) lúc hộp thoại hiện. Đặt các màn liên tiếp cạnh nhau để so.
+2. **Kiểm tra 5 giây:** cho người xem khung hình đầu của hai màn liên tiếp, hỏi "Màn sau có gì mới?" — đạt khi nêu đúng không cần gợi ý. Có thể thử bằng AI trước, nhưng cần **ít nhất 5 người thật** để kết luận.
+3. **Che khuất:** ở 844×390 và 667×375, công trình, điểm giao và xe không nằm dưới giao diện khi xe đang lái qua.
+4. **Gameplay không đổi:** chạy lại các tuyến autopilot, thời gian lệch không quá 1 giây.
+5. **Hiệu năng:** FPS giảm không quá 10% trên máy cấu hình thấp, kể cả lúc có cảnh quay.

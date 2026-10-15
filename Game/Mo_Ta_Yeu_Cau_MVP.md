@@ -2,7 +2,7 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 1.11 — sửa theo báo cáo playtest 8 nhân vật: màn hình nhỏ, luôn hiển thị ngang, Màn tiếp, bấm rẽ sớm, bảng lấy hàng cố định, hết giờ không ép mua (D-46 → D-53) |
+| Phiên bản | 1.14 — Khung tăng độ khó theo chương và màn (D-63), câu hỏi mở về cách đo độ khó (DK-Q1, DK-Q2). 1.13 — Chương 2 cho người chơi thấy khung cảnh tiến triển: cảnh quay mới, đoạn mở màn, đô thị hoá quanh công trình, cần cẩu, nhãn không chồng (D-54 → D-58); địa danh riêng, cụm nhà mọc, Trang chủ, cảnh kết chương và bưu thiếp (D-59 → D-62) |
 | Ngày | 15/10/2026 |
 | Nguồn | Tài liệu ý tưởng game (mục 1–21), flowchart vòng chơi, ảnh tham chiếu giao diện, phản hồi xác nhận của BA |
 | Mục đích | Cơ sở tham chiếu để thiết kế giao diện và viết tài liệu (BRD/SRS/GDD). Không thay thế BRD/SRS. |
@@ -93,6 +93,16 @@ Thử thách đến từ:
 | D-51 | **Popup tạm dừng thêm nút Bản đồ** (biểu tượng); đóng bản đồ thì quay lại popup tạm dừng. Vẫn chỉ biểu tượng, không thêm chữ (giữ D-31). | [XN] PT2 I-10 (a), I-11 không làm |
 | D-52 | **Đi qua điểm giao khi chưa có hàng:** hiện dòng nhắc ngắn "Chưa có hàng cho <điểm> — lấy ở <kho> trước", **không dừng xe**. Bổ sung HD-03. | [XN] PT2 I-15 |
 | D-53 | Chỉnh nhỏ: camera được lùi ra ngoài mép bản đồ để xe/điểm không nằm dưới giao diện (I-07); bong bóng hướng dẫn Màn 1 tự chọn chỗ không che xe, nút và bảng hỏi (I-13); ghi "3 kiện từ Kho B" thay "×3"; chấm "!" trên nút màn chỉ ở màn có cơ chế mới, thẻ màn ghi "! Cơ chế mới" (I-16). **Giữ nguyên:** mô tả xe bằng chữ (I-08), công thức sao (I-09 — màn sau khó dần nên màn đầu dễ 3 sao là hợp lý), mở sẵn mọi màn ở demo (I-14). | [XN] PT2 |
+| D-54 | **Cảnh quay hoàn thành công trình (Chương 2):** camera tới công trình và phóng khoảng 1,3 lần; công trình **nảy lên** (0 → 1,1 → 1 trong 0,5 giây) kèm vòng sáng, hiện trọn **≥ 2 giây** không bị che; sau đó camera lướt tới **đoạn đường vừa thông**, rào chắn mờ dần, đoạn mới có **vạch vàng chạy**; khung cuối là đoạn đường mới (không có đường mới thì khu quanh công trình). Hộp thoại nằm ở **dải đáy**, vạch vàng giữ nguyên cùng hộp thoại; giao diện lái xe ẩn suốt cảnh. Camera cảnh quay **nằm trong bản đồ** (mép trên nới tối đa 60px để thấy cần cẩu) — sửa lỗi lộ vùng ngoài bản đồ do D-53/I-07. Cảnh cuối chương giữ hộp thoại giữa màn hình có ảnh toàn cảnh. Bỏ qua được. | [XN] HA-Q1, T-01 |
+| D-55 | **Đoạn mở màn Chương 2** (1,3–2,1 giây): camera đi từ điểm mới của màn — đoạn đường vừa thông, rồi công trình vừa xây (màn đầu chương: công trường) — về xe, khung cuối trùng khung lái xe. Đồng hồ chưa chạy; sau đoạn này mới tới bước chờ xuất phát (XP-01). **Chỉ chạy lần đầu vào màn từ màn chuẩn bị**, không chạy khi Thử lại; chạm màn hình, nút "Bỏ qua" hoặc phím bất kỳ để bỏ qua. | [XN] HA-Q2, T-03 |
+| D-56 | **Ô phố chứa công trình đã xây luôn là khu dân cư**, kể cả khi nằm ngoài vùng thông xe (công trình không đứng giữa ruộng). Chỉ đổi hình, **không đổi mạng đường** — Màn 9 khác Màn 8 ở khu quanh Chợ mới. Mỗi công trình có **câu thông báo riêng** (bổ sung câu cho Chợ mới và Công viên). | [XN] HA-Q3 (a), T-07 |
+| D-57 | **Công trường:** cần cẩu cao gấp đôi (nhô 60px trên lô), cần quay chậm ±10°, móc treo khối vật liệu, vài đống vật liệu quanh lô (màu nâu gạch, xám, vàng gỗ — không dùng cam/xanh dương đậm của loại đường). Khi lái xe, phần giao diện (mini map, đồng hồ, nhiệm vụ) đè lên công trường thì **mờ còn 30%**. | [XN] HA-Q1, T-05 |
+| D-58 | **Nhãn màn chuẩn bị không chồng nhau:** hạn giao tách thành dòng riêng "⏱ hạn m:ss"; mỗi khối nhãn thử 8 chỗ quanh ký hiệu (4 cạnh + 4 góc chéo), giữ khoảng hở tối thiểu 4px. | [XN] HA-Q1, T-10 |
+| D-59 | **Địa danh có hình khối riêng** (nhận ra khi chưa đọc nhãn), lớn hơn nhà thường, nằm gọn trong ô phố, không đè đường: **Tiệm bánh** mái hồng, mái hiên sọc hồng–trắng quay ra đường, biển bánh lớn (150×60); **Trường học** nhà chữ L mái đỏ gạch, sân có vạch, cột cờ, hàng rào trắng; **Chợ mới** sân lát, 3 dãy quầy mái nhiều màu, cổng đỏ, người mua; **Bệnh viện** mái trắng viền xám, chữ thập đỏ lớn, xe cứu thương, bãi cỏ (các công trình này 124×120); **Công viên** lớn nhất bản đồ (160×160): hồ, lối đi, đài phun nước, vòng cây, bồn hoa. Lô "Sắp xây" và công trường cùng kích thước. | [XN] HA-Q1 đợt 2, T-02 |
+| D-60 | **Nhà mới mọc thành cụm:** mọi lô trong bán kính 330 quanh công trình là lô phát triển (bỏ cơ chế bỏ ngẫu nhiên 50%); khi công trình xây xong, lô thành nhà mái màu tươi, sân cỏ viền **hàng rào trắng**. Cụm nhà **mọc lần lượt** từ gần công trình ra xa (mỗi nhà 0,35 giây, cách nhau 0,12 giây) trong cảnh quay và trong đoạn mở màn của màn kế tiếp (camera dừng ở công trình 0,9 giây). | [XN] HA-Q1 đợt 2, T-06 |
+| D-61 | **Trang chủ Chương 2:** lớp phủ trắng giảm từ 28% xuống 10%; lần đầu về Trang chủ sau khi thắng một màn Chương 2, công trình vừa xây có **vòng sáng nhấp nháy 2 lần**. | [XN] HA-Q1 đợt 2, T-09 |
+| D-62 | **Cảnh kết chương** (sau Công viên, ≤ 6 giây, bỏ qua được): camera kéo ra toàn cảnh (thấy cả 5 công trình), trời chuyển chiều tối, 5 công trình lần lượt sáng lên (cách nhau 0,35 giây), rồi đèn ở mọi ngã tư bật; sau đó hộp thoại giữa màn hình kèm ảnh toàn cảnh. **Bưu thiếp:** khi đã hoàn thành mọi màn của chương, Trang chủ (chương đó) có nút "📮 Bưu thiếp" mở ảnh toàn cảnh khu đã xây xong, tên chương, danh sách công trình, số sao. | [XN] HA-Q1 đợt 3, T-08 |
+| D-63 | **Khung tăng độ khó theo chương và màn.** Cốt truyện dự kiến **khoảng 15 chương, mỗi chương khoảng 10 màn**. Độ khó mục tiêu của màn *m* (1–10) thuộc chương *c*: **ĐK = 5(c − 1) + m**, tức chương *c* chạy từ **5c − 4 đến 5c + 5** (chương 1: 1–10, chương 2: 6–15, chương 3: 11–20 … chương 15: 71–80). Hệ quả: (1) **trong một chương, màn sau luôn khó hơn màn trước** (mỗi màn tăng 1 bậc, không có màn nghỉ xen giữa); (2) **sang chương mới, độ khó lùi 4 bậc**: màn 1 chương *c + 1* ngang màn 6 chương *c*, không bao giờ khó hơn màn cuối chương trước; (3) hai chương liền nhau **chồng lấn 5 bậc**, bước giữa hai chương **cố định là 5**. Cách đo độ khó: chưa chốt (DK-Q1). **Demo hiện tại chưa theo khung này:** Chương 2 bắt đầu lại từ màn làm quen, lặp thứ tự cơ chế của Chương 1. Sẽ thiết kế lại khi làm chương đủ 10 màn. | [XN] phản hồi BA 15/10 |
 | D-08 | Nhiên liệu/pin, gia tốc, phanh: ngoài MVP. | [XN] |
 | D-09 | Giao thông xác định, dự đoán được (chỉ còn yếu tố tĩnh: hạn chế loại xe, ngõ cụt). | [XN] / D-21, D-22 |
 | D-10 | Màn thiết kế thủ công, kiểm tra khả năng hoàn thành trước khi phát hành. | [XN] |
@@ -414,6 +424,8 @@ PASS = all_missions_completed
 | VP-Q7 | Sau này có thêm loại vật phẩm khác? | Thiết kế cửa hàng/kho dạng danh sách để thêm dễ |
 | VP-Q8 | +5 kim cương mỗi lần thắng hay **chỉ lần đầu** thắng mỗi màn? | Chỉ lần đầu — chống cày màn dễ (đang làm theo **[GĐ]**) |
 | VP-Q9 | Tặng kim cương khi mới chơi? | Chưa tặng (bản thử bắt đầu 0 kim cương) |
+| DK-Q1 | **Cách xác định độ khó của một màn** (D-63): gồm những đòn bẩy nào, trọng số bao nhiêu, đo bằng cách nào? | Dùng chỉ số tổng hợp từ: kích thước vùng chơi, số nhiệm vụ, số ràng buộc chồng nhau, **độ "bẫy"** (chênh lệch giữa cách chơi không tính toán và lời giải tối ưu), **biên thời gian** (T0 so với tối ưu). Hiệu chỉnh bằng autopilot và test với người thật. Ưu tiên tăng độ bẫy và tổ hợp ràng buộc; đặt sàn cho biên thời gian để game không biến thành chạy đua. BA sẽ phân tích sau |
+| DK-Q2 | Có giữ cơ chế dự kiến của Chương 3 (chở khách, đổi xe) và Chương 4 (cầu đóng/mở theo giờ) làm nguồn tăng độ khó không? | Giữ, vì nếu chỉ tăng bản đồ, số nhiệm vụ và bóp thời gian thì khó đủ đòn bẩy để đi tới độ khó 80 |
 | VP-Q11 | Số kim cương hiện ở đâu? | Trang chủ (góc trên phải, chạm mở cửa hàng), màn kết quả, popup hết giờ; **không hiện trên màn chơi** (đang làm theo **[GĐ]**) |
 
 Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
@@ -559,6 +571,20 @@ Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 | TC-92 | Hết giờ, không vật phẩm, 5 kim cương | Nút chính "Thử lại"; liên kết "Mua kim cương…" → bước xác nhận → mới mở cửa hàng | D-50 |
 | TC-93 | Tạm dừng → nút Bản đồ → Đóng | Quay lại popup tạm dừng; thời gian vẫn dừng | D-51 |
 | TC-94 | Xe trống đi qua điểm giao còn đơn | Hiện "Chưa có hàng cho … — lấy ở … trước"; xe không dừng | D-52 |
+| TC-95 | Thắng màn Chương 2 có mở đường (vd Màn 6) | Camera tới công trình, công trình nảy lên và hiện trọn ≥ 2 giây; camera tới đường mới, rào chắn mờ dần, vạch vàng; hộp thoại ở dải đáy không che; không khung nào lộ quá 15% vùng ngoài bản đồ | D-54 |
+| TC-96 | Thắng Màn 8 (không mở đường) | Khung cuối là khu quanh Chợ mới đã thành khu phố; câu "Chợ mới khai trương…" | D-54, D-56 |
+| TC-97 | Vào Màn 7 từ màn chuẩn bị → Bắt đầu | Camera đi từ đường phía Đông vừa thông → Tiệm bánh → xe; đồng hồ đứng ở 1:04; sau đó xe chờ xuất phát | D-55 |
+| TC-98 | Thua Màn 7 → Thử lại → Bắt đầu | Không có đoạn mở màn | D-55 |
+| TC-99 | Đang có đoạn mở màn, chạm màn hình | Bỏ qua ngay, xe chờ xuất phát | D-55 |
+| TC-100 | So màn chuẩn bị Màn 8 và Màn 9 | Màn 9: ô phố quanh Chợ mới có nhà, không còn ruộng; mạng đường giống Màn 8 | D-56 |
+| TC-101 | Màn 6, lái xe ở hàng trên gần Tiệm bánh để công trường nằm dưới mini map | Thấy trọn cần cẩu; mini map mờ đi, vẫn chạm được | D-57 |
+| TC-102 | Màn chuẩn bị Màn 4, 9, 10 | Không có nhãn chồng nhau; hạn giao ở dòng riêng | D-58 |
+| TC-103 | Chạy lại các tuyến autopilot sau khi đổi hình ảnh | Thời gian hoàn thành không đổi | D-54 → D-62 |
+| TC-104 | Xem toàn cảnh Màn 10 sau khi xây xong | Chỉ ra đúng 5 công trình không cần nhãn; không công trình nào đè đường | D-59 |
+| TC-105 | Thắng Màn 6, xem cảnh quay; rồi vào Màn 7 | Cụm nhà quanh Tiệm bánh mọc lần lượt trong cảnh quay và trong đoạn mở màn Màn 7; nhà mới có hàng rào trắng | D-60 |
+| TC-106 | Thắng một màn Chương 2 → Trang chủ | Công trình vừa xây có vòng sáng nhấp nháy; lần về Trang chủ sau không nhấp nháy nữa | D-61 |
+| TC-107 | Thắng Màn 10 | Cảnh kết ≤ 6 giây: toàn cảnh, trời tối dần, 5 công trình sáng lần lượt, đèn ngã tư bật; bỏ qua được; hộp thoại nhắc bưu thiếp | D-62 |
+| TC-108 | Hoàn thành cả 5 màn Chương 2 → Trang chủ, chọn Chương 2 → Bưu thiếp | Mở ảnh toàn cảnh, tên chương, 5 công trình, số sao; Đóng hoặc chạm nền để tắt. Chưa hoàn thành đủ thì không có nút | D-62 |
 
 > Đã bỏ: TC-06 (nhiệm vụ phụ), TC-07 (nhiên liệu), TC-18 (va chạm).
 
@@ -633,6 +659,9 @@ Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 | VP-Q1 → Q3, M1 → M3 | Vật phẩm Thêm giờ & kim cương vào MVP, thanh toán mô phỏng ở demo; tối đa 2 lần/lượt; thắng nhờ vật phẩm vẫn Đạt và lưu thời gian; gói 50k → 275; lưu dữ liệu trên máy | 1.9 |
 | PT-Q1 → Q7 | Phân tích báo cáo playtest ([Phan_Tich_Playtest.md](Phan_Tich_Playtest.md)): đối tượng 12+; làm A1, A2, A4, âm thanh, hướng dẫn tương tác Màn 1, xếp hạng 3 sao (công thức BA); gộp bản thử (Q-65 → Q-72 theo đề xuất); vuốt để sau; không làm Nitro, vệt GPS, chế độ Zen | 1.10 |
 | PT2 (I-01 → I-17) | Báo cáo playtest 8 nhân vật ([Bao_Cao_Playtest_8_Nhan_Vat.md](Bao_Cao_Playtest_8_Nhan_Vat.md)): làm I-01, I-02, I-03, I-05, I-07, I-13, I-16; I-17 luôn ngang; I-06 (a); I-04; I-10 (a); I-15. Giữ I-08, I-09, I-14; không làm I-11, I-10 (c) | 1.11 |
+| HA-Q1 → Q5 | Đánh giá hình ảnh tiến triển Chương 2 ([Danh_Gia_Hinh_Anh_Tien_Trien_Man.md](Danh_Gia_Hinh_Anh_Tien_Trien_Man.md)): làm đợt 1 (T-01, T-03, T-07 (a), T-05, T-10 + sửa camera cảnh quay); đợt 2 (T-02, T-06, T-09) và đợt 3 (T-08) làm sau; đoạn mở màn chỉ lần đầu vào màn; danh sách kiểm tra mục 5 thành chuẩn cho chương mới ([Chu_De_Khung_Canh.md](Chu_De_Khung_Canh.md) mục 9); **không sửa Chương 1** | 1.12 |
+| HA-Q1 (đợt 2, 3) | BA yêu cầu làm nốt: T-02 địa danh riêng, T-06 cụm nhà mọc, T-09 Trang chủ, T-08 cảnh kết chương + bưu thiếp. T-12 (người đi bộ, chim) vẫn để sau | 1.13 |
+| Cơ chế theo chương, độ khó | Không làm "mỗi chương một nghề" để giữ tính nhất quán và dễ chơi. Chốt khung độ khó răng cưa chồng lấn: ĐK = 5(c − 1) + m, khoảng 15 chương × 10 màn, bước 5, tăng tuyệt đối trong chương (D-63). Cách đo độ khó để phân tích sau (DK-Q1) | 1.14 |
 
 ---
 
