@@ -37,6 +37,8 @@ SHOTS = [
     ('06_ban_do_lon_man10', 'lv=10&play&map'),
     ('07_tam_dung_man4', 'lv=4&play&pause'),
     ('08_hoan_thanh_man7', 'lv=7&win&cutend'),
+    ('09_nhiem_vu_man4', 'lv=4&play&mis'),  # từ v1.1
+    ('10_huong_dan_man4', 'lv=4&play&help'),  # từ v1.1
 ]
 RE_VER = re.compile(r"^const VER='(\d+)\.(\d+)';$", re.M)
 RE_SAVED = re.compile(r"^const VER_SAVED=(true|false);", re.M)

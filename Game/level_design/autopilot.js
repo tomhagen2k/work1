@@ -2,6 +2,8 @@
 // runPlan(levelIndex, vehicleKey, plan) — plan: [{zone:'KhoA', picks:['Sieu','Hoa']}, {zone:'Hoa'}, ...]
 function runPlan(li, vk, plan, maxSec = 400, naive = false) {
   VK = vk; openLevel(li); VK = vk; reset(); startGame();
+  if (G.state === 'wait') G.state = 'play'; // chờ xuất phát: coi như bấm hướng đầu xe ngay tại 0:00
+  G.tut = null; // không chạy hướng dẫn tương tác Màn 1
   // naive: chọn đường theo độ dài (bỏ qua loại đường)
   const edgeT = (u, w) => { const e = getE(u, w); const f = factor(e); return f == null ? null : SP / (V().v * (naive ? 1 : f)); };
   const zoneOf = id => ZONES.find(z => z.id === id);

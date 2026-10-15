@@ -2,7 +2,7 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 1.9 — bổ sung vật phẩm Thêm giờ và kim cương (D-35 → D-39, mục 17) |
+| Phiên bản | 1.10 — phân tích báo cáo playtest: đối tượng người chơi, xếp hạng 3 sao, âm thanh, chờ xuất phát, popup Nhiệm vụ/Hướng dẫn, hướng dẫn tương tác Màn 1 (D-40 → D-45) |
 | Ngày | 15/10/2026 |
 | Nguồn | Tài liệu ý tưởng game (mục 1–21), flowchart vòng chơi, ảnh tham chiếu giao diện, phản hồi xác nhận của BA |
 | Mục đích | Cơ sở tham chiếu để thiết kế giao diện và viết tài liệu (BRD/SRS/GDD). Không thay thế BRD/SRS. |
@@ -79,6 +79,12 @@ Thử thách đến từ:
 | D-37 | Thắng có dùng Thêm giờ: vẫn **Đạt**, mở màn sau, **lưu thời gian** như bình thường. | [XN] VP-Q3 |
 | D-38 | **Kim cương:** +5 khi thắng màn; gói nạp 20.000đ → 100 · **50.000đ → 275** · 100.000đ → 600 · 500.000đ → 3.500. Vật phẩm Thêm giờ giá 20 kim cương. | [XN] / bảng giá theo đề xuất |
 | D-39 | Mua thành công → **lưu kim cương và vật phẩm trên máy người dùng**. | [XN] M3 — rủi ro xem 17.5 |
+| D-40 | **Người chơi mục tiêu:** chính là **12 tuổi trở lên, thích giải đố nhẹ**. Trẻ nhỏ là đối tượng phụ — **không thiết kế riêng cho trẻ ở MVP** (không chế độ hỗ trợ, không bỏ giới hạn thời gian). | [XN] PT-Q1 |
+| D-41 | **Xếp hạng 3 sao** khi Đạt. Tính trên **thời gian gốc của màn** (không cộng giờ từ vật phẩm): **có dùng Thêm giờ → 1 sao**; không dùng: thời gian còn lại **≤ 5%** → 1 sao, **≤ 10%** → 2 sao, **> 10%** → 3 sao. Lưu số sao **cao nhất** mỗi màn (cùng thời gian tốt nhất). Hiện ở: màn kết quả (kèm gợi ý "về đích khi còn dư hơn … giây để đạt n sao"), dưới nút màn ở trang chủ, thẻ màn, tổng sao mỗi chương. Thay quyết định "bỏ sao" trước đây (mục 13). | [XN] PT-Q7 / [GĐ] nơi hiển thị, lưu sao cao nhất |
+| D-42 | **Âm thanh** tổng hợp (không cần file): lấy hàng, giao hàng, chọn hướng, quay đầu, bảng hỏi, tích tắc 10 giây cuối, thắng (kèm từng sao), thua, công trình hoàn thành, tiếng bấm nút. **Nút tắt/bật tiếng** ở trang chủ và popup tạm dừng, nhớ lựa chọn trên máy. | [XN] PT-Q3 / [GĐ] danh sách âm thanh |
+| D-43 | Cải thiện từ báo cáo playtest: (1) **Màn chuẩn bị** có nhãn "Xem bản đồ, lên kế hoạch · xe chưa chạy", nút **Bắt đầu nhấp nháy**, chạm bản đồ (không kéo) → bong bóng chỉ vào nút Bắt đầu. (2) **D-pad nhận hướng theo góc** chạm so với tâm cụm nút, vùng bấm rộng hơn nút 10px, khe giữa nút 8px — không bấm nhầm sang nút bên cạnh. (3) **Màn kết quả khi chưa đạt** giọng nhẹ: "Hết giờ rồi!" / "Trễ hạn mất rồi!", thanh tiến độ "Đã giao x/y kiện", mẹo theo nguyên nhân, nút chính "Thử lại". | [XN] PT-Q2 |
+| D-44 | **Chờ xuất phát, popup Nhiệm vụ & Hướng dẫn** (từ [De_Xuat_Trai_Nghiem_Man_Choi.md](De_Xuat_Trai_Nghiem_Man_Choi.md), đưa vào demo): vào màn xe đứng yên, chỉ mũi tên cùng hướng đầu xe cho xe chạy, **đồng hồ (và hạn riêng của đơn) tính từ lúc xe xuất phát** (Q-65); quay đầu khi chờ: quay tại chỗ, không tính giờ (Q-66); nút cùng hướng nhấp nháy ở mọi màn, bong bóng "Nhấn để xe chạy" **chỉ ở Màn 1–3** (Q-67); popup Nhiệm vụ PA1 (Q-68), Hướng dẫn PA-C mở ở tab "Màn này" (Q-69); chấm "!" trên nút Hướng dẫn ở màn có cơ chế mới lần đầu xuất hiện và chưa mở, không tự mở (Q-70); chạm cụm vòng nhiệm vụ mở popup Nhiệm vụ (Q-71); mọi chỉ báo dừng giờ dùng dạng ngắn **"⏸ mm:ss"** (Q-72). | [XN] PT-Q4 / [GĐ] "vài màn đầu" = Màn 1–3 |
+| D-45 | **Màn 1 giữ 90 giây** + **hướng dẫn tương tác lần đầu chơi Màn 1**: chỉ nút xuất phát → ở mỗi ngã tư cần rẽ xe **dừng hẳn** (đồng hồ dừng), khoanh nút đúng, chỉ nhận đúng nút, ghi "để tới <điểm>" → tới kho chỉ bảng hỏi → báo đã lấy hàng → giao xong đơn đầu thì kết thúc. Có nút "Bỏ qua hướng dẫn". Hướng đúng tính theo đường ngắn nhất tới kho còn hàng / điểm giao của hàng đang chở. | [XN] PT-Q5 / [GĐ] cách hướng dẫn chi tiết |
 | D-08 | Nhiên liệu/pin, gia tốc, phanh: ngoài MVP. | [XN] |
 | D-09 | Giao thông xác định, dự đoán được (chỉ còn yếu tố tĩnh: hạn chế loại xe, ngõ cụt). | [XN] / D-21, D-22 |
 | D-10 | Màn thiết kế thủ công, kiểm tra khả năng hoàn thành trước khi phát hành. | [XN] |
@@ -127,7 +133,7 @@ flowchart TD
 | GL-03 | Hiển thị danh sách nhiệm vụ, thời hạn từng nhiệm vụ, thời gian tổng. | [XN] |
 | GL-04 | Chọn xe: hiển thị các xe được phép trong màn và đặc tính (xem mục 9). | [XN] |
 | GL-05 | Xe không phù hợp với màn bị chặn hoặc cảnh báo kèm lý do trước khi bắt đầu. | [XN] TC-14 |
-| GL-06 | Đồng hồ chỉ chạy khi nhấn **Bắt đầu**. | [XN] |
+| GL-06 | Đồng hồ chỉ chạy khi **xe xuất phát** (nhấn mũi tên cùng hướng đầu xe sau khi nhấn Bắt đầu). | [XN] D-44, Q-65 |
 
 > GL-05 là màn hình chuẩn bị, **không** thuộc phạm vi "không phản hồi" của D-15 (D-15 áp dụng cho thao tác trong lúc chơi). **[GĐ]**
 
@@ -159,7 +165,7 @@ flowchart TD
 
 | ID | Yêu cầu | Nguồn |
 |---|---|---|
-| CT-01 | Khi nhấn Bắt đầu, xe tự chạy thẳng theo hướng xuất phát. | [XN] |
+| CT-01 | Nhấn Bắt đầu → vào màn chơi, **xe đứng yên**; nhấn mũi tên cùng hướng đầu xe → xe tự chạy thẳng theo hướng xuất phát. | [XN] D-44 |
 | CT-02 | Tốc độ xe do loại xe và đoạn đường quyết định. | [XN] |
 | CT-03 | Mỗi giao lộ có **vùng nhận lệnh rẽ** bắt đầu khoảng **1–1,5 giây** trước giao lộ (theo tốc độ xe). Độ dài là **tham số cấu hình**, điều chỉnh qua chơi thử. | [XN] Q-20 |
 | CT-04 | Khi xe vào vùng nhận lệnh, nút rẽ của **hướng khả dụng** sáng lên. Bấm trong vùng → xe rẽ khi tới tâm giao lộ. | [XN] Q-20 |
@@ -361,8 +367,8 @@ PASS = all_missions_completed
 | UI-02 | Đang chơi | **Vùng trên**: đồng hồ tổng, trạng thái nhiệm vụ (ưu tiên nhiệm vụ sắp hết hạn), mini map, xe hiện tại + số kiện/số khách đang chở trên sức chứa (vd: 2/3), nút Pause. **Vùng giữa**: bản đồ 3D, camera bám xe. **Góc dưới**: 4 nút hướng, Quay đầu. | [XN] |
 | UI-03 | Bản đồ lớn | Bản đồ toàn màn, vị trí xe, điểm nhiệm vụ còn lại, điểm đổi xe, nút Đóng; chỉ báo "Thời gian đang dừng"; phóng to/thu nhỏ/kéo, chú giải loại đường (D-33) | [XN] |
 | UI-04 | Pause | Màn che bản đồ, nút Tiếp tục / Chơi lại / Thoát | [XN] / [GĐ] các nút |
-| UI-05 | Đạt | Thông báo hoàn thành, thời gian hoàn thành, thời gian tốt nhất (đánh dấu kỷ lục mới), nút Màn tiếp / Chơi lại | [XN] |
-| UI-06 | Không đạt | Nguyên nhân cụ thể (F-xx), gợi ý dựa trên dữ liệu lượt chơi, nút Chơi lại / Về danh sách màn | [XN] |
+| UI-05 | Đạt | **3 sao** (D-41), thông báo hoàn thành, thời gian hoàn thành + còn dư, thời gian tốt nhất (đánh dấu kỷ lục mới), thưởng kim cương lần đầu, gợi ý để có thêm sao, nút Màn tiếp / Chơi lại | [XN] |
+| UI-06 | Không đạt | Tiêu đề giọng nhẹ theo nguyên nhân, nguyên nhân cụ thể (F-xx), tiến độ đã giao, mẹo, nút **Thử lại** / Trang chủ | [XN] D-43 |
 | UI-07 | Chỉ báo | Nút rẽ sáng khi trong vùng nhận lệnh; chỉ báo hướng rẽ đã chọn; tiến trình quay đầu / phục vụ; cảnh báo sắp hết giờ / nhiệm vụ sắp quá hạn | [XN] / [SL] |
 | UI-08 | Bảng hỏi | Tên điểm, các nút việc làm được, nút "Đi tiếp"; chỉ báo "Thời gian đang dừng" | [XN] D-23 |
 
@@ -394,7 +400,6 @@ PASS = all_missions_completed
 
 | ID | Câu hỏi | Đề xuất của Claude |
 |---|---|---|
-
 | VP-Q4 | Thêm giờ có cứu đơn **trễ hạn riêng** (F-02) không? | Không — chỉ cứu hết thời gian tổng (đang làm theo **[GĐ]**) |
 | VP-Q5 | Có cho dùng Thêm giờ **chủ động** khi chưa hết giờ? | Không (đang làm theo **[GĐ]**) |
 | VP-Q6 | Có kho vật phẩm? Nhận vật phẩm ngoài mua? | Có kho; **tặng 1 vật phẩm ở lần hết giờ đầu tiên** (đang làm theo **[GĐ]**) |
@@ -422,7 +427,7 @@ Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 | 7.1 | Gia tốc, phanh, nhiên liệu | Bỏ khỏi MVP |
 | 8.2 | Đường tắc nghẽn mô phỏng bằng xe | Chỉ dùng hệ số tốc độ |
 | 8.6 | Va chạm | **Hoãn** cùng xe NPC, chướng ngại |
-| 10.2–10.4 | Điểm, sao, phần thưởng tiền tệ | Điểm, sao: **bỏ** (thay bằng thời gian tốt nhất). Phần thưởng tiền tệ: **thay** bằng kim cương (D-38) |
+| 10.2–10.4 | Điểm, sao, phần thưởng tiền tệ | Điểm: **bỏ** (thay bằng thời gian tốt nhất). Sao: **dùng lại theo công thức D-41** (từ 1.10). Phần thưởng tiền tệ: **thay** bằng kim cương (D-38) |
 | 12.3 | Màn hình thắng có điểm, sao, va chạm | Sửa theo UI-05 |
 | 13, 14 | Bảng xếp hạng, kinh tế trong game | Bảng xếp hạng: sau MVP. Kinh tế: **kim cương + vật phẩm Thêm giờ vào MVP** (D-35) |
 | 16 | "Điểm số, hệ thống sao và lưu thành tích" | Đổi thành "Kết quả Đạt/Không đạt, lưu tiến trình và thời gian tốt nhất" |
@@ -447,7 +452,7 @@ Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 - [ ] Khoảng 10 màn thiết kế và kiểm thử thủ công
 - [ ] Kim cương, vật phẩm Thêm giờ, gợi ý khi hết giờ, cửa hàng (demo: thanh toán mô phỏng) — D-35 → D-39
 
-**Ngoài MVP:** xe NPC, chướng ngại, va chạm, nhiên liệu/pin, điểm & sao, nhiệm vụ phụ, nhiều xe, giao thông ngẫu nhiên, bản đồ tự sinh, bảng xếp hạng, thanh toán thật & tài khoản/lưu trực tuyến, sự kiện trực tuyến.
+**Ngoài MVP:** xe NPC, chướng ngại, va chạm, nhiên liệu/pin, điểm, nhiệm vụ phụ, chế độ dành riêng cho trẻ nhỏ (D-40), điều khiển vuốt (để sau đợt thử với người thật — PT-Q6), nhiều xe, giao thông ngẫu nhiên, bản đồ tự sinh, bảng xếp hạng, thanh toán thật & tài khoản/lưu trực tuyến, sự kiện trực tuyến.
 
 ---
 
@@ -525,6 +530,18 @@ Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 | TC-71 | Mua gói kim cương (mô phỏng), xác nhận | Cộng đúng số kim cương của gói; số dư lưu trên máy, mở lại game vẫn còn | D-38, D-39 |
 | TC-72 | Mua gói, chọn Hủy ở bước xác nhận | Không cộng kim cương | D-38 |
 | TC-73 | Mua vật phẩm ở cửa hàng khi < 20 kim cương | Không mua được, báo "Chưa đủ kim cương" | D-38 |
+| TC-74 | Màn 90 giây, thắng khi còn 9,1 giây (> 10%) / 9,0 giây (= 10%) / 4,5 giây (= 5%) / 4,4 giây | 3 sao / 2 sao / 1 sao / 1 sao | D-41 |
+| TC-75 | Thắng có dùng Thêm giờ (dù còn nhiều giờ) | 1 sao; màn kết quả ghi đã dùng Thêm giờ | D-41 |
+| TC-76 | Thắng lại màn đã có 3 sao nhưng lần này 1 sao | Trang chủ vẫn hiện 3 sao | D-41 |
+| TC-77 | Nhấn Bắt đầu ở màn chuẩn bị | Xe đứng yên, đồng hồ không chạy; nút cùng hướng đầu xe nhấp nháy | D-44, Q-65 |
+| TC-78 | Đang chờ xuất phát, nhấn mũi tên khác hướng đầu xe | Không phản hồi; nhấn đúng hướng → xe chạy, đồng hồ chạy | D-44 |
+| TC-79 | Đang chờ xuất phát, nhấn Quay đầu | Xe quay tại chỗ, vẫn đứng chờ, nút nhấp nháy đổi theo hướng mới; đồng hồ không chạy | Q-66 |
+| TC-80 | Màn có đơn hạn 0:38, chờ 20 giây rồi mới xuất phát | Hạn vẫn còn đủ 0:38 tính từ lúc xuất phát | Q-65 |
+| TC-81 | Chạm bản đồ ở màn chuẩn bị (không kéo) | Hiện bong bóng chỉ vào nút Bắt đầu | D-43 |
+| TC-82 | Chạm D-pad lệch ra mép giữa nút Lên và nút Trái | Nhận hướng theo góc gần nhất; không nhận cả hai | D-43 |
+| TC-83 | Tắt âm thanh ở trang chủ, mở lại game | Vẫn tắt; nút ở popup tạm dừng cũng hiện trạng thái tắt | D-42 |
+| TC-84 | Lần đầu chơi Màn 1 | Hướng dẫn tương tác: chỉ nút xuất phát → xe dừng ở ngã tư cần rẽ (đồng hồ dừng), chỉ nhận đúng nút → bảng hỏi ở kho → giao đơn đầu thì kết thúc | D-45 |
+| TC-85 | Chơi Màn 1 lần hai, hoặc đã bấm "Bỏ qua hướng dẫn" | Không còn hướng dẫn | D-45 |
 
 > Đã bỏ: TC-06 (nhiệm vụ phụ), TC-07 (nhiên liệu), TC-18 (va chạm).
 
@@ -597,6 +614,7 @@ Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 | Q-62 | Mỗi lần mở bản đồ lớn về toàn cảnh | 1.8 |
 | Q-64 | Chữ tối thiểu 12px, nút tối thiểu ~44px — chuẩn chung mọi màn hình | 1.8 |
 | VP-Q1 → Q3, M1 → M3 | Vật phẩm Thêm giờ & kim cương vào MVP, thanh toán mô phỏng ở demo; tối đa 2 lần/lượt; thắng nhờ vật phẩm vẫn Đạt và lưu thời gian; gói 50k → 275; lưu dữ liệu trên máy | 1.9 |
+| PT-Q1 → Q7 | Phân tích báo cáo playtest ([Phan_Tich_Playtest.md](Phan_Tich_Playtest.md)): đối tượng 12+; làm A1, A2, A4, âm thanh, hướng dẫn tương tác Màn 1, xếp hạng 3 sao (công thức BA); gộp bản thử (Q-65 → Q-72 theo đề xuất); vuốt để sau; không làm Nitro, vệt GPS, chế độ Zen | 1.10 |
 
 ---
 

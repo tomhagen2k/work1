@@ -48,8 +48,8 @@
 const LIST=(window.VERSIONS||[]).slice().reverse();
 const OPTS=[{v:'dev',l:'Đang làm (demo/index.html)',p:'../demo/index.html'}].concat(LIST.map(x=>({v:x.ver,l:'v'+x.ver+' · '+x.ngay,p:`v${x.ver}/index.html`,o:x})));
 const PRE=[['','Trang chủ'],['ch=2','Trang chủ · Chương 2'],['lv=4','Chuẩn bị · màn 4'],['lv=10','Chuẩn bị · màn 10'],['lv=4&play','Đang chơi · màn 4'],
-  ['lv=10&play','Đang chơi · màn 10'],['lv=10&play&map','Bản đồ lớn · màn 10'],['lv=4&play&pause','Tạm dừng · màn 4'],['lv=7&win&cutend','Hoàn thành · màn 7'],['*','Tự nhập…']];
-const SHOTS=['01_trang_chu','02_trang_chu_chuong2','03_chuan_bi_man4','04_chuan_bi_man10','05_dang_choi_man4','06_ban_do_lon_man10','07_tam_dung_man4','08_hoan_thanh_man7'];
+  ['lv=10&play','Đang chơi · màn 10'],['lv=10&play&map','Bản đồ lớn · màn 10'],['lv=4&play&pause','Tạm dừng · màn 4'],['lv=7&win&cutend','Hoàn thành · màn 7'],['lv=4&play&mis','Nhiệm vụ · màn 4'],['lv=4&play&help','Hướng dẫn · màn 4'],['*','Tự nhập…']];
+const SHOTS=['01_trang_chu','02_trang_chu_chuong2','03_chuan_bi_man4','04_chuan_bi_man10','05_dang_choi_man4','06_ban_do_lon_man10','07_tam_dung_man4','08_hoan_thanh_man7','09_nhiem_vu_man4','10_huong_dan_man4'];
 const $=id=>document.getElementById(id),q=new URLSearchParams(location.search);
 ['sa','sb'].forEach((id,i)=>{$(id).innerHTML=OPTS.map(o=>`<option value="${o.v}">${o.l}</option>`).join('');
   $(id).value=q.get(i?'b':'a')||(i?'dev':(OPTS[1]?OPTS[1].v:'dev'));});

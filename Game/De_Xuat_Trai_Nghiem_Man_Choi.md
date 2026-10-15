@@ -6,7 +6,7 @@
 | Ngày | 14/10/2026 |
 | Căn cứ | Phản hồi BA 14/10/2026; [Mo_Ta_Yeu_Cau_MVP.md](Mo_Ta_Yeu_Cau_MVP.md) v1.8 |
 | Bản thử | [mockups/proto_trai_nghiem.html](mockups/proto_trai_nghiem.html) — bản sao demo, chơi được, đã đặt theo phương án BA chọn. Demo gốc **chưa sửa** |
-| Trạng thái | **Chưa phải yêu cầu.** Chỉ đưa vào Mô tả yêu cầu khi BA chốt mục 5 |
+| Trạng thái | **Đã chốt toàn bộ mục 5 (PT-Q4, 15/10/2026) và đưa vào yêu cầu: D-44 trong [Mo_Ta_Yeu_Cau_MVP.md](Mo_Ta_Yeu_Cau_MVP.md).** Đã gộp vào `demo/index.html` (v1.1); bản thử giữ lại để tham khảo |
 
 ---
 

@@ -16,5 +16,24 @@ window.VERSIONS=[
    "08_hoan_thanh_man7.png"
   ],
   "tag": "demo-v1.0"
+ },
+ {
+  "ver": "1.1",
+  "ngay": "15/10/2026",
+  "tai_lieu": "1.10",
+  "tom_tat": "Cải thiện từ báo cáo playtest — chờ xuất phát, popup Nhiệm vụ/Hướng dẫn, kim cương và Thêm giờ (gộp từ bản thử), xếp hạng 3 sao, âm thanh, hướng dẫn tương tác Màn 1, màn chuẩn bị rõ ràng hơn, D-pad nhận hướng theo góc.",
+  "anh": [
+   "01_trang_chu.png",
+   "02_trang_chu_chuong2.png",
+   "03_chuan_bi_man4.png",
+   "04_chuan_bi_man10.png",
+   "05_dang_choi_man4.png",
+   "06_ban_do_lon_man10.png",
+   "07_tam_dung_man4.png",
+   "08_hoan_thanh_man7.png",
+   "09_nhiem_vu_man4.png",
+   "10_huong_dan_man4.png"
+  ],
+  "tag": "demo-v1.1"
  }
 ];
