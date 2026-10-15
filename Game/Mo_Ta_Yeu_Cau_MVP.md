@@ -2,7 +2,7 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 1.10 — phân tích báo cáo playtest: đối tượng người chơi, xếp hạng 3 sao, âm thanh, chờ xuất phát, popup Nhiệm vụ/Hướng dẫn, hướng dẫn tương tác Màn 1 (D-40 → D-45) |
+| Phiên bản | 1.11 — sửa theo báo cáo playtest 8 nhân vật: màn hình nhỏ, luôn hiển thị ngang, Màn tiếp, bấm rẽ sớm, bảng lấy hàng cố định, hết giờ không ép mua (D-46 → D-53) |
 | Ngày | 15/10/2026 |
 | Nguồn | Tài liệu ý tưởng game (mục 1–21), flowchart vòng chơi, ảnh tham chiếu giao diện, phản hồi xác nhận của BA |
 | Mục đích | Cơ sở tham chiếu để thiết kế giao diện và viết tài liệu (BRD/SRS/GDD). Không thay thế BRD/SRS. |
@@ -85,6 +85,14 @@ Thử thách đến từ:
 | D-43 | Cải thiện từ báo cáo playtest: (1) **Màn chuẩn bị** có nhãn "Xem bản đồ, lên kế hoạch · xe chưa chạy", nút **Bắt đầu nhấp nháy**, chạm bản đồ (không kéo) → bong bóng chỉ vào nút Bắt đầu. (2) **D-pad nhận hướng theo góc** chạm so với tâm cụm nút, vùng bấm rộng hơn nút 10px, khe giữa nút 8px — không bấm nhầm sang nút bên cạnh. (3) **Màn kết quả khi chưa đạt** giọng nhẹ: "Hết giờ rồi!" / "Trễ hạn mất rồi!", thanh tiến độ "Đã giao x/y kiện", mẹo theo nguyên nhân, nút chính "Thử lại". | [XN] PT-Q2 |
 | D-44 | **Chờ xuất phát, popup Nhiệm vụ & Hướng dẫn** (từ [De_Xuat_Trai_Nghiem_Man_Choi.md](De_Xuat_Trai_Nghiem_Man_Choi.md), đưa vào demo): vào màn xe đứng yên, chỉ mũi tên cùng hướng đầu xe cho xe chạy, **đồng hồ (và hạn riêng của đơn) tính từ lúc xe xuất phát** (Q-65); quay đầu khi chờ: quay tại chỗ, không tính giờ (Q-66); nút cùng hướng nhấp nháy ở mọi màn, bong bóng "Nhấn để xe chạy" **chỉ ở Màn 1–3** (Q-67); popup Nhiệm vụ PA1 (Q-68), Hướng dẫn PA-C mở ở tab "Màn này" (Q-69); chấm "!" trên nút Hướng dẫn ở màn có cơ chế mới lần đầu xuất hiện và chưa mở, không tự mở (Q-70); chạm cụm vòng nhiệm vụ mở popup Nhiệm vụ (Q-71); mọi chỉ báo dừng giờ dùng dạng ngắn **"⏸ mm:ss"** (Q-72). | [XN] PT-Q4 / [GĐ] "vài màn đầu" = Màn 1–3 |
 | D-45 | **Màn 1 giữ 90 giây** + **hướng dẫn tương tác lần đầu chơi Màn 1**: chỉ nút xuất phát → ở mỗi ngã tư cần rẽ xe **dừng hẳn** (đồng hồ dừng), khoanh nút đúng, chỉ nhận đúng nút, ghi "để tới <điểm>" → tới kho chỉ bảng hỏi → báo đã lấy hàng → giao xong đơn đầu thì kết thúc. Có nút "Bỏ qua hướng dẫn". Hướng đúng tính theo đường ngắn nhất tới kho còn hàng / điểm giao của hàng đang chở. | [XN] PT-Q5 / [GĐ] cách hướng dẫn chi tiết |
+| D-46 | **Khung hình:** co theo cả hai chiều và căn giữa tuyệt đối (sửa lỗi lệch/cắt ở màn hình ngang nhỏ như 667×375, 740×360). **Luôn hiển thị ngang:** cầm dọc thì game tự xoay 90° (không còn màn hình "Xoay ngang điện thoại"); bản ứng dụng thật khóa hướng ngang trong cấu hình. | [XN] PT2 I-01, I-17 |
+| D-47 | **Sang màn tiếp:** màn thắng có nút chính **"Màn tiếp ▶"** (Chương 2: nút chính vẫn là "Xem công trình", "Màn tiếp" nằm ở cảnh quay). Thắng xong về Trang chủ thì **tự chọn màn kế tiếp chưa hoàn thành** (kể cả sang chương sau). | [XN] PT2 I-02, I-03 |
+| D-48 | **Bảng lấy hàng giữ cố định vị trí:** mọi đơn của điểm hiện theo thứ tự cố định; đơn đã lấy hết / xe hết chỗ vẫn giữ chỗ, hiện xám, không bấm được. Máy cảm ứng ẩn gợi ý phím. | [XN] PT2 I-05, I-16 |
+| D-49 | **Bấm rẽ sớm vẫn nhận:** bấm hướng trước khi tới vùng nhận lệnh → nhận nếu **giao lộ kế tiếp** có hướng đó; giữ lệnh (nút hiện vàng, mũi tên trên xe) tới giao lộ đó; bấm lại để hủy. Hướng giao lộ kế tiếp không có → vẫn không phản hồi. Sửa CT-04, CT-05. | [XN] PT2 I-06 (a) |
+| D-50 | **Hết giờ, không có vật phẩm, không đủ kim cương:** nút chính **"Thử lại"**, nút phụ "Chịu thua", mua kim cương chỉ là **liên kết nhỏ**; bấm vào → bước xác nhận "Cửa hàng bán bằng tiền thật… hỏi ý kiến bố mẹ" trước khi hiện giá. Sửa VP-02. | [XN] PT2 I-04 |
+| D-51 | **Popup tạm dừng thêm nút Bản đồ** (biểu tượng); đóng bản đồ thì quay lại popup tạm dừng. Vẫn chỉ biểu tượng, không thêm chữ (giữ D-31). | [XN] PT2 I-10 (a), I-11 không làm |
+| D-52 | **Đi qua điểm giao khi chưa có hàng:** hiện dòng nhắc ngắn "Chưa có hàng cho <điểm> — lấy ở <kho> trước", **không dừng xe**. Bổ sung HD-03. | [XN] PT2 I-15 |
+| D-53 | Chỉnh nhỏ: camera được lùi ra ngoài mép bản đồ để xe/điểm không nằm dưới giao diện (I-07); bong bóng hướng dẫn Màn 1 tự chọn chỗ không che xe, nút và bảng hỏi (I-13); ghi "3 kiện từ Kho B" thay "×3"; chấm "!" trên nút màn chỉ ở màn có cơ chế mới, thẻ màn ghi "! Cơ chế mới" (I-16). **Giữ nguyên:** mô tả xe bằng chữ (I-08), công thức sao (I-09 — màn sau khó dần nên màn đầu dễ 3 sao là hợp lý), mở sẵn mọi màn ở demo (I-14). | [XN] PT2 |
 | D-08 | Nhiên liệu/pin, gia tốc, phanh: ngoài MVP. | [XN] |
 | D-09 | Giao thông xác định, dự đoán được (chỉ còn yếu tố tĩnh: hạn chế loại xe, ngõ cụt). | [XN] / D-21, D-22 |
 | D-10 | Màn thiết kế thủ công, kiểm tra khả năng hoàn thành trước khi phát hành. | [XN] |
@@ -168,8 +176,8 @@ flowchart TD
 | CT-01 | Nhấn Bắt đầu → vào màn chơi, **xe đứng yên**; nhấn mũi tên cùng hướng đầu xe → xe tự chạy thẳng theo hướng xuất phát. | [XN] D-44 |
 | CT-02 | Tốc độ xe do loại xe và đoạn đường quyết định. | [XN] |
 | CT-03 | Mỗi giao lộ có **vùng nhận lệnh rẽ** bắt đầu khoảng **1–1,5 giây** trước giao lộ (theo tốc độ xe). Độ dài là **tham số cấu hình**, điều chỉnh qua chơi thử. | [XN] Q-20 |
-| CT-04 | Khi xe vào vùng nhận lệnh, nút rẽ của **hướng khả dụng** sáng lên. Bấm trong vùng → xe rẽ khi tới tâm giao lộ. | [XN] Q-20 |
-| CT-05 | Bấm rẽ ngoài vùng nhận lệnh, hoặc hướng đó không có đường, hoặc đường bị cấm với xe hiện tại (một chiều ngược, cấm loại xe) → **không phản hồi**. | [XN] Q-09, Q-22 |
+| CT-04 | Khi xe vào vùng nhận lệnh, nút rẽ của **hướng khả dụng** sáng lên. Bấm trong vùng → xe rẽ khi tới tâm giao lộ. **Từ D-49:** bấm sớm trước vùng nhận lệnh cũng được nhận nếu giao lộ kế tiếp có hướng đó. | [XN] Q-20 |
+| CT-05 | Bấm rẽ ngoài vùng nhận lệnh, hoặc hướng đó không có đường, hoặc đường bị cấm với xe hiện tại (một chiều ngược, cấm loại xe) → **không phản hồi**. **Ngoại lệ D-49:** bấm sớm hướng mà giao lộ kế tiếp có → được nhận. | [XN] Q-09, Q-22 |
 | CT-06 | Hướng bị cấm **không** sáng nút rẽ (CT-04 chỉ sáng hướng hợp lệ với xe hiện tại). | [SL] từ CT-04 + D-15 |
 | CT-07 | Qua giao lộ không có lệnh rẽ → **đi thẳng**. | [GĐ] |
 | CT-08 | Giao lộ không có hướng thẳng hợp lệ (ngã ba chữ T, đường cụt, hướng thẳng bị cấm) mà không có lệnh rẽ → xe **tự dừng chờ lệnh**. | [XN] Q-21 / [SL] áp dụng cho hướng thẳng bị cấm |
@@ -203,7 +211,7 @@ flowchart TD
 |---|---|---|
 | HD-01 | Mỗi điểm nhiệm vụ / điểm đổi xe có vùng đỗ trên đường (dùng cho logic tự dừng, **không hiển thị** — D-27). | [XN] |
 | HD-02 | Xe vào vùng đỗ và tại đó có **ít nhất một việc làm được** → xe **tự dừng**. | [XN] Q-44 |
-| HD-03 | Tại vùng đỗ **không có việc nào làm được** (kho đã lấy hết hàng, xe đầy, không có hàng giao cho điểm này, xe sai nhóm…) → xe **đi qua bình thường**, không dừng, không hỏi. | [XN] Q-44 (T2, T4) |
+| HD-03 | Tại vùng đỗ **không có việc nào làm được** (kho đã lấy hết hàng, xe đầy, không có hàng giao cho điểm này, xe sai nhóm…) → xe **đi qua bình thường**, không dừng, không hỏi. Điểm giao chưa có hàng: hiện dòng nhắc, không dừng (D-52). | [XN] Q-44 (T2, T4) |
 | HD-04 | Việc tự dừng **không làm mất** hướng đã chọn cho giao lộ kế tiếp. | [XN] (T9) |
 
 ### 5.2. Thứ tự xử lý khi xe đã dừng
@@ -542,6 +550,15 @@ Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 | TC-83 | Tắt âm thanh ở trang chủ, mở lại game | Vẫn tắt; nút ở popup tạm dừng cũng hiện trạng thái tắt | D-42 |
 | TC-84 | Lần đầu chơi Màn 1 | Hướng dẫn tương tác: chỉ nút xuất phát → xe dừng ở ngã tư cần rẽ (đồng hồ dừng), chỉ nhận đúng nút → bảng hỏi ở kho → giao đơn đầu thì kết thúc | D-45 |
 | TC-85 | Chơi Màn 1 lần hai, hoặc đã bấm "Bỏ qua hướng dẫn" | Không còn hướng dẫn | D-45 |
+| TC-86 | Mở game trên màn hình ngang 667×375 / 740×360 / 640×360 | Khung game nằm giữa, đủ nút Bắt đầu, Quay đầu, mini map | D-46 |
+| TC-87 | Mở game khi cầm dọc | Game tự xoay hiển thị ngang; chạm nút hướng, kéo bản đồ vẫn đúng hướng | D-46 |
+| TC-88 | Thắng Màn 1 (Chương 1) | Nút chính "Màn tiếp ▶" mở Màn 2; về Trang chủ thì Màn 2 được chọn sẵn | D-47 |
+| TC-89 | Kho có 2 đơn, lấy hết đơn thứ nhất | Bảng hỏi hiện lại: đơn thứ nhất vẫn ở vị trí cũ, xám "Đã lấy hết", không bấm được | D-48 |
+| TC-90 | Bấm Phải khi xe còn cách giao lộ kế tiếp xa (giao lộ đó có hướng Phải) | Nút Phải hiện vàng, mũi tên trên xe; tới giao lộ xe rẽ phải | D-49 |
+| TC-91 | Như TC-90 nhưng giao lộ kế tiếp không có hướng Phải | Không phản hồi | D-49 |
+| TC-92 | Hết giờ, không vật phẩm, 5 kim cương | Nút chính "Thử lại"; liên kết "Mua kim cương…" → bước xác nhận → mới mở cửa hàng | D-50 |
+| TC-93 | Tạm dừng → nút Bản đồ → Đóng | Quay lại popup tạm dừng; thời gian vẫn dừng | D-51 |
+| TC-94 | Xe trống đi qua điểm giao còn đơn | Hiện "Chưa có hàng cho … — lấy ở … trước"; xe không dừng | D-52 |
 
 > Đã bỏ: TC-06 (nhiệm vụ phụ), TC-07 (nhiên liệu), TC-18 (va chạm).
 
@@ -615,6 +632,7 @@ Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 | Q-64 | Chữ tối thiểu 12px, nút tối thiểu ~44px — chuẩn chung mọi màn hình | 1.8 |
 | VP-Q1 → Q3, M1 → M3 | Vật phẩm Thêm giờ & kim cương vào MVP, thanh toán mô phỏng ở demo; tối đa 2 lần/lượt; thắng nhờ vật phẩm vẫn Đạt và lưu thời gian; gói 50k → 275; lưu dữ liệu trên máy | 1.9 |
 | PT-Q1 → Q7 | Phân tích báo cáo playtest ([Phan_Tich_Playtest.md](Phan_Tich_Playtest.md)): đối tượng 12+; làm A1, A2, A4, âm thanh, hướng dẫn tương tác Màn 1, xếp hạng 3 sao (công thức BA); gộp bản thử (Q-65 → Q-72 theo đề xuất); vuốt để sau; không làm Nitro, vệt GPS, chế độ Zen | 1.10 |
+| PT2 (I-01 → I-17) | Báo cáo playtest 8 nhân vật ([Bao_Cao_Playtest_8_Nhan_Vat.md](Bao_Cao_Playtest_8_Nhan_Vat.md)): làm I-01, I-02, I-03, I-05, I-07, I-13, I-16; I-17 luôn ngang; I-06 (a); I-04; I-10 (a); I-15. Giữ I-08, I-09, I-14; không làm I-11, I-10 (c) | 1.11 |
 
 ---
 
@@ -647,7 +665,7 @@ Bản thử: [mockups/proto_trai_nghiem.html](mockups/proto_trai_nghiem.html) �
 | ID | Yêu cầu | Nguồn |
 |---|---|---|
 | VP-01 | Đồng hồ tổng về 0:00, còn đơn chưa giao, số lần Thêm giờ đã dùng < 2 → **dừng thời gian**, hiện popup "Hết giờ!" ghi số đơn và số kiện còn lại. | [XN] D-36 |
-| VP-02 | Nút chính theo thứ tự ưu tiên: có vật phẩm → **"Dùng +30 giây"** (ghi số đang có); không có vật phẩm nhưng đủ 20 kim cương → **"Mua & dùng +30 giây · 20"**; không đủ → **"Mua kim cương"** (mở cửa hàng, thời gian vẫn dừng, mua xong quay lại popup). Nút phụ **"Chịu thua"** → Không đạt (F-01). | [XN] luồng mục 4 |
+| VP-02 | Nút chính theo thứ tự ưu tiên: có vật phẩm → **"Dùng +30 giây"** (ghi số đang có); không có vật phẩm nhưng đủ 20 kim cương → **"Mua & dùng +30 giây · 20"**; không đủ → **"Mua kim cương"** (mở cửa hàng, thời gian vẫn dừng, mua xong quay lại popup). Nút phụ **"Chịu thua"** → Không đạt (F-01). **Sửa bởi D-50:** khi không đủ kim cương, nút chính là "Thử lại"; mua kim cương là liên kết phụ có bước xác nhận. | [XN] luồng mục 4 |
 | VP-03 | Cuối popup ghi số kim cương, số vật phẩm và "Thêm giờ lần n/2". | [GĐ] |
 | VP-04 | Dùng xong: đồng hồ +30 giây, đóng popup, chơi tiếp từ đúng trạng thái cũ (xe, hàng, lệnh rẽ không đổi). | [SL] |
 | VP-05 | Đã dùng đủ 2 lần → hết giờ là thua ngay, lý do ghi rõ đã dùng 2/2 lần. | [XN] D-36 |

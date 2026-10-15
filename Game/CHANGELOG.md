@@ -5,7 +5,7 @@ Quy trình: [Quy_Trinh_Phien_Ban.md](Quy_Trinh_Phien_Ban.md) · Danh sách và s
 Mỗi mục ứng với một phiên bản. Mục "đang làm" được ghi dần trong lúc làm; khi chốt, script đổi thành "chốt dd/mm/yyyy" và mở mục mới.
 Mỗi thay đổi ghi kèm mã quyết định (D-xx, Q-xx) và **vị trí code** để sau này lấy lại được.
 
-## v1.2 · đang làm
+## v1.3 · đang làm
 
 Tóm tắt: (chưa có thay đổi)
 
@@ -18,6 +18,50 @@ Tài liệu yêu cầu: (ghi khi chốt)
 ### Bỏ
 
 ### Vị trí code
+
+## v1.2 · chốt 15/10/2026
+
+Tóm tắt: Sửa theo báo cáo playtest 8 nhân vật — chơi được trên màn hình nhỏ và khi cầm dọc, nút Màn tiếp, bấm rẽ sớm, bảng lấy hàng cố định, hết giờ không ép mua, nút Bản đồ trong tạm dừng.
+
+Tài liệu yêu cầu: v1.11
+
+### Thêm
+
+- Nút **"Màn tiếp ▶"** là nút chính ở màn thắng (Chương 1); phím Enter cũng sang màn tiếp (D-47).
+- Nút **Bản đồ** trong popup tạm dừng; đóng bản đồ quay lại tạm dừng (D-51).
+- Bước xác nhận trước khi mở cửa hàng từ popup hết giờ ("bán bằng tiền thật… hỏi ý kiến bố mẹ") (D-50).
+- Dòng nhắc "Chưa có hàng cho … — lấy ở … trước" khi đi qua điểm giao mà chưa có hàng (D-52).
+
+### Thay đổi
+
+- **Khung hình căn giữa tuyệt đối** — hết lệch/cắt ở 667×375, 740×360, 640×360 (D-46, I-01).
+- **Cầm dọc: game tự xoay 90°** thay cho màn "Xoay ngang điện thoại"; mọi thao tác chạm/kéo đổi tọa độ theo hướng xoay (D-46, I-17).
+- Thắng xong về Trang chủ → **tự chọn màn kế tiếp** chưa hoàn thành (D-47, I-02).
+- **Bấm rẽ sớm** được nhận nếu giao lộ kế tiếp có hướng đó (D-49, I-06a).
+- **Bảng lấy hàng giữ cố định vị trí**, đơn đã lấy hết hiện xám; máy cảm ứng ẩn gợi ý phím (D-48).
+- Hết giờ khi không có vật phẩm và không đủ kim cương: nút chính **"Thử lại"**, mua kim cương thành liên kết phụ (D-50, I-04).
+- Camera lùi được ra ngoài mép bản đồ để giao diện không che xe/điểm (D-53, I-07).
+- Bong bóng hướng dẫn Màn 1 tự chọn chỗ không che xe, nút, bảng hỏi (I-13).
+- "×3 từ Kho B" → "3 kiện từ Kho B"; chấm "!" trên nút màn chỉ ở màn có cơ chế mới, thẻ màn ghi "! Cơ chế mới" (I-16).
+- Màn kết quả rộng hơn để 3 nút nằm một hàng; sao hiện bằng hẹn giờ (nếu hiệu ứng không chạy sao vẫn hiện).
+- Bộ lái tự động: chỉ chọn nút lấy hàng còn bấm được. Thời gian đo được không đổi.
+
+### Bỏ
+
+- Màn hình "Xoay ngang điện thoại để chơi".
+
+### Vị trí code
+
+| Tính năng | Hàm / khối chính |
+|---|---|
+| Khung hình, xoay | `fit`, `STG`, `toStage`, `rectToStage`; CSS `#wrap`, `#stage` |
+| Màn tiếp | `nextLevel`, `goHome`, nút `#bNext2` trong `end` |
+| Bảng lấy hàng | `choices` (cờ `ok`), `hasWork`, `askChoose`, `renderAsk` |
+| Bấm rẽ sớm | `cTurn` (nhánh `!v[dir]`) |
+| Hết giờ, cổng mua | `renderTO`, `toAct` (`retry`, `shop`), `#gatev` |
+| Bản đồ từ tạm dừng | `pauseMap`, `resume` (`G.mapFromPause`) |
+| Nhắc chưa có hàng | `step` (`G.noGoodsZ`) |
+| Camera | `render` (`CAM`, lề ngoài bản đồ) |
 
 ## v1.1 · chốt 15/10/2026
 

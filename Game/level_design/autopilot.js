@@ -35,7 +35,7 @@ function runPlan(li, vk, plan, maxSec = 400, naive = false) {
       const here = G.ask.z.id;
       if (tgt && here === tgt.id && plan[k].picks && plan[k].picks.length) {
         const want = PLACE[plan[k].picks[0]];
-        const i = G.ask.ch.findIndex(a => a.label.endsWith(want));
+        const i = G.ask.ch.findIndex(a => a.ok !== false && a.label.endsWith(want));
         if (i >= 0) { plan[k].picks.shift(); askChoose(i); } else { plan[k].picks.shift(); }
       } else { if (tgt && here === tgt.id) { log.push([+G.t.toFixed(1), here]); k++; } askSkip(); }
       continue;
