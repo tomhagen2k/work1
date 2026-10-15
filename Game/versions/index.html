@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Các phiên bản demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#eef5e8;--card:#fff;--ink:#2d3440;--sub:#5c6573;--line:#e3e6ea;--go:#37c26b;--goD:#24995a;--blue:#1c7ed6}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Nunito","Segoe UI",sans-serif;padding:20px 16px 40px}
+  .wrap{max-width:1100px;margin:0 auto}
+  header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  h1{font-size:26px;font-weight:900}
+  h1 small{display:block;font-size:13px;color:var(--sub);font-weight:800;margin-top:2px}
+  .btn{display:inline-flex;align-items:center;gap:6px;border-radius:14px;padding:9px 16px;font-weight:900;font-size:14px;text-decoration:none;background:var(--go);color:#fff;box-shadow:0 3px 0 var(--goD)}
+  .btn.alt{background:#fff;color:var(--ink);border:2px solid var(--line);box-shadow:0 3px 0 rgba(0,0,0,.08)}
+  .btn.sm{padding:6px 11px;font-size:12.5px;border-radius:11px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+  .card{background:var(--card);border-radius:16px;overflow:hidden;box-shadow:0 3px 0 rgba(0,0,0,.08);display:flex;flex-direction:column}
+  .card.dev{outline:3px solid #ffd43b}
+  .thumb{aspect-ratio:844/390;background:#8fd16a center/cover no-repeat;display:grid;place-items:center;color:#2b8a3e;font-weight:900;font-size:13px}
+  .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .ver{display:flex;align-items:center;gap:8px;font-size:20px;font-weight:900}
+  .tag{font-size:11.5px;font-weight:900;border-radius:8px;padding:2px 8px;background:#e7f5ff;color:var(--blue)}
+  .tag.dev{background:#fff3bf;color:#8a6d00}
+  .meta{font-size:12.5px;font-weight:800;color:var(--sub)}
+  .sum{font-size:13.5px;font-weight:800;line-height:1.35}
+  .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+  .empty{background:#fff;border-radius:16px;padding:18px;font-weight:800;color:var(--sub);line-height:1.5}
+  code{background:#f1f3f5;border-radius:5px;padding:1px 5px;font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Các phiên bản demo<small>Bản đang làm luôn là <code>demo/index.html</code>; mỗi lần chốt, bản đó được lưu vào đây và không sửa nữa.</small></h1>
+    <a class="btn" href="so_sanh.html">So sánh hai bản</a>
+  </header>
+  <div class="grid" id="grid"></div>
+</div>
+<script src="danh_sach.js"></script>
+<script>
+const V=(window.VERSIONS||[]).slice().reverse();
+const card=(o)=>`<div class="card ${o.dev?'dev':''}">
+  <div class="thumb" style="${o.img?`background-image:url('${o.img}')`:''}">${o.img?'':'Chưa có ảnh — ảnh được chụp khi chốt'}</div>
+  <div class="body">
+    <div class="ver">${o.title}<span class="tag ${o.dev?'dev':''}">${o.dev?'Đang làm':'Bản lưu'}</span></div>
+    <div class="meta">${o.meta}</div>
+    <div class="sum">${o.sum||''}</div>
+    <div class="acts">${o.acts}</div>
+  </div></div>`;
+const html=[card({dev:true,title:'Bản hiện tại',meta:'demo/index.html — số phiên bản ghi ở góc trang chủ',sum:'Mọi thay đổi mới đang được sửa trực tiếp ở bản này.',
+  acts:`<a class="btn sm" href="../demo/index.html">Chơi</a><a class="btn alt sm" href="../CHANGELOG.md">Nhật ký thay đổi</a>${V.length?`<a class="btn alt sm" href="so_sanh.html?a=${V[0].ver}&b=dev">So với v${V[0].ver}</a>`:''}`})]
+  .concat(V.map((v,i)=>card({title:'v'+v.ver,img:v.anh&&v.anh.length?`v${v.ver}/anh/${v.anh.includes('04_chuan_bi_man10.png')?'04_chuan_bi_man10.png':v.anh[0]}`:'',
+    meta:`Chốt ${v.ngay} · tài liệu yêu cầu v${v.tai_lieu} · nhãn Git <code>${v.tag}</code>`,sum:v.tom_tat,
+    acts:`<a class="btn sm" href="v${v.ver}/index.html">Chơi</a><a class="btn alt sm" href="v${v.ver}/GHI_CHU.md">Ghi chú</a><a class="btn alt sm" href="v${v.ver}/anh/">Ảnh</a>`+
+      (V[i+1]?`<a class="btn alt sm" href="so_sanh.html?a=${V[i+1].ver}&b=${v.ver}">So với v${V[i+1].ver}</a>`:'')})));
+document.getElementById('grid').innerHTML=html.join('')+(V.length?'':`<div class="empty">Chưa có bản lưu nào. Khi BA nói <b>"chốt phiên bản"</b>, bản hiện tại được lưu thành <b>v1.0</b> và xuất hiện ở đây.</div>`);
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>So sánh phiên bản</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#1f252c;--panel:#2b333d;--ink:#f1f3f5;--sub:#aab4bf;--go:#37c26b;--goD:#24995a}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Nunito","Segoe UI",sans-serif;padding:12px 16px 30px}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:var(--panel);border-radius:14px;padding:10px 12px;margin-bottom:12px}
+  .bar label{font-size:12.5px;font-weight:900;color:var(--sub);display:flex;align-items:center;gap:6px}
+  select,input{font-family:inherit;font-weight:800;font-size:13.5px;border-radius:10px;border:0;padding:7px 9px;background:#fff;color:#2d3440}
+  input{width:150px}
+  button,a.b{font-family:inherit;font-weight:900;font-size:13.5px;border:0;border-radius:11px;padding:8px 14px;background:var(--go);color:#fff;box-shadow:0 3px 0 var(--goD);cursor:pointer;text-decoration:none}
+  .seg{display:flex;background:#1f252c;border-radius:11px;padding:3px}
+  .seg button{background:none;box-shadow:none;color:var(--sub);padding:6px 12px}
+  .seg button.on{background:#fff;color:#2d3440}
+  .back{background:#fff;color:#2d3440;box-shadow:none}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:900px){.two{grid-template-columns:1fr}}
+  .col h2{font-size:15px;font-weight:900;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+  .col h2 span{font-size:11.5px;background:#495057;border-radius:8px;padding:2px 8px}
+  .frame{position:relative;width:100%;aspect-ratio:844/390;border-radius:10px;overflow:hidden;background:#000}
+  .frame iframe{position:absolute;left:0;top:0;width:844px;height:390px;border:0;transform-origin:0 0}
+  .shot{margin-bottom:14px}
+  .shot h3{font-size:13px;font-weight:900;color:var(--sub);margin:4px 0 6px}
+  .shot img{width:100%;border-radius:10px;display:block;background:#000}
+  .none{aspect-ratio:844/390;border-radius:10px;border:2px dashed #495057;display:grid;place-items:center;color:var(--sub);font-weight:800;font-size:13px;text-align:center;padding:10px}
+  .hint{font-size:12px;font-weight:800;color:var(--sub)}
+</style>
+</head>
+<body>
+<div class="bar">
+  <a class="b back" href="index.html">← Danh sách</a>
+  <label>Bản A <select id="sa"></select></label>
+  <label>Bản B <select id="sb"></select></label>
+  <div class="seg" id="mode"><button data-m="live" class="on">Chơi trực tiếp</button><button data-m="shot">Ảnh chuẩn</button></div>
+  <label id="lPre">Màn hình <select id="pre"></select></label>
+  <label id="lHash"># <input id="hash" placeholder="vd lv=4&play"></label>
+  <button id="go">Mở</button>
+  <span class="hint" id="hint">Hai bản chạy độc lập, kỷ lục của từng bản lưu riêng.</span>
+</div>
+<div id="out"></div>
+<script src="danh_sach.js"></script>
+<script>
+const LIST=(window.VERSIONS||[]).slice().reverse();
+const OPTS=[{v:'dev',l:'Đang làm (demo/index.html)',p:'../demo/index.html'}].concat(LIST.map(x=>({v:x.ver,l:'v'+x.ver+' · '+x.ngay,p:`v${x.ver}/index.html`,o:x})));
+const PRE=[['','Trang chủ'],['ch=2','Trang chủ · Chương 2'],['lv=4','Chuẩn bị · màn 4'],['lv=10','Chuẩn bị · màn 10'],['lv=4&play','Đang chơi · màn 4'],
+  ['lv=10&play','Đang chơi · màn 10'],['lv=10&play&map','Bản đồ lớn · màn 10'],['lv=4&play&pause','Tạm dừng · màn 4'],['lv=7&win&cutend','Hoàn thành · màn 7'],['*','Tự nhập…']];
+const SHOTS=['01_trang_chu','02_trang_chu_chuong2','03_chuan_bi_man4','04_chuan_bi_man10','05_dang_choi_man4','06_ban_do_lon_man10','07_tam_dung_man4','08_hoan_thanh_man7'];
+const $=id=>document.getElementById(id),q=new URLSearchParams(location.search);
+['sa','sb'].forEach((id,i)=>{$(id).innerHTML=OPTS.map(o=>`<option value="${o.v}">${o.l}</option>`).join('');
+  $(id).value=q.get(i?'b':'a')||(i?'dev':(OPTS[1]?OPTS[1].v:'dev'));});
+$('pre').innerHTML=PRE.map(([h,l])=>`<option value="${h}">${l}</option>`).join('');
+let mode='live';
+const opt=v=>OPTS.find(o=>o.v===v)||OPTS[0];
+function fitFrames(){document.querySelectorAll('.frame').forEach(f=>{const i=f.querySelector('iframe');if(i)i.style.transform=`scale(${f.clientWidth/844})`;});}
+function render(){
+  $('lPre').style.display=$('lHash').style.display=mode==='live'?'':'none';$('lHash').style.display=mode==='live'&&$('pre').value==='*'?'':'none';
+  const A=opt($('sa').value),B=opt($('sb').value);
+  if(mode==='live'){const h=$('pre').value==='*'?$('hash').value.replace(/^#/,''):$('pre').value,t=Date.now();
+    $('out').innerHTML=`<div class="two">${[A,B].map(o=>`<div class="col"><h2>${o.l}<span>${o.v==='dev'?'đang làm':'bản lưu'}</span></h2><div class="frame"><iframe src="${o.p}?t=${t}${h?'#'+h:''}"></iframe></div></div>`).join('')}</div>`;
+    fitFrames();}
+  else{const cell=(o,s)=>o.v!=='dev'&&o.o.anh&&o.o.anh.includes(s+'.png')?`<img src="v${o.v}/anh/${s}.png" alt="">`:`<div class="none">${o.v==='dev'?'Bản đang làm chưa có ảnh chuẩn — ảnh được chụp khi chốt. Dùng "Chơi trực tiếp".':'Không có ảnh này'}</div>`;
+    $('out').innerHTML=`<div class="two"><div class="col"><h2>${A.l}</h2></div><div class="col"><h2>${B.l}</h2></div></div>`+
+      SHOTS.map(s=>`<div class="shot"><h3>${s.slice(3).replace(/_/g,' ')}</h3><div class="two"><div>${cell(A,s)}</div><div>${cell(B,s)}</div></div></div>`).join('');}
+}
+$('mode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;mode=b.dataset.m;[...$('mode').children].forEach(x=>x.classList.toggle('on',x===b));render();});
+['sa','sb'].forEach(id=>$(id).addEventListener('change',render));
+$('pre').addEventListener('change',()=>{if($('pre').value!=='*')render();else $('lHash').style.display='';});
+$('go').addEventListener('click',render);$('hash').addEventListener('keydown',e=>{if(e.key==='Enter')render();});
+addEventListener('resize',fitFrames);render();
+</script>
+</body>
+</html>

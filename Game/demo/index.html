@@ -189,7 +189,7 @@
 
   <button id="bSkip">Bỏ qua ⏭</button>
   <div class="ov" id="home">
-    <div id="hLeft"><div class="brand">Giao Hàng<small>BẢN DEMO</small></div><div id="chList" style="display:flex;flex-direction:column;gap:8px"></div></div>
+    <div id="hLeft"><div class="brand">Giao Hàng<small id="verTag">BẢN DEMO</small></div><div id="chList" style="display:flex;flex-direction:column;gap:8px"></div></div>
     <svg id="hMap" viewBox="0 0 644 390"></svg>
     <div class="panel" id="hCard"></div>
   </div>
@@ -226,6 +226,12 @@
 </div></div>
 
 <script>
+/* ======================= Phiên bản (Quy_Trinh_Phien_Ban.md) ======================= */
+// Script tools/chot_phien_ban.py đọc và sửa 2 dòng dưới — giữ nguyên định dạng.
+const VER='1.0';
+const VER_SAVED=false; // true = bản lưu trong versions/ (không sửa nữa)
+const SK=VER_SAVED?`v${VER}_`:''; // bản lưu dùng khóa lưu riêng để kỷ lục không lẫn giữa các bản
+
 /* ======================= Thông số chung ======================= */
 const SP=350, TURN_ZONE=2.0, ZONE_HALF=90, PICK_TIME=2, DROP_TIME=1.5;
 const VEH={
@@ -645,10 +651,10 @@ function step(dt){
   for(const m of G.M)if(m.dl&&G.t>m.dl&&m.delivered<m.qty)return end(false,`Đơn ${m.src} → ${m.name} đã quá hạn ${fmt(m.dl)} (mới giao ${m.delivered}/${m.qty} kiện).`);
   if(G.t>=LV.T0){G.t=LV.T0;return end(false,`Hết thời gian. Còn ${G.M.filter(m=>m.delivered<m.qty).map(m=>m.name).join(', ')} chưa giao đủ.`);}
 }
-function getBest(i){try{const v=parseFloat(localStorage.getItem(`demo_best_L${i+1}`));return isNaN(v)?null:v;}catch(e){return null;}}
+function getBest(i){try{const v=parseFloat(localStorage.getItem(`${SK}demo_best_L${i+1}`));return isNaN(v)?null:v;}catch(e){return null;}}
 function end(win,why){
   G.state=win?'won':'lost';const t=G.t;let best=getBest(LVI),rec=false;
-  if(win&&(best===null||t<best)){rec=true;best=t;try{localStorage.setItem(`demo_best_L${LVI+1}`,t);}catch(e){}}
+  if(win&&(best===null||t<best)){rec=true;best=t;try{localStorage.setItem(`${SK}demo_best_L${LVI+1}`,t);}catch(e){}}
   $('rTitle').textContent=win?'Hoàn thành!':'Không đạt';$('rTitle').style.color=win?'#2b8a3e':'#2d3440';
   $('rWhy').textContent=win?'':why;
   $('rStat').textContent=win?`${V().name} · thời gian ${fmt(t)} · còn lại ${fmt(LV.T0-t)}`:`${V().name} · đã chơi ${fmt(t)}`;
@@ -978,6 +984,8 @@ function loop(now){acc+=Math.min(.25,(now-last)/1000);last=now;
 const vPrep=makeViewer('pMap'),vPlay=makeViewer('vMap');
 // dựng sẵn màn 1 phía sau trang chủ
 buildLevel(0);buildCarLayer();reset();G.state='home';
+document.getElementById('verTag').textContent=`BẢN DEMO · v${VER} ${VER_SAVED?'· bản lưu':'· đang làm'}`;
+document.title=`Demo Giao Hàng · v${VER}${VER_SAVED?'':' (đang làm)'}`;
 renderHome();show('home');
 // mở thẳng một màn qua địa chỉ, ví dụ index.html#lv=3
 const hc=location.hash.match(/ch=(\d)/);if(hc&&CHAPTERS[+hc[1]-1]){HCH=+hc[1]-1;HSEL=null;renderHome();}

@@ -1,0 +1,20 @@
+// Tự sinh bởi tools/chot_phien_ban.py — không sửa tay
+window.VERSIONS=[
+ {
+  "ver": "1.0",
+  "ngay": "15/10/2026",
+  "tai_lieu": "1.9",
+  "tom_tat": "Bản gốc khi bắt đầu quản lý phiên bản — 10 màn trong 2 chương, điều khiển 4 hướng, xe tự dừng và bảng hỏi ở điểm, Chương 2 xây dựng dần, bản đồ lớn phóng to/thu nhỏ, màn chuẩn bị ghi nhiệm vụ trên bản đồ.",
+  "anh": [
+   "01_trang_chu.png",
+   "02_trang_chu_chuong2.png",
+   "03_chuan_bi_man4.png",
+   "04_chuan_bi_man10.png",
+   "05_dang_choi_man4.png",
+   "06_ban_do_lon_man10.png",
+   "07_tam_dung_man4.png",
+   "08_hoan_thanh_man7.png"
+  ],
+  "tag": "demo-v1.0"
+ }
+];

@@ -7,6 +7,7 @@
 | Nguồn | Tài liệu ý tưởng game (mục 1–21), flowchart vòng chơi, ảnh tham chiếu giao diện, phản hồi xác nhận của BA |
 | Mục đích | Cơ sở tham chiếu để thiết kế giao diện và viết tài liệu (BRD/SRS/GDD). Không thay thế BRD/SRS. |
 | Ý tưởng chờ xem xét | [Y_Tuong_Mo_Rong.md](Y_Tuong_Mo_Rong.md) — chưa phải yêu cầu |
+| Phiên bản demo | [Quy_Trinh_Phien_Ban.md](Quy_Trinh_Phien_Ban.md) · nhật ký [CHANGELOG.md](CHANGELOG.md) · các bản lưu [versions/index.html](versions/index.html) |
 
 **Quy ước đánh dấu nguồn gốc yêu cầu**
 
