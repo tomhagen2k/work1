@@ -1655,8 +1655,12 @@ function buildMarks(v,og,mode){
     const nm=tx(lab,z.name,12);
     if(mode==='prep'&&z.id===site){const sp=el('tspan',{fill:'#c77c00','font-size':12},nm);sp.textContent=' · công trình';}
     // hạn giao tách thành dòng riêng (T-10)
-    if(mode==='prep'&&!z.kho){let y=27;G.M.filter(m=>m.to===z.id).forEach(m=>{tx(lab,`${m.qty} kiện từ ${m.src}`,y,{'font-size':12,fill:m.dl?'#c92a2a':'#3b4350'});y+=14;
-      if(m.dl){tx(lab,`⏱ hạn ${fmt(m.dl)}`,y,{'font-size':12,fill:'#c92a2a'});y+=14;}});}});
+    // nhiệm vụ dưới tên điểm giao: màn chuẩn bị ghi đủ; khi đang chơi (bản đồ lớn) ghi số kiện CÒN PHẢI GIAO, đang chở, hạn còn lại (D-75)
+    if(!z.kho&&mode==='prep'){let y=27;G.M.filter(m=>m.to===z.id).forEach(m=>{tx(lab,`${m.qty} kiện từ ${m.src}`,y,{'font-size':12,fill:m.dl?'#c92a2a':'#3b4350'});y+=14;
+      if(m.dl){tx(lab,`⏱ hạn ${fmt(m.dl)}`,y,{'font-size':12,fill:'#c92a2a'});y+=14;}});}
+    if(!z.kho&&mode==='play'){let y=27;G.M.filter(m=>m.to===z.id&&m.delivered<m.qty).forEach(m=>{const left=m.qty-m.delivered;
+      tx(lab,`Còn ${left} kiện từ ${m.src}`+(m.onboard>0?` · đang chở ${m.onboard}`:''),y,{'font-size':12,fill:m.dl?'#c92a2a':m.onboard>0?'#b35c00':'#3b4350'});y+=14;
+      if(m.dl){tx(lab,`⏱ hạn còn ${fmt(Math.max(0,m.dl-G.t))}`,y,{'font-size':12,fill:'#c92a2a'});y+=14;}});}});
   if(LV.bonus)(G.gems||[]).forEach(gm=>{if(gm.got)return;const g=add(gm.x,gm.y,{});el('path',{d:'M-7 -3 L-4 -8 H4 L7 -3 L0 7Z',fill:'#4dd4f7',stroke:'#fff','stroke-width':2,'stroke-linejoin':'round'},g);});
   const c=add(G.disp.x,G.disp.y,{car:true});el('circle',{r:9,fill:'#fff',stroke:'#e8590c','stroke-width':4},c);
   tx(c,'Xe',4.5,{x:14,'text-anchor':'start',fill:'#e8590c'});

@@ -2,7 +2,7 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 1.25 — Chương 2 Khu đô thị mới dựng lại theo khung (D-74). 1.24 — Màn thưởng kim cương cuối chương (D-73). 1.23 — Hướng dẫn Màn 1 luôn chạy, mẹo Quay đầu ở điểm giao thứ nhất (D-72). 1.22 — Mẹo Quay đầu trong hướng dẫn Màn 1 (D-71). 1.21 — Luật chơi lần đầu ở Màn 1 (D-70). 1.20 — Đặt trước Quay đầu khi dừng ở điểm (D-69). 1.19 — Chương 1 Làng ven sông vào demo (D-68). 1.18 — Điều chỉnh CT-06, CT-07 (D-67). 1.17 — Chủ đề khung cảnh 15 chương (D-66). 1.16 — Bộ công thức độ khó và bố cục 15 chương (D-65). 1.15 — Chỉ vận chuyển hàng hóa; chở khách và đổi xe xếp cuối (D-64); khung độ khó chuyển sang file riêng [level_design/Khung_Do_Kho_Chuong_Man.md](level_design/Khung_Do_Kho_Chuong_Man.md). 1.14 — Khung tăng độ khó theo chương và màn (D-63), câu hỏi mở về cách đo độ khó (DK-Q1, DK-Q2). 1.13 — Chương 2 cho người chơi thấy khung cảnh tiến triển: cảnh quay mới, đoạn mở màn, đô thị hoá quanh công trình, cần cẩu, nhãn không chồng (D-54 → D-58); địa danh riêng, cụm nhà mọc, Trang chủ, cảnh kết chương và bưu thiếp (D-59 → D-62) |
+| Phiên bản | 1.26 — Bản đồ lớn khi chơi hiện nhiệm vụ còn lại (D-75). 1.25 — Chương 2 Khu đô thị mới dựng lại theo khung (D-74). 1.24 — Màn thưởng kim cương cuối chương (D-73). 1.23 — Hướng dẫn Màn 1 luôn chạy, mẹo Quay đầu ở điểm giao thứ nhất (D-72). 1.22 — Mẹo Quay đầu trong hướng dẫn Màn 1 (D-71). 1.21 — Luật chơi lần đầu ở Màn 1 (D-70). 1.20 — Đặt trước Quay đầu khi dừng ở điểm (D-69). 1.19 — Chương 1 Làng ven sông vào demo (D-68). 1.18 — Điều chỉnh CT-06, CT-07 (D-67). 1.17 — Chủ đề khung cảnh 15 chương (D-66). 1.16 — Bộ công thức độ khó và bố cục 15 chương (D-65). 1.15 — Chỉ vận chuyển hàng hóa; chở khách và đổi xe xếp cuối (D-64); khung độ khó chuyển sang file riêng [level_design/Khung_Do_Kho_Chuong_Man.md](level_design/Khung_Do_Kho_Chuong_Man.md). 1.14 — Khung tăng độ khó theo chương và màn (D-63), câu hỏi mở về cách đo độ khó (DK-Q1, DK-Q2). 1.13 — Chương 2 cho người chơi thấy khung cảnh tiến triển: cảnh quay mới, đoạn mở màn, đô thị hoá quanh công trình, cần cẩu, nhãn không chồng (D-54 → D-58); địa danh riêng, cụm nhà mọc, Trang chủ, cảnh kết chương và bưu thiếp (D-59 → D-62) |
 | Ngày | 15/10/2026 |
 | Nguồn | Tài liệu ý tưởng game (mục 1–21), flowchart vòng chơi, ảnh tham chiếu giao diện, phản hồi xác nhận của BA |
 | Mục đích | Cơ sở tham chiếu để thiết kế giao diện và viết tài liệu (BRD/SRS/GDD). Không thay thế BRD/SRS. |
@@ -115,6 +115,7 @@ Thử thách đến từ:
 | D-72 | **Hướng dẫn di chuyển Màn 1 Chương 1 luôn chạy** mỗi lần vào màn (thay "lần đầu chơi Màn 1" của D-45). **Mẹo Quay đầu (D-71) hiện khi đã lấy đủ hàng ở kho cho mọi điểm giao và xe dừng ở điểm giao thứ nhất** (thay "lần đầu xe dừng lấy hàng"). Thẻ luật chơi và 4 bước khoanh (D-70) vẫn chỉ lần đầu. | [XN] phản hồi BA 16/10 |
 | D-73 | **Màn thưởng kim cương cuối mỗi chương** ([Y_Tuong_Mo_Rong.md](Y_Tuong_Mo_Rong.md) YT-03, quy tắc MT-1 → MT-8): bản đồ chương hoàn thiện, 20–30 kim cương trên các tuyến, xe đi qua tự nhặt; không tính sao; thưởng đúng số nhặt được; thoát giữa chừng không tính, chơi lại được; nhận thưởng xong thì khóa; không dùng Thêm giờ; mở sau khi thắng màn 10 (nút 🎁 sau cờ Hết chương). Ngoài khung độ khó (CM-05). | [XN] phản hồi BA 16/10 |
 | D-74 | **Chương 2 · Khu đô thị mới dựng lại theo khung độ khó**, thay 5 màn thử nghiệm: 10 màn ĐK 6–15, yếu tố mới nhiều kho (2 kho từ màn 3, 3 kho từ màn 8), bản đồ chung 7×4, khung cảnh xây mới 10 công trình, màn thưởng "Lễ khánh thành". Thiết kế + số đo: [level_design/Thiet_Ke_Chuong_2.md](level_design/Thiet_Ke_Chuong_2.md). C2-1 đã chốt: màn 7, 9 chấp nhận 22 kế hoạch; màn trùm đánh giá bằng số kế hoạch đạt 3★ (khung độ khó bản 0.5). | [XN] yêu cầu BA 16/10 |
+| D-75 | **Bản đồ lớn mở khi đang chơi** (từ mini map / popup tạm dừng) hiện nhiệm vụ dưới tên điểm giao như màn chuẩn bị, theo tiến độ: "Còn N kiện từ <kho>", thêm "· đang chở n" khi xe đang chở hàng tới điểm đó, "⏱ hạn còn m:ss" với đơn có hạn; điểm đã giao đủ chỉ còn ký hiệu xám ✓. Bổ sung D-33. | [XN] phản hồi BA 16/10 / [GĐ] câu chữ |
 | D-08 | Nhiên liệu/pin, gia tốc, phanh: ngoài MVP. | [XN] |
 | D-09 | Giao thông xác định, dự đoán được (chỉ còn yếu tố tĩnh: hạn chế loại xe, ngõ cụt). | [XN] / D-21, D-22 |
 | D-10 | Màn thiết kế thủ công, kiểm tra khả năng hoàn thành trước khi phát hành. | [XN] |
@@ -685,6 +686,7 @@ Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 | Phản hồi demo v1.4 | Hướng dẫn Màn 1 luôn chạy; mẹo Quay đầu ở điểm giao thứ nhất (D-72) | 1.23 |
 | YT-03 | Màn thưởng kim cương cuối chương (D-73) | 1.24 |
 | Dựng Chương 2 | Chương 2 Khu đô thị mới theo khung độ khó + màn thưởng (D-74) | 1.25 |
+| Phản hồi demo v1.4 | Bản đồ lớn khi chơi hiện nhiệm vụ còn lại (D-75) | 1.26 |
 
 ---
 
