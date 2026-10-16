@@ -7,17 +7,33 @@ Mỗi thay đổi ghi kèm mã quyết định (D-xx, Q-xx) và **vị trí code
 
 ## v1.4 · đang làm
 
-Tóm tắt: (chưa có thay đổi)
+Tóm tắt: Chương 1 mới "Làng ven sông" — 10 màn theo khung độ khó (D-63 → D-67), khung cảnh làng xây dựng dần (D-66); engine đọc cấu hình chương
 
 Tài liệu yêu cầu: (ghi khi chốt)
 
 ### Thêm
+- **Chương 1 · Làng ven sông** (10 màn, thay Chương 1 demo cũ "Khu phố nhỏ"): 1 kho (Hợp tác xã), xe van; yếu tố mới ở màn 1 (điều khiển), 3 (nhiều điểm giao), 5 (chia chuyến), 8 (đường lớn — đường đê); màn 10 là màn trùm. T0 theo CT-05 từ thời gian đo bằng autopilot. Thiết kế + số đo: `level_design/Thiet_Ke_Chuong_1.md` (D-63 → D-67).
+- **Khung cảnh Làng ven sông** (bộ tài nguyên A): ruộng lúa chia ô có bờ, lũy tre viền xóm, nhà ba gian có sân gạch, sông và đường đê, trâu, đống rơm; vườn rau là chỗ nhà mới sẽ mọc (D-66).
+- **10 công trình của làng** (mỗi màn thắng một công trình, câu thông báo riêng): lều chợ, giếng làng, trường làng, cụm nhà Xóm Đông, trạm y tế, ao cá, đình làng, bến đò, nhà văn hóa, chợ phiên dưới gốc đa (Chợ phiên xây 2 giai đoạn: màn 1 và màn 10). Cảnh kết chương và bưu thiếp dùng lại cơ chế Chương 2.
+- `level_design/levels_ch1.py`, `ket_qua_ch1.json` (bộ giải), ảnh kiểm chứng `playtest_evidence/chuong1_v14/`.
 
 ### Thay đổi
+- **Engine đọc cấu hình chương** (`addChapter`, biến `CC`): bản đồ chung, vùng theo màn, công trình, câu thông báo, tiêu đề kết chương và bộ vẽ cảnh nằm trong cấu hình (`CH1`, `CH2`). Màn có `cc` là màn của chương xây dựng dần (thay `chapter===2`). Thêm chương mới = thêm cấu hình + bộ vẽ cảnh.
+- Chương 2 (khu đô thị) giữ nguyên nội dung, ghi là **bản thử nghiệm**; nay là màn 11–15. Autopilot Chương 2 giữ nguyên thời gian (24.6 / 49.4 / 55.3 / 96.6 / 128.8 / 116.7).
+- Danh sách chương "Sắp có" theo bố cục 15 chương (D-66): Chương 3 · Thành phố Không Ngủ (đường đông), Chương 4 · Đảo Mây Trắng (hạn giao) — thay "Trung tâm: chở khách, đổi xe" và "Cảng" (DK-Q7).
+- Bảng "Cách chơi": thêm cơ chế "Nhiều điểm giao", "Đường lớn", "Tổng hợp" (màn trùm không gắn huy hiệu "! Cơ chế mới").
+- Cảnh quay: khung cuối được nới mép dưới thêm khoảng cao dải hộp thoại, để công trình sát mép dưới bản đồ (Trạm y tế) không bị hộp thoại che (K6).
+- `tools/chot_phien_ban.py`: bộ lái tự động đọc `ket_qua_ch1.json` (màn 1–10) và `ket_qua_ch2.json` (màn 11–15). **Lưu ý:** địa chỉ `#lv=` trong bộ ảnh chuẩn nay trỏ tới màn của Chương 1 mới; kỷ lục đã lưu trên máy theo số thứ tự màn cũ sẽ lệch.
 
 ### Bỏ
+- 5 màn Chương 1 demo cũ ("Khu phố nhỏ": làm quen, chia chuyến, đường lớn & đông, hạn giao, chọn xe) — còn ở bản lưu `versions/v1.3/`.
 
 ### Vị trí code
+- Cấu hình chương và sinh màn: `addChapter`, `CC`, `CH1`, `CH1_LV`, `CH2`, `CH2_LV`, `CHAPTERS` (`demo/index.html`).
+- Khung công trình dùng chung: `chRect` (thay `ch2Rect`), `buildingRect`; chọn bộ vẽ: `drawChapter` → `CC.draw` (`drawUrban` cho Chương 2, `drawVillage` cho Chương 1).
+- Cảnh làng: `VPAL`, `VROOF`, `vHouse`, `bamboo`, `buffalo`, `strawStack`, `paddy`, `vLot`, `vBuild`, `vWarehouse`, `bigTree`, `vLandmark`, `drawVillage`.
+- Cảnh quay, đoạn mở màn, Trang chủ, bưu thiếp dùng `CC`: `siteCenter`, `newRoads`, `startCut`, `cutDraw`, `finFx`, `finishCut`, `postReady`, `openPost`, `drawHomeMap`, `buildMarks`; `camFit(x,y,z,yb)`, `camFrame`.
+- Cơ chế theo màn: `MECH`, `MECHTXT`, `newMech`.
 
 ## v1.3 · chốt 15/10/2026
 

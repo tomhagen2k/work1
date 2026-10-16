@@ -434,35 +434,43 @@ const PCOL={KhoA:'#1c7ed6',KhoB:'#1864ab',Sieu:'#f76707',Hoa:'#e64980',Dong:'#f7
   Cho:'#f76707',Truong:'#7048e8',BenhVien:'#e03131',Nha:'#0ca678',Cang:'#e64980'};
 const row=(j,i0,i1)=>{const r=[];for(let i=i0;i<i1;i++)r.push([`c${i}r${j}`,`c${i+1}r${j}`]);return r;};
 const col=(i,j0,j1)=>{const r=[];for(let j=j0;j<j1;j++)r.push([`c${i}r${j}`,`c${i}r${j+1}`]);return r;};
-// Dữ liệu 5 màn — khớp level_design/levels.py
-const LEVELS=[
- {name:'Làm quen',intro:'Tập chọn hướng, xe tự dừng ở điểm, chọn hàng ở bảng hỏi.',T0:90,grid:[5,3],vehicles:['van'],
-  remove:[['c0r0','c1r0'],['c4r0','c4r1']],start:['c0r1','c1r1',40/350],
-  points:{KhoA:['c1r0','c2r0',.5],Hoa:['c3r0','c3r1',.5],Sieu:['c3r2','c4r2',.5]},
-  missions:[{from:'KhoA',to:'Sieu',qty:2},{from:'KhoA',to:'Hoa',qty:1}]},
- {name:'Chia chuyến',intro:'5 kiện nhưng xe chỉ chở 3 — gom đơn nào đi chung chuyến?',T0:65,grid:[5,3],vehicles:['van'],
-  start:['c0r1','c1r1',40/350],
-  points:{KhoA:['c2r1','c3r1',.5],Dong:['c4r0','c4r1',.5],Bac:['c3r0','c4r0',.5],Tay:['c0r1','c0r2',.5]},
-  missions:[{from:'KhoA',to:'Dong',qty:2},{from:'KhoA',to:'Tay',qty:2},{from:'KhoA',to:'Bac',qty:1}]},
- {name:'Đường lớn & đường đông',intro:'Đường thẳng chưa chắc nhanh nhất. Hai kho ở hai phía.',T0:75,grid:[5,4],vehicles:['van'],
-  start:['c0r3','c0r2',.2],
-  types:{lon:[...row(3,0,4),...col(0,1,3),...col(4,1,3)],dong:[...row(1,0,4),...row(0,1,3)]},
-  points:{KhoA:['c0r0','c0r1',.5],Cho:['c4r1','c4r2',.5],KhoB:['c4r0','c4r1',.5],Truong:['c0r1','c0r2',.5]},
-  missions:[{from:'KhoA',to:'Cho',qty:3},{from:'KhoB',to:'Truong',qty:3}]},
- {name:'Hạn giao',intro:'Có đơn phải giao trước hạn — làm đơn gấp trước hay gom chuyến trước?',T0:112,grid:[6,4],vehicles:['van'],
-  start:['c0r1','c1r1',40/350],
-  types:{lon:[...row(3,0,5),...col(5,0,3)],dong:[...row(1,2,4),...col(3,0,2)]},
-  points:{KhoA:['c1r0','c2r0',.5],KhoB:['c4r3','c5r3',.5],BenhVien:['c4r0','c5r0',.5],Truong:['c0r2','c0r3',.5],Cho:['c2r2','c3r2',.5],Nha:['c5r1','c5r2',.5]},
-  missions:[{from:'KhoA',to:'BenhVien',qty:1,dl:38},{from:'KhoA',to:'Cho',qty:2},{from:'KhoB',to:'Truong',qty:2,dl:78},{from:'KhoB',to:'Nha',qty:2}]},
- {name:'Chọn xe',intro:'Xe máy, xe van hay xe tải? Mỗi xe hợp với một kiểu đường.',T0:102,grid:[6,4],vehicles:['may','van','tai'],
-  start:['c0r1','c1r1',40/350],
-  types:{lon:[...row(3,0,5),...col(0,0,3)],dong:row(1,1,4),gogh:[...col(3,1,3),...row(2,3,5)],hem:[...col(2,0,1),...col(4,2,3)]},
-  points:{KhoA:['c0r2','c0r3',.5],KhoB:['c5r0','c5r1',.5],Cho:['c2r0','c3r0',.5],Truong:['c4r1','c4r2',.5],Nha:['c1r2','c2r2',.5],Cang:['c5r2','c5r3',.5]},
-  missions:[{from:'KhoA',to:'Cho',qty:2},{from:'KhoA',to:'Nha',qty:2},{from:'KhoB',to:'Cang',qty:3},{from:'KhoB',to:'Truong',qty:1}]}
-];
+// Chương xây dựng dần: mỗi chương một CẤU HÌNH (bản đồ chung, vùng theo màn, công trình, câu thông báo, bộ vẽ cảnh).
+// Màn được sinh từ cấu hình (addChapter) — thêm chương mới chỉ cần thêm cấu hình + bộ vẽ cảnh của chủ đề.
+const LEVELS=[];
+let CC=null; // cấu hình chương đang hiển thị (màn đang chơi, Trang chủ, bưu thiếp)
+function addChapter(C,levels){return levels.map((l,k)=>{const used=new Set(l.missions.flatMap(m=>[m.from,m.to]));
+  LEVELS.push({...l,cc:C,stage:k,grid:[C.cols,C.rows],start:C.start,region:C.regions[k],types:C.types,remove:C.remove||[],
+    points:Object.fromEntries(Object.entries(C.points).filter(([id])=>used.has(id)))});return LEVELS.length-1;});}
+// ---------- Chương 1: Làng ven sông — khớp level_design/levels_ch1.py (thiết kế + số đo: level_design/Thiet_Ke_Chuong_1.md) ----------
+const CH1={cols:6,rows:4,start:['c0r1','c1r1',40/350],
+  types:{lon:[...col(5,0,3),...row(0,4,5),...row(3,4,5)]}, // đường đê dọc sông + 2 nhánh — chỉ nằm trong vùng mở ở màn 8
+  points:{HTX:['c1r1','c2r1',.5],ChoPhien:['c2r0','c3r0',.5],GiengLang:['c0r1','c0r2',.5],XomTren:['c0r0','c1r0',.5],XomGiua:['c3r1','c3r2',.5],
+    NhaLy:['c1r2','c2r2',.5],TruongLang:['c4r0','c4r1',.5],XomDong:['c3r2','c4r2',.5],TramYTe:['c1r3','c2r3',.5],XomNam:['c3r3','c4r3',.5],
+    AoCa:['c0r2','c0r3',.5],DinhLang:['c2r2','c2r3',.5],BenDo:['c5r1','c5r2',.5],NhaVanHoa:['c4r2','c4r3',.5],XomBai:['c5r2','c5r3',.5]},
+  sites:['ChoPhien','GiengLang','TruongLang','XomDong','TramYTe','AoCa','DinhLang','BenDo','NhaVanHoa','ChoPhien'], // Chợ phiên xây 2 giai đoạn: lều chợ (màn 1) → chợ phiên (màn 10)
+  siteNames:['Lều chợ','Giếng làng','Trường làng','Xóm Đông','Trạm y tế','Ao cá','Đình làng','Bến đò','Nhà văn hóa','Chợ phiên'],
+  regions:[[3,2],[3,2],[4,2],[4,2],[4,3],[4,3],[4,3],[5,3],[5,3],[5,3]],
+  openNote:['Lều chợ đầu tiên đã dựng — làng có chỗ họp chợ rồi!','Giếng làng sửa xong — nước trong cho cả xóm. Đường sang xóm Đông đã thông.',
+    'Trường làng khai giảng — tiếng trống vang cả xóm Đông.','Xóm Đông có thêm nhà mới quanh trường. Đường xuống xóm Nam đã thông.',
+    'Trạm y tế mở cửa — xóm Nam đã có đường vào.','Ao cá thả giống xong — vườn cây xanh mát.','Đình làng trùng tu xong — mái cong đỏ thắm. Đường đê ven sông đã thông.',
+    'Bến đò hoạt động — đường đê nối cả làng ra sông.','Nhà văn hóa khánh thành — sẵn sàng cho phiên chợ lớn.','Chợ phiên đông vui dưới gốc đa — đủ 10 công trình.'],
+  finTitle:'Làng ven sông đã có chợ phiên!',draw:o=>drawVillage(o),postNote:'Đã dựng xong làng ven sông'};
+const M_=(to,qty)=>({from:'HTX',to,qty});
+const CH1_LV=addChapter(CH1,[
+ {name:'Ngày đầu đi giao',intro:'Ngày đầu ở Hợp tác xã: chở hàng ra chợ và Xóm Trên.',T0:90,vehicles:['van'],missions:[M_('ChoPhien',2),M_('XomTren',1)]},
+ {name:'Giếng làng',intro:'Chở gạch, ngói sửa giếng làng.',T0:50,vehicles:['van'],missions:[M_('ChoPhien',2),M_('GiengLang',1)]},
+ {name:'Trường làng',intro:'Ba nơi cần hàng — giao nơi nào trước cho nhanh?',T0:55,vehicles:['van'],missions:[M_('ChoPhien',1),M_('XomTren',1),M_('TruongLang',1)]},
+ {name:'Xóm Đông',intro:'Điểm giao nằm hai phía kho — đi phía nào trước?',T0:60,vehicles:['van'],missions:[M_('ChoPhien',1),M_('XomTren',1),M_('XomDong',1)]},
+ {name:'Trạm y tế',intro:'5 kiện nhưng xe chỉ chở 3 — gom đơn nào đi chung chuyến?',T0:80,vehicles:['van'],missions:[M_('NhaLy',1),M_('TruongLang',3),M_('TramYTe',1)]},
+ {name:'Ao cá',intro:'Gom các điểm gần nhau vào cùng một chuyến.',T0:75,vehicles:['van'],missions:[M_('GiengLang',1),M_('XomGiua',1),M_('TruongLang',2),M_('AoCa',2)]},
+ {name:'Đình làng',intro:'Gom theo cảm giác sẽ không kịp — tính kỹ từng chuyến.',T0:80,vehicles:['van'],missions:[M_('ChoPhien',1),M_('GiengLang',2),M_('AoCa',1),M_('DinhLang',3)]},
+ {name:'Bến đò',intro:'Đường đê dài hơn nhưng nhanh hơn — đường thẳng chưa chắc nhanh nhất.',T0:95,vehicles:['van'],missions:[M_('ChoPhien',1),M_('XomTren',1),M_('XomNam',2),M_('BenDo',1)]},
+ {name:'Nhà văn hóa',intro:'Nhiều hàng, có đường đê — xếp chuyến và chọn đường thật khéo.',T0:95,vehicles:['van'],missions:[M_('XomTren',1),M_('NhaLy',3),M_('BenDo',1),M_('NhaVanHoa',2)]},
+ {name:'Chợ phiên',intro:'Phiên chợ đầu tiên của làng — dùng hết những gì đã học.',T0:105,vehicles:['van'],missions:[M_('ChoPhien',3),M_('GiengLang',1),M_('XomDong',1),M_('AoCa',2),M_('XomBai',2)]}
+]);
 
-// ---------- Chương 2: Khu đô thị mới (một bản đồ chung, xây dựng dần) — khớp level_design/levels_ch2.py ----------
-const CH2={cols:6,rows:4,
+// ---------- Chương 2: Khu đô thị mới (bản thử nghiệm; một bản đồ chung, xây dựng dần) — khớp level_design/levels_ch2.py ----------
+const CH2={cols:6,rows:4,start:['c0r1','c1r1',40/350],big:'CongVien',finTitle:'Khu đô thị mới đã hoàn thành!',draw:o=>drawUrban(o),postNote:'Đã xây xong khu đô thị mới',
   types:{lon:[...row(3,0,5),...col(5,1,3)],dong:[...row(1,1,4),...row(2,2,3),...col(3,0,1)],gogh:[...col(5,0,1),...row(2,4,5)],hem:row(0,4,5)},
   points:{BaiVL:['c0r0','c0r1',.5],KhoTong:['c1r2','c2r2',.5],XuongGo:['c4r2','c4r3',.5],TiemBanh:['c1r0','c2r0',.5],TruongHoc:['c2r1','c2r2',.5],
     NhaVH:['c0r1','c0r2',.5],NhaTre:['c3r1','c3r2',.5],ChoMoi:['c4r1','c4r2',.5],BenhVien:['c3r2','c3r3',.5],KhuNha:['c1r3','c2r3',.5],CongVien:['c5r2','c5r3',.5]},
@@ -472,7 +480,7 @@ const CH2={cols:6,rows:4,
   regions:[[2,2],[3,2],[4,3],[4,3],[5,3]],
   openNote:['Thông xe tuyến mới phía Đông — Nhà trẻ đã có đường vào.','Thông xe đường lớn phía Nam và khu phía Đông.','Chợ mới khai trương — ruộng quanh chợ thành khu phố đông vui.',
     'Thông xe dải phía Đông — đường gồ ghề và hẻm.','Công viên mở cửa — đủ 5 công trình, khu đô thị mới đã hoàn chỉnh.']};
-[
+const CH2_LV=addChapter(CH2,[
  {name:'Khởi công',intro:'Chở vật liệu xây Tiệm bánh — công trình đầu tiên của khu.',T0:90,vehicles:['van'],
   missions:[{from:'BaiVL',to:'TiemBanh',qty:2},{from:'BaiVL',to:'NhaVH',qty:1}]},
  {name:'Xây trường',intro:'5 kiện nhưng xe chỉ chở 3 — gom đơn nào đi chung chuyến?',T0:64,vehicles:['van'],
@@ -483,20 +491,23 @@ const CH2={cols:6,rows:4,
   missions:[{from:'KhoTong',to:'BenhVien',qty:1,dl:35},{from:'BaiVL',to:'BenhVien',qty:3},{from:'KhoTong',to:'ChoMoi',qty:2},{from:'KhoTong',to:'KhuNha',qty:2,dl:50}]},
  {name:'Công viên trung tâm',intro:'Chọn xe phù hợp để hoàn thiện khu đô thị.',T0:150,vehicles:['may','van','tai'],
   missions:[{from:'BaiVL',to:'CongVien',qty:4},{from:'KhoTong',to:'BenhVien',qty:1},{from:'KhoTong',to:'ChoMoi',qty:2},{from:'KhoTong',to:'TiemBanh',qty:1}]}
-].forEach((l,k)=>{const used=new Set(l.missions.flatMap(m=>[m.from,m.to]));
-  LEVELS.push({...l,chapter:2,stage:k,grid:[CH2.cols,CH2.rows],start:['c0r1','c1r1',40/350],region:CH2.regions[k],types:CH2.types,
-    points:Object.fromEntries(Object.entries(CH2.points).filter(([id])=>used.has(id)))});});
+]);
 Object.assign(PLACE,{BaiVL:'Bãi vật liệu',KhoTong:'Kho tổng',XuongGo:'Xưởng gỗ',TiemBanh:'Tiệm bánh',TruongHoc:'Trường học',NhaVH:'Nhà văn hóa',
   NhaTre:'Nhà trẻ',ChoMoi:'Chợ mới',KhuNha:'Khu nhà ở',CongVien:'Công viên'});
 Object.assign(PCOL,{BaiVL:'#1c7ed6',KhoTong:'#1864ab',XuongGo:'#1971c2',TiemBanh:'#e64980',TruongHoc:'#f76707',NhaVH:'#7048e8',NhaTre:'#0ca678',
   ChoMoi:'#f59f00',KhuNha:'#0ca678',CongVien:'#2b8a3e'});
-const KHO=new Set(['KhoA','KhoB','BaiVL','KhoTong','XuongGo']);
-const MECH=['Điều khiển','Chia chuyến','Đường lớn & đông','Hạn giao','Chọn xe','Điều khiển','Chia chuyến','Đường lớn & đông','Hạn giao','Chọn xe'];
+Object.assign(PLACE,{HTX:'Hợp tác xã',ChoPhien:'Chợ phiên',GiengLang:'Giếng làng',XomTren:'Xóm Trên',XomGiua:'Xóm Giữa',NhaLy:'Nhà ông Lý',
+  TruongLang:'Trường làng',XomDong:'Xóm Đông',TramYTe:'Trạm y tế',XomNam:'Xóm Nam',AoCa:'Ao cá',DinhLang:'Đình làng',BenDo:'Bến đò',NhaVanHoa:'Nhà văn hóa',XomBai:'Xóm Bãi'});
+Object.assign(PCOL,{HTX:'#1c7ed6',ChoPhien:'#e64980',GiengLang:'#0ca678',XomTren:'#7048e8',XomGiua:'#f59f00',NhaLy:'#ae3ec9',TruongLang:'#f76707',
+  XomDong:'#d6336c',TramYTe:'#e03131',XomNam:'#5c940d',AoCa:'#1098ad',DinhLang:'#a61e4d',BenDo:'#0b7285',NhaVanHoa:'#9c36b5',XomBai:'#66a80f'});
+const KHO=new Set(['KhoA','KhoB','BaiVL','KhoTong','XuongGo','HTX']);
+const MECH=['Điều khiển','Điều khiển','Nhiều điểm giao','Nhiều điểm giao','Chia chuyến','Chia chuyến','Chia chuyến','Đường lớn','Đường lớn','Tổng hợp',
+  'Điều khiển','Chia chuyến','Đường lớn & đông','Hạn giao','Chọn xe'];
 const CHAPTERS=[
-  {name:'Khu phố nhỏ',mech:'Làm quen, chia chuyến, đường đông, hạn giao, chọn xe',levels:[0,1,2,3,4]},
-  {name:'Khu đô thị mới',mech:'Xây dựng khu phố qua từng màn',levels:[5,6,7,8,9],ch2:true},
-  {name:'Trung tâm',mech:'Chở khách, đổi xe',soon:true},
-  {name:'Cảng',mech:'Cầu đóng/mở theo giờ',soon:true}
+  {name:'Làng ven sông',mech:'1 kho, nhiều điểm giao, chia chuyến, đường lớn',levels:CH1_LV,cc:CH1},
+  {name:'Khu đô thị mới',mech:'Bản thử nghiệm — xây dựng khu phố qua từng màn',levels:CH2_LV,cc:CH2},
+  {name:'Thành phố Không Ngủ',mech:'Đường đông',soon:true},
+  {name:'Đảo Mây Trắng',mech:'Hạn giao',soon:true}
 ];
 
 /* ======================= Tiện ích SVG ======================= */
@@ -569,23 +580,24 @@ function buildLevel(i){
   for(let a=0;a<cols;a++)for(let b=0;b<rows-1;b++)add(`c${a}r${b}`,`c${a}r${b+1}`);
   ZONES=Object.entries(LV.points).map(([id,[a,b,f]])=>({id,a,b,d1:f*SP-ZONE_HALF,d2:f*SP+ZONE_HALF,name:PLACE[id],col:PCOL[id],kho:KHO.has(id)}));
   CSITE=null;GROW_I=[];
-  if(LV.chapter===2){const o={region:LV.region,built:CH2.sites.map((_,k)=>k<LV.stage),constructing:LV.stage,pins:true,grow:LV.stage-1};drawChapter(o);CSITE=o.siteR||null;GROW_I=o.growI||[];}else drawStatic();
+  CC=LV.cc||null;
+  if(CC){const o={region:LV.region,built:CC.sites.map((_,k)=>k<LV.stage),constructing:LV.stage,pins:true,grow:LV.stage-1};drawChapter(o);CSITE=o.siteR||null;GROW_I=o.growI||[];}else drawStatic();
   buildMinimap();
   document.querySelectorAll('.fullmap').forEach(s=>s.setAttribute('viewBox',`0 0 ${W} ${H}`));
 }
 function zoneXY(z,d){const A=N[z.a],u=unit(A,N[z.b]);return{x:A.x+u.x*d,y:A.y+u.y*d,u};}
 // Khung công trình Chương 2 (dùng chung cho bản đồ, ghim, cảnh quay). 5 công trình chính lớn hơn nhà thường ~1,5–3 lần,
 // nằm gọn trong ô phố, không đè đường (T-02); Công viên lớn nhất bản đồ.
-function ch2Rect(id){const [a,b,f]=CH2.points[id],m=s=>s.match(/c(\d+)r(\d+)/),A=m(a),B=m(b),ai=+A[1],aj=+A[2];
-  const x=100+(ai+(+B[1]-ai)*f)*SP,y=100+(aj+(+B[2]-aj)*f)*SP,site=CH2.sites.includes(id);
+function chRect(id){const [a,b,f]=CC.points[id],m=s=>s.match(/c(\d+)r(\d+)/),A=m(a),B=m(b),ai=+A[1],aj=+A[2];
+  const x=100+(ai+(+B[1]-ai)*f)*SP,y=100+(aj+(+B[2]-aj)*f)*SP,site=CC.sites.includes(id);
   if(+A[2]===+B[2]){if(aj===0)return site?{x:x-75,y:8,w:150,h:60,px:x,py:50,lx:x,ly:86,cx:x,cy:38}:{x:x-58,y:12,w:116,h:54,px:x,py:52,lx:x,ly:84,cx:x,cy:40};
     return{x:x-58,y:y+40,w:116,h:58,px:x,py:y+72,lx:x,ly:y+116,cx:x,cy:y+69};}
-  if(id==='CongVien')return{x:x-200,y:y-80,w:160,h:160,px:x-120,py:y+6,lx:x-120,ly:y+96,cx:x-120,cy:y};
-  const R=ai<CH2.cols-1;
+  if(id===CC.big)return{x:x-200,y:y-80,w:160,h:160,px:x-120,py:y+6,lx:x-120,ly:y+96,cx:x-120,cy:y};
+  const R=ai<CC.cols-1;
   if(site)return R?{x:x+38,y:y-60,w:124,h:120,px:x+100,py:y+6,lx:x+100,ly:y+78,cx:x+100,cy:y}:{x:x-162,y:y-60,w:124,h:120,px:x-100,py:y+6,lx:x-100,ly:y+78,cx:x-100,cy:y};
   return R?{x:x+40,y:y-46,w:92,h:92,px:x+86,py:y+6,lx:x+86,ly:y+66,cx:x+86,cy:y}:{x:x-132,y:y-46,w:92,h:92,px:x-86,py:y+6,lx:x-86,ly:y+66,cx:x-86,cy:y};}
 function buildingRect(z){
-  if(LV.chapter===2)return ch2Rect(z.id);
+  if(LV.cc)return chRect(z.id);
   const {x,y,u}=zoneXY(z,(z.d1+z.d2)/2),A=N[z.a];
   if(u.x){return A.j===0?{x:x-58,y:12,w:116,h:54,px:x,py:52,lx:x,ly:84}:{x:x-58,y:y+40,w:116,h:58,px:x,py:y+72,lx:x,ly:y+116};}
   const right=A.i<LV.grid[0]-1;
@@ -636,12 +648,14 @@ function drawStatic(){
   pinLayer(()=>ZONES.forEach(z=>{const b=buildingRect(z);pin(b.px,b.py,z.col,z.kho);label(b.lx,b.ly,z.name);}));
 }
 // Vẽ bản đồ Chương 2 theo trạng thái xây dựng. opts: region [c1,r1], built[5], constructing (chỉ số công trình đang xây hoặc -1), pins
-function drawChapter(opts){
-  const C=CH2,[c1,r1]=opts.region,Wc=200+(C.cols-1)*SP,Hc=200+(C.rows-1)*SP;
+function drawChapter(opts){CC.draw(opts);}
+// Bộ vẽ cảnh khu đô thị (Chương 2 thử nghiệm)
+function drawUrban(opts){
+  const C=CC,[c1,r1]=opts.region,Wc=200+(C.cols-1)*SP,Hc=200+(C.rows-1)*SP;
   const P=n=>{const m=n.match(/c(\d+)r(\d+)/);return{x:100+ +m[1]*SP,y:100+ +m[2]*SP,i:+m[1],j:+m[2]};};
   const inR=(i,j)=>i<=c1&&j<=r1;
   const R=sd=>{let q=sd;return()=>{q=(q*16807)%2147483647;return(q-1)/2147483646;};};
-  const bR=ch2Rect;
+  const bR=chRect;
   const RES=Object.keys(C.points).map(bR);
   const hit=(x,y,w,h)=>RES.some(r=>x<r.x+r.w+10&&x+w+10>r.x&&y<r.y+r.h+10&&y+h+10>r.y);
   const SC=C.sites.map(id=>{const r=bR(id);return{x:r.cx,y:r.cy};});
@@ -770,6 +784,186 @@ function landmark(id,b){const R=(x,y,w,h,a)=>el('rect',Object.assign({x,y,width:
     [[.82,.18],[.62,.12],[.88,.42],[.14,.82],[.36,.9],[.88,.86],[.66,.9],[.12,.58]].forEach(([fx,fy])=>tree(b.x+b.w*fx,b.y+b.h*fy,10));
     [[.7,.65,'#f783ac'],[.3,.68,'#ffd43b'],[.62,.34,'#f783ac']].forEach(([fx,fy,c])=>{el('circle',{cx:b.x+b.w*fx,cy:b.y+b.h*fy,r:7,fill:c,stroke:'#fff','stroke-width':2});});
     return;}
+}
+/* ======================= Bộ vẽ cảnh Làng ven sông (Chương 1) =======================
+   Bảng màu theo Chu_De_Khung_Canh.md mục 3.1: lúa non, đất bờ, sông ao; ngói đỏ cũ, tường vôi vàng, mái tôn; nhấn đỏ cờ, vàng rơm.
+   Không dùng cam / xanh dương đậm cho trang trí (màu loại đường — K10). Vật trang trí không nằm trên mặt đường (N9). */
+const VPAL={lua:'#8cc152',luaD:'#7db446',bo:'#b99a6b',nuoc:'#5fa8a0',nuocL:'#8ccbc1',ngoi:'#a8553a',vang:'#e9d9a6',ton:'#8a9aa3',san:'#d6a183',
+  vuon:'#a7d177',dat:'#d8c9a3',tre:'#4f8a3a',road:'#8f8b82',walk:'#e3dac6',ruong:'#9bbf6a'};
+const VROOF=['#a8553a','#b0563a','#9a4b33','#8a9aa3','#a8553a','#b86b4b'];
+function vHouse(x,y,w,h,roof){ // nhà ba gian: mái ngói + sân gạch phía trước (nhìn từ trên: ô đỏ nhạt)
+  const hh=Math.max(18,Math.round(h*.58));house(x,y,w,hh,roof);
+  el('rect',{x:x+3,y:y+hh+3,width:w-6,height:Math.max(6,h-hh-5),rx:2,fill:VPAL.san,stroke:shade(VPAL.san,-.18),'stroke-width':1});}
+function bamboo(x,y,r){el('circle',{cx:x+3,cy:y+4,r,fill:PAL.shadow});el('circle',{cx:x,cy:y,r,fill:VPAL.tre});
+  el('circle',{cx:x-r*.3,cy:y-r*.3,r:r*.55,fill:shade(VPAL.tre,.2)});}
+function buffalo(x,y){el('ellipse',{cx:x+3,cy:y+4,rx:13,ry:7,fill:PAL.shadow});el('ellipse',{cx:x,cy:y,rx:13,ry:7,fill:'#5f5850'});
+  el('circle',{cx:x+13,cy:y-1,r:4.5,fill:'#4e4842'});el('path',{d:`M${x+13} ${y-5} q4 -5 9 -3 M${x+13} ${y+3} q4 5 9 3`,stroke:'#e9e1d2','stroke-width':2,fill:'none'});}
+function strawStack(x,y){el('circle',{cx:x+3,cy:y+4,r:11,fill:PAL.shadow});el('circle',{cx:x,cy:y,r:11,fill:'#e2c46a'});el('circle',{cx:x,cy:y,r:4,fill:'#c9a646'});}
+function paddy(x0,y0,w,h,r){ // ruộng lúa chia ô có bờ đất (ngoài xóm)
+  el('rect',{x:x0,y:y0,width:w,height:h,rx:8,fill:VPAL.bo});
+  for(let a=0;a<2;a++)for(let b=0;b<2;b++){const px=x0+5+a*(w-10)/2,py=y0+5+b*(h-10)/2,pw=(w-10)/2-5,ph=(h-10)/2-5;
+    el('rect',{x:px,y:py,width:pw,height:ph,rx:4,fill:(a+b)%2?VPAL.luaD:VPAL.lua});
+    for(let k=1;k<6;k++)el('line',{x1:px+5,y1:py+k*ph/6,x2:px+pw-5,y2:py+k*ph/6,stroke:shade(VPAL.lua,.14),'stroke-width':2,opacity:.75});}
+  const q=r();if(q<.3)buffalo(x0+30+r()*(w-80),y0+30+r()*(h-60));else if(q<.6)strawStack(x0+25+r()*(w-50),y0+25+r()*(h-50));}
+function vLot(b){el('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx:4,fill:'#d8bf8f',stroke:'#8d6e63','stroke-width':3,'stroke-dasharray':'8 5'});
+  const g=el('g',{transform:`translate(${b.cx},${b.cy})`});el('rect',{x:-26,y:-11,width:52,height:20,rx:4,fill:'#fff3bf',stroke:'#8d6e63','stroke-width':1.5},g);
+  const t=el('text',{y:4,'text-anchor':'middle','font-size':9,'font-weight':900,fill:'#5c3d00','font-family':'Nunito,Segoe UI'},g);t.textContent='Sắp xây';}
+// công trường: giàn giáo + cần cẩu cao nhô 60 trên lô, cần quay chậm ±10°, đống gạch, ngói, gỗ (D-57)
+function vBuild(b,opts){el('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx:4,fill:'#d8bf8f'});
+  el('rect',{x:b.x+10,y:b.y+10,width:b.w-20,height:b.h-20,fill:'rgba(201,166,107,.55)',stroke:'#8d6e63','stroke-width':3});
+  for(let q=1;q<3;q++){el('line',{x1:b.x+10+q*(b.w-20)/3,y1:b.y+10,x2:b.x+10+q*(b.w-20)/3,y2:b.y+b.h-10,stroke:'#8d6e63','stroke-width':2});
+    el('line',{x1:b.x+10,y1:b.y+10+q*(b.h-20)/3,x2:b.x+b.w-10,y2:b.y+10+q*(b.h-20)/3,stroke:'#8d6e63','stroke-width':2});}
+  const mx=b.x+b.w-8,top=Math.max(-50,b.y-60);
+  el('line',{x1:mx,y1:b.y+b.h-6,x2:mx,y2:top,stroke:'#f59f00','stroke-width':7});
+  for(let y=b.y+b.h-6;y>top+8;y-=14)el('line',{x1:mx-3.5,y1:y,x2:mx+3.5,y2:y-7,stroke:'#c77c00','stroke-width':1.5});
+  const jib=el('g',{});
+  el('animateTransform',{attributeName:'transform',type:'rotate',values:`-10 ${mx} ${top};10 ${mx} ${top};-10 ${mx} ${top}`,dur:'7s',repeatCount:'indefinite'},jib);
+  el('line',{x1:mx+26,y1:top,x2:b.x-6,y2:top,stroke:'#f59f00','stroke-width':6},jib);el('rect',{x:mx+14,y:top-6,width:16,height:12,rx:2,fill:'#495057'},jib);
+  el('line',{x1:b.x+22,y1:top,x2:b.x+22,y2:top+38,stroke:'#495057','stroke-width':1.5},jib);
+  el('rect',{x:b.x+13,y:top+38,width:18,height:11,rx:2,fill:VPAL.ngoi,stroke:shade(VPAL.ngoi,-.3),'stroke-width':1.5},jib);
+  el('rect',{x:mx-8,y:top-9,width:16,height:12,rx:2,fill:'#fff3bf',stroke:'#c77c00','stroke-width':1.5});
+  [[b.x+12,b.y+b.h-20,VPAL.ngoi],[b.x+30,b.y+b.h-16,'#adb5bd'],[b.x+b.w-40,b.y+14,'#c9a646']].forEach(([x,y,c])=>{
+    el('rect',{x:x+2,y:y+3,width:18,height:12,rx:2,fill:PAL.shadow});el('rect',{x,y,width:18,height:12,rx:2,fill:c,stroke:shade(c,-.3),'stroke-width':1.5});});
+  opts.siteR={x0:b.x-10,y0:top-12,x1:mx+32,y1:b.y+b.h};}
+function vWarehouse(b){ // Hợp tác xã: nhà kho mái tôn lớn + sân phơi lúa
+  el('rect',{x:b.x-6,y:b.y-2,width:b.w+12,height:b.h+4,rx:4,fill:VPAL.vang,stroke:shade(VPAL.vang,-.2),'stroke-width':2});
+  for(let i=1;i<6;i++)el('line',{x1:b.x-2,y1:b.y+i*b.h/6,x2:b.x+b.w*.4,y2:b.y+i*b.h/6,stroke:'#d9bf6a','stroke-width':3});
+  house(b.x+b.w*.45,b.y+4,b.w*.55-2,b.h-8,VPAL.ton);}
+function bigTree(x,y,r){el('circle',{cx:x+6,cy:y+8,r,fill:PAL.shadow});el('circle',{cx:x,cy:y,r,fill:'#3f7f33'});
+  [[-.4,-.3,.55],[.35,-.35,.5],[.1,.35,.55],[-.35,.3,.45]].forEach(([dx,dy,s])=>el('circle',{cx:x+dx*r,cy:y+dy*r,r:r*s,fill:'#4f9a3e'}));
+  el('circle',{cx:x-r*.2,cy:y-r*.25,r:r*.25,fill:'#6fb85a'});}
+// công trình đã xây — mỗi công trình một hình khối nhận ra được khi chưa đọc nhãn (K4). stage: số giai đoạn đã xây (Chợ phiên: 1 = lều chợ, 2 = chợ phiên)
+function vLandmark(id,b,stage){const R=(x,y,w,h,a)=>el('rect',Object.assign({x,y,width:w,height:h},a||{}));
+  if(id==='ChoPhien'){
+    if(stage<2){R(b.x+8,b.y+4,b.w-16,b.h-8,{rx:5,fill:VPAL.dat,stroke:VPAL.bo,'stroke-width':2});
+      [[b.x+20,b.y+12],[b.x+b.w/2+8,b.y+12]].forEach(([x,y])=>{R(x+3,y+4,48,30,{rx:2,fill:PAL.shadow});R(x,y,48,30,{rx:2,fill:'#d4b067',stroke:'#a8873f','stroke-width':1.5});
+        for(let k=1;k<4;k++)el('line',{x1:x+3,y1:y+k*7.5,x2:x+45,y2:y+k*7.5,stroke:'#b8963f','stroke-width':1.5});});
+      [[34,48],[70,50],[104,47]].forEach(([dx,dy],i)=>el('circle',{cx:b.x+dx,cy:b.y+dy,r:3.2,fill:['#e9d9a6','#fff','#d6332e'][i],stroke:'rgba(0,0,0,.25)','stroke-width':1}));return;}
+    // chợ phiên hoàn chỉnh dưới gốc đa (kỳ quan màn trùm)
+    R(b.x-4,b.y,b.w+8,b.h+4,{rx:6,fill:VPAL.dat,stroke:VPAL.bo,'stroke-width':2.5});
+    const cs=['#d4b067','#c0392b','#d4b067','#e9d9a6','#c0392b','#d4b067'];
+    cs.forEach((c,i)=>{const x=b.x+6+i*24,y=b.y+6+(i%2)*22;R(x+2,y+3,20,16,{rx:2,fill:PAL.shadow});R(x,y,20,16,{rx:2,fill:c,stroke:shade(c,-.3),'stroke-width':1.2});});
+    [[14,50],[40,54],[66,48],[92,55],[118,50],[30,40],[100,40]].forEach(([dx,dy],i)=>el('circle',{cx:b.x+dx,cy:b.y+dy,r:3,fill:['#fff','#e9d9a6','#d6332e','#fff3bf'][i%4],stroke:'rgba(0,0,0,.25)','stroke-width':1}));
+    bigTree(b.x+b.w+30,b.y+34,30);
+    R(b.x-14,b.y+6,4,40,{fill:'#5f5850'});R(b.x-10,b.y+6,16,11,{fill:'#d6332e'});return;}
+  if(id==='GiengLang'){R(b.x+8,b.y+8,b.w-16,b.h-16,{rx:6,fill:VPAL.san,stroke:shade(VPAL.san,-.2),'stroke-width':2});
+    for(let k=1;k<5;k++){el('line',{x1:b.x+8+k*(b.w-16)/5,y1:b.y+8,x2:b.x+8+k*(b.w-16)/5,y2:b.y+b.h-8,stroke:shade(VPAL.san,-.12),'stroke-width':1});}
+    const cx=b.cx,cy=b.cy;el('circle',{cx:cx+4,cy:cy+5,r:30,fill:PAL.shadow});el('circle',{cx,cy,r:30,fill:'#bfb6a6',stroke:'#8f877a','stroke-width':3});
+    el('circle',{cx,cy,r:20,fill:VPAL.nuoc});el('circle',{cx:cx-6,cy:cy-6,r:6,fill:VPAL.nuocL});
+    [[-36,-36],[36,-36],[-36,36],[36,36]].forEach(([dx,dy])=>R(cx+dx-3,cy+dy-3,6,6,{fill:'#6d4c41'}));
+    el('path',{d:`M${cx-40} ${cy-40} L${cx+40} ${cy-40} L${cx+46} ${cy-48} M${cx-40} ${cy-40} L${cx-46} ${cy-48}`,stroke:VPAL.ngoi,'stroke-width':6,fill:'none','stroke-linecap':'round'});
+    bamboo(b.x+b.w-12,b.y+b.h-12,10);return;}
+  if(id==='TruongLang'){R(b.x,b.y,b.w,b.h,{rx:4,fill:'#dee2e6',stroke:'#fff','stroke-width':3,'stroke-dasharray':'7 3'});
+    house(b.x+4,b.y+4,b.w-8,40,'#b03a2e');house(b.x+b.w-44,b.y+44,40,b.h-48,'#b03a2e');
+    const cx=b.x+10,cy=b.y+52,cw=b.w-62,ch=b.h-62;R(cx,cy,cw,ch,{rx:3,fill:'#c9b27a',stroke:'#fff','stroke-width':2});
+    const fx=b.x+18,fy=b.y+b.h-10;el('line',{x1:fx,y1:fy,x2:fx,y2:fy-46,stroke:'#495057','stroke-width':2.5});
+    R(fx,fy-46,22,14,{fill:'#e03131'});el('path',{d:`M${fx+11} ${fy-43.5} l1.6 3.4 3.6 .3 -2.8 2.3 .9 3.5 -3.3 -1.9 -3.3 1.9 .9 -3.5 -2.8 -2.3 3.6 -.3Z`,fill:'#ffd43b'});
+    el('circle',{cx:cx+cw/2,cy:cy+ch/2,r:8,fill:'#8d6e63',stroke:'#fff','stroke-width':2});return;} // trống trường
+  if(id==='XomDong'){R(b.x,b.y,b.w,b.h,{rx:5,fill:'#b2f2bb',stroke:'#c9b27a','stroke-width':2.5,'stroke-dasharray':'5 3'});
+    [[b.x+6,b.y+6],[b.x+b.w/2-17,b.y+10],[b.x+b.w-40,b.y+6]].forEach(([x,y],i)=>vHouse(x,y,34,40,['#c0392b','#b0563a','#9a4b33'][i]));
+    bamboo(b.x+b.w-8,b.y+b.h-6,7);return;}
+  if(id==='TramYTe'){R(b.x,b.y,b.w,b.h,{rx:5,fill:'#b2f2bb'});house(b.x+6,b.y+4,b.w-12,b.h-16,'#f1f3f5');
+    R(b.x+6,b.y+4,b.w-12,b.h-16,{fill:'none',stroke:'#adb5bd','stroke-width':2});
+    const cx=b.cx,cy=b.y+4+(b.h-16)/2;R(cx-5,cy-15,10,30,{fill:'#e03131',stroke:'#fff','stroke-width':1.5});R(cx-15,cy-5,30,10,{fill:'#e03131'});R(cx-5,cy-5,10,10,{fill:'#e03131'});
+    tree(b.x+b.w-10,b.y+b.h-6,6);return;}
+  if(id==='AoCa'){R(b.x,b.y,b.w,b.h,{rx:10,fill:VPAL.vuon});
+    el('ellipse',{cx:b.cx,cy:b.cy+6,rx:b.w/2-14,ry:b.h/2-22,fill:VPAL.nuoc,stroke:'#7a9a6a','stroke-width':4});
+    el('ellipse',{cx:b.cx-14,cy:b.cy-4,rx:14,ry:6,fill:VPAL.nuocL,opacity:.8});
+    R(b.cx-6,b.y+10,12,30,{fill:'#8d6e63',stroke:'#6d4c41','stroke-width':1.5}); // cầu ao
+    [[.15,.15],[.85,.15],[.12,.88],[.88,.88]].forEach(([fx,fy])=>bamboo(b.x+b.w*fx,b.y+b.h*fy,9));return;}
+  if(id==='DinhLang'){R(b.x,b.y,b.w,b.h,{rx:4,fill:VPAL.san,stroke:shade(VPAL.san,-.2),'stroke-width':2});
+    const x=b.x+12,y=b.y+12,w=b.w-24,h=56;el('rect',{x:x+5,y:y+6,width:w,height:h,fill:PAL.shadow,rx:3});
+    el('polygon',{points:`${x-8},${y-6} ${x+w+8},${y-6} ${x+w-14},${y+h/2} ${x+14},${y+h/2}`,fill:'#9a2e22'});
+    el('polygon',{points:`${x-8},${y+h+6} ${x+w+8},${y+h+6} ${x+w-14},${y+h/2} ${x+14},${y+h/2}`,fill:'#7d241b'});
+    el('polygon',{points:`${x-8},${y-6} ${x+14},${y+h/2} ${x-8},${y+h+6}`,fill:'#8a281e'});el('polygon',{points:`${x+w+8},${y-6} ${x+w-14},${y+h/2} ${x+w+8},${y+h+6}`,fill:'#6e1f17'});
+    el('line',{x1:x+14,y1:y+h/2,x2:x+w-14,y2:y+h/2,stroke:'#e2c46a','stroke-width':4});
+    [[x-10,y-8],[x+w+10,y-8],[x-10,y+h+8],[x+w+10,y+h+8]].forEach(([px,py])=>el('circle',{cx:px,cy:py,r:4,fill:'#e2c46a'})); // đầu đao cong
+    el('circle',{cx:b.cx,cy:b.y+b.h-20,r:8,fill:'#8f877a',stroke:'#5f5850','stroke-width':2}); // lư hương
+    tree(b.x+12,b.y+b.h-10,9);tree(b.x+b.w-12,b.y+b.h-10,9);return;}
+  if(id==='BenDo'){R(b.x+20,b.y+30,b.w-24,b.h-60,{rx:4,fill:VPAL.dat,stroke:VPAL.bo,'stroke-width':2});
+    house(b.x+30,b.y+36,56,40,VPAL.ngoi);
+    const y=b.cy,jx=100+(CC.cols-1)*SP+44; // cầu tàu từ mép sông (ngoài mặt đường đê)
+    el('rect',{x:jx,y:y-8,width:58,height:16,fill:'#8d6e63',stroke:'#6d4c41','stroke-width':1.5});
+    el('path',{d:`M${jx+44} ${y+14} q28 -12 56 0 q-28 18 -56 0Z`,fill:'#6d4c41'});el('path',{d:`M${jx+52} ${y+14} q20 -7 40 0`,stroke:'#d4b067','stroke-width':6,fill:'none'});return;}
+  if(id==='NhaVanHoa'){R(b.x,b.y,b.w,b.h,{rx:4,fill:VPAL.san,stroke:shade(VPAL.san,-.2),'stroke-width':2});
+    house(b.x+8,b.y+6,b.w-16,58,'#b03a2e');R(b.x+30,b.y+70,b.w-60,22,{rx:3,fill:'#e9d9a6',stroke:'#c9a646','stroke-width':2}); // sân khấu
+    [b.x+14,b.x+b.w-18].forEach(x=>{el('line',{x1:x,y1:b.y+b.h-8,x2:x,y2:b.y+b.h-40,stroke:'#495057','stroke-width':2});R(x,b.y+b.h-40,16,10,{fill:'#d6332e'});});return;}
+  vHouse(b.x,b.y,b.w,b.h,VPAL.ngoi);}
+function drawVillage(opts){
+  const C=CC,[c1,r1]=opts.region,Wc=200+(C.cols-1)*SP,Hc=200+(C.rows-1)*SP,RX=100+(C.cols-1)*SP+60;
+  const P=n=>{const m=n.match(/c(\d+)r(\d+)/);return{x:100+ +m[1]*SP,y:100+ +m[2]*SP,i:+m[1],j:+m[2]};};
+  const inR=(i,j)=>i<=c1&&j<=r1;
+  const R=sd=>{let q=sd;return()=>{q=(q*16807)%2147483647;return(q-1)/2147483646;};};
+  const RES=Object.keys(C.points).map(id=>chRect(id));
+  const hit=(x,y,w,h)=>RES.some(r=>x<r.x+r.w+10&&x+w+10>r.x&&y<r.y+r.h+10&&y+h+10>r.y);
+  const SC=C.sites.map(id=>{const r=chRect(id);return{x:r.cx,y:r.cy};});
+  // ô phố chứa công trình đã xây là xóm, dù ngoài vùng thông xe — công trình không đứng giữa ruộng (K5)
+  const xomB=new Set(SC.filter((p,k)=>opts.built[k]).map(p=>`${Math.floor((p.x-100)/SP)},${Math.floor((p.y-100)/SP)}`));
+  // nền: ruộng lúa bao quanh; sông dọc mép Đông
+  el('rect',{x:-600,y:-600,width:Wc+1200,height:Hc+1200,fill:VPAL.lua});
+  for(let x=-576;x<RX-40;x+=100)for(let y=-576;y<Hc+560;y+=100){if(x>-60&&x<Wc&&y>-60&&y<Hc)continue;
+    el('rect',{x,y,width:92,height:92,rx:6,fill:(Math.round(x/100)+Math.round(y/100))%2?VPAL.luaD:VPAL.lua,stroke:VPAL.bo,'stroke-width':3});}
+  el('rect',{x:RX-14,y:-600,width:16,height:Hc+1200,fill:VPAL.bo});
+  el('rect',{x:RX,y:-600,width:Wc+700-RX,height:Hc+1200,fill:VPAL.nuoc});
+  {const r=R(71);for(let k=0;k<26;k++){const x=RX+20+r()*420,y=-560+r()*(Hc+1100);el('path',{d:`M${x} ${y} q12 -5 24 0 q12 5 24 0`,stroke:VPAL.nuocL,'stroke-width':3,fill:'none',opacity:.8});}}
+  // ô phố: trong vùng = xóm (vườn, lũy tre, nhà ba gian); ngoài vùng = ruộng lúa
+  for(let i=0;i<C.cols-1;i++)for(let j=0;j<C.rows-1;j++){
+    const x0=100+i*SP+44,y0=100+j*SP+44,cw=(SP-88)/2,ch=(SP-88)/2,xom=inR(i+1,j+1)||xomB.has(`${i},${j}`);
+    if(!xom){paddy(x0-10,y0-10,SP-68,SP-68,R(900+i*17+j*5));continue;}
+    el('rect',{x:x0-10,y:y0-10,width:SP-68,height:SP-68,rx:12,fill:VPAL.vuon});
+    {const r=R(300+i*13+j*7);for(let d=0;d<4*(SP-80);d+=26){const s=Math.floor(d/(SP-80)),t=d%(SP-80);
+      const [x,y]=[[x0-4+t,y0-4],[x0+SP-92,y0-4+t],[x0+SP-92-t,y0+SP-92],[x0-4,y0+SP-92-t]][s];
+      if(r()<.72&&!hit(x-9,y-9,18,18))bamboo(x,y,8+r()*3);}} // lũy tre viền xóm
+    for(let a=0;a<2;a++)for(let b=0;b<2;b++){const r=R(1000+i*131+j*37+a*11+b*3);
+      const w=56+r()*36,h=46+r()*26,x=x0+8+a*cw+(cw-w-16)*r(),y=y0+8+b*ch+(ch-h-16)*r();
+      if(hit(x,y,w,h)){if(!hit(x+w/2-12,y+h/2-12,24,24))tree(x+w/2,y+h/2,11);continue;}
+      const cx=x+w/2,cy=y+h/2;let dev=-1,best=330;
+      SC.forEach((p,k)=>{const dd=Math.hypot(p.x-cx,p.y-cy);if(dd<best){best=dd;dev=k;}});
+      const col=VROOF[Math.floor(r()*VROOF.length)];
+      if(dev<0)vHouse(x,y,w,h,col);
+      else if(opts.built[dev]){const T_=TARGET,grow=opts.grow===dev;
+        if(grow){const g=el('g',{});(opts.growI=opts.growI||[]).push({g,cx,cy,d:best});TARGET=g;}
+        // nhà mới: vườn có hàng rào tre, mái ngói tươi
+        el('rect',{x:x+1,y:y+1,width:w-2,height:h-2,rx:5,fill:'#b2f2bb',stroke:'#c9b27a','stroke-width':2.5,'stroke-dasharray':'5 3'});
+        vHouse(x+7,y+6,w-16,h-12,['#c0392b','#b0563a','#9a4b33'][Math.floor(r()*3)]);TARGET=T_;}
+      else{el('rect',{x:x+4,y:y+4,width:w-8,height:h-8,rx:4,fill:'#b5d98a',stroke:'#c9b27a','stroke-width':2,'stroke-dasharray':'6 5'}); // vườn rau — chỗ sẽ mọc nhà mới
+        for(let k=1;k<4;k++)el('line',{x1:x+10,y1:y+4+k*(h-8)/4,x2:x+w-10,y2:y+4+k*(h-8)/4,stroke:'#6fa84a','stroke-width':4,'stroke-linecap':'round','stroke-dasharray':'2 7'});}}
+  }
+  // mép bản đồ: lũy tre, cây, đống rơm (ngoài mặt đường)
+  {const r=R(77);for(let x=20;x<RX-40;x+=60){if(!hit(x-10,6,24,40))bamboo(x+r()*10,26+r()*10,9);if(!hit(x-10,Hc-50,24,44))bamboo(x+r()*10,Hc-28-r()*10,9);}
+   for(let y=150;y<Hc-150;y+=70)if(!hit(14,y,30,30))bamboo(34,y+r()*30,9);}
+  // đường: trong vùng vẽ theo loại (thường = bê tông liên thôn, lớn = đường đê); ngoài vùng là đường đất "chưa thông xe" có rào chắn
+  const types={};for(const t in C.types)for(const [a,b] of C.types[t])types[keyE(a,b)]=t;
+  const all=[];for(let j=0;j<C.rows;j++)for(let i=0;i<C.cols-1;i++)all.push([`c${i}r${j}`,`c${i+1}r${j}`]);
+  for(let i=0;i<C.cols;i++)for(let j=0;j<C.rows-1;j++)all.push([`c${i}r${j}`,`c${i}r${j+1}`]);
+  const RW={thuong:46,lon:64,dong:46,gogh:46,hem:24},RC={thuong:VPAL.road,lon:'#3b4048',dong:'#4f4a4a',gogh:'#8a6a4a',hem:'#7d838c'};
+  const open=[],closed=[];all.forEach(([a,b])=>{const A=P(a),B=P(b);(inR(A.i,A.j)&&inR(B.i,B.j)?open:closed).push({a,b,A,B,type:types[keyE(a,b)]||'thuong'});});
+  [...open,...closed].filter(e=>e.type==='lon').forEach(e=>el('line',{x1:e.A.x,y1:e.A.y,x2:e.B.x,y2:e.B.y,stroke:VPAL.ruong,'stroke-width':110,'stroke-linecap':'square'})); // mái đê phủ cỏ
+  closed.forEach(e=>el('line',{x1:e.A.x,y1:e.A.y,x2:e.B.x,y2:e.B.y,stroke:'#c9a66b','stroke-width':34,'stroke-linecap':'square'}));
+  open.forEach(e=>el('line',{x1:e.A.x,y1:e.A.y,x2:e.B.x,y2:e.B.y,stroke:VPAL.walk,'stroke-width':RW[e.type]+14,'stroke-linecap':'square'}));
+  open.forEach(e=>el('line',{x1:e.A.x,y1:e.A.y,x2:e.B.x,y2:e.B.y,stroke:RC[e.type],'stroke-width':RW[e.type],'stroke-linecap':'square'}));
+  open.forEach(e=>{const u=unit(e.A,e.B),px=-u.y,py=u.x;const p=(d,o)=>({x:e.A.x+u.x*d+px*o,y:e.A.y+u.y*d+py*o});
+    if(e.type==='thuong'){const s=p(36,0),t=p(SP-36,0);el('line',{x1:s.x,y1:s.y,x2:t.x,y2:t.y,stroke:PAL.line,'stroke-width':2,'stroke-dasharray':'12 12',opacity:.75});}
+    if(e.type==='lon'){[-2.5,2.5].forEach(o=>{const s=p(40,o),t=p(SP-40,o);el('line',{x1:s.x,y1:s.y,x2:t.x,y2:t.y,stroke:'#ffd43b','stroke-width':2});});}});
+  closed.forEach(e=>{[[e.A,e.B],[e.B,e.A]].forEach(([X,Y])=>{if(!inR(X.i,X.j))return;const u=unit(X,Y),q={x:X.x+u.x*40,y:X.y+u.y*40},ang=Math.atan2(u.y,u.x)*180/Math.PI+90;
+    const g=el('g',{transform:`translate(${q.x},${q.y}) rotate(${ang})`});el('rect',{x:-22,y:-5,width:44,height:10,rx:2,fill:'#fff',stroke:'#c92a2a','stroke-width':1.5},g);
+    [-14,0,14].forEach(dx=>el('rect',{x:dx-4,y:-5,width:7,height:10,fill:'#e03131'},g));});});
+  // mỗi dải đường đặc biệt 1 biển
+  const tOf=(a,b)=>{const A=P(a),B=P(b);return inR(A.i,A.j)&&inR(B.i,B.j)?(types[keyE(a,b)]||'thuong'):null;};
+  const runs=[];
+  for(let j=0;j<C.rows;j++){let r=null;for(let i=0;i<C.cols-1;i++){const t=tOf(`c${i}r${j}`,`c${i+1}r${j}`);if(t&&t!=='thuong'&&r&&r.t===t)r.n++;else{r=t&&t!=='thuong'?{t,h:1,i,j,n:1}:null;if(r)runs.push(r);}}}
+  for(let i=0;i<C.cols;i++){let r=null;for(let j=0;j<C.rows-1;j++){const t=tOf(`c${i}r${j}`,`c${i}r${j+1}`);if(t&&t!=='thuong'&&r&&r.t===t)r.n++;else{r=t&&t!=='thuong'?{t,h:0,i,j,n:1}:null;if(r)runs.push(r);}}}
+  runs.forEach(r=>{const mid=r.n*SP/2,x0=100+r.i*SP,y0=100+r.j*SP,d=(mid%SP===0)?mid-SP/2:mid,off=RW[r.t]/2+20;
+    if(r.h)signSVG(r.t,TARGET,x0+d,y0-off,12);else signSVG(r.t,TARGET,x0-off,y0+d,12);});
+  // công trình (một điểm có thể xây nhiều giai đoạn — Chợ phiên)
+  Object.keys(C.points).forEach(id=>{const b=chRect(id),ks=C.sites.map((s,k)=>s===id?k:-1).filter(k=>k>=0);
+    if(!ks.length){if(id==='HTX')vWarehouse(b);else vHouse(b.x,b.y,b.w,b.h,VROOF[id.length%VROOF.length]);return;}
+    const nb=ks.filter(k=>opts.built[k]).length,building=ks.includes(opts.constructing),T_=TARGET;
+    if(ks.includes(opts.pop)&&opts.built[opts.pop]){opts.popG=el('g',{});TARGET=opts.popG;}
+    if(building)vBuild(b,opts);else if(nb===0)vLot(b);else vLandmark(id,b,nb);
+    TARGET=T_;});
+  if(opts.growI)opts.growI.sort((a,b)=>a.d-b.d);
+  if(opts.pins)pinLayer(()=>ZONES.forEach(z=>{const b=chRect(z.id);pin(b.px,b.py,z.col,z.kho);label(b.lx,b.ly,z.name);}));
 }
 function buildMinimap(){
   const box=document.getElementById('mm');box.innerHTML='';
@@ -931,19 +1125,19 @@ function end(win,why,kind){
     :ext?'Đã dùng Thêm giờ nên chỉ tính 1 sao. Thử lại không dùng vật phẩm để có thêm sao.'
     :st<3?`Về đích khi còn dư hơn <b>${secTxt(STAR_CUT[st-1]*LV.T0)}</b> để đạt ${st+1} sao.`:'Tuyệt vời — đạt tối đa 3 sao!';
   // màn thắng: "Màn tiếp ▶" là nút chính (Chương 2 thì nút chính là Xem công trình, Màn tiếp nằm ở cảnh quay) (I-03)
-  const nx=nextLevel(LVI),showNext=win&&nx!==null&&LV.chapter!==2;$('bNext2').style.display=showNext?'':'none';
-  $('bRestart2').textContent=win?'Chơi lại':'Thử lại';$('bRestart2').classList.toggle('alt',showNext||(win&&LV.chapter===2));
+  const nx=nextLevel(LVI),showNext=win&&nx!==null&&!LV.cc;$('bNext2').style.display=showNext?'':'none';
+  $('bRestart2').textContent=win?'Chơi lại':'Thử lại';$('bRestart2').classList.toggle('alt',showNext||(win&&LV.cc));
   if(win&&nx!==null)HSEL=nx; // về Trang chủ thì chọn sẵn màn kế (I-02)
   if(win){sfx('win');for(let i=0;i<st;i++)setTimeout(()=>sfx('star',i),450+i*280);}else sfx('lose');
-  if(win&&LV.chapter===2)HOME_FLASH=LV.stage; // về Trang chủ: công trình vừa xây nhấp nháy một lần (T-09)
-  const cut=win&&LV.chapter===2;$('bCut').style.display=cut?'':'none';
+  if(win&&LV.cc)HOME_FLASH=LV.stage; // về Trang chủ: công trình vừa xây nhấp nháy một lần (T-09)
+  const cut=win&&LV.cc;$('bCut').style.display=cut?'':'none';
   show('result');
   if(cut){const tok=G;setTimeout(()=>{if(G===tok&&G.state==='won'&&$('result').classList.contains('on'))startCut();},2200);}
 }
 // Cảnh quay hoàn thành công trình (Chương 2): camera trượt tới công trình → công trình hoàn thiện + vùng mới thông xe
-function siteCenter(k){const r=ch2Rect(CH2.sites[k]);return{x:r.cx,y:r.cy};}
+function siteCenter(k){const r=chRect(CC.sites[k]);return{x:r.cx,y:r.cy};}
 // Đoạn đường thông xe khi chuyển từ vùng của công trình k sang vùng của màn sau
-function newRoads(k){if(k<0||k>=CH2.regions.length-1)return[];const [a0,b0]=CH2.regions[k],[a1,b1]=CH2.regions[k+1],P=(i,j)=>({x:100+i*SP,y:100+j*SP}),r=[];
+function newRoads(k){if(k<0||k>=CC.regions.length-1)return[];const [a0,b0]=CC.regions[k],[a1,b1]=CC.regions[k+1],P=(i,j)=>({x:100+i*SP,y:100+j*SP}),r=[];
   const inA=(i,j)=>i<=a0&&j<=b0,inB=(i,j)=>i<=a1&&j<=b1;
   for(let j=0;j<=b1;j++)for(let i=0;i<a1;i++)if(!(inA(i,j)&&inA(i+1,j)))r.push([P(i,j),P(i+1,j),inA(i,j)?0:inA(i+1,j)?1:-1]);
   for(let i=0;i<=a1;i++)for(let j=0;j<b1;j++)if(!(inA(i,j)&&inA(i,j+1)))r.push([P(i,j),P(i,j+1),inA(i,j)?0:inA(i,j+1)?1:-1]);
@@ -953,11 +1147,12 @@ const bboxOf=pts=>pts.reduce((b,p)=>({x0:Math.min(b.x0,p.x),y0:Math.min(b.y0,p.y
    Mỗi mốc: tâm khung nhìn (x,y) và độ phóng z; giữa các mốc trượt mượt. Khung nằm trọn trong bản đồ (không lộ vùng ngoài).
    Khi lái xe vẫn dùng giới hạn lề của I-07 — mốc cuối của đoạn mở màn trùng khung lái xe nên không bị giật. */
 // mép trên nới 60 để thấy trọn cần cẩu của công trường sát mép trên (≈ 15% khung — ngưỡng của báo cáo)
-function camFit(x,y,z){const vw=844/z,vh=390/z,c=(v,s,L0,L1)=>s>=L1-L0?(L0+L1)/2:Math.max(L0+s/2,Math.min(L1-s/2,v));return{x:c(x,vw,0,W),y:c(y,vh,-60,H),z};}
+// yb: nới mép dưới (khung cuối cảnh quay — dải đáy có hộp thoại che, để công trình sát mép dưới vẫn nằm trên hộp thoại)
+function camFit(x,y,z,yb){const vw=844/z,vh=390/z,c=(v,s,L0,L1)=>s>=L1-L0?(L0+L1)/2:Math.max(L0+s/2,Math.min(L1-s/2,v));return{x:c(x,vw,0,W),y:c(y,vh,-60,H+(yb||0)),z};}
 function camPlay(fx,fy){return{x:Math.max(-210,Math.min(W-844+250,fx-422))+422,y:Math.max(-150,Math.min(H-390+90,fy-215))+195,z:1};}
 // khung chứa bb ở phần trên màn hình (dải đáy ~90px dành cho hộp thoại); không thu nhỏ quá bề ngang bản đồ (không lộ vùng ngoài); mép trên bb luôn trong khung
 function camFrame(bb){const z=Math.max(844/W,Math.min(1.3,844/(bb.x1-bb.x0+120),300/(bb.y1-bb.y0+40)));
-  return camFit((bb.x0+bb.x1)/2,Math.min((bb.y0+bb.y1)/2+45/z,bb.y0-10+195/z),z);}
+  return camFit((bb.x0+bb.x1)/2,Math.min((bb.y0+bb.y1)/2+45/z,bb.y0-10+195/z),z,90/z);}
 function camAt(keys,t){let i=0;while(i<keys.length-1&&t>=keys[i+1].t)i++;const a=keys[i],b=keys[i+1];if(!b)return a;
   const e=Math.max(0,Math.min(1,(t-a.t)/(b.t-a.t))),s=e*e*(3-2*e);return{x:a.x+(b.x-a.x)*s,y:a.y+(b.y-a.y)*s,z:a.z+(b.z-a.z)*s};}
 function cineCam(){if((G.state==='cut'||G.state==='cutdone')&&G.cut)return camAt(G.cut.keys,G.cut.t);if(G.state==='intro'&&G.intro)return camAt(G.intro.keys,G.intro.t);return null;}
@@ -965,24 +1160,24 @@ function cineCam(){if((G.state==='cut'||G.state==='cutdone')&&G.cut)return camAt
 // rào chắn mờ dần → khung cuối chứa công trình + đường mới, hộp thoại ở dải đáy (T-01)
 const CUT_POP=.9,CUT_ROAD=3,FIN_T=3.4;
 function startCut(){
-  if(!G||G.state!=='won'||LV.chapter!==2)return;
+  if(!G||G.state!=='won'||!LV.cc)return;
   const k=LV.stage,s=siteCenter(k),nr=newRoads(k);show(null);$('hud').style.visibility='hidden';$('bSkip').style.display='block';
   // khung cuối: đoạn đường vừa thông (công trình đã được xem ≥ 2 giây ở bước trước); không có đường mới thì khu quanh công trình
   const keys=[{t:0,...camPlay(G.disp.x,G.disp.y)},{t:.8,...camFit(s.x,s.y,1.3)},{t:CUT_ROAD,...camFit(s.x,s.y,1.3)}],
     fb=nr.length?bboxOf(nr.flatMap(([A,B])=>[A,B])):bboxOf([{x:s.x-170,y:s.y-130},{x:s.x+170,y:s.y+130}]);
-  const fin=k===CH2.sites.length-1;
+  const fin=k===CC.sites.length-1;
   if(fin){keys[2].t=FIN_T-1;keys.push({t:FIN_T,...camFit(W/2,530,.37)});} // cảnh kết chương: kéo ra toàn cảnh (T-08)
   else{keys.push({t:CUT_ROAD+1,...camFrame(fb)});if(nr.length)keys.push({t:CUT_ROAD+1.8,...camFrame(fb)});}
   G.state='cut';G.cut={t:0,k,phase:0,to:s,keys,roads:nr,fin,end:fin?6:keys[keys.length-1].t+.2};
 }
-function cutDraw(region,k){ST.innerHTML='';TARGET=ST;const o={region,built:CH2.sites.map((_,i)=>i<=k),constructing:-1,pins:false,pop:k,grow:k};drawChapter(o);G.cut.growI=o.growI||[];return o.popG;}
+function cutDraw(region,k){ST.innerHTML='';TARGET=ST;const o={region,built:CC.sites.map((_,i)=>i<=k),constructing:-1,pins:false,pop:k,grow:k};drawChapter(o);G.cut.growI=o.growI||[];return o.popG;}
 // Cụm nhà mới "mọc" lần lượt từ gần công trình ra xa: mỗi nhà phóng 0 → 1,12 → 1 trong 0,35 giây, cách nhau 0,12 giây (T-06)
 function growSet(items,t){items.forEach((it,i)=>{const e=(t-i*.12)/.35;
   if(e>=1){it.g.removeAttribute('transform');return;}const s=e<=0?.01:e<.7?1.12*e/.7:1.12-.12*(e-.7)/.3;
   it.g.setAttribute('transform',`translate(${it.cx},${it.cy}) scale(${s}) translate(${-it.cx},${-it.cy})`);});}
 function cutReveal(){
   const c=G.cut;if(c.phase)return;c.phase=1;sfx('build');const k=c.k;
-  c.pop=cutDraw(CH2.regions[k],k); // vùng cũ: đường mới chưa thông, thông ở bước sau
+  c.pop=cutDraw(CC.regions[k],k); // vùng cũ: đường mới chưa thông, thông ở bước sau
   carG.style.display='none';badge.style.display='none';
   const fx=el('g',{},DYN);c.fx=fx;
   [0,.35,.7].forEach(dl=>{const ci=el('circle',{cx:c.to.x,cy:c.to.y,r:10,fill:'none',stroke:'#ffd43b','stroke-width':6},fx);
@@ -992,7 +1187,7 @@ function cutReveal(){
 // đường mới thông: vẽ lại theo vùng màn sau, phủ vệt vàng lên đoạn mới, rào chắn cũ mờ dần
 function cutRoads(){
   const c=G.cut;if(c.phase>=2)return;c.phase=2;if(!c.roads.length)return;
-  cutDraw(CH2.regions[c.k+1],c.k);sfx('turn');
+  cutDraw(CC.regions[c.k+1],c.k);sfx('turn');
   const g=el('g',{},DYN);c.rfx=g;c.glow=[];c.bars=[];
   c.roads.forEach(([A,B,old])=>{const ln=el('line',{x1:A.x,y1:A.y,x2:B.x,y2:B.y,stroke:'#ffd43b','stroke-width':9,'stroke-linecap':'round','stroke-dasharray':'26 16',opacity:.95},g);
     el('animate',{attributeName:'stroke-dashoffset',from:84,to:0,dur:'.7s',repeatCount:'indefinite'},ln);c.glow.push(ln);
@@ -1011,7 +1206,7 @@ function cutFx(){const c=G.cut;if(c.growI&&c.phase===1)growSet(c.growI,c.t-CUT_P
 function finFx(c){const cl=v=>Math.max(0,Math.min(1,v)),t=c.t-FIN_T;
   if(!c.ffx){const g=el('g',{},DYN);c.ffx=g;
     c.dusk=el('rect',{x:-600,y:-600,width:W+1200,height:H+1200,fill:'#1c2541',opacity:0},g);
-    c.lit=CH2.sites.map((_,i)=>{const p=siteCenter(i),r=ch2Rect(CH2.sites[i]),R=Math.max(r.w,r.h)*.75,s=el('g',{opacity:0},g);
+    c.lit=CC.sites.map((_,i)=>{const p=siteCenter(i),r=chRect(CC.sites[i]),R=Math.max(r.w,r.h)*.75,s=el('g',{opacity:0},g);
       el('circle',{cx:p.x,cy:p.y,r:R,fill:'#fff3bf',opacity:.5},s);el('circle',{cx:p.x,cy:p.y,r:R,fill:'none',stroke:'#ffd43b','stroke-width':12},s);return s;});
     c.lamps=el('g',{opacity:0},g);for(const k in N){const n=N[k];el('circle',{cx:n.x,cy:n.y,r:30,fill:'#ffe066',opacity:.45},c.lamps);el('circle',{cx:n.x,cy:n.y,r:8,fill:'#fff9db'},c.lamps);}}
   c.dusk.setAttribute('opacity',(.38*cl(t/.8)).toFixed(3));
@@ -1020,9 +1215,9 @@ function finFx(c){const cl=v=>Math.max(0,Math.min(1,v)),t=c.t-FIN_T;
 function finishCut(){ // giao diện lái xe vẫn ẩn để không che khung cuối; reset() bật lại khi vào màn
   const c=G.cut;if(!c)return;cutReveal();cutRoads();c.t=c.end;cutFx();G.state='cutdone';$('bSkip').style.display='none';
   if(c.fx)c.fx.remove();if(c.bars)c.bars.forEach(b=>b.remove());if(c.pop)c.pop.removeAttribute('transform'); // vạch vàng đường mới giữ lại cùng hộp thoại
-  const k=c.k,last=k===CH2.sites.length-1;
-  $('cTitle').textContent=last?'Khu đô thị mới đã hoàn thành!':`✨ ${CH2.siteNames[k]} đã hoàn thành!`;
-  $('cNote').textContent=(CH2.openNote[k]||'Khu phố đông vui hơn rồi!')+(last?' Bưu thiếp toàn cảnh đã lưu ở Trang chủ.':'');
+  const k=c.k,last=k===CC.sites.length-1;
+  $('cTitle').textContent=last?CC.finTitle:`✨ ${CC.siteNames[k]} đã hoàn thành!`;
+  $('cNote').textContent=(CC.openNote[k]||'Khu phố đông vui hơn rồi!')+(last?' Bưu thiếp toàn cảnh đã lưu ở Trang chủ.':'');
   $('cPic').style.display=last?'':'none';$('bNext').style.display=last?'none':'';$('cutv').classList.toggle('big',last);
   show('cutv');
 }
@@ -1122,20 +1317,20 @@ function renderHome(){
   drawHomeMap();renderSoundBtns();$('bPost').style.display=postReady()?'':'none';
 }
 // Bưu thiếp (T-08): có khi đã hoàn thành mọi màn của chương xây dựng dần; ảnh toàn cảnh khu đã xây xong
-function postReady(){const c=CHAPTERS[HCH];return !!c.ch2&&c.levels.every(k=>getBest(k)!==null);}
-function openPost(){const svg=$('postPic'),T=TARGET;svg.innerHTML='';TARGET=svg;
-  drawChapter({region:CH2.regions[CH2.regions.length-1],built:CH2.sites.map(()=>true),constructing:-1,pins:false});TARGET=T;
+function postReady(){const c=CHAPTERS[HCH];return !!c.cc&&c.levels.every(k=>getBest(k)!==null);}
+function openPost(){const svg=$('postPic'),T=TARGET;svg.innerHTML='';TARGET=svg;CC=CHAPTERS[HCH].cc;
+  drawChapter({region:CC.regions[CC.regions.length-1],built:CC.sites.map(()=>true),constructing:-1,pins:false});TARGET=T;
   const lv=CHAPTERS[HCH].levels,sn=lv.reduce((a,k)=>a+getStars(k),0);
-  $('postT').textContent=CHAPTERS[HCH].name;$('postD').innerHTML=`Đã xây xong ${CH2.sites.length} công trình: ${CH2.siteNames.join(', ')}.<br><b style="font-size:13px;color:#c77c00;margin:0">★ ${sn}/${lv.length*3}</b>`;
+  $('postT').textContent=CHAPTERS[HCH].name;$('postD').innerHTML=`${CC.postNote}: ${[...new Set(CC.siteNames)].join(', ')}.<br><b style="font-size:13px;color:#c77c00;margin:0">★ ${sn}/${lv.length*3}</b>`;
   $('postv').classList.add('on');}
 function hEl(t,a,p){return el(t,a,p||$('hMap'));}
 function drawHomeMap(){
   const M=$('hMap');M.innerHTML='';const ch=CHAPTERS[HCH],lv=ch.levels||[];
   const sv=seed;seed=97+HCH*13;
   hEl('rect',{width:644,height:390,fill:ch.soon?'#b5c4a8':'#8fd16a'});
-  if(ch.ch2){const built=lv.map(k=>getBest(k)!==null),nb=built.filter(Boolean).length,sc=390/1250;
-    const g=hEl('g',{transform:`translate(${(644-1950*sc)/2-60},0) scale(${sc})`});TARGET=g;
-    drawChapter({region:CH2.regions[Math.min(nb,4)],built,constructing:-1,pins:false});
+  if(ch.cc){CC=ch.cc;const built=lv.map(k=>getBest(k)!==null),nb=built.filter(Boolean).length,Wc=200+(CC.cols-1)*SP,Hc=200+(CC.rows-1)*SP,sc=390/Hc;
+    const g=hEl('g',{transform:`translate(${(644-Wc*sc)/2-60},0) scale(${sc})`});TARGET=g;
+    drawChapter({region:CC.regions[Math.min(nb,CC.regions.length-1)],built,constructing:-1,pins:false});
     // công trình vừa xây: vòng sáng nhấp nháy 2 lần (T-09)
     if(HOME_FLASH!==null&&built[HOME_FLASH]){const p=siteCenter(HOME_FLASH);[0,.5].forEach(dl=>{const c=el('circle',{cx:p.x,cy:p.y,r:60,fill:'none',stroke:'#ffd43b','stroke-width':22,opacity:0},g);
       el('animate',{attributeName:'r',values:'60;300',dur:'1s',begin:`${.3+dl}s`,repeatCount:'2'},c);el('animate',{attributeName:'opacity',values:'1;0',dur:'1s',begin:`${.3+dl}s`,repeatCount:'2'},c);});
@@ -1291,7 +1486,7 @@ function makeViewer(id){
 function buildMarks(v,og,mode){
   og.innerHTML='';v.items=[];const add=(x,y,o)=>{const g=el('g',{},og);v.items.push(Object.assign({g,x,y},o));return g;};
   const tx=(g,t,y,o)=>{const e=el('text',Object.assign({x:0,y,'text-anchor':'middle','font-size':12.5,'font-weight':900,'font-family':'Nunito,Segoe UI',fill:'#1d2733',stroke:'#fff','stroke-width':3.5,'stroke-linejoin':'round','paint-order':'stroke'},o||{}),g);e.textContent=t;return e;};
-  const site=LV.chapter===2?CH2.sites[LV.stage]:null;
+  const site=LV.cc?LV.cc.sites[LV.stage]:null;
   ZONES.forEach(z=>{const b=buildingRect(z),st=mode==='play'?zState(z):'on',col=st==='done'?'#adb5bd':z.col,lab=el('g',{});
     const g=add(b.px,b.py-26,{lab});
     if(st==='carry')el('circle',{r:18,fill:'none',stroke:'#ffd43b','stroke-width':4},g);
@@ -1315,7 +1510,7 @@ function startGame(noIntro){show(null);
 /* Đoạn mở màn Chương 2 (T-03, HA-Q2): camera đi từ điểm mới của màn (đường vừa thông → công trình vừa xây; màn đầu: công trường) về xe.
    Đồng hồ chưa chạy. Chỉ chạy lần đầu vào màn từ màn chuẩn bị — không chạy khi Thử lại; chạm hoặc nhấn phím để bỏ qua. */
 let INTRO_LV=-1;
-function introKeys(){if(LV.chapter!==2)return null;const s=LV.stage,pts=[];
+function introKeys(){if(!LV.cc)return null;const s=LV.stage,pts=[];
   if(s>0){const nr=newRoads(s-1);if(nr.length){const rb=bboxOf(nr.flatMap(([A,B])=>[A,B]));pts.push({x:(rb.x0+rb.x1)/2,y:(rb.y0+rb.y1)/2});}pts.push(siteCenter(s-1));}
   else pts.push(siteCenter(0));
   const keys=[];let t=0;
@@ -1472,7 +1667,7 @@ const IC={list:'<svg class="ic" viewBox="0 0 28 28"><rect x="6" y="5" width="16"
 $('bMis').innerHTML=IC.list;$('bHelp').innerHTML=IC.help+'<span class="bd">!</span>';
 // chấm "!" trên nút Hướng dẫn: màn có cơ chế mới (lần đầu xuất hiện) và chưa mở hướng dẫn (Q-70) — nhớ trên máy
 const helpSeen=(()=>{try{return JSON.parse(localStorage.getItem(`${SK}demo_help_seen`))||{};}catch(e){return{};}})();
-const newMech=i=>MECH.indexOf(MECH[i])===i,GO_HINT_LEVELS=3;
+const newMech=i=>MECH[i]!=='Tổng hợp'&&MECH.indexOf(MECH[i])===i,GO_HINT_LEVELS=3;
 let INFO={kind:null,prev:null},hTab='lv';
 function openInfo(kind){if(!G||(G.state!=='play'&&G.state!=='wait'))return;INFO={kind,prev:G.state};G.state='info';if(kind==='help'){helpSeen[LVI]=1;try{localStorage.setItem(`${SK}demo_help_seen`,JSON.stringify(helpSeen));}catch(e){}hTab='lv';}renderInfo();show('infov');}
 function closeInfo(){if(G.state!=='info')return;G.state=INFO.prev;INFO.kind=null;show(null);}
@@ -1488,7 +1683,8 @@ const foot=()=>`<div class="ifoot">${vehIcon(VK)}<span><b>${V().name}</b> · tr�
 const misList=()=>sortM().map(({m,i})=>`<div class="mrow ${m.delivered>=m.qty?'done':''}"><span class="no">${i+1}</span>${route(m)}${pbar(m)}${mstat(m)}${mdl(m)}</div>`).join('')+foot();
 
 /* ---- nội dung hướng dẫn (dùng chung cho 3 phương án) ---- */
-const MECHTXT={'Điều khiển':'Chọn hướng ở giao lộ, xe tự dừng ở điểm, chọn hàng ở bảng hỏi.','Chia chuyến':'Hàng nhiều hơn sức chứa của xe — phải chia chuyến, gom đơn gần nhau đi chung.',
+const MECHTXT={'Điều khiển':'Chọn hướng ở giao lộ, xe tự dừng ở điểm, chọn hàng ở bảng hỏi.','Nhiều điểm giao':'Nhiều nơi cần hàng — chọn thứ tự giao để đi ít đường nhất.',
+  'Đường lớn':'Đường lớn chạy nhanh hơn — đường vòng qua đường lớn có khi nhanh hơn đường thẳng.','Tổng hợp':'Màn cuối chương: dùng mọi điều đã học trong chương.','Chia chuyến':'Hàng nhiều hơn sức chứa của xe — phải chia chuyến, gom đơn gần nhau đi chung.',
   'Đường lớn & đông':'Đường lớn chạy nhanh, đường đông chạy chậm — đường thẳng chưa chắc nhanh nhất.','Hạn giao':'Có đơn ghi ⏱ hạn — giao trễ hạn là thua ngay.','Chọn xe':'Chọn xe phù hợp: xe máy vào được hẻm nhưng chở ít, xe tải chở nhiều nhưng chậm.'};
 function eff(t,k){const f=ROAD[t].f[k];if(f===null)return['x','✕ Không vào'];if(f>=1.2)return['f','Nhanh hơn'];if(f>=.95)return['n','Bình thường'];if(f>=.75)return['n','Hơi chậm'];if(f>=.55)return['s','Chậm'];return['vs','Rất chậm'];}
 const ROADDESC={thuong:'Mốc so sánh',lon:'Rộng, nhiều làn',dong:'Xe càng to càng chậm',gogh:'Ổ gà, xe máy chậm nhất',hem:'Chỉ xe máy vào được'};

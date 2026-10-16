@@ -87,12 +87,13 @@ def autopilot(exe, page_html, out_txt):
     def conv(path):
         return [{'zone': z, 'picks': a[4:].split('+')} if a.startswith('lấy ') else {'zone': z} for _, z, a in path]
     plans = []
-    for k, vs in json.load(open(os.path.join(LD, 'ket_qua.json'), encoding='utf-8')).items():
-        for v, r in vs.items():
-            plans.append([int(k[1:]) - 1, v, conv(r['path']), round(r['opt'], 1)])
+    # Chương 1 (Làng ven sông, từ v1.4): màn 1–10 · Chương 2 (thử nghiệm): màn 11–15
+    for k, r in json.load(open(os.path.join(LD, 'ket_qua_ch1.json'), encoding='utf-8')).items():
+        lid, v = k.split('_')
+        plans.append([int(lid[3:]) - 1, v, conv(r['path']), round(r['opt'], 1)])
     for k, r in json.load(open(os.path.join(LD, 'ket_qua_ch2.json'), encoding='utf-8')).items():
         lid, v = k.split('_')
-        plans.append([4 + int(lid[3:]), v, conv(r['path']), round(r['opt'], 1)])
+        plans.append([9 + int(lid[3:]), v, conv(r['path']), round(r['opt'], 1)])
     runner = '''
 (function(){const PLANS=%s,VN={van:'Xe van',may:'Xe máy',tai:'Xe tải'};
 const out=PLANS.map(([li,v,p,opt])=>{try{const r=runPlan(li,v,JSON.parse(JSON.stringify(p)));

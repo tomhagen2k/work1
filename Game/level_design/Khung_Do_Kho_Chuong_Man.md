@@ -2,7 +2,7 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 0.2 — chốt bố cục 15 chương, bộ công thức CT-01 → CT-09, bảng tra thời gian, quy trình kiểm chứng; bỏ phần câu chuyện và phần so sánh với demo |
+| Phiên bản | 0.4 — màn trùm Chương 1 theo khoảng ≥ 10, độ khó màn trùm đánh giá bằng số kế hoạch đạt 3★. 0.3 — CT-06 đếm theo kế hoạch chuẩn, không áp dụng cho màn ≤ 2 điểm giao; CT-07 áp dụng từ màn đầu tiên có chia chuyến. 0.2 — chốt bố cục 15 chương, bộ công thức CT-01 → CT-09, bảng tra thời gian, quy trình kiểm chứng; bỏ phần câu chuyện và phần so sánh với demo |
 | Ngày | 16/10/2026 |
 | Mục đích | **Một nơi duy nhất** để giám sát: cấu trúc chương và màn, độ khó mục tiêu từng màn, yếu tố dùng ở từng chương, thời gian và cách kiểm chứng |
 | Liên quan | [Mo_Ta_Yeu_Cau_MVP.md](../Mo_Ta_Yeu_Cau_MVP.md) (D-63, D-64, D-65) · [Chu_De_Khung_Canh.md](../Chu_De_Khung_Canh.md) · bộ giải [solver.py](solver.py) |
@@ -81,12 +81,12 @@ Nguồn: [XN] 16/10.
 | CT-03 | Thời gian tối ưu (T_opt) | T_opt = T_min(c) + (T_max(c) − T_min(c)) × (m − 1) / 9, với **T_min(c) = min(30 + 20(c − 1), 90)** và **T_max(c) = min(80 + 25(c − 1), 165)**. Từ Chương 5, độ dài màn không tăng thêm |
 | CT-04 | Biên thời gian | **biên = max(20%, 35% − 0,5% × (ĐK − 1))**; màn có yếu tố mới **+10%** |
 | CT-05 | Thời gian cho phép | **T0 = T_opt × (1 + biên)**, làm tròn lên bội số 5 giây, **tối đa 200 giây** (thời gian đếm ngược người chơi thấy). Ngoại lệ: Chương 1 màn 1 (hướng dẫn) T0 = 90 |
-| CT-06 | Số kế hoạch đạt (số cách thắng trong T0) | ĐK 1–10: ≥ 10 · ĐK 11–30: 5–20 · ĐK 31–50: 3–10 · ĐK 51–70: 2–6 · ĐK 71–80: 1–4. **Màn trùm** lấy nửa dưới của khoảng (ĐK 1–10: 10–15) |
-| CT-07 | Bẫy | Từ ĐK 4, cách chơi **không tính toán phải thua** |
+| CT-06 | Số kế hoạch đạt (số cách thắng trong T0) | ĐK 1–10: ≥ 10 · ĐK 11–30: 5–20 · ĐK 31–50: 3–10 · ĐK 51–70: 2–6 · ĐK 71–80: 1–4. **Màn trùm:** Chương 1 theo khoảng của ĐK (≥ 10); độ khó màn trùm đánh giá thêm bằng **số kế hoạch đạt 3★** (về đích khi còn dư > 10% thời gian). Các chương sau: tạm lấy nửa dưới của khoảng, xem lại khi dựng (Chương 1 cho thấy 3 chuyến với biên ≥ 30% sinh ít nhất khoảng 60 kế hoạch). **Không áp dụng** cho màn có ≤ 2 điểm giao (số kế hoạch tối đa chỉ khoảng 4) |
+| CT-07 | Bẫy | Từ **màn đầu tiên có chia chuyến** (Chương 1: màn 5, ĐK 5), cách chơi **không tính toán phải thua**. Màn chỉ 1 chuyến không thể đạt: cách chơi giao điểm gần nhất trước chỉ chậm hơn tối ưu tối đa khoảng 17%, thấp hơn biên |
 | CT-08 | Có thể đạt 3★ | Hệ quả của CT-04: biên ≥ 20% → chạy tối ưu còn dư ≥ 16,7% thời gian, trên ngưỡng 10% của 3★ (D-41); còn chỗ cho khoảng 1 lần rẽ nhầm |
 | CT-09 | Màn nhiều xe | Thông số tính theo **xe tốt nhất**. Mỗi xe khác còn được chọn phải đạt được, trừ khi màn cố ý cho xe đó thua. Không xe nào có số kế hoạch đạt vượt trần CT-06 |
 
-**Định nghĩa "kế hoạch":** một thứ tự điểm dừng cộng với cách lấy hàng ở mỗi kho; giữa hai điểm xe đi đường nhanh nhất.
+**Định nghĩa "kế hoạch" (kế hoạch chuẩn):** chuỗi các chuyến; mỗi chuyến **về kho khi xe đã trống**, lấy hàng, rồi **chỉ đi tới các điểm có hàng trên xe** để giao. Hai kế hoạch khác nhau khi khác cách chia hàng vào chuyến hoặc khác thứ tự điểm. Giữa hai điểm xe đi đường nhanh nhất. (Đếm theo mọi thứ tự điểm dừng thì ra hàng trăm biến thể vô nghĩa — không dùng.)
 
 **Một màn được coi là "đúng ĐK"** khi thỏa đủ **CT-05, CT-06 và CT-07**. Không dùng chỉ số có trọng số. [XN] — trả lời DK-Q1.
 
@@ -130,8 +130,8 @@ Từ Chương 5 bản đồ không to thêm: quá mức này khó đọc trên k
 
 | Màn | ĐK | Nội dung | Điểm giao · kiện · số chuyến | T_opt | Biên | T0 | Kế hoạch đạt |
 |---|---|---|---|---|---|---|---|
-| 1 | 1 | **Mới:** làm quen điều khiển (hướng dẫn) | 2 · 3 · 1 | 30 | — | 90 | Không áp dụng (màn hướng dẫn) |
-| 2 | 2 | Ôn điều khiển, bản đồ khác | 2 · 3 · 1 | 36 | 34,5% | 50 | ≥ 10 |
+| 1 | 1 | **Mới:** làm quen điều khiển (hướng dẫn) | 2 · 3 · 1 | 30 | — | 90 | Không áp dụng (≤ 2 điểm giao) |
+| 2 | 2 | Ôn điều khiển, bản đồ khác | 2 · 3 · 1 | 36 | 34,5% | 50 | Không áp dụng (≤ 2 điểm giao) |
 | 3 | 3 | **Mới:** nhiều điểm giao, chọn thứ tự giao | 3 · 3 · 1 | 41 | 44% | 60 | ≥ 10 |
 | 4 | 4 | Điểm giao ở hai phía kho | 3 · 3 · 1 | 47 | 33,5% | 65 | ≥ 10 |
 | 5 | 5 | **Mới:** chia chuyến (5 kiện, xe chở 3) | 3 · 5 · 2 | 52 | 43% | 75 | ≥ 10 |
@@ -139,7 +139,7 @@ Từ Chương 5 bản đồ không to thêm: quá mức này khó đọc trên k
 | 7 | 7 | Cách gom "trực giác" bị thua | 4 · 7 · 3 | 63 | 32% | 85 | ≥ 10 |
 | 8 | 8 | **Mới:** đường lớn (đường vòng nhanh hơn đường thẳng) | 3 · 4 · 2 | 69 | 41,5% | 100 | ≥ 10 |
 | 9 | 9 | Đường lớn + chia chuyến | 4 · 7 · 3 | 74 | 31% | 100 | ≥ 10 |
-| 10 | 10 | **Trùm:** nhiều điểm + chia chuyến + đường lớn | 5 · 9 · 3 | 80 | 30,5% | 105 | 10–15 |
+| 10 | 10 | **Trùm:** nhiều điểm + chia chuyến + đường lớn | 5 · 9 · 3 | 80 | 30,5% | 105 | ≥ 10 (đánh giá thêm bằng số kế hoạch đạt 3★) |
 
 ## 8. Chi tiết Chương 2 (thêm nhiều kho, ĐK 6–15)
 
@@ -214,7 +214,7 @@ Cột **Chương** là chương giới thiệu yếu tố theo mục 3.2.
 
 | ID | Câu hỏi | Đề xuất của Claude |
 |---|---|---|
-| DK-Q7 | Danh sách chương trong demo ghi "Chương 3 · Trung tâm: Chở khách, đổi xe", "Chương 4 · Cảng: Cầu đóng/mở theo giờ" — không khớp mục 3.2. Sửa khi nào? | Sửa cùng đợt dựng lại màn theo khung |
+| DK-Q7 | ~~Danh sách chương trong demo không khớp mục 3.2~~ | **Đã xử lý** ở demo v1.4: Chương 1 Làng ven sông, Chương 3–4 "Sắp có" theo bố cục 15 chương |
 
 Đã trả lời: DK-Q1 (ba điều kiện đo được, mục 4), DK-Q2 (D-64), DK-Q3 (mục 3.2), DK-Q4 (sàn 20%, CT-04), DK-Q5 (màn trùm theo đúng công thức, không nới thêm), DK-Q6 (bỏ câu chuyện — PV-04).
 
@@ -226,3 +226,5 @@ Cột **Chương** là chương giới thiệu yếu tố theo mục 3.2.
 |---|---|---|
 | 16/10/2026 | 0.1 | Tạo file: khung D-63, 6 nhóm yếu tố, D-64, màn trùm, đề xuất câu chuyện |
 | 16/10/2026 | 0.2 | Chốt bố cục 15 chương (Chương 1 chỉ 1 kho, mỗi chương sau thêm 1 yếu tố), bộ công thức CT-01 → CT-09 (T0 tối đa 200 giây, sàn biên 20%, +10% màn có yếu tố mới, ba điều kiện đo được thay chỉ số trọng số), bảng tra, quy mô, chi tiết Chương 1–2, quy trình kiểm chứng. Bỏ câu chuyện (PV-04) và phần so sánh với demo (demo là thử nghiệm) |
+| 16/10/2026 | 0.3 | Khi dựng Chương 1 thấy 3 điểm không đạt được: đổi định nghĩa kế hoạch thành kế hoạch chuẩn (CT-06), CT-06 không áp dụng cho màn ≤ 2 điểm giao, CT-07 từ màn đầu tiên có chia chuyến. BA duyệt |
+| 16/10/2026 | 0.4 | Màn trùm Chương 1: số kế hoạch đạt theo khoảng ≥ 10 (khoảng 10–15 không đạt được với biên 30,5%); độ khó màn trùm đánh giá thêm bằng số kế hoạch đạt 3★. BA duyệt (C1-1) |
