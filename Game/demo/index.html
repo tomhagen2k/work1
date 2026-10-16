@@ -1035,7 +1035,7 @@ let G=null;
 const V=()=>VEH[VK];
 function reset(){
   const [a,b,f]=LV.start;
-  G={t:0,state:'ready',car:{from:a,to:b,d:f*SP,stopped:false,wait:false,busy:null,cmd:null,skip:null},ask:null,
+  G={t:0,state:'ready',car:{from:a,to:b,d:f*SP,stopped:false,wait:false,busy:null,cmd:null,skip:null,uq:false},ask:null,
      M:LV.missions.map(m=>({...m,picked:0,delivered:0,onboard:0,name:PLACE[m.to],src:PLACE[m.from],col:PCOL[m.to]}))};
   drawVehicle(carBody,VK);carG.style.display='';badge.style.display='';$('hud').style.visibility='';$('bSkip').style.display='none';
   const p=carPose();G.disp={x:p.x,y:p.y,a:p.a};
@@ -1067,10 +1067,12 @@ function zoneProcess(z){
   if(del.length){c.stopped=true;busy(DROP_TIME,()=>{del.forEach(m=>{m.delivered+=m.onboard;m.onboard=0;});sfx('drop');zoneProcess(z);});return;}
   const ch=choices(z);
   if(ch.some(a=>a.ok)){c.stopped=true;G.ask={z,ch};G.state='ask';renderAsk();sfx('ask');return;}
-  c.stopped=false;c.skip=z.id;
+  c.stopped=false;c.skip=z.id;leaveZone();
 }
 function askChoose(i){if(G.state!=='ask'||!G.ask.ch[i]||!G.ask.ch[i].ok)return;const a=G.ask.ch[i];G.ask=null;G.state='play';renderAsk();a.run();}
-function askSkip(){if(G.state!=='ask')return;const z=G.ask.z;G.ask=null;G.state='play';renderAsk();G.car.stopped=false;G.car.skip=z.id;}
+function askSkip(){if(G.state!=='ask')return;const z=G.ask.z;G.ask=null;G.state='play';renderAsk();G.car.stopped=false;G.car.skip=z.id;leaveZone();}
+// Rời điểm (lấy/giao xong hoặc "Đi tiếp"): đã đặt lệnh Quay đầu trong lúc dừng thì quay đầu ngay (QD-01)
+function leaveZone(){const c=G.car;if(!c.uq)return;c.uq=false;if(canGo(c.to,c.from))doUturn();}
 
 /* ======================= Mô phỏng ======================= */
 function step(dt){
@@ -1227,12 +1229,16 @@ function finishCut(){ // giao diện lái xe vẫn ẩn để không che khung c
 function cTurn(dir){if(G.tut&&G.tut.hold&&dir!==G.tut.hold.dir)return;if(G.state==='wait'){if(dir===heading(G.car.from,G.car.to)){G.state='play';sfx('turn');}return;}
   if(G.state!=='play')return;const c=G.car,v=validDirs();
   // bấm sớm (chưa tới vùng nhận lệnh): nhận nếu giao lộ kế tiếp có hướng đó, giữ tới khi tới nơi (I-06a)
-  if(!v[dir]){if(c.busy&&c.busy.uturn||c.wait||!options(c.from,c.to)[dir])return;c.cmd=c.cmd===dir?null:dir;sfx('turn');return;}
+  if(!v[dir]){if(c.busy&&c.busy.uturn||c.wait||!options(c.from,c.to)[dir])return;c.cmd=c.cmd===dir?null:dir;if(c.cmd)c.uq=false;sfx('turn');return;}
   if(c.wait){c.from=c.to;c.to=v[dir];c.d=0;c.wait=false;c.cmd=null;sfx('turn');return;}
-  c.cmd=c.cmd===dir?null:dir;sfx('turn');}
+  c.cmd=c.cmd===dir?null:dir;if(c.cmd)c.uq=false;sfx('turn');}
 // Quay đầu khi đang chờ: quay tại chỗ, không tính giờ, vẫn chờ (Q-66)
 function cUturn(){if(G.state==='wait'){const c=G.car;if(canGo(c.to,c.from)){[c.from,c.to]=[c.to,c.from];c.d=SP-c.d;sfx('uturn');}return;}
-  if(G.state!=='play'||(G.tut&&G.tut.hold))return;const c=G.car;if(c.busy||!canGo(c.to,c.from))return;sfx('uturn');
+  if(G.tut&&G.tut.hold)return;const c=G.car;
+  // đang dừng ở điểm (giao hàng, bảng hỏi, đang lấy hàng): đặt / hủy lệnh quay đầu khi rời điểm (QD-01)
+  if((G.state==='ask'||(G.state==='play'&&c.stopped))&&!(c.busy&&c.busy.uturn)){if(!c.uq&&!canGo(c.to,c.from))return;c.uq=!c.uq;if(c.uq)c.cmd=null;sfx('turn');return;}
+  if(G.state!=='play')return;if(c.busy||!canGo(c.to,c.from))return;doUturn();}
+function doUturn(){const c=G.car;sfx('uturn');
   busy(V().ut,()=>{[c.from,c.to]=[c.to,c.from];c.d=SP-c.d;c.stopped=false;c.wait=false;c.cmd=null;});c.busy.uturn=true;}
 
 /* ======================= Hiển thị ======================= */
@@ -1263,7 +1269,9 @@ function render(){
   carG.setAttribute('transform',`translate(${d.x},${d.y}) rotate(${d.a})`);
   badge.setAttribute('transform',`translate(${d.x},${d.y-32})`);badgeT.textContent=`${load()}/${V().cap}`;
   const c=G.car;
-  if(c.cmd){turnInd.style.display='';turnInd.setAttribute('transform',`translate(${d.x+32},${d.y-32})`);
+  if(c.uq){turnInd.style.display='';turnInd.setAttribute('transform',`translate(${d.x+32},${d.y-32})`);
+    turnPath.setAttribute('d','M-4 7 V-2 A4.5 4.5 0 0 1 5 -2 V5 M2 2 L5 5.5 L8 2');turnPath.setAttribute('transform','');}
+  else if(c.cmd){turnInd.style.display='';turnInd.setAttribute('transform',`translate(${d.x+32},${d.y-32})`);
     turnPath.setAttribute('d','M0 7 V-7 M-5 -2 L0 -7 L5 -2');turnPath.setAttribute('transform',`rotate(${{N:0,E:90,S:180,W:-90}[c.cmd]})`);}
   else turnInd.style.display='none';
   if(c.busy){busyG.style.display='';busyG.setAttribute('transform',`translate(${d.x},${d.y+30})`);busyBar.setAttribute('width',56*Math.min(1,c.busy.t/c.busy.dur));}else busyG.style.display='none';
@@ -1286,7 +1294,9 @@ function render(){
   for(const dir in DBTN){const b=$(DBTN[dir]);b.classList.toggle('glow',!!v[dir]&&c.cmd!==dir);b.classList.toggle('sel',c.cmd===dir);b.classList.toggle('go',dir===hd);}
   // bong bóng "Nhấn để xe chạy" chỉ ở vài màn đầu; nút nhấp nháy ở mọi màn (Q-67)
   $('goHint').classList.toggle('on',G.state==='wait'&&LVI<GO_HINT_LEVELS&&!G.tut);if(hd&&$('goK').dataset.d!==hd){$('goK').dataset.d=hd;$('goK').innerHTML=`<span style="display:grid;transform:rotate(${{N:0,E:90,S:180,W:-90}[hd]}deg)">${ARROW}</span>`;}
-  $('bUturn').classList.toggle('dim',(G.state!=='play'&&G.state!=='wait')||!!c.busy);
+  const atZ=G.state==='ask'||(G.state==='play'&&c.stopped&&!(c.busy&&c.busy.uturn));
+  $('bUturn').classList.toggle('sel',!!c.uq);
+  $('bUturn').classList.toggle('dim',!atZ&&((G.state!=='play'&&G.state!=='wait')||!!c.busy));
   $('bHelp').querySelector('.bd').style.display=newMech(LVI)&&!helpSeen[LVI]?'':'none';
 }
 // Trạng thái điểm (D-28): kho còn hàng 'on' / hết 'done'; điểm giao 'on' / đang chở hàng tới 'carry' / giao đủ 'done'
@@ -1647,7 +1657,7 @@ addEventListener('keydown',e=>{
   if((G.state==='play'||G.state==='wait')&&(k==='n'||k==='N')){openInfo('mis');return;}
   if((G.state==='play'||G.state==='wait')&&(k==='h'||k==='H'||k==='?')){openInfo('help');return;}
   if(G.state==='wait'&&(k==='u'||k==='U')){cUturn();return;}
-  if(G.state==='ask'){if(k>='1'&&k<='9')askChoose(+k-1);else if(k==='Enter'||k===' ')askSkip();e.preventDefault();return;}
+  if(G.state==='ask'){if(k==='u'||k==='U')cUturn();else if(k>='1'&&k<='9')askChoose(+k-1);else if(k==='Enter'||k===' ')askSkip();e.preventDefault();return;}
   if(k==='ArrowLeft')cTurn('W');else if(k==='ArrowRight')cTurn('E');else if(k==='ArrowUp')cTurn('N');else if(k==='ArrowDown')cTurn('S');
   else if(k==='u'||k==='U')cUturn();else if(k==='p'||k==='P')pauseGame();else if(k==='m'||k==='M')mapView();
   if(k.startsWith('Arrow')||k===' ')e.preventDefault();

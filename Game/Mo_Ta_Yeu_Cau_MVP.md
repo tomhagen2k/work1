@@ -2,7 +2,7 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 1.19 — Chương 1 Làng ven sông vào demo (D-68). 1.18 — Điều chỉnh CT-06, CT-07 (D-67). 1.17 — Chủ đề khung cảnh 15 chương (D-66). 1.16 — Bộ công thức độ khó và bố cục 15 chương (D-65). 1.15 — Chỉ vận chuyển hàng hóa; chở khách và đổi xe xếp cuối (D-64); khung độ khó chuyển sang file riêng [level_design/Khung_Do_Kho_Chuong_Man.md](level_design/Khung_Do_Kho_Chuong_Man.md). 1.14 — Khung tăng độ khó theo chương và màn (D-63), câu hỏi mở về cách đo độ khó (DK-Q1, DK-Q2). 1.13 — Chương 2 cho người chơi thấy khung cảnh tiến triển: cảnh quay mới, đoạn mở màn, đô thị hoá quanh công trình, cần cẩu, nhãn không chồng (D-54 → D-58); địa danh riêng, cụm nhà mọc, Trang chủ, cảnh kết chương và bưu thiếp (D-59 → D-62) |
+| Phiên bản | 1.20 — Đặt trước Quay đầu khi dừng ở điểm (D-69). 1.19 — Chương 1 Làng ven sông vào demo (D-68). 1.18 — Điều chỉnh CT-06, CT-07 (D-67). 1.17 — Chủ đề khung cảnh 15 chương (D-66). 1.16 — Bộ công thức độ khó và bố cục 15 chương (D-65). 1.15 — Chỉ vận chuyển hàng hóa; chở khách và đổi xe xếp cuối (D-64); khung độ khó chuyển sang file riêng [level_design/Khung_Do_Kho_Chuong_Man.md](level_design/Khung_Do_Kho_Chuong_Man.md). 1.14 — Khung tăng độ khó theo chương và màn (D-63), câu hỏi mở về cách đo độ khó (DK-Q1, DK-Q2). 1.13 — Chương 2 cho người chơi thấy khung cảnh tiến triển: cảnh quay mới, đoạn mở màn, đô thị hoá quanh công trình, cần cẩu, nhãn không chồng (D-54 → D-58); địa danh riêng, cụm nhà mọc, Trang chủ, cảnh kết chương và bưu thiếp (D-59 → D-62) |
 | Ngày | 15/10/2026 |
 | Nguồn | Tài liệu ý tưởng game (mục 1–21), flowchart vòng chơi, ảnh tham chiếu giao diện, phản hồi xác nhận của BA |
 | Mục đích | Cơ sở tham chiếu để thiết kế giao diện và viết tài liệu (BRD/SRS/GDD). Không thay thế BRD/SRS. |
@@ -109,6 +109,7 @@ Thử thách đến từ:
 | D-66 | **Chủ đề khung cảnh cho 15 chương** (chi tiết: [Chu_De_Khung_Canh.md](Chu_De_Khung_Canh.md) bản 0.5, mục 5): chủ đề đi theo yếu tố mới của từng chương — 1 Làng ven sông · 2 Khu đô thị mới · 3 New York đêm · 4 Santorini · 5 Phố cổ Hà Nội · 6 Ai Cập · 7 Rio · 8 Paris · 9 Amsterdam · 10 Cảng châu Á · 11 Bangkok · 12 Kyoto · 13 Thành phố sa mạc hiện đại · 14 London · 15 Jaipur & Agra; Làng tuyết là chương sự kiện. Làm hình theo **6 bộ tài nguyên dùng chung**. **Mọi chương, kể cả Chương 1, xây dựng dần** (thay HA-Q5). **Không dùng khung nhịp cố định** cho 10 màn — thiết kế theo cảnh quan từng chủ đề, chỉ giữ các điểm bắt buộc (màn 1 bối cảnh mới, mỗi màn có thay đổi thấy được, màn 3 chứa yếu tố mới, màn 10 kỳ quan + cảnh kết + bưu thiếp). | [XN] phản hồi BA 16/10 |
 | D-67 | **Điều chỉnh bộ công thức độ khó khi dựng Chương 1:** "kế hoạch" đếm theo **kế hoạch chuẩn** (mỗi chuyến về kho khi xe trống, chỉ đi tới điểm có hàng trên xe); CT-06 không áp dụng cho màn ≤ 2 điểm giao; CT-07 (cách chơi không tính toán phải thua) áp dụng từ màn đầu tiên có chia chuyến. Chi tiết: [Khung_Do_Kho_Chuong_Man.md](level_design/Khung_Do_Kho_Chuong_Man.md) bản 0.3 | [XN] phản hồi BA 16/10 |
 | D-68 | **Chương 1 · Làng ven sông dựng vào demo**, thay Chương 1 demo cũ "Khu phố nhỏ" (còn ở bản lưu v1.3): 10 màn theo khung độ khó, khung cảnh xây dựng dần. **Engine đọc cấu hình chương** (bản đồ chung, vùng, công trình, câu thông báo, bộ vẽ cảnh) để các chương sau ghép vào không phải sửa engine. Chương 2 khu đô thị giữ làm bản thử nghiệm (màn 11–15). Thiết kế + số đo: [level_design/Thiet_Ke_Chuong_1.md](level_design/Thiet_Ke_Chuong_1.md) | [XN] BA duyệt kế hoạch 16/10 |
+| D-69 | **Đặt trước Quay đầu khi đang dừng ở điểm** lấy/giao hàng: nút sáng vàng, xong việc thì xe quay đầu ngay (QD-01, mục 4.4). | [XN] phản hồi BA 16/10 |
 | D-08 | Nhiên liệu/pin, gia tốc, phanh: ngoài MVP. | [XN] |
 | D-09 | Giao thông xác định, dự đoán được (chỉ còn yếu tố tĩnh: hạn chế loại xe, ngõ cụt). | [XN] / D-21, D-22 |
 | D-10 | Màn thiết kế thủ công, kiểm tra khả năng hoàn thành trước khi phát hành. | [XN] |
@@ -216,6 +217,7 @@ flowchart TD
 | CT-22 | ~~Quay đầu trên đường **một chiều** (sẽ đi ngược chiều) → không phản hồi.~~ (bỏ — D-22) | [SL] D-15 |
 | CT-23 | Quay đầu được tại vị trí bất kỳ trên đường. | [XN] Q-34, D-22 / [GĐ] D-24 |
 | CT-24 | Sau khi quay đầu, xe **tự chạy tiếp**. | [XN] Q-49 |
+| QD-01 | **Đặt trước Quay đầu khi đang dừng ở điểm:** trong lúc xe dừng tại điểm lấy/giao (đang giao, đang mở bảng hỏi, đang lấy hàng), bấm Quay đầu → nút **sáng vàng** (như nút hướng đã chọn) và trên xe hiện mũi tên chữ U; khi xong việc ở điểm (hoặc chọn "Đi tiếp") xe **quay đầu ngay** rồi tự chạy. Bấm lại để hủy; bấm một hướng thì lệnh quay đầu bị hủy. Thời gian quay đầu như thường (CT-21). | [XN] phản hồi BA 16/10 (D-69) / [GĐ] hủy khi bấm hướng |
 
 ---
 
@@ -672,6 +674,7 @@ Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 | Dựng Chương 1 | Điều chỉnh CT-06, CT-07 (D-67) | 1.18 |
 | Dựng Chương 1 | Chương 1 Làng ven sông vào demo, engine theo cấu hình chương (D-68) | 1.19 |
 | C1-1 | Màn trùm Chương 1: số kế hoạch đạt ≥ 10, độ khó màn trùm đánh giá bằng số kế hoạch đạt 3★ (khung độ khó bản 0.4) | 1.19 |
+| Phản hồi demo v1.4 | Đặt trước Quay đầu khi dừng ở điểm (D-69) | 1.20 |
 
 ---
 
