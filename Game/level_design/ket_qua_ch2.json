@@ -1,133 +1,203 @@
 {
  "C2L1_van": {
-  "opt": 29.444444444444446,
-  "naive": 29.444444444444446,
-  "naive_fail": null,
+  "opt": 55.88888888888889,
   "path": [
    [
     7.9,
     "BaiVL",
-    "lấy TiemBanh+NhaVH"
+    "lấy VanPhongDA+QuanCafe"
    ],
    [
     14.8,
-    "NhaVH",
-    "giao NhaVH"
+    "VanPhongDA",
+    "giao VanPhongDA"
    ],
    [
-    29.4,
+    22.1,
+    "QuanCafe",
+    "giao QuanCafe"
+   ],
+   [
+    37.3,
+    "BaiVL",
+    "lấy TiemBanh+ChungCuB"
+   ],
+   [
+    46.6,
     "TiemBanh",
     "giao TiemBanh"
+   ],
+   [
+    55.9,
+    "ChungCuB",
+    "giao ChungCuB"
    ]
   ],
+  "naive": 85.51851851851852,
+  "naive_fail": null,
   "naive_log": [
    [
-    7.9,
+    9.9,
     "BaiVL",
     "lấy"
    ],
    [
-    14.8,
-    "NhaVH",
+    16.8,
+    "VanPhongDA",
     "giao"
    ],
    [
-    29.4,
+    31.4,
     "TiemBanh",
+    "giao"
+   ],
+   [
+    40.7,
+    "ChungCuB",
+    "giao"
+   ],
+   [
+    60.3,
+    "BaiVL",
+    "lấy"
+   ],
+   [
+    73.0,
+    "QuanCafe",
+    "giao"
+   ],
+   [
+    85.5,
+    "ChungCuB",
     "giao"
    ]
   ]
  },
  "C2L2_van": {
-  "opt": 54.75308641975309,
-  "naive": 85.7037037037037,
-  "naive_fail": null,
+  "opt": 58.68518518518519,
   "path": [
    [
-    11.3,
-    "KhoTong",
-    "lấy NhaVH"
+    5.9,
+    "BaiVL",
+    "lấy TiemBanh"
    ],
    [
-    22.1,
-    "NhaVH",
-    "giao NhaVH"
+    15.2,
+    "TiemBanh",
+    "giao TiemBanh"
    ],
    [
-    35.3,
-    "KhoTong",
-    "lấy TruongHoc+NhaTre"
+    26.4,
+    "BaiVL",
+    "lấy VanPhongDA"
    ],
    [
-    40.7,
-    "TruongHoc",
-    "giao TruongHoc"
+    31.8,
+    "VanPhongDA",
+    "giao VanPhongDA"
    ],
    [
-    54.8,
+    41.2,
+    "BaiVL",
+    "lấy NhaTre+QuanCafe"
+   ],
+   [
+    53.9,
+    "QuanCafe",
+    "giao QuanCafe"
+   ],
+   [
+    58.7,
     "NhaTre",
     "giao NhaTre"
    ]
   ],
+  "naive": 99.35185185185185,
+  "naive_fail": null,
   "naive_log": [
    [
-    13.3,
-    "KhoTong",
+    9.9,
+    "BaiVL",
     "lấy"
    ],
    [
-    18.7,
-    "TruongHoc",
+    16.8,
+    "VanPhongDA",
     "giao"
    ],
    [
-    36.6,
-    "NhaVH",
+    31.4,
+    "TiemBanh",
     "giao"
    ],
    [
-    48.4,
-    "KhoTong",
-    "lấy"
-   ],
-   [
-    59.1,
-    "NhaVH",
-    "giao"
-   ],
-   [
-    85.7,
+    40.7,
     "NhaTre",
+    "giao"
+   ],
+   [
+    57.9,
+    "BaiVL",
+    "lấy"
+   ],
+   [
+    64.8,
+    "VanPhongDA",
+    "giao"
+   ],
+   [
+    72.1,
+    "QuanCafe",
+    "giao"
+   ],
+   [
+    86.6,
+    "BaiVL",
+    "lấy"
+   ],
+   [
+    99.4,
+    "QuanCafe",
     "giao"
    ]
   ]
  },
  "C2L3_van": {
-  "opt": 56.25925925925925,
-  "naive": 75.67901234567901,
-  "naive_fail": null,
+  "opt": 60.166666666666664,
   "path": [
    [
     5.9,
     "BaiVL",
-    "lấy ChoMoi"
+    "lấy ChungCuA"
    ],
    [
-    30.7,
-    "ChoMoi",
-    "giao ChoMoi"
+    16.7,
+    "ChungCuA",
+    "giao ChungCuA"
    ],
    [
-    36.6,
-    "XuongGo",
-    "lấy NhaVH"
+    31.6,
+    "KhoTong",
+    "lấy TruongHoc"
    ],
    [
-    56.3,
-    "NhaVH",
-    "giao NhaVH"
+    37.0,
+    "TruongHoc",
+    "giao TruongHoc"
+   ],
+   [
+    44.4,
+    "KhoTong",
+    "lấy VanPhongDA"
+   ],
+   [
+    60.2,
+    "VanPhongDA",
+    "giao VanPhongDA"
    ]
   ],
+  "naive": 98.87037037037037,
+  "naive_fail": null,
   "naive_log": [
    [
     5.9,
@@ -135,63 +205,78 @@
     "lấy"
    ],
    [
-    42.6,
-    "ChoMoi",
+    16.7,
+    "ChungCuA",
     "giao"
    ],
    [
-    48.5,
-    "XuongGo",
+    32.3,
+    "KhoTong",
     "lấy"
    ],
    [
-    75.7,
-    "NhaVH",
+    39.2,
+    "TruongHoc",
+    "giao"
+   ],
+   [
+    61.7,
+    "VanPhongDA",
+    "giao"
+   ],
+   [
+    77.9,
+    "KhoTong",
+    "lấy"
+   ],
+   [
+    98.9,
+    "VanPhongDA",
     "giao"
    ]
   ]
  },
  "C2L4_van": {
-  "opt": 105.32716049382717,
-  "naive": 105.9753086419753,
-  "naive_fail": "trễ hạn BenhVien",
+  "opt": 72.74074074074073,
   "path": [
    [
-    13.3,
+    5.9,
+    "BaiVL",
+    "lấy NhaTre"
+   ],
+   [
+    20.6,
+    "NhaTre",
+    "giao NhaTre"
+   ],
+   [
+    31.6,
     "KhoTong",
-    "lấy BenhVien+KhuNha"
+    "lấy TruongHoc"
    ],
    [
-    25.1,
-    "BenhVien",
-    "giao BenhVien"
+    37.0,
+    "TruongHoc",
+    "giao TruongHoc"
    ],
    [
-    34.0,
+    46.4,
+    "KhoTong",
+    "lấy KhuNha+VanPhongDA"
+   ],
+   [
+    60.9,
     "KhuNha",
     "giao KhuNha"
    ],
    [
-    49.6,
-    "BaiVL",
-    "lấy BenhVien"
-   ],
-   [
-    72.0,
-    "BenhVien",
-    "giao BenhVien"
-   ],
-   [
-    85.9,
-    "KhoTong",
-    "lấy ChoMoi"
-   ],
-   [
-    105.3,
-    "ChoMoi",
-    "giao ChoMoi"
+    72.7,
+    "VanPhongDA",
+    "giao VanPhongDA"
    ]
   ],
+  "naive": 98.87037037037037,
+  "naive_fail": null,
   "naive_log": [
    [
     5.9,
@@ -199,257 +284,78 @@
     "lấy"
    ],
    [
-    33.1,
-    "BenhVien",
+    20.6,
+    "NhaTre",
     "giao"
    ],
    [
-    51.1,
+    33.6,
     "KhoTong",
     "lấy"
    ],
    [
-    66.6,
-    "BenhVien",
+    39.0,
+    "TruongHoc",
     "giao"
    ],
    [
-    77.4,
-    "ChoMoi",
-    "giao"
-   ],
-   [
-    97.3,
-    "KhoTong",
-    "lấy"
-   ],
-   [
-    106.0,
+    61.5,
     "KhuNha",
     "giao"
-   ]
-  ]
- },
- "C2L5_may": {
-  "opt": 212.41025641025644,
-  "naive": 253.87820512820514,
-  "naive_fail": null,
-  "path": [
-   [
-    4.7,
-    "BaiVL",
-    "lấy CongVien"
    ],
    [
-    23.8,
-    "CongVien",
-    "giao CongVien"
-   ],
-   [
-    37.1,
-    "KhoTong",
-    "lấy BenhVien"
-   ],
-   [
-    45.6,
-    "BenhVien",
-    "giao BenhVien"
-   ],
-   [
-    54.7,
-    "KhoTong",
-    "lấy TiemBanh"
-   ],
-   [
-    64.3,
-    "TiemBanh",
-    "giao TiemBanh"
-   ],
-   [
-    72.7,
-    "BaiVL",
-    "lấy CongVien"
-   ],
-   [
-    90.8,
-    "CongVien",
-    "giao CongVien"
-   ],
-   [
-    104.1,
-    "KhoTong",
-    "lấy ChoMoi"
-   ],
-   [
-    115.3,
-    "ChoMoi",
-    "giao ChoMoi"
-   ],
-   [
-    133.5,
-    "BaiVL",
-    "lấy CongVien"
-   ],
-   [
-    151.6,
-    "CongVien",
-    "giao CongVien"
-   ],
-   [
-    164.9,
-    "KhoTong",
-    "lấy ChoMoi"
-   ],
-   [
-    176.2,
-    "ChoMoi",
-    "giao ChoMoi"
-   ],
-   [
-    194.3,
-    "BaiVL",
-    "lấy CongVien"
-   ],
-   [
-    212.4,
-    "CongVien",
-    "giao CongVien"
-   ]
-  ],
-  "naive_log": [
-   [
-    4.7,
-    "BaiVL",
-    "lấy"
-   ],
-   [
-    30.3,
-    "CongVien",
-    "giao"
-   ],
-   [
-    46.9,
+    77.9,
     "KhoTong",
     "lấy"
    ],
    [
-    55.5,
-    "BenhVien",
-    "giao"
-   ],
-   [
-    64.6,
-    "KhoTong",
-    "lấy"
-   ],
-   [
-    75.8,
-    "ChoMoi",
-    "giao"
-   ],
-   [
-    87.6,
-    "KhoTong",
-    "lấy"
-   ],
-   [
-    98.8,
-    "ChoMoi",
-    "giao"
-   ],
-   [
-    110.6,
-    "KhoTong",
-    "lấy"
-   ],
-   [
-    120.1,
-    "TiemBanh",
-    "giao"
-   ],
-   [
-    128.5,
-    "BaiVL",
-    "lấy"
-   ],
-   [
-    153.1,
-    "CongVien",
-    "giao"
-   ],
-   [
-    177.9,
-    "BaiVL",
-    "lấy"
-   ],
-   [
-    203.5,
-    "CongVien",
-    "giao"
-   ],
-   [
-    228.3,
-    "BaiVL",
-    "lấy"
-   ],
-   [
-    253.9,
-    "CongVien",
+    98.9,
+    "VanPhongDA",
     "giao"
    ]
   ]
  },
  "C2L5_van": {
-  "opt": 136.49382716049382,
-  "naive": 192.88888888888886,
-  "naive_fail": null,
+  "opt": 75.12962962962963,
   "path": [
    [
     5.9,
     "BaiVL",
-    "lấy CongVien"
+    "lấy TiemBanh"
    ],
    [
-    32.9,
-    "CongVien",
-    "giao CongVien"
-   ],
-   [
-    53.3,
-    "KhoTong",
-    "lấy ChoMoi+TiemBanh"
-   ],
-   [
-    72.7,
-    "ChoMoi",
-    "giao ChoMoi"
-   ],
-   [
-    89.8,
+    15.2,
     "TiemBanh",
     "giao TiemBanh"
    ],
    [
-    99.5,
-    "BaiVL",
-    "lấy CongVien"
-   ],
-   [
-    113.2,
+    34.7,
     "KhoTong",
-    "lấy BenhVien"
+    "lấy ChoMoi+ChungCuB"
    ],
    [
-    125.1,
-    "BenhVien",
-    "giao BenhVien"
+    39.5,
+    "ChoMoi",
+    "giao ChoMoi"
    ],
    [
-    136.5,
-    "CongVien",
-    "giao CongVien"
+    48.1,
+    "ChungCuB",
+    "giao ChungCuB"
+   ],
+   [
+    59.4,
+    "KhoTong",
+    "lấy VanPhongDA"
+   ],
+   [
+    75.1,
+    "VanPhongDA",
+    "giao VanPhongDA"
    ]
   ],
+  "naive": 104.75925925925925,
+  "naive_fail": null,
   "naive_log": [
    [
     5.9,
@@ -457,112 +363,503 @@
     "lấy"
    ],
    [
-    51.4,
-    "CongVien",
-    "giao"
-   ],
-   [
-    78.2,
-    "KhoTong",
-    "lấy"
-   ],
-   [
-    93.7,
-    "BenhVien",
-    "giao"
-   ],
-   [
-    104.5,
-    "ChoMoi",
-    "giao"
-   ],
-   [
-    124.4,
-    "KhoTong",
-    "lấy"
-   ],
-   [
-    137.6,
+    15.2,
     "TiemBanh",
     "giao"
    ],
    [
-    148.9,
-    "BaiVL",
+    34.7,
+    "KhoTong",
     "lấy"
    ],
    [
-    192.9,
-    "CongVien",
+    39.5,
+    "ChoMoi",
+    "giao"
+   ],
+   [
+    52.0,
+    "VanPhongDA",
+    "giao"
+   ],
+   [
+    75.4,
+    "KhoTong",
+    "lấy"
+   ],
+   [
+    86.2,
+    "ChungCuB",
+    "giao"
+   ],
+   [
+    104.8,
+    "VanPhongDA",
     "giao"
    ]
   ]
  },
- "C2L5_tai": {
-  "opt": 117.4871794871795,
-  "naive": 207.50000000000003,
-  "naive_fail": null,
+ "C2L6_van": {
+  "opt": 76.81481481481481,
   "path": [
    [
-    18.8,
-    "KhoTong",
-    "lấy BenhVien+ChoMoi+TiemBanh"
+    5.9,
+    "BaiVL",
+    "lấy BenhVien"
    ],
    [
-    34.7,
+    30.1,
     "BenhVien",
     "giao BenhVien"
    ],
    [
-    47.0,
-    "ChoMoi",
-    "giao ChoMoi"
+    40.5,
+    "KhoTong",
+    "lấy ChungCuB"
    ],
    [
-    70.0,
-    "TiemBanh",
-    "giao TiemBanh"
+    49.8,
+    "ChungCuB",
+    "giao ChungCuB"
    ],
    [
-    82.8,
-    "BaiVL",
-    "lấy CongVien"
+    61.1,
+    "KhoTong",
+    "lấy NhaMau"
    ],
    [
-    117.5,
-    "CongVien",
-    "giao CongVien"
+    76.8,
+    "NhaMau",
+    "giao NhaMau"
    ]
   ],
+  "naive": 109.44444444444443,
+  "naive_fail": null,
   "naive_log": [
    [
-    7.8,
+    5.9,
     "BaiVL",
     "lấy"
    ],
    [
-    82.2,
-    "CongVien",
-    "giao"
-   ],
-   [
-    124.9,
-    "KhoTong",
-    "lấy"
-   ],
-   [
-    149.7,
+    30.1,
     "BenhVien",
     "giao"
    ],
    [
-    164.5,
+    41.2,
+    "KhoTong",
+    "lấy"
+   ],
+   [
+    52.0,
+    "ChungCuB",
+    "giao"
+   ],
+   [
+    74.4,
+    "NhaMau",
+    "giao"
+   ],
+   [
+    92.2,
+    "KhoTong",
+    "lấy"
+   ],
+   [
+    109.4,
+    "NhaMau",
+    "giao"
+   ]
+  ]
+ },
+ "C2L7_van": {
+  "opt": 80.92592592592592,
+  "path": [
+   [
+    5.9,
+    "BaiVL",
+    "lấy NhaTre"
+   ],
+   [
+    20.6,
+    "NhaTre",
+    "giao NhaTre"
+   ],
+   [
+    31.6,
+    "KhoTong",
+    "lấy TruongHoc"
+   ],
+   [
+    37.0,
+    "TruongHoc",
+    "giao TruongHoc"
+   ],
+   [
+    44.4,
+    "KhoTong",
+    "lấy NhaVH"
+   ],
+   [
+    53.7,
+    "NhaVH",
+    "giao NhaVH"
+   ],
+   [
+    65.0,
+    "KhoTong",
+    "lấy KhuNha"
+   ],
+   [
+    80.9,
+    "KhuNha",
+    "giao KhuNha"
+   ]
+  ],
+  "naive": 127.2222222222222,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    5.9,
+    "BaiVL",
+    "lấy"
+   ],
+   [
+    20.6,
+    "NhaTre",
+    "giao"
+   ],
+   [
+    33.6,
+    "KhoTong",
+    "lấy"
+   ],
+   [
+    39.0,
+    "TruongHoc",
+    "giao"
+   ],
+   [
+    61.5,
+    "KhuNha",
+    "giao"
+   ],
+   [
+    79.9,
+    "KhoTong",
+    "lấy"
+   ],
+   [
+    90.7,
+    "NhaVH",
+    "giao"
+   ],
+   [
+    100.0,
+    "KhuNha",
+    "giao"
+   ],
+   [
+    116.4,
+    "KhoTong",
+    "lấy"
+   ],
+   [
+    127.2,
+    "NhaVH",
+    "giao"
+   ]
+  ]
+ },
+ "C2L8_van": {
+  "opt": 88.7037037037037,
+  "path": [
+   [
+    5.9,
+    "BaiVL",
+    "lấy NhaVH"
+   ],
+   [
+    28.3,
+    "NhaVH",
+    "giao NhaVH"
+   ],
+   [
+    43.3,
+    "XuongGo",
+    "lấy HoDieuHoa"
+   ],
+   [
+    50.2,
+    "HoDieuHoa",
+    "giao HoDieuHoa"
+   ],
+   [
+    57.6,
+    "XuongGo",
+    "lấy ChungCuB"
+   ],
+   [
+    70.1,
+    "KhoTong",
+    "lấy TiemBanh"
+   ],
+   [
+    79.4,
+    "ChungCuB",
+    "giao ChungCuB"
+   ],
+   [
+    88.7,
+    "TiemBanh",
+    "giao TiemBanh"
+   ]
+  ],
+  "naive": 149.44444444444446,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    5.9,
+    "BaiVL",
+    "lấy"
+   ],
+   [
+    32.2,
+    "NhaVH",
+    "giao"
+   ],
+   [
+    42.0,
+    "KhoTong",
+    "lấy"
+   ],
+   [
+    59.1,
+    "TiemBanh",
+    "giao"
+   ],
+   [
+    87.9,
+    "XuongGo",
+    "lấy"
+   ],
+   [
+    93.3,
+    "HoDieuHoa",
+    "giao"
+   ],
+   [
+    111.8,
+    "ChungCuB",
+    "giao"
+   ],
+   [
+    130.9,
+    "XuongGo",
+    "lấy"
+   ],
+   [
+    149.4,
+    "ChungCuB",
+    "giao"
+   ]
+  ]
+ },
+ "C2L9_van": {
+  "opt": 95.18518518518518,
+  "path": [
+   [
+    5.9,
+    "BaiVL",
+    "lấy ThapVP"
+   ],
+   [
+    29.0,
+    "ThapVP",
+    "giao ThapVP"
+   ],
+   [
+    38.3,
+    "KhoTong",
+    "lấy SieuThi"
+   ],
+   [
+    51.5,
+    "SieuThi",
+    "giao SieuThi"
+   ],
+   [
+    58.9,
+    "XuongGo",
+    "lấy NhaMau"
+   ],
+   [
+    69.9,
+    "KhoTong",
+    "lấy KhuNha"
+   ],
+   [
+    85.9,
+    "KhuNha",
+    "giao KhuNha"
+   ],
+   [
+    95.2,
+    "NhaMau",
+    "giao NhaMau"
+   ]
+  ],
+  "naive": 146.85185185185185,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    5.9,
+    "BaiVL",
+    "lấy"
+   ],
+   [
+    34.2,
+    "ThapVP",
+    "giao"
+   ],
+   [
+    45.5,
+    "KhoTong",
+    "lấy"
+   ],
+   [
+    58.7,
+    "SieuThi",
+    "giao"
+   ],
+   [
+    88.9,
+    "KhuNha",
+    "giao"
+   ],
+   [
+    105.4,
+    "KhoTong",
+    "lấy"
+   ],
+   [
+    118.5,
+    "SieuThi",
+    "giao"
+   ],
+   [
+    125.9,
+    "XuongGo",
+    "lấy"
+   ],
+   [
+    146.9,
+    "NhaMau",
+    "giao"
+   ]
+  ]
+ },
+ "C2L10_van": {
+  "opt": 102.37037037037037,
+  "path": [
+   [
+    5.9,
+    "BaiVL",
+    "lấy NhaVH"
+   ],
+   [
+    28.3,
+    "NhaVH",
+    "giao NhaVH"
+   ],
+   [
+    43.3,
+    "XuongGo",
+    "lấy CongVien"
+   ],
+   [
+    51.9,
+    "CongVien",
+    "giao CongVien"
+   ],
+   [
+    61.8,
+    "XuongGo",
+    "lấy ChoMoi+ChungCuA"
+   ],
+   [
+    73.2,
+    "ChoMoi",
+    "giao ChoMoi"
+   ],
+   [
+    79.9,
+    "KhoTong",
+    "lấy TiemBanh"
+   ],
+   [
+    93.1,
+    "ChungCuA",
+    "giao ChungCuA"
+   ],
+   [
+    102.4,
+    "TiemBanh",
+    "giao TiemBanh"
+   ]
+  ],
+  "naive": 143.87037037037038,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    5.9,
+    "BaiVL",
+    "lấy"
+   ],
+   [
+    32.2,
+    "NhaVH",
+    "giao"
+   ],
+   [
+    42.0,
+    "KhoTong",
+    "lấy"
+   ],
+   [
+    59.1,
+    "TiemBanh",
+    "giao"
+   ],
+   [
+    87.9,
+    "XuongGo",
+    "lấy"
+   ],
+   [
+    95.2,
+    "CongVien",
+    "giao"
+   ],
+   [
+    103.4,
     "ChoMoi",
     "giao"
    ],
    [
-    207.5,
-    "TiemBanh",
+    117.3,
+    "XuongGo",
+    "lấy"
+   ],
+   [
+    126.0,
+    "CongVien",
+    "giao"
+   ],
+   [
+    143.9,
+    "ChungCuA",
     "giao"
    ]
   ]
