@@ -524,7 +524,7 @@ const CH2_LV=addChapter(CH2,[
  {name:'Công viên trung tâm',intro:'Chọn xe phù hợp để hoàn thiện khu đô thị.',T0:150,vehicles:['may','van','tai'],
   missions:[{from:'BaiVL',to:'CongVien',qty:4},{from:'KhoTong',to:'BenhVien',qty:1},{from:'KhoTong',to:'ChoMoi',qty:2},{from:'KhoTong',to:'TiemBanh',qty:1}]}
 ]);
-const CH1_BONUS=addBonus(CH1); // màn 16 trong danh sách — hiện ở Trang chủ sau cờ Hết chương 1
+const CH1_BONUS=addBonus(CH1); // màn 16 trong danh sách — hiện ở Trang chủ sau cờ Về đích của Chương 1
 Object.assign(PLACE,{BaiVL:'Bãi vật liệu',KhoTong:'Kho tổng',XuongGo:'Xưởng gỗ',TiemBanh:'Tiệm bánh',TruongHoc:'Trường học',NhaVH:'Nhà văn hóa',
   NhaTre:'Nhà trẻ',ChoMoi:'Chợ mới',KhuNha:'Khu nhà ở',CongVien:'Công viên'});
 Object.assign(PCOL,{BaiVL:'#1c7ed6',KhoTong:'#1864ab',XuongGo:'#1971c2',TiemBanh:'#e64980',TruongHoc:'#f76707',NhaVH:'#7048e8',NhaTre:'#0ca678',
@@ -1435,7 +1435,7 @@ function drawHomeMap(){
   const fy=top[1]-stepY;d+=` C${top[0]} ${top[1]-30} 205 ${fy+30} 205 ${fy}`;
   road(d,24);
   const fg=hEl('g',{transform:`translate(205,${fy-4})`});hEl('rect',{x:-58,y:-13,width:116,height:26,rx:13,fill:'#ffd43b',stroke:'#fff','stroke-width':3},fg);
-  const ft=hEl('text',{y:5,'text-anchor':'middle','font-size':11.5,'font-weight':900,fill:'#5c3d00','font-family':'Nunito'},fg);ft.textContent='🏁 Hết chương '+(HCH+1);
+  const ft=hEl('text',{y:5,'text-anchor':'middle','font-size':11.5,'font-weight':900,fill:'#5c3d00','font-family':'Nunito'},fg);ft.textContent='🏁 Về đích';
   const cur=lv.find(k=>getBest(k)===null);
   if(HSEL===null||!(lv.includes(HSEL)||HSEL===ch.bonus))HSEL=cur!==undefined?cur:(ch.bonus!=null&&bonusOpen(ch)&&getBonus(ch.bonus)===null?ch.bonus:lv[0]);
   if(ch.bonus!=null){const op=bonusOpen(ch),got=getBonus(ch.bonus),bx=352,by=fy-4,g=hEl('g',{class:'nd','data-k':ch.bonus}); // màn thưởng (MT-5)
@@ -1445,8 +1445,7 @@ function drawHomeMap(){
     if(op&&got===null)hEl('animate',{attributeName:'r',values:'21;24;21',dur:'1.2s',repeatCount:'indefinite'},ci);
     if(got!==null)hEl('path',{d:`M${bx-8} ${by} l5 5 l10 -11`,fill:'none',stroke:'#fff','stroke-width':4,'stroke-linecap':'round','stroke-linejoin':'round'},g);
     else{const gc=op?'#e03131':'#868e96';hEl('rect',{x:bx-10,y:by-4,width:20,height:13,rx:2,fill:gc},g);hEl('rect',{x:bx-12,y:by-9,width:24,height:6,rx:2,fill:shade(gc,-.15)},g); // hộp quà
-      hEl('rect',{x:bx-2,y:by-9,width:4,height:18,fill:'#fff3bf'},g);hEl('path',{d:`M${bx} ${by-9} q-8 -9 -9 -1 M${bx} ${by-9} q8 -9 9 -1`,fill:'none',stroke:'#fff3bf','stroke-width':2.5},g);}
-    hEl('path',{d:`M266 ${fy-4} H324`,stroke:'#ffd43b','stroke-width':4,'stroke-dasharray':'4 6','stroke-linecap':'round'});}
+      hEl('rect',{x:bx-2,y:by-9,width:4,height:18,fill:'#fff3bf'},g);hEl('path',{d:`M${bx} ${by-9} q-8 -9 -9 -1 M${bx} ${by-9} q8 -9 9 -1`,fill:'none',stroke:'#fff3bf','stroke-width':2.5},g);}}
   P.forEach(([x,y],i)=>{const k=lv[i],best=getBest(k),done=best!==null,isCur=k===cur,sel=k===HSEL,r=isCur?23:20;
     const g=hEl('g',{class:'nd','data-k':k});
     if(sel)hEl('circle',{cx:x,cy:y,r:r+9,fill:'rgba(255,212,59,.45)'},g);
@@ -1465,8 +1464,8 @@ function drawHomeMap(){
   const L=LEVELS[HSEL],b=getBest(HSEL);
   if(L.bonus){const op=bonusOpen(ch),got=getBonus(HSEL);
     $('hCard').innerHTML=`<div class="n">🎁 MÀN THƯỞNG · CHƯƠNG ${HCH+1}</div><div class="t">${L.name}</div><div class="d">${L.intro}</div>
-      <div class="row"><span>⏱ ${fmt(L.T0)}</span><span class="tag">${GEM} ${L.gems.length} kim cương · không tính sao</span></div>`+
-      (got!==null?`<div class="d" style="color:#2b8a3e;font-weight:900">Đã nhận ✓ ${got} kim cương — màn đã khóa</div>`:op?'<button class="cta gold" id="bPlay">Chơi · nhận thưởng 1 lần</button>':'<div class="d" style="font-weight:900">🔒 Thắng màn 10 để mở</div>');return;}
+      <div class="row">${got!==null?`<span class="ok">✓ Đã nhận ${got} ${GEM}</span>`:`<span>⏱ ${fmt(L.T0)}</span><span class="tag">${GEM} ${L.gems.length} kim cương</span>`}</div>`+
+      (got!==null?'':op?'<button class="cta gold" id="bPlay">Chơi · nhận thưởng 1 lần</button>':'<div class="d" style="font-weight:900">🔒 Thắng màn 10 để mở</div>');return;}
   $('hCard').innerHTML=`<div class="n">MÀN ${HSEL+1} · CHƯƠNG ${HCH+1}</div><div class="t">${L.name}</div><div class="d">${L.intro}</div>
     <div class="row"><span>⏱ ${fmt(L.T0)}</span>${b!==null?`<span class="ok">${'★'.repeat(getStars(HSEL))}${'☆'.repeat(3-getStars(HSEL))} · Tốt nhất ${fmt(b)}</span>`:(newMech(HSEL)?`<span class="tag">! Cơ chế mới · ${MECH[HSEL]}</span>`:'')}</div>
     <button class="cta" id="bPlay">Chơi</button>`;
