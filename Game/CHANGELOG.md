@@ -16,6 +16,9 @@ Tài liệu yêu cầu: (ghi khi chốt)
 - **Khung cảnh Làng ven sông** (bộ tài nguyên A): ruộng lúa chia ô có bờ, lũy tre viền xóm, nhà ba gian có sân gạch, sông và đường đê, trâu, đống rơm; vườn rau là chỗ nhà mới sẽ mọc (D-66).
 - **10 công trình của làng** (mỗi màn thắng một công trình, câu thông báo riêng): lều chợ, giếng làng, trường làng, cụm nhà Xóm Đông, trạm y tế, ao cá, đình làng, bến đò, nhà văn hóa, chợ phiên dưới gốc đa (Chợ phiên xây 2 giai đoạn: màn 1 và màn 10). Cảnh kết chương và bưu thiếp dùng lại cơ chế Chương 2.
 - `level_design/levels_ch1.py`, `ket_qua_ch1.json` (bộ giải), ảnh kiểm chứng `playtest_evidence/chuong1_v14/`.
+- **Luật chơi lần đầu ở Màn 1** (D-70, PA-C): (1) thẻ "Cách chơi" rút gọn — mục tiêu "Giao đủ mọi kiện hàng trước khi hết giờ!" + 3 biểu tượng kho ▲ → điểm giao ▼ → đồng hồ, câu nhắc xem bản đồ để tự nghĩ đường đi; (2) 4 bước khoanh trên bản đồ chuẩn bị: kho, điểm giao + dòng nhiệm vụ, thời gian của màn, nút Bắt đầu (chạm để tiếp, có Bỏ qua); chỉ chạy lần đầu mở Màn 1. (3) Tab **"Luật chơi"** đầu tiên trong nút ? (mục tiêu, lên kế hoạch, lái xe, thua khi, sao). Hướng dẫn lúc lái xe (D-45) giữ nguyên.
+- **Hướng dẫn di chuyển Màn 1 luôn chạy** mỗi lần vào Màn 1 Chương 1 (D-72, thay "chỉ lần đầu" của D-45); "Bỏ qua hướng dẫn" chỉ bỏ qua lượt đang chơi.
+- **Hướng dẫn lái xe Màn 1 thêm mẹo Quay đầu đặt trước** (D-71, D-72): khi đã lấy đủ hàng ở kho và xe dừng ở điểm giao thứ nhất, game đứng hình, khoanh nút Quay đầu và nhắc có thể bấm để xe quay đầu ngay khi xong việc; bấm thử Quay đầu hoặc chạm vào lời nhắc để đi tiếp.
 - **Đặt trước lệnh Quay đầu khi đang dừng ở điểm** (D-69, QD-01): đang giao hàng, đang mở bảng hỏi hoặc đang lấy hàng thì bấm Quay đầu (hoặc phím U) để xe quay đầu ngay khi rời điểm. Nút Quay đầu sáng vàng như nút hướng đã chọn, trên xe có mũi tên chữ U; bấm lại để hủy; bấm một hướng thì lệnh quay đầu bị hủy (chỉ giữ một lệnh).
 
 ### Thay đổi
@@ -35,6 +38,7 @@ Tài liệu yêu cầu: (ghi khi chốt)
 - Cảnh làng: `VPAL`, `VROOF`, `vHouse`, `bamboo`, `buffalo`, `strawStack`, `paddy`, `vLot`, `vBuild`, `vWarehouse`, `bigTree`, `vLandmark`, `drawVillage`.
 - Cảnh quay, đoạn mở màn, Trang chủ, bưu thiếp dùng `CC`: `siteCenter`, `newRoads`, `startCut`, `cutDraw`, `finFx`, `finishCut`, `postReady`, `openPost`, `drawHomeMap`, `buildMarks`; `camFit(x,y,z,yb)`, `camFrame`.
 - Cơ chế theo màn: `MECH`, `MECHTXT`, `newMech`.
+- Luật chơi lần đầu: `#rulev`, `#pcCatch`, `#pcRing`, `#pcTip` (HTML + CSS), `rulesStart` (gọi từ `openLevel`), `rulesEnd` (gọi từ `startGame`), `pcSteps`, `pcShow`, `pcNext`, khóa `demo_rules_done`; tab `rule` trong `HSEC`.
 - Quay đầu đặt trước: `G.car.uq`, `cUturn`, `doUturn`, `leaveZone` (gọi từ `zoneProcess`, `askSkip`), nhánh `c.uq` trong `render()` (mũi tên chữ U, lớp `sel` của `#bUturn`), phím U trong bảng hỏi.
 
 ## v1.3 · chốt 15/10/2026

@@ -2,7 +2,7 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 1.20 — Đặt trước Quay đầu khi dừng ở điểm (D-69). 1.19 — Chương 1 Làng ven sông vào demo (D-68). 1.18 — Điều chỉnh CT-06, CT-07 (D-67). 1.17 — Chủ đề khung cảnh 15 chương (D-66). 1.16 — Bộ công thức độ khó và bố cục 15 chương (D-65). 1.15 — Chỉ vận chuyển hàng hóa; chở khách và đổi xe xếp cuối (D-64); khung độ khó chuyển sang file riêng [level_design/Khung_Do_Kho_Chuong_Man.md](level_design/Khung_Do_Kho_Chuong_Man.md). 1.14 — Khung tăng độ khó theo chương và màn (D-63), câu hỏi mở về cách đo độ khó (DK-Q1, DK-Q2). 1.13 — Chương 2 cho người chơi thấy khung cảnh tiến triển: cảnh quay mới, đoạn mở màn, đô thị hoá quanh công trình, cần cẩu, nhãn không chồng (D-54 → D-58); địa danh riêng, cụm nhà mọc, Trang chủ, cảnh kết chương và bưu thiếp (D-59 → D-62) |
+| Phiên bản | 1.23 — Hướng dẫn Màn 1 luôn chạy, mẹo Quay đầu ở điểm giao thứ nhất (D-72). 1.22 — Mẹo Quay đầu trong hướng dẫn Màn 1 (D-71). 1.21 — Luật chơi lần đầu ở Màn 1 (D-70). 1.20 — Đặt trước Quay đầu khi dừng ở điểm (D-69). 1.19 — Chương 1 Làng ven sông vào demo (D-68). 1.18 — Điều chỉnh CT-06, CT-07 (D-67). 1.17 — Chủ đề khung cảnh 15 chương (D-66). 1.16 — Bộ công thức độ khó và bố cục 15 chương (D-65). 1.15 — Chỉ vận chuyển hàng hóa; chở khách và đổi xe xếp cuối (D-64); khung độ khó chuyển sang file riêng [level_design/Khung_Do_Kho_Chuong_Man.md](level_design/Khung_Do_Kho_Chuong_Man.md). 1.14 — Khung tăng độ khó theo chương và màn (D-63), câu hỏi mở về cách đo độ khó (DK-Q1, DK-Q2). 1.13 — Chương 2 cho người chơi thấy khung cảnh tiến triển: cảnh quay mới, đoạn mở màn, đô thị hoá quanh công trình, cần cẩu, nhãn không chồng (D-54 → D-58); địa danh riêng, cụm nhà mọc, Trang chủ, cảnh kết chương và bưu thiếp (D-59 → D-62) |
 | Ngày | 15/10/2026 |
 | Nguồn | Tài liệu ý tưởng game (mục 1–21), flowchart vòng chơi, ảnh tham chiếu giao diện, phản hồi xác nhận của BA |
 | Mục đích | Cơ sở tham chiếu để thiết kế giao diện và viết tài liệu (BRD/SRS/GDD). Không thay thế BRD/SRS. |
@@ -110,6 +110,9 @@ Thử thách đến từ:
 | D-67 | **Điều chỉnh bộ công thức độ khó khi dựng Chương 1:** "kế hoạch" đếm theo **kế hoạch chuẩn** (mỗi chuyến về kho khi xe trống, chỉ đi tới điểm có hàng trên xe); CT-06 không áp dụng cho màn ≤ 2 điểm giao; CT-07 (cách chơi không tính toán phải thua) áp dụng từ màn đầu tiên có chia chuyến. Chi tiết: [Khung_Do_Kho_Chuong_Man.md](level_design/Khung_Do_Kho_Chuong_Man.md) bản 0.3 | [XN] phản hồi BA 16/10 |
 | D-68 | **Chương 1 · Làng ven sông dựng vào demo**, thay Chương 1 demo cũ "Khu phố nhỏ" (còn ở bản lưu v1.3): 10 màn theo khung độ khó, khung cảnh xây dựng dần. **Engine đọc cấu hình chương** (bản đồ chung, vùng, công trình, câu thông báo, bộ vẽ cảnh) để các chương sau ghép vào không phải sửa engine. Chương 2 khu đô thị giữ làm bản thử nghiệm (màn 11–15). Thiết kế + số đo: [level_design/Thiet_Ke_Chuong_1.md](level_design/Thiet_Ke_Chuong_1.md) | [XN] BA duyệt kế hoạch 16/10 |
 | D-69 | **Đặt trước Quay đầu khi đang dừng ở điểm** lấy/giao hàng: nút sáng vàng, xong việc thì xe quay đầu ngay (QD-01, mục 4.4). | [XN] phản hồi BA 16/10 |
+| D-70 | **Luật chơi lần đầu ở Màn 1 Chương 1** (PA-C): (LC-01) thẻ "Cách chơi" rút gọn trước màn chuẩn bị — một câu mục tiêu + 3 biểu tượng kho ▲ → điểm giao ▼ → đồng hồ, nút "Xem bản đồ"; (LC-02) 4 bước khoanh trên bản đồ chuẩn bị: kho, điểm giao và dòng nhiệm vụ, thời gian của màn, nút Bắt đầu — mỗi bước một câu, chạm để tiếp, có "Bỏ qua"; chỉ lần đầu mở Màn 1 (đồng hồ chưa chạy); (LC-03) tab "Luật chơi" đầu tiên trong popup Cách chơi (nút ?) để xem lại: mục tiêu, lên kế hoạch, lái xe, điều kiện thua, sao. Hướng dẫn lúc lái xe (D-45) giữ nguyên. | [XN] phản hồi BA 16/10 / [GĐ] câu chữ (chờ BA duyệt trên bản dựng) |
+| D-71 | **Hướng dẫn lái xe Màn 1 (D-45) thêm mẹo Quay đầu đặt trước (QD-01):** lần đầu xe dừng lấy hàng, đồng hồ đứng, khoanh nút Quay đầu với lời nhắc "khi xe đang dừng lấy hoặc giao hàng vẫn bấm được Quay đầu — xe quay đầu ngay khi xong việc"; bấm thử Quay đầu hoặc chạm lời nhắc để đi tiếp. | [XN] phản hồi BA 16/10 / [GĐ] thời điểm hiện và câu chữ |
+| D-72 | **Hướng dẫn di chuyển Màn 1 Chương 1 luôn chạy** mỗi lần vào màn (thay "lần đầu chơi Màn 1" của D-45). **Mẹo Quay đầu (D-71) hiện khi đã lấy đủ hàng ở kho cho mọi điểm giao và xe dừng ở điểm giao thứ nhất** (thay "lần đầu xe dừng lấy hàng"). Thẻ luật chơi và 4 bước khoanh (D-70) vẫn chỉ lần đầu. | [XN] phản hồi BA 16/10 |
 | D-08 | Nhiên liệu/pin, gia tốc, phanh: ngoài MVP. | [XN] |
 | D-09 | Giao thông xác định, dự đoán được (chỉ còn yếu tố tĩnh: hạn chế loại xe, ngõ cụt). | [XN] / D-21, D-22 |
 | D-10 | Màn thiết kế thủ công, kiểm tra khả năng hoàn thành trước khi phát hành. | [XN] |
@@ -675,6 +678,9 @@ Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 | Dựng Chương 1 | Chương 1 Làng ven sông vào demo, engine theo cấu hình chương (D-68) | 1.19 |
 | C1-1 | Màn trùm Chương 1: số kế hoạch đạt ≥ 10, độ khó màn trùm đánh giá bằng số kế hoạch đạt 3★ (khung độ khó bản 0.4) | 1.19 |
 | Phản hồi demo v1.4 | Đặt trước Quay đầu khi dừng ở điểm (D-69) | 1.20 |
+| Phản hồi demo v1.4 | Luật chơi lần đầu ở Màn 1 theo PA-C (D-70) | 1.21 |
+| Phản hồi demo v1.4 | Mẹo Quay đầu trong hướng dẫn Màn 1 (D-71) | 1.22 |
+| Phản hồi demo v1.4 | Hướng dẫn Màn 1 luôn chạy; mẹo Quay đầu ở điểm giao thứ nhất (D-72) | 1.23 |
 
 ---
 

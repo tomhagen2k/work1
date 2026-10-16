@@ -329,6 +329,25 @@
   #tutTip{position:absolute;z-index:8;width:max-content;max-width:300px;background:#1d2733;color:#fff;font-size:13px;font-weight:800;line-height:1.35;padding:9px 12px 4px;border-radius:14px;display:none;flex-direction:column;box-shadow:0 6px 18px rgba(0,0,0,.3)}
   #tutTip b{color:#ffd43b}
   #tutTip button{align-self:flex-end;background:none;color:#adb5bd;font-size:12px;font-weight:900;padding:0 4px;min-height:32px}
+  /* Luật chơi lần đầu (Màn 1, LC-01 → LC-03): thẻ luật rút gọn, rồi 4 bước khoanh trên bản đồ chuẩn bị */
+  #rulev{position:absolute;inset:0;z-index:24;display:none;align-items:center;justify-content:center;background:rgba(20,28,38,.55)}
+  #rulev.on{display:flex}
+  #rulev .rc{width:560px;background:#fff;border-radius:22px;padding:18px 24px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  #rulev h2{margin:0;font-size:22px;font-weight:900;color:#1d2733}
+  #rulev .goal{font-size:16px;font-weight:900;color:#2b8a3e;text-align:center}
+  #rulev .steps{display:flex;align-items:center;gap:10px}
+  #rulev .st{display:flex;flex-direction:column;align-items:center;gap:6px;width:150px;text-align:center;font-size:13px;font-weight:800;color:#3b4350}
+  #rulev .st i{width:46px;height:46px;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+  #rulev .st i svg{width:26px;height:26px}
+  #rulev .ar2{font-size:22px;font-weight:900;color:#adb5bd}
+  #rulev .sub{font-size:13px;font-weight:800;color:#6b7686;text-align:center;max-width:470px}
+  #pcCatch{position:absolute;inset:0;z-index:21;display:none}
+  #pcRing{position:absolute;z-index:22;border:4px solid #ffd43b;border-radius:14px;box-shadow:0 0 0 4px rgba(255,255,255,.75),0 0 18px 4px rgba(255,212,59,.8);pointer-events:none;display:none;animation:tutP 1s ease-in-out infinite}
+  #pcTip{position:absolute;z-index:23;width:max-content;max-width:300px;background:#1d2733;color:#fff;font-size:13px;font-weight:800;line-height:1.35;padding:9px 12px 4px;border-radius:14px;display:none;flex-direction:column;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+  #pcTip b{color:#ffd43b}
+  #pcTip .pcf{display:flex;justify-content:space-between;align-items:center;gap:14px}
+  #pcTip .pcf small{color:#adb5bd;font-size:11.5px;font-weight:800}
+  #pcTip button{background:none;color:#adb5bd;font-size:12px;font-weight:900;padding:0 4px;min-height:32px}
 </style>
 </head>
 <body>
@@ -354,6 +373,11 @@
   </div>
 
   <div id="tutRing"></div><div id="tutTip"><span id="tutTx"></span><button id="tutSkip">Bỏ qua hướng dẫn</button></div>
+  <div id="rulev"><div class="rc"><h2>Cách chơi</h2><div class="goal">Giao đủ mọi kiện hàng trước khi hết giờ!</div>
+    <div class="steps"><div class="st" id="rS1"></div><span class="ar2">→</span><div class="st" id="rS2"></div><span class="ar2">→</span><div class="st" id="rS3"></div></div>
+    <div class="sub">Trước khi xe chạy, hãy <b>xem bản đồ</b> và tự nghĩ đường đi, thứ tự giao. Đường ngắn chưa chắc đã nhanh nhất.</div>
+    <button class="cta" id="bRuleOk">Xem bản đồ</button></div></div>
+  <div id="pcCatch"></div><div id="pcRing"></div><div id="pcTip"><span id="pcTx"></span><div class="pcf"><small id="pcN"></small><button id="pcSkip">Bỏ qua</button></div></div>
   <button id="bSkip">Bỏ qua ⏭</button>
   <div class="ov" id="home">
     <div id="hLeft"><div class="brand">Giao Hàng<small id="verTag">BẢN DEMO</small></div><div id="chList" style="display:flex;flex-direction:column;gap:8px"></div><button id="bSnd1"></button></div>
@@ -1234,7 +1258,7 @@ function cTurn(dir){if(G.tut&&G.tut.hold&&dir!==G.tut.hold.dir)return;if(G.state
   c.cmd=c.cmd===dir?null:dir;if(c.cmd)c.uq=false;sfx('turn');}
 // Quay đầu khi đang chờ: quay tại chỗ, không tính giờ, vẫn chờ (Q-66)
 function cUturn(){if(G.state==='wait'){const c=G.car;if(canGo(c.to,c.from)){[c.from,c.to]=[c.to,c.from];c.d=SP-c.d;sfx('uturn');}return;}
-  if(G.tut&&G.tut.hold)return;const c=G.car;
+  if(G.tut&&G.tut.hold&&!G.tut.hold.u)return;const c=G.car;
   // đang dừng ở điểm (giao hàng, bảng hỏi, đang lấy hàng): đặt / hủy lệnh quay đầu khi rời điểm (QD-01)
   if((G.state==='ask'||(G.state==='play'&&c.stopped))&&!(c.busy&&c.busy.uturn)){if(!c.uq&&!canGo(c.to,c.from))return;c.uq=!c.uq;if(c.uq)c.cmd=null;sfx('turn');return;}
   if(G.state!=='play')return;if(c.busy||!canGo(c.to,c.from))return;doUturn();}
@@ -1399,7 +1423,7 @@ function legendSVG(type){const s=document.createElementNS(NS,'svg');s.setAttribu
 function openLevel(i){
   buildLevel(i);buildCarLayer();INTRO_LV=-1;HOME_FLASH=null;
   if(!LV.vehicles.includes(VK))VK=LV.vehicles.includes('van')?'van':LV.vehicles[0];
-  reset();renderPrep();show('prep');
+  reset();renderPrep();show('prep');rulesStart();
 }
 /* ---------- Màn chuẩn bị (PA2 — D-34): nhiệm vụ ghi ngay trên bản đồ (xem buildMarks), cột phải: tên màn, thời gian, xe, nút ---------- */
 const HOMEIC='<svg viewBox="0 0 28 28"><path d="M5 13 L14 5 L23 13 M8 11 V23 H20 V11 M12 23 V17 H16 V23"/></svg>';
@@ -1423,6 +1447,33 @@ function renderPrep(){
   $('pLeg').innerHTML=$('vLeg').innerHTML=legendHTML();
 }
 function prepView(){vPrep.refresh('prep',[34,0,46,0]);}
+/* ---------- Luật chơi lần đầu (Màn 1 Chương 1): thẻ luật rút gọn (LC-01) → 4 bước khoanh trên bản đồ chuẩn bị (LC-02) ----------
+   Chỉ lần đầu mở Màn 1; xem lại ở tab "Luật chơi" của nút ? (LC-03). Đồng hồ chưa chạy (màn chuẩn bị). */
+const RULE_KEY=()=>`${SK}demo_rules_done`;
+function rulesDone(){try{return localStorage.getItem(RULE_KEY())==='1';}catch(e){return false;}}
+let PC=null;
+function rulesStart(){if(LVI!==0||rulesDone())return;
+  $('rS1').innerHTML=`${pk('HTX',1)}<span>Lấy hàng ở <b>kho</b><br>(ô vuông ▲)</span>`;
+  $('rS2').innerHTML=`${pk('ChoPhien',0)}<span>Giao tới <b>điểm giao</b><br>(hình tròn ▼)</span>`;
+  $('rS3').innerHTML=`<i style="background:#1d2733;border-radius:50%;color:#fff;font-size:20px">⏱</i><span>Xong <b>trước khi hết giờ</b><br>là thắng</span>`;
+  $('rulev').classList.add('on');}
+function rulesEnd(save){$('rulev').classList.remove('on');PC=null;['pcCatch','pcRing','pcTip'].forEach(i=>$(i).style.display='none');
+  if(save){try{localStorage.setItem(RULE_KEY(),'1');}catch(e){}}}
+function pcSteps(){const it=vPrep.items,zk=ZONES.find(z=>z.kho),zd=ZONES.find(z=>!z.kho),gi=id=>{const k=ZONES.findIndex(z=>z.id===id);return it[k]&&it[k].g;};
+  return[{el:gi(zk.id),pad:16,t:`Đây là <b>kho ${zk.name}</b> (ô vuông ▲) — hàng lấy ở đây.`},
+    {el:gi(zd.id),pad:16,lab:true,t:`Đây là <b>điểm giao</b> (hình tròn ▼). Dòng chữ bên dưới cho biết cần <b>mấy kiện</b>, lấy <b>ở đâu</b>.`},
+    {el:document.querySelector('#pUI .ptime'),pad:6,t:`Đây là <b>thời gian của cả màn</b>. Đồng hồ chỉ chạy khi xe xuất phát.`},
+    {el:document.querySelector('#pUI [data-act=start]'),pad:6,t:`Nghĩ xong đường đi thì bấm <b>Bắt đầu</b> để xe chạy.`}];}
+function pcShow(){if(!PC)return;const S=pcSteps(),st=S[PC.i];if(!st||!st.el){rulesEnd(true);return;}
+  let r=rectToStage(st.el);if(st.lab){const k=ZONES.findIndex(z=>!z.kho),lb=vPrep.items[k]&&vPrep.items[k].lab;if(lb){const q=rectToStage(lb);r={x:Math.min(r.x,q.x),y:Math.min(r.y,q.y),w:Math.max(r.x+r.w,q.x+q.w)-Math.min(r.x,q.x),h:Math.max(r.y+r.h,q.y+q.h)-Math.min(r.y,q.y)};}}
+  const p=st.pad,ring=$('pcRing'),tip=$('pcTip');
+  Object.assign(ring.style,{display:'block',left:`${r.x-p}px`,top:`${r.y-p}px`,width:`${r.w+2*p}px`,height:`${r.h+2*p}px`});
+  $('pcTx').innerHTML=st.t;$('pcN').textContent=`${PC.i+1}/${S.length} · chạm để tiếp`;tip.style.display='flex';$('pcCatch').style.display='block';
+  const tw=tip.offsetWidth,th=tip.offsetHeight,cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+  let tx=cl(r.x+r.w/2-tw/2,8,844-tw-8),ty=r.y+r.h+p+10;
+  if(ty+th>382)ty=r.y-p-10-th;if(ty<8){ty=cl(r.y+r.h/2-th/2,8,382-th);tx=r.x-p-12-tw>8?r.x-p-12-tw:cl(r.x+r.w+p+12,8,844-tw-8);}
+  Object.assign(tip.style,{left:`${tx}px`,top:`${ty}px`});}
+function pcNext(){if(!PC)return;PC.i++;if(PC.i>=pcSteps().length){rulesEnd(true);return;}pcShow();}
 let hintT=null;function startHint(){const h=$('pHint');h.classList.add('on');clearTimeout(hintT);hintT=setTimeout(()=>h.classList.remove('on'),2600);}
 
 /* ---------- Bộ xem bản đồ lớn: kéo để di chuyển, chụm 2 ngón / con lăn / nút +− để phóng to thu nhỏ (D-33) ----------
@@ -1513,7 +1564,7 @@ function buildMarks(v,og,mode){
   tx(c,'Xe',4.5,{x:14,'text-anchor':'start',fill:'#e8590c'});
 }
 // vào màn xe đứng yên, chờ nhấn mũi tên cùng hướng đầu xe (XP-01). Chương 2: trước đó có đoạn mở màn (T-03)
-function startGame(noIntro){show(null);
+function startGame(noIntro){show(null);rulesEnd(false);
   const k=!noIntro&&INTRO_LV!==LVI?introKeys():null;INTRO_LV=LVI;
   if(k){G.state='intro';G.intro={t:0,keys:k,end:k[k.length-1].t,growT:k.growT||0};growSet(GROW_I,-1);$('hud').style.visibility='hidden';$('bSkip').style.display='block';return;}
   G.state='wait';tutStart();}
@@ -1548,7 +1599,7 @@ function restart(){reset();renderPrep();show('prep');}
 const TUT_KEY=()=>`${SK}demo_tut1_done`,DIRNAME={N:'Lên',S:'Xuống',W:'Trái',E:'Phải'};
 function tutDone(){try{return localStorage.getItem(TUT_KEY())==='1';}catch(e){return false;}}
 function tutEnd(save){if(save){try{localStorage.setItem(TUT_KEY(),'1');}catch(e){}}if(G)G.tut=null;}
-function tutStart(){G.tut=LVI===0&&!tutDone()?{step:'go',hold:null,node:null,msg:null}:null;}
+function tutStart(){G.tut=LVI===0?{step:'go',hold:null,node:null,msg:null}:null;}
 function tutCost(n0,prev,z){const dist={[n0]:0},pq=[[0,n0]];let best=Infinity;
   while(pq.length){pq.sort((a,b)=>a[0]-b[0]);const [d,n]=pq.shift();if(d>dist[n])continue;
     for(const nb of nbrs(n)){if(!canGo(n,nb)||(n===n0&&nb===prev))continue;const t=SP/(V().v*factor(getE(n,nb)));
@@ -1566,7 +1617,11 @@ function tutUpdate(){const T=G.tut,ring=$('tutRing'),tip=$('tutTip');let target=
     if(T.step==='go'){if(G.state==='wait'){target=$(DBTN[heading(c.from,c.to)]);txt='Nhấn nút đang nhấp nháy để <b>xe chạy</b>. Đồng hồ chỉ bắt đầu từ lúc này.';}else T.step='pick';}
     if(T.step==='pick'&&load()>0&&G.state==='play'){T.step='deliver';tutMsg('Đã lấy hàng! Giờ chở tới điểm <b>● tròn</b> — xe tự giao khi tới nơi.',4500);}
     if(T.step==='deliver'&&G.M.some(m=>m.delivered>0)){T.step='done';T.hold=null;tutMsg('Giao thành công! Giao nốt các đơn còn lại nhé.',3500);tutEnd(true);G.tut=T;}
-    if(G.state==='ask'&&T.step==='pick'){target=$('askO').querySelector('.opt:not(.off)');txt='Xe tự dừng ở kho <b>▲</b>. Chọn hàng để lấy — đồng hồ đang dừng.';}
+    // mẹo Quay đầu đặt trước (D-69, D-72): đã lấy đủ hàng ở kho, tới điểm giao thứ nhất → đứng hình, chỉ nút Quay đầu; bấm thử hoặc chạm vào lời nhắc để đi tiếp
+    if(!T.uSeen&&T.step==='deliver'&&G.state==='play'&&c.stopped&&c.busy&&!c.busy.uturn&&G.M.every(m=>m.picked>=m.qty)){T.uSeen=true;T.hold={u:true};}
+    if(T.hold&&T.hold.u){if(c.uq){T.hold=null;tutMsg('Xe sẽ <b>quay đầu ngay</b> khi giao hàng xong. Bấm lại Quay đầu nếu muốn hủy.',3500);}
+      else{target=$('bUturn');txt='Mẹo: khi xe đang dừng <b>lấy hoặc giao hàng</b>, bạn vẫn bấm được <b>Quay đầu</b> — nút sáng vàng và xe quay đầu ngay khi xong việc. Bấm thử, hoặc chạm vào đây để đi tiếp.';}}
+    else if(G.state==='ask'&&T.step==='pick'){target=$('askO').querySelector('.opt:not(.off)');txt='Xe tự dừng ở kho <b>▲</b>. Chọn hàng để lấy — đồng hồ đang dừng.';}
     else if(G.state==='play'&&T.step!=='done'&&T.step!=='go'){
       if(T.hold&&(c.cmd===T.hold.dir||c.to!==T.hold.node))T.hold=null;
       if(!T.hold&&!c.busy&&!c.cmd&&T.node!==c.to&&Object.keys(validDirs()).length){T.node=c.to;const b=tutBest();
@@ -1623,7 +1678,8 @@ const tap=(id,fn)=>$(id).addEventListener('pointerdown',e=>{e.preventDefault();f
 {const dp=document.querySelector('.dpad');dp.addEventListener('pointerdown',e=>{e.preventDefault();const r=rectToStage(dp),p=toStage(e.clientX,e.clientY),
   dx=p.x-(r.x+r.w/2),dy=p.y-(r.y+r.h/2);if(Math.hypot(dx,dy)<14)return;
   const dir=Math.abs(dx)>Math.abs(dy)?(dx>0?'E':'W'):(dy>0?'S':'N'),b=$(DBTN[dir]);b.classList.add('press');setTimeout(()=>b.classList.remove('press'),130);cTurn(dir);});}
-tap('bUturn',cUturn);tap('tutSkip',()=>tutEnd(true));tap('bSnd1',()=>setSound(!SND.on));tap('bSnd2',()=>setSound(!SND.on));tap('bPause',pauseGame);tap('bMis',()=>openInfo('mis'));tap('bHelp',()=>openInfo('help'));tap('missions',()=>openInfo('mis'));tap('bInfoX',closeInfo);
+tap('bUturn',cUturn);$('tutTip').addEventListener('pointerdown',e=>{if(e.target.closest('#tutSkip'))return;if(G&&G.tut&&G.tut.hold&&G.tut.hold.u){e.preventDefault();G.tut.hold=null;}});tap('bRuleOk',()=>{$('rulev').classList.remove('on');PC={i:0};pcShow();});tap('pcCatch',pcNext);tap('pcTip',pcNext);
+$('pcSkip').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();rulesEnd(true);});tap('tutSkip',()=>tutEnd(true));tap('bSnd1',()=>setSound(!SND.on));tap('bSnd2',()=>setSound(!SND.on));tap('bPause',pauseGame);tap('bMis',()=>openInfo('mis'));tap('bHelp',()=>openInfo('help'));tap('missions',()=>openInfo('mis'));tap('bInfoX',closeInfo);
 $('infov').addEventListener('pointerdown',e=>{if(e.target.id==='infov'){e.preventDefault();closeInfo();}});
 $('iBody').addEventListener('pointerdown',e=>{const t=e.target.closest('[data-tab]');if(!t)return;e.preventDefault();hTab=t.dataset.tab;renderInfo();});
 tap('mm',mapView);tap('bMapClose',resume);tap('bResume',resume);tap('bMap2',pauseMap);
@@ -1711,6 +1767,11 @@ const ILL={
   time:`<svg viewBox="0 0 190 120" width="190" height="120"><rect width="190" height="120" fill="#e9f5e1"/><rect x="12" y="12" width="78" height="30" rx="15" fill="#1d2733"/><text x="51" y="33" text-anchor="middle" font-size="16" font-weight="900" fill="#fff" font-family="Nunito">⏱ 1:52</text><rect x="100" y="16" width="78" height="22" rx="9" fill="#ffe3e3"/><text x="139" y="31" text-anchor="middle" font-size="10" font-weight="900" fill="#c92a2a" font-family="Nunito">⏱ Hạn còn 0:38</text><text x="12" y="62" font-size="10" font-weight="900" fill="#2d3440" font-family="Nunito">Đồng hồ dừng khi:</text>${['⏸ Tạm dừng','🗺 Bản đồ','📋 Nhiệm vụ','? Hướng dẫn','Bảng hỏi'].map((t,i)=>`<rect x="${12+(i%3)*58}" y="${70+Math.floor(i/3)*22}" width="54" height="18" rx="8" fill="#fff"/><text x="${39+(i%3)*58}" y="${82+Math.floor(i/3)*22}" text-anchor="middle" font-size="8.5" font-weight="900" fill="#2d3440" font-family="Nunito">${t}</text>`).join('')}</svg>`};
 function HSEC(){const lv=LV,tot=G.M.reduce((s,m)=>s+m.qty,0),used=[...new Set(E.map(e=>e.type))].filter(t=>t!=='thuong'),mech=MECH[LVI];
   return[
+  {id:'rule',ic:IC.list,t:'Luật chơi',body:()=>`<div class="hrow"><span class="hi">${IC.star}</span><span><b>Mục tiêu</b><span>Lấy hàng ở <b>kho</b> ${pk(ZONES.find(z=>z.kho).id,1)} và giao tới các <b>điểm giao</b> ${pk((ZONES.find(z=>!z.kho)||ZONES[0]).id,0)} cho đủ số kiện, <b>trước khi đồng hồ về 0:00</b>.</span></span></div>
+    <div class="hrow"><span class="hi">${IC.pin}</span><span><b>Lên kế hoạch trước</b><span>Ở màn chuẩn bị, xe chưa chạy, đồng hồ chưa chạy: xem bản đồ, tự nghĩ <b>đường đi</b> và <b>thứ tự giao</b>. Đường ngắn chưa chắc nhanh nhất.</span></span></div>
+    <div class="hrow"><span class="hi">${IC.car}</span><span><b>Lái xe</b><span>Xe tự chạy; bạn chọn hướng ở giao lộ. Tới điểm có việc, xe tự dừng để lấy / giao hàng.</span></span></div>
+    <div class="hrow"><span class="hi" style="background:#e03131">✕</span><span><b>Thua khi</b><span>Hết giờ mà chưa giao đủ, hoặc giao trễ một đơn có hạn ⏱.</span></span></div>
+    <div class="hrow"><span class="hi" style="background:#f59f00">★</span><span><b>Sao</b><span>Về đích càng sớm càng nhiều sao: còn dư hơn 10% thời gian → 3 sao.</span></span></div>`},
   {id:'lv',ic:IC.star,t:'Màn này',nw:newMech(LVI),body:()=>`<div class="hrow"><span class="hi">${IC.star}</span><span><b>Mục tiêu</b><span>Giao đủ <b>${tot} kiện</b> cho <b>${G.M.length} đơn</b> trước khi đồng hồ về 0:00 (có ${fmt(lv.T0)}).</span></span></div>
     <div class="hrow"><span class="hi" style="background:#e03131">!</span><span><b>${newMech(LVI)?'Mới ở màn này':'Trọng tâm của màn'}: ${mech}</b><span>${MECHTXT[mech]||''}</span></span></div>
     <div class="hrow"><span class="hi">${IC.road}</span><span><b>Đường trong màn</b><span style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${used.length?used.map(t=>`<span style="display:flex;gap:4px;align-items:center">${legendSVG(t)}${ROAD[t].name}</span>`).join(''):'Chỉ có đường thường'}</span></span></div>
