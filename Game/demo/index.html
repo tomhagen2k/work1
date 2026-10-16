@@ -478,8 +478,16 @@ const CH1={cols:6,rows:4,start:['c0r1','c1r1',40/350],
     'Trường làng khai giảng — tiếng trống vang cả xóm Đông.','Xóm Đông có thêm nhà mới quanh trường. Đường xuống xóm Nam đã thông.',
     'Trạm y tế mở cửa — xóm Nam đã có đường vào.','Ao cá thả giống xong — vườn cây xanh mát.','Đình làng trùng tu xong — mái cong đỏ thắm. Đường đê ven sông đã thông.',
     'Bến đò hoạt động — đường đê nối cả làng ra sông.','Nhà văn hóa khánh thành — sẵn sàng cho phiên chợ lớn.','Chợ phiên đông vui dưới gốc đa — đủ 10 công trình.'],
-  finTitle:'Làng ven sông đã có chợ phiên!',draw:o=>drawVillage(o),postNote:'Đã dựng xong làng ven sông'};
+  finTitle:'Làng ven sông đã có chợ phiên!',draw:o=>drawVillage(o),postNote:'Đã dựng xong làng ven sông',
+  // màn thưởng kim cương (YT-03, D-73): 25 kim cương, 7 cụm trên các tuyến; T0 = vòng nhặt hết nhanh nhất (~57 giây theo demo) + 50%
+  bonus:{name:'Phiên chợ vàng',intro:'Làng mở hội! Lái xe nhặt kim cương rải trên các con đường của làng.',T0:90,
+    gems:[['c0r0','c1r0',4],['c3r0','c4r0',3],['c5r0','c5r1',4],['c5r2','c5r3',3],['c1r3','c2r3',4],['c3r1','c3r2',3],['c0r2','c0r3',4]]}};
 const M_=(to,qty)=>({from:'HTX',to,qty});
+// Màn thưởng cuối chương: bản đồ hoàn thiện (mọi công trình, mọi tuyến), không có kho / điểm giao — chỉ nhặt kim cương (D-73)
+function addBonus(C){const b=C.bonus;
+  LEVELS.push({name:b.name,intro:b.intro,T0:b.T0,vehicles:['van'],missions:[],cc:C,stage:C.sites.length,bonus:true,grid:[C.cols,C.rows],start:C.start,
+    region:C.regions[C.regions.length-1],types:C.types,remove:C.remove||[],points:{},
+    gems:b.gems.flatMap(([a,b2,n])=>Array.from({length:n},(_,k)=>[a,b2,(k+1)/(n+1)]))});return LEVELS.length-1;}
 const CH1_LV=addChapter(CH1,[
  {name:'Ngày đầu đi giao',intro:'Ngày đầu ở Hợp tác xã: chở hàng ra chợ và Xóm Trên.',T0:90,vehicles:['van'],missions:[M_('ChoPhien',2),M_('XomTren',1)]},
  {name:'Giếng làng',intro:'Chở gạch, ngói sửa giếng làng.',T0:50,vehicles:['van'],missions:[M_('ChoPhien',2),M_('GiengLang',1)]},
@@ -516,6 +524,7 @@ const CH2_LV=addChapter(CH2,[
  {name:'Công viên trung tâm',intro:'Chọn xe phù hợp để hoàn thiện khu đô thị.',T0:150,vehicles:['may','van','tai'],
   missions:[{from:'BaiVL',to:'CongVien',qty:4},{from:'KhoTong',to:'BenhVien',qty:1},{from:'KhoTong',to:'ChoMoi',qty:2},{from:'KhoTong',to:'TiemBanh',qty:1}]}
 ]);
+const CH1_BONUS=addBonus(CH1); // màn 16 trong danh sách — hiện ở Trang chủ sau cờ Hết chương 1
 Object.assign(PLACE,{BaiVL:'Bãi vật liệu',KhoTong:'Kho tổng',XuongGo:'Xưởng gỗ',TiemBanh:'Tiệm bánh',TruongHoc:'Trường học',NhaVH:'Nhà văn hóa',
   NhaTre:'Nhà trẻ',ChoMoi:'Chợ mới',KhuNha:'Khu nhà ở',CongVien:'Công viên'});
 Object.assign(PCOL,{BaiVL:'#1c7ed6',KhoTong:'#1864ab',XuongGo:'#1971c2',TiemBanh:'#e64980',TruongHoc:'#f76707',NhaVH:'#7048e8',NhaTre:'#0ca678',
@@ -526,9 +535,9 @@ Object.assign(PCOL,{HTX:'#1c7ed6',ChoPhien:'#e64980',GiengLang:'#0ca678',XomTren
   XomDong:'#d6336c',TramYTe:'#e03131',XomNam:'#5c940d',AoCa:'#1098ad',DinhLang:'#a61e4d',BenDo:'#0b7285',NhaVanHoa:'#9c36b5',XomBai:'#66a80f'});
 const KHO=new Set(['KhoA','KhoB','BaiVL','KhoTong','XuongGo','HTX']);
 const MECH=['Điều khiển','Điều khiển','Nhiều điểm giao','Nhiều điểm giao','Chia chuyến','Chia chuyến','Chia chuyến','Đường lớn','Đường lớn','Tổng hợp',
-  'Điều khiển','Chia chuyến','Đường lớn & đông','Hạn giao','Chọn xe'];
+  'Điều khiển','Chia chuyến','Đường lớn & đông','Hạn giao','Chọn xe','Thưởng'];
 const CHAPTERS=[
-  {name:'Làng ven sông',mech:'1 kho, nhiều điểm giao, chia chuyến, đường lớn',levels:CH1_LV,cc:CH1},
+  {name:'Làng ven sông',mech:'1 kho, nhiều điểm giao, chia chuyến, đường lớn',levels:CH1_LV,cc:CH1,bonus:CH1_BONUS},
   {name:'Khu đô thị mới',mech:'Bản thử nghiệm — xây dựng khu phố qua từng màn',levels:CH2_LV,cc:CH2},
   {name:'Thành phố Không Ngủ',mech:'Đường đông',soon:true},
   {name:'Đảo Mây Trắng',mech:'Hạn giao',soon:true}
@@ -1009,6 +1018,7 @@ function buildMinimap(){
     mmZ[z.id]={g,ring,shape,gl,ok,col:z.col,state:''};
     const vert=!!u.y,right=x>W/2;
     const t=el('text',{x:vert?(right?x-95:x+95):x,y:vert?y+24:(y<H/2?y+150:y-95),'text-anchor':vert?(right?'end':'start'):'middle','font-size':68,'font-weight':900,'font-family':'Nunito,Segoe UI',fill:'#1d2733',stroke:'#fff','stroke-width':14,'paint-order':'stroke'},mmSvg);t.textContent=z.name;});
+  mmGem=(LV.gems||[]).map(([a,b,f])=>el('circle',{cx:N[a].x+(N[b].x-N[a].x)*f,cy:N[a].y+(N[b].y-N[a].y)*f,r:26,fill:'#4dd4f7',stroke:'#fff','stroke-width':8},mmSvg));
   mmView=el('rect',{width:844,height:390,fill:'none',stroke:'#fff','stroke-width':10,'stroke-dasharray':'30 20',opacity:.9},mmSvg);
   mmCar=el('circle',{r:40,fill:'#fff',stroke:'#e8590c','stroke-width':16},mmSvg);
 }
@@ -1061,10 +1071,35 @@ function reset(){
   const [a,b,f]=LV.start;
   G={t:0,state:'ready',car:{from:a,to:b,d:f*SP,stopped:false,wait:false,busy:null,cmd:null,skip:null,uq:false},ask:null,
      M:LV.missions.map(m=>({...m,picked:0,delivered:0,onboard:0,name:PLACE[m.to],src:PLACE[m.from],col:PCOL[m.to]}))};
-  drawVehicle(carBody,VK);carG.style.display='';badge.style.display='';$('hud').style.visibility='';$('bSkip').style.display='none';
+  drawVehicle(carBody,VK);carG.style.display='';badge.style.display=LV.bonus?'none':'';$('hud').style.visibility='';$('bSkip').style.display='none';
   const p=carPose();G.disp={x:p.x,y:p.y,a:p.a};
+  if(GEMG){GEMG.remove();GEMG=null;}
+  if(LV.bonus){G.gems=LV.gems.map(([a,b,f])=>({a,b,f,got:false}));G.gemN=0;GEMG=el('g',{},DYN);DYN.insertBefore(GEMG,DYN.firstChild);
+    G.gems.forEach(g=>{const A=N[g.a],B=N[g.b],x=A.x+(B.x-A.x)*g.f,y=A.y+(B.y-A.y)*g.f;g.x=x;g.y=y;g.el=gemSprite(GEMG,x,y);});
+    mmGem.forEach(d=>d.style.display='');}
   renderAsk();lastMis='';render();
 }
+// kim cương nhặt được (MT-7): lấp lánh, nổi trên mặt đường — chỉ có ở màn thưởng
+let GEMG=null,mmGem=[];
+function gemSprite(p,x,y){const g=el('g',{transform:`translate(${x},${y})`},p);
+  el('ellipse',{cx:2,cy:13,rx:10,ry:3.5,fill:'rgba(0,0,0,.25)'},g);
+  const b=el('g',{},g);el('animateTransform',{attributeName:'transform',type:'translate',values:'0 0;0 -4;0 0',dur:'1.4s',repeatCount:'indefinite'},b);
+  el('path',{d:'M-9 -4 L-5 -10 H5 L9 -4 L0 9Z',fill:'#4dd4f7',stroke:'#fff','stroke-width':2,'stroke-linejoin':'round'},b);
+  el('path',{d:'M-9 -4 H9 M-3 -10 L-4 -4 L0 9 L4 -4 L3 -10',fill:'none',stroke:'#1c94c4','stroke-width':1.2},b);
+  const sp=el('path',{d:'M7 -14 l1.5 3.5 3.5 1.5 -3.5 1.5 -1.5 3.5 -1.5 -3.5 -3.5 -1.5 3.5 -1.5Z',fill:'#fff'},b);
+  el('animate',{attributeName:'opacity',values:'0;1;0',dur:'1.1s',repeatCount:'indefinite'},sp);return g;}
+// nhặt: xe đi qua kim cương trên cùng đoạn đường (cách ≤ 28px theo chiều dọc đường)
+function gemCollect(){const c=G.car;G.gems.forEach((g,i)=>{if(g.got)return;let pos=null;
+  if(c.from===g.a&&c.to===g.b)pos=c.d;else if(c.from===g.b&&c.to===g.a)pos=SP-c.d;if(pos===null||Math.abs(pos-g.f*SP)>28)return;
+  g.got=true;G.gemN++;g.el.remove();if(mmGem[i])mmGem[i].style.display='none';sfx('pick');});}
+// kết thúc màn thưởng (hết giờ hoặc nhặt hết): cộng đúng số đã nhặt, khóa màn (MT-2, MT-4). Thoát giữa chừng không qua đây → không tính (MT-1)
+function bonusEnd(){G.state='won';const n=G.gemN,tot=G.gems.length;
+  try{localStorage.setItem(`${SK}demo_bonus_L${LVI+1}`,n);}catch(e){}WAL.kc+=n;saveW();
+  $('rStars').style.display='none';$('rTitle').textContent=n===tot?'Nhặt hết kim cương!':'Hết giờ — phiên chợ kết thúc!';$('rTitle').style.color='#2b8a3e';
+  $('rWhy').textContent='';$('rProg').style.display='none';$('rStat').textContent=`Nhặt được ${n}/${tot} kim cương`;
+  $('rRec').innerHTML=`<span class="rw">+${n} ${GEM} đã cộng vào ví</span>`;$('rHint').innerHTML='Màn thưởng chỉ chơi một lần — đã khóa.';
+  ['bNext2','bRestart2','bCut'].forEach(id=>$(id).style.display='none');
+  sfx('win');show('result');}
 const speed=()=>{const e=getE(G.car.from,G.car.to);return V().v*(factor(e)||1);};
 const load=()=>G.M.reduce((s,m)=>s+m.onboard,0);
 function zonePos(z){const c=G.car;if(c.from===z.a&&c.to===z.b)return c.d;if(c.from===z.b&&c.to===z.a)return SP-c.d;return null;}
@@ -1117,12 +1152,15 @@ function step(dt){
       if(ms.length){G.noGoodsZ=z.id;toast(`Chưa có hàng cho ${z.name} — lấy ở ${ms[0].src} trước`);}} // I-15
     if(z&&z.id!==c.skip&&!c.busy&&hasWork(z))zoneProcess(z);
   }
+  if(LV.bonus){gemCollect();if(G.gemN>=G.gems.length||G.t>=T0()){G.t=Math.min(G.t,T0());return bonusEnd();}return;} // không dùng Thêm giờ (MT-8)
   if(G.M.every(m=>m.delivered>=m.qty))return end(true);
   for(const m of G.M)if(m.dl&&G.t>m.dl&&m.delivered<m.qty)return end(false,`Đơn ${m.src} → ${m.name} cần giao trong ${fmt(m.dl)} đầu (mới giao ${m.delivered}/${m.qty} kiện).`,'dl');
   // hết thời gian tổng: còn lượt thì gợi ý Thêm giờ (D-36), hết lượt thì thua
   if(G.t>=T0()){G.t=T0();if((G.ext||0)<MAX_EXT){timeUp();return;}
     return end(false,`Đã dùng ${MAX_EXT}/${MAX_EXT} lần thêm giờ. Còn ${G.M.filter(m=>m.delivered<m.qty).map(m=>m.name).join(', ')} chưa giao đủ.`,'time');}
 }
+function getBonus(i){try{const v=parseInt(localStorage.getItem(`${SK}demo_bonus_L${i+1}`));return isNaN(v)?null:v;}catch(e){return null;}} // số kim cương đã nhận (null = chưa nhận)
+const bonusOpen=c=>c.bonus!=null&&getBest(c.levels[c.levels.length-1])!==null; // mở khi đã thắng màn cuối chương
 function getBest(i){try{const v=parseFloat(localStorage.getItem(`${SK}demo_best_L${i+1}`));return isNaN(v)?null:v;}catch(e){return null;}}
 function getStars(i){try{return +localStorage.getItem(`${SK}demo_stars_L${i+1}`)||0;}catch(e){return 0;}}
 // Xếp hạng sao (D-41). Thời gian còn lại tính trên thời gian gốc của màn (không cộng giờ từ vật phẩm).
@@ -1152,7 +1190,7 @@ function end(win,why,kind){
     :st<3?`Về đích khi còn dư hơn <b>${secTxt(STAR_CUT[st-1]*LV.T0)}</b> để đạt ${st+1} sao.`:'Tuyệt vời — đạt tối đa 3 sao!';
   // màn thắng: "Màn tiếp ▶" là nút chính (Chương 2 thì nút chính là Xem công trình, Màn tiếp nằm ở cảnh quay) (I-03)
   const nx=nextLevel(LVI),showNext=win&&nx!==null&&!LV.cc;$('bNext2').style.display=showNext?'':'none';
-  $('bRestart2').textContent=win?'Chơi lại':'Thử lại';$('bRestart2').classList.toggle('alt',showNext||(win&&LV.cc));
+  $('bRestart2').style.display='';$('bRestart2').textContent=win?'Chơi lại':'Thử lại';$('bRestart2').classList.toggle('alt',showNext||(win&&LV.cc));
   if(win&&nx!==null)HSEL=nx; // về Trang chủ thì chọn sẵn màn kế (I-02)
   if(win){sfx('win');for(let i=0;i<st;i++)setTimeout(()=>sfx('star',i),450+i*280);}else sfx('lose');
   if(win&&LV.cc)HOME_FLASH=LV.stage; // về Trang chủ: công trình vừa xây nhấp nháy một lần (T-09)
@@ -1243,7 +1281,7 @@ function finishCut(){ // giao diện lái xe vẫn ẩn để không che khung c
   if(c.fx)c.fx.remove();if(c.bars)c.bars.forEach(b=>b.remove());if(c.pop)c.pop.removeAttribute('transform'); // vạch vàng đường mới giữ lại cùng hộp thoại
   const k=c.k,last=k===CC.sites.length-1;
   $('cTitle').textContent=last?CC.finTitle:`✨ ${CC.siteNames[k]} đã hoàn thành!`;
-  $('cNote').textContent=(CC.openNote[k]||'Khu phố đông vui hơn rồi!')+(last?' Bưu thiếp toàn cảnh đã lưu ở Trang chủ.':'');
+  $('cNote').textContent=(CC.openNote[k]||'Khu phố đông vui hơn rồi!')+(last?' Bưu thiếp toàn cảnh đã lưu ở Trang chủ.'+(CC.bonus?' 🎁 Màn thưởng kim cương đã mở!':''):'');
   $('cPic').style.display=last?'':'none';$('bNext').style.display=last?'none':'';$('cutv').classList.toggle('big',last);
   show('cutv');
 }
@@ -1329,6 +1367,7 @@ function zState(z){if(z.kho)return G.M.some(m=>m.from===z.id&&m.picked<m.qty)?'o
 const CAM={x:0,y:0};
 let lastMis='';
 function renderMissions(){
+  if(LV.bonus){const h=`<div class="mc" style="width:auto;padding:0 12px;display:flex;align-items:center;gap:6px;background:rgba(20,28,38,.85);border-radius:24px;height:44px;color:#fff;font-weight:900;font-size:16px">${GEM}${G.gemN}/${G.gems.length}</div>`;if(h!==lastMis){$('missions').innerHTML=h;lastMis=h;}return;}
   const html=G.M.map(m=>{const p=m.delivered/m.qty,cc=2*Math.PI*22,done=m.delivered>=m.qty;let dd='',warn=false;
     if(done)dd='✓';else if(m.dl){const r=m.dl-G.t;dd=fmt(r);warn=r<=10;}
     return`<div class="mc ${warn?'warn':''} ${done?'done':''} ${m.onboard>0?'carry':''}"><svg class="ring" viewBox="0 0 50 50"><circle cx="25" cy="25" r="22" fill="rgba(20,28,38,.85)" stroke="rgba(255,255,255,.25)" stroke-width="4"/><circle cx="25" cy="25" r="22" fill="none" stroke="${warn?'#ff4d42':m.col}" stroke-width="4" stroke-dasharray="${cc*p} ${cc}" stroke-linecap="round"/></svg><div class="c">${I.box}${m.delivered}/${m.qty}</div>${dd?`<span class="dd">${dd}</span>`:''}<span class="onb"></span></div>`;}).join('');
@@ -1398,7 +1437,16 @@ function drawHomeMap(){
   const fg=hEl('g',{transform:`translate(205,${fy-4})`});hEl('rect',{x:-58,y:-13,width:116,height:26,rx:13,fill:'#ffd43b',stroke:'#fff','stroke-width':3},fg);
   const ft=hEl('text',{y:5,'text-anchor':'middle','font-size':11.5,'font-weight':900,fill:'#5c3d00','font-family':'Nunito'},fg);ft.textContent='🏁 Hết chương '+(HCH+1);
   const cur=lv.find(k=>getBest(k)===null);
-  if(HSEL===null||!lv.includes(HSEL))HSEL=cur!==undefined?cur:lv[0];
+  if(HSEL===null||!(lv.includes(HSEL)||HSEL===ch.bonus))HSEL=cur!==undefined?cur:(ch.bonus!=null&&bonusOpen(ch)&&getBonus(ch.bonus)===null?ch.bonus:lv[0]);
+  if(ch.bonus!=null){const op=bonusOpen(ch),got=getBonus(ch.bonus),bx=352,by=fy-4,g=hEl('g',{class:'nd','data-k':ch.bonus}); // màn thưởng (MT-5)
+    if(HSEL===ch.bonus)hEl('circle',{cx:bx,cy:by,r:30,fill:'rgba(255,212,59,.45)'},g);
+    hEl('circle',{cx:bx,cy:by+3,r:21,fill:'rgba(0,0,0,.25)'},g);
+    const ci=hEl('circle',{cx:bx,cy:by,r:21,fill:got!==null?'#37c26b':op?'#ffd43b':'#ced4da',stroke:'#fff','stroke-width':3},g);
+    if(op&&got===null)hEl('animate',{attributeName:'r',values:'21;24;21',dur:'1.2s',repeatCount:'indefinite'},ci);
+    if(got!==null)hEl('path',{d:`M${bx-8} ${by} l5 5 l10 -11`,fill:'none',stroke:'#fff','stroke-width':4,'stroke-linecap':'round','stroke-linejoin':'round'},g);
+    else{const gc=op?'#e03131':'#868e96';hEl('rect',{x:bx-10,y:by-4,width:20,height:13,rx:2,fill:gc},g);hEl('rect',{x:bx-12,y:by-9,width:24,height:6,rx:2,fill:shade(gc,-.15)},g); // hộp quà
+      hEl('rect',{x:bx-2,y:by-9,width:4,height:18,fill:'#fff3bf'},g);hEl('path',{d:`M${bx} ${by-9} q-8 -9 -9 -1 M${bx} ${by-9} q8 -9 9 -1`,fill:'none',stroke:'#fff3bf','stroke-width':2.5},g);}
+    hEl('path',{d:`M266 ${fy-4} H324`,stroke:'#ffd43b','stroke-width':4,'stroke-dasharray':'4 6','stroke-linecap':'round'});}
   P.forEach(([x,y],i)=>{const k=lv[i],best=getBest(k),done=best!==null,isCur=k===cur,sel=k===HSEL,r=isCur?23:20;
     const g=hEl('g',{class:'nd','data-k':k});
     if(sel)hEl('circle',{cx:x,cy:y,r:r+9,fill:'rgba(255,212,59,.45)'},g);
@@ -1415,6 +1463,10 @@ function drawHomeMap(){
       hEl('rect',{x:-17,y:-9,width:32,height:16,rx:4,fill:'#fff',stroke:'#c9ced6'},v);hEl('rect',{x:-15,y:-7,width:20,height:12,rx:2,fill:'#e9edf2'},v);hEl('rect',{x:7,y:-7,width:5,height:12,rx:1.5,fill:'#2b3a4a'},v);}
   });
   const L=LEVELS[HSEL],b=getBest(HSEL);
+  if(L.bonus){const op=bonusOpen(ch),got=getBonus(HSEL);
+    $('hCard').innerHTML=`<div class="n">🎁 MÀN THƯỞNG · CHƯƠNG ${HCH+1}</div><div class="t">${L.name}</div><div class="d">${L.intro}</div>
+      <div class="row"><span>⏱ ${fmt(L.T0)}</span><span class="tag">${GEM} ${L.gems.length} kim cương · không tính sao</span></div>`+
+      (got!==null?`<div class="d" style="color:#2b8a3e;font-weight:900">Đã nhận ✓ ${got} kim cương — màn đã khóa</div>`:op?'<button class="cta gold" id="bPlay">Chơi · nhận thưởng 1 lần</button>':'<div class="d" style="font-weight:900">🔒 Thắng màn 10 để mở</div>');return;}
   $('hCard').innerHTML=`<div class="n">MÀN ${HSEL+1} · CHƯƠNG ${HCH+1}</div><div class="t">${L.name}</div><div class="d">${L.intro}</div>
     <div class="row"><span>⏱ ${fmt(L.T0)}</span>${b!==null?`<span class="ok">${'★'.repeat(getStars(HSEL))}${'☆'.repeat(3-getStars(HSEL))} · Tốt nhất ${fmt(b)}</span>`:(newMech(HSEL)?`<span class="tag">! Cơ chế mới · ${MECH[HSEL]}</span>`:'')}</div>
     <button class="cta" id="bPlay">Chơi</button>`;
@@ -1441,8 +1493,9 @@ function legendTip(e,tipId){const li=e.target.closest('.li');if(!li)return;e.pre
   tip.classList.add('on');clearTimeout(tip._t);tip._t=setTimeout(()=>tip.classList.remove('on'),3000);}
 function renderPrep(){
   const chN=CHAPTERS.findIndex(c=>c.levels&&c.levels.includes(LVI))+1;
-  $('pUI').innerHTML=`<div class="ph"><small>MÀN ${LVI+1} · CHƯƠNG ${chN}</small><span class="ptime">⏱ ${fmt(LV.T0)}</span></div><div class="pn">${LV.name}</div>`+
-    `<div class="pi">Nhiệm vụ ghi ngay trên bản đồ</div>`+vehHTML()+
+  const chB=CHAPTERS.findIndex(c=>c.bonus===LVI)+1;
+  $('pUI').innerHTML=`<div class="ph"><small>${LV.bonus?`🎁 MÀN THƯỞNG · CHƯƠNG ${chB}`:`MÀN ${LVI+1} · CHƯƠNG ${chN}`}</small><span class="ptime">⏱ ${fmt(LV.T0)}</span></div><div class="pn">${LV.name}</div>`+
+    `<div class="pi">${LV.bonus?`Nhặt ${LV.gems.length} kim cương trên đường — xe đi qua là nhặt. Không tính sao.`:'Nhiệm vụ ghi ngay trên bản đồ'}</div>`+vehHTML()+
     `<div class="pbtn"><button class="rb sm" data-act="home" aria-label="Trang chủ">${HOMEIC}</button><button class="cta" data-act="start">Bắt đầu</button></div>`;
   $('pLeg').innerHTML=$('vLeg').innerHTML=legendHTML();
 }
@@ -1560,6 +1613,7 @@ function buildMarks(v,og,mode){
     // hạn giao tách thành dòng riêng (T-10)
     if(mode==='prep'&&!z.kho){let y=27;G.M.filter(m=>m.to===z.id).forEach(m=>{tx(lab,`${m.qty} kiện từ ${m.src}`,y,{'font-size':12,fill:m.dl?'#c92a2a':'#3b4350'});y+=14;
       if(m.dl){tx(lab,`⏱ hạn ${fmt(m.dl)}`,y,{'font-size':12,fill:'#c92a2a'});y+=14;}});}});
+  if(LV.bonus)(G.gems||[]).forEach(gm=>{if(gm.got)return;const g=add(gm.x,gm.y,{});el('path',{d:'M-7 -3 L-4 -8 H4 L7 -3 L0 7Z',fill:'#4dd4f7',stroke:'#fff','stroke-width':2,'stroke-linejoin':'round'},g);});
   const c=add(G.disp.x,G.disp.y,{car:true});el('circle',{r:9,fill:'#fff',stroke:'#e8590c','stroke-width':4},c);
   tx(c,'Xe',4.5,{x:14,'text-anchor':'start',fill:'#e8590c'});
 }
@@ -1571,7 +1625,7 @@ function startGame(noIntro){show(null);rulesEnd(false);
 /* Đoạn mở màn Chương 2 (T-03, HA-Q2): camera đi từ điểm mới của màn (đường vừa thông → công trình vừa xây; màn đầu: công trường) về xe.
    Đồng hồ chưa chạy. Chỉ chạy lần đầu vào màn từ màn chuẩn bị — không chạy khi Thử lại; chạm hoặc nhấn phím để bỏ qua. */
 let INTRO_LV=-1;
-function introKeys(){if(!LV.cc)return null;const s=LV.stage,pts=[];
+function introKeys(){if(!LV.cc||LV.bonus)return null;const s=LV.stage,pts=[];
   if(s>0){const nr=newRoads(s-1);if(nr.length){const rb=bboxOf(nr.flatMap(([A,B])=>[A,B]));pts.push({x:(rb.x0+rb.x1)/2,y:(rb.y0+rb.y1)/2});}pts.push(siteCenter(s-1));}
   else pts.push(siteCenter(0));
   const keys=[];let t=0;
@@ -1591,7 +1645,8 @@ function pauseMap(){if(G.state!=='paused'||pendingAct)return;G.state=G.prevS||'p
 function nextLevel(i){const all=CHAPTERS.filter(c=>!c.soon).flatMap(c=>c.levels);const after=all.slice(all.indexOf(i)+1);
   const nd=after.find(k=>getBest(k)===null);return nd!==undefined?nd:(after.length?after[0]:null);}
 function goHome(){if(G)G.state='home';if(HSEL!==null){const ci=CHAPTERS.findIndex(c=>c.levels&&c.levels.includes(HSEL));if(ci>=0)HCH=ci;}renderHome();show('home');}
-function restart(){reset();renderPrep();show('prep');}
+function restart(){if(LV.bonus&&getBonus(LVI)!==null)return goHome(); // màn thưởng đã nhận: khóa (MT-4)
+  reset();renderPrep();show('prep');}
 
 /* ======================= Hướng dẫn tương tác Màn 1 (C2 — PT-Q5) =======================
    Chỉ ở lần đầu chơi Màn 1: xuất phát → rẽ (xe dừng hẳn ở ngã tư cần rẽ, đồng hồ dừng, chỉ nhận đúng nút) → lấy hàng → giao đơn đầu tiên.
@@ -1733,7 +1788,7 @@ const IC={list:'<svg class="ic" viewBox="0 0 28 28"><rect x="6" y="5" width="16"
 $('bMis').innerHTML=IC.list;$('bHelp').innerHTML=IC.help+'<span class="bd">!</span>';
 // chấm "!" trên nút Hướng dẫn: màn có cơ chế mới (lần đầu xuất hiện) và chưa mở hướng dẫn (Q-70) — nhớ trên máy
 const helpSeen=(()=>{try{return JSON.parse(localStorage.getItem(`${SK}demo_help_seen`))||{};}catch(e){return{};}})();
-const newMech=i=>MECH[i]!=='Tổng hợp'&&MECH.indexOf(MECH[i])===i,GO_HINT_LEVELS=3;
+const newMech=i=>MECH[i]!=='Tổng hợp'&&MECH[i]!=='Thưởng'&&MECH.indexOf(MECH[i])===i,GO_HINT_LEVELS=3;
 let INFO={kind:null,prev:null},hTab='lv';
 function openInfo(kind){if(!G||(G.state!=='play'&&G.state!=='wait'))return;INFO={kind,prev:G.state};G.state='info';if(kind==='help'){helpSeen[LVI]=1;try{localStorage.setItem(`${SK}demo_help_seen`,JSON.stringify(helpSeen));}catch(e){}hTab='lv';}renderInfo();show('infov');}
 function closeInfo(){if(G.state!=='info')return;G.state=INFO.prev;INFO.kind=null;show(null);}
@@ -1772,7 +1827,7 @@ function HSEC(){const lv=LV,tot=G.M.reduce((s,m)=>s+m.qty,0),used=[...new Set(E.
     <div class="hrow"><span class="hi">${IC.car}</span><span><b>Lái xe</b><span>Xe tự chạy; bạn chọn hướng ở giao lộ. Tới điểm có việc, xe tự dừng để lấy / giao hàng.</span></span></div>
     <div class="hrow"><span class="hi" style="background:#e03131">✕</span><span><b>Thua khi</b><span>Hết giờ mà chưa giao đủ, hoặc giao trễ một đơn có hạn ⏱.</span></span></div>
     <div class="hrow"><span class="hi" style="background:#f59f00">★</span><span><b>Sao</b><span>Về đích càng sớm càng nhiều sao: còn dư hơn 10% thời gian → 3 sao.</span></span></div>`},
-  {id:'lv',ic:IC.star,t:'Màn này',nw:newMech(LVI),body:()=>`<div class="hrow"><span class="hi">${IC.star}</span><span><b>Mục tiêu</b><span>Giao đủ <b>${tot} kiện</b> cho <b>${G.M.length} đơn</b> trước khi đồng hồ về 0:00 (có ${fmt(lv.T0)}).</span></span></div>
+  {id:'lv',ic:IC.star,t:'Màn này',nw:newMech(LVI),body:()=>LV.bonus?`<div class="hrow"><span class="hi">${GEM}</span><span><b>Màn thưởng</b><span>Nhặt càng nhiều kim cương càng tốt trước khi hết ${fmt(lv.T0)}. Xe đi qua là nhặt. Nhận đúng số đã nhặt, <b>chỉ một lần</b>; thoát giữa chừng thì không tính, chơi lại được.</span></span></div>`:`<div class="hrow"><span class="hi">${IC.star}</span><span><b>Mục tiêu</b><span>Giao đủ <b>${tot} kiện</b> cho <b>${G.M.length} đơn</b> trước khi đồng hồ về 0:00 (có ${fmt(lv.T0)}).</span></span></div>
     <div class="hrow"><span class="hi" style="background:#e03131">!</span><span><b>${newMech(LVI)?'Mới ở màn này':'Trọng tâm của màn'}: ${mech}</b><span>${MECHTXT[mech]||''}</span></span></div>
     <div class="hrow"><span class="hi">${IC.road}</span><span><b>Đường trong màn</b><span style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">${used.length?used.map(t=>`<span style="display:flex;gap:4px;align-items:center">${legendSVG(t)}${ROAD[t].name}</span>`).join(''):'Chỉ có đường thường'}</span></span></div>
     <div class="hrow"><span class="hi">${IC.car}</span><span><b>${V().name}</b><span>Chở tối đa ${V().cap} kiện mỗi chuyến · ${V().spd.toLowerCase()}${V().note?' · '+V().note:''}</span></span></div>`},

@@ -88,6 +88,16 @@ Số đo: **T_opt** đo bằng bộ lái tự động trong demo (đúng tốc �
 
 Nhà mọc thành cụm quanh mỗi công trình vừa xây (K8). Ô phố chứa công trình đã xây là xóm làng (K5).
 
+## 4b. Màn thưởng kim cương — "Phiên chợ vàng" (D-73)
+
+| Hạng mục | Nội dung |
+|---|---|
+| Mở | Sau khi thắng màn 10; nút hộp quà sau cờ Hết chương ở Trang chủ |
+| Bản đồ | Làng hoàn thiện (đủ 10 công trình, mọi tuyến đã thông) |
+| Kim cương | 25, thành 7 cụm: c0r0–c1r0 (4), c3r0–c4r0 (3), đê c5r0–c5r1 (4), đê c5r2–c5r3 (3), c1r3–c2r3 (4), c3r1–c3r2 (3), c0r2–c0r3 (4) |
+| Thời gian | Vòng nhặt hết nhanh nhất ≈ 60,5 giây theo bộ giải (≈ 57 giây demo) → T0 = 90 giây (+50%) |
+| Quy tắc | MT-1 → MT-8 (Y_Tuong_Mo_Rong YT-03) |
+
 ## 5. Khung cảnh chủ đề (theo Chu_De_Khung_Canh mục 3.1)
 
 | Hạng mục | Thể hiện trong demo |

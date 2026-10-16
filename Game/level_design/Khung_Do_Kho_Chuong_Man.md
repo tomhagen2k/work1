@@ -32,6 +32,7 @@
 | CM-02 | Trong một chương, **màn sau luôn khó hơn màn trước** (không có màn nghỉ xen giữa) | [XN] D-63 |
 | CM-03 | Sang chương mới, độ khó **lùi 4 bậc**: màn 1 chương *c + 1* ngang màn 6 chương *c* | [XN] D-63 |
 | CM-04 | **Màn 10 mỗi chương là màn trùm**: tổ hợp mọi yếu tố đã có trong chương, gắn với phần thưởng lớn nhất chương | [XN] 16/10 |
+| CM-05 | **Màn thưởng kim cương** sau màn 10 của mỗi chương (YT-03, D-73): nằm **ngoài** 10 màn tính độ khó — CT-01 → CT-09 không áp dụng; thời gian đủ nhặt hết theo vòng đi hợp lý + biên khoảng 50% | [XN] 16/10 |
 
 ---
 

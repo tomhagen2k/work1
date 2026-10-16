@@ -86,3 +86,33 @@
 - Mỗi chương dùng khung cảnh của một vùng khác nhau (vd New York ban đêm sáng đèn, Brazil với kỳ quan thế giới, đường phố sa mạc…).
 - Mỗi khung cảnh thể hiện nét đặc trưng: kiến trúc nhà, cảnh quan, màu sắc, biểu tượng.
 - Vẫn giữ góc nhìn từ trên xuống; chi tiết trong ô phố không ảnh hưởng đường đi.
+
+---
+
+## YT-03. Màn thưởng kim cương cuối chương
+
+| Thông tin | Nội dung |
+|---|---|
+| Người đề xuất | BA |
+| Ngày ghi nhận | 16/10/2026 |
+| Trạng thái | **Đã chốt (16/10/2026, D-73)** — làm bản dựng ở Chương 1 |
+
+### Mô tả (theo BA)
+- Cuối mỗi chương có **một màn thưởng**: bản đồ chương đã hoàn thiện, **kim cương nằm rải rác trên các tuyến đường**, người chơi lái xe thu thập trong thời gian cho phép.
+- Dễ hơn màn thường (chỉ thu thập), **không tính sao**, **chỉ nhận thưởng 1 lần**; chơi xong thì **không chơi lại được**.
+- Số kim cương trên bản đồ **20–30**.
+
+### Quy tắc đã chốt
+
+| ID | Quy tắc | Nguồn |
+|---|---|---|
+| MT-1 | Thoát giữa chừng (tạm dừng → Trang chủ / Chơi lại, tắt ứng dụng): **không tính là đã chơi**, **không cộng** kim cương đã nhặt ở lượt đó; chơi lại được | [XN] |
+| MT-2 | Thưởng **đúng số kim cương nhặt được** trong lượt hoàn thành (hết giờ hoặc nhặt hết); **không có mức tối thiểu** | [XN] (hiểu câu trả lời "Không" là không có mức tối thiểu — [GĐ]) |
+| MT-3 | Dễ: thời gian đủ nhặt hết theo một vòng đi hợp lý **cộng biên khoảng 50%**; kim cương xếp thành 6–8 cụm trên các tuyến; xe đi qua là tự nhặt | [XN] theo đề xuất |
+| MT-4 | Sau khi nhận thưởng: màn **khóa luôn**, hiện "Đã nhận ✓" | [XN] |
+| MT-5 | Trang chủ: nút 🎁 **sau cờ "Hết chương"**, mở khi thắng màn 10; hộp thoại kết chương báo "Màn thưởng đã mở" | [XN] theo đề xuất |
+| MT-6 | Trạng thái "đã nhận" lưu trên máy (rủi ro như mục 17.5) | [XN] theo đề xuất |
+| MT-7 | Kim cương trên mặt đường là **vật nhặt được** (ngoại lệ của N9/K10), có hiệu ứng lấp lánh riêng, chỉ có ở màn thưởng | [XN] theo đề xuất |
+| MT-8 | **Không dùng Thêm giờ** ở màn thưởng | [XN] theo đề xuất |
+
+Màn thưởng **nằm ngoài** 10 màn tính độ khó (khung độ khó không áp dụng). Kinh tế: thêm 20–30 kim cương mỗi chương (khoảng 40–60% so với 50 kim cương từ 10 màn thắng).
