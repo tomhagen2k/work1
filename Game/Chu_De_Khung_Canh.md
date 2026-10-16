@@ -1,11 +1,11 @@
-# Chủ đề khung cảnh theo chương — 10 đề xuất
+# Chủ đề khung cảnh theo chương — 15 chương
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 0.4 — thêm mục 9: chuẩn bắt buộc cho chương xây dựng dần (HA-Q4) |
-| Ngày | 15/10/2026 |
-| Trạng thái | **Ý tưởng, chưa phải yêu cầu** (YT-02 trong [Y_Tuong_Mo_Rong.md](Y_Tuong_Mo_Rong.md)). BA đã chọn 5 chủ đề, chưa đưa vào yêu cầu MVP |
-| Căn cứ | Phản hồi BA: mỗi chương một vùng/chủ đề riêng (vd New York ban đêm, Brazil với kỳ quan, sa mạc…); bài học từ mockup ô phố v1 → v3 ([mockups/khung_pho_v3.html](mockups/khung_pho_v3.html)) |
+| Phiên bản | 0.5 — chốt bố cục **15 chủ đề cho 15 chương** theo yếu tố mới của từng chương (mục 5), bộ tài nguyên dùng chung (mục 6.1), mọi chương xây dựng dần, bỏ khung nhịp cố định (mục 9) |
+| Ngày | 16/10/2026 |
+| Trạng thái | **Đã chốt** (D-66 trong [Mo_Ta_Yeu_Cau_MVP.md](Mo_Ta_Yeu_Cau_MVP.md)). Các chương demo hiện có chỉ là thử nghiệm, không ràng buộc bố cục này |
+| Căn cứ | Phản hồi BA: mỗi chương một vùng/chủ đề riêng; bài học từ mockup ô phố v1 → v3 ([mockups/khung_pho_v3.html](mockups/khung_pho_v3.html)); khung độ khó [level_design/Khung_Do_Kho_Chuong_Man.md](level_design/Khung_Do_Kho_Chuong_Man.md) (yếu tố mới theo chương, mục 3.2) |
 
 ---
 
@@ -52,9 +52,9 @@ Mỗi chủ đề phải mô tả đủ 5 loại đường, giữ **độ rộng
 
 ---
 
-## 2. Tổng quan 10 chủ đề
+## 2. Danh mục 10 chủ đề ban đầu (tham khảo)
 
-Chọn để **khác nhau rõ** về châu lục, khí hậu, thời điểm trong ngày, tông màu và mật độ, để hai chương liền nhau không bị giống nhau.
+Danh mục phân tích ngày 14/10. **Cột "Gắn cơ chế" là gợi ý cũ**, trước khi chốt chỉ vận chuyển hàng hóa (D-64) và khung độ khó (D-65). Chủ đề và yếu tố chính thức của từng chương xem **mục 5**.
 
 | # | Chủ đề | Thời điểm | Tông màu | Biểu tượng chính (nhìn từ trên) | Loại đường nổi bật | Gắn cơ chế (gợi ý) | Khó đọc bản đồ | Chi phí hình |
 |---|---|---|---|---|---|---|---|---|
@@ -69,13 +69,15 @@ Chọn để **khác nhau rõ** về châu lục, khí hậu, thời điểm tro
 | 9 | **Làng tuyết Bắc Âu (Lapland)** | Chạng vạng | Trắng tuyết, gỗ đỏ, đèn vàng | Lều băng, rừng thông tuyết | Gồ ghề (tuyết lún) | Chương sự kiện mùa đông | **Cao** | Trung bình |
 | 10 | **Ấn Độ – Jaipur & Agra** | Nắng ấm | Hồng đất, trắng ngà | Taj Mahal + vườn chia 4, giếng bậc thang | Đông (chợ), hẻm | Đường đông | Trung bình – cao | Trung bình – cao |
 
-**Dự phòng** (nếu muốn đổi): Dubai (sa mạc hiện đại, đảo hình cây cọ), London (xe buýt đỏ, sông Thames), Bangkok (chợ nổi, chùa vàng), thảo nguyên Kenya, Thượng Hải về đêm, thành phố tương lai.
+**Danh sách bổ sung** (từ 16/10 đã dùng Dubai, London, Bangkok — mục 5): thảo nguyên Kenya, Thượng Hải về đêm, thành phố tương lai để dự phòng.
 
 ---
 
 ## 3. Chi tiết từng chủ đề
 
-Mã màu là **giá trị gợi ý**; sẽ chỉnh khi làm mockup.
+Mã màu là **giá trị gợi ý**; sẽ chỉnh khi làm mockup. Dòng "Gắn cơ chế" đã cập nhật theo mục 5.
+
+**Chưa có chi tiết** (viết khi làm mockup chương đó): Làng ven sông (Ch.1), Khu đô thị mới (Ch.2 — tham khảo [level_design/Thiet_Ke_Chuong_2.md](level_design/Thiet_Ke_Chuong_2.md)), Thành phố cảng châu Á (Ch.10), Bangkok (Ch.11), Thành phố sa mạc hiện đại (Ch.13), London (Ch.14).
 
 ### 3.1. Phố cổ Hà Nội
 
@@ -88,9 +90,9 @@ Mã màu là **giá trị gợi ý**; sẽ chỉnh khi làm mockup.
 | 5 loại đường | Thường: phố nhỏ có cây. Lớn: đại lộ hàng cây (Tràng Tiền, Điện Biên Phủ). Đông: **phố hàng** (Hàng Đào, Hàng Ngang), xe máy kín. Gồ ghề: ngõ đang lát lại. Hẻm: **ngõ nhỏ chỉ xe máy** (rất thật). |
 | Vật trang trí | Xe máy đỗ vỉa hè, gánh hàng rong đội nón lá (từ trên là chấm tròn sáng), ghế nhựa thấp quán trà đá, ô dù quán cà phê. |
 | Biểu tượng | **Hồ Gươm + Tháp Rùa + cầu Thê Húc đỏ cong** (mặt bằng rất đặc trưng); Nhà hát Lớn; chợ Đồng Xuân; cầu Long Biên ở rìa. |
-| Gắn cơ chế | Hẻm + xe máy là chủ đề tự nhiên nhất; đường đông = phố hàng. |
+| Gắn cơ chế | **Chương 5 — hẻm + xe máy** (chủ đề tự nhiên nhất); đường đông = phố hàng. |
 | Rủi ro & xử lý | Phố hàng dễ rối → ô dù/mái hiên **1–2 màu**, chỉ ở đường đông. |
-| Chi phí | **Thấp** — gần với bộ hình hiện tại (v3 đã có mái ngói, hàng cây). Phù hợp Chương 1 hoặc chương "quê nhà". |
+| Chi phí | **Thấp** — gần với bộ hình hiện tại (v3 đã có mái ngói, hàng cây). Dùng bộ tài nguyên Đông Nam Á (mục 6.1). Bảng màu Chương 5 chuyển sang **sáng sớm sương, tông lạnh** (mục 5) để khác Chương 4, 6. |
 
 ### 3.2. New York về đêm
 
@@ -103,7 +105,7 @@ Mã màu là **giá trị gợi ý**; sẽ chỉnh khi làm mockup.
 | 5 loại đường | Thường: phố có đèn đường. Lớn: Avenue nhiều làn, vạch qua đường sọc trắng. Đông: **Times Square**, màn hình LED, taxi vàng kẹt cứng. Gồ ghề: đường đang sửa, rào cam, tấm thép phủ. Hẻm: ngõ sau có thùng rác, thang thoát hiểm. |
 | Vật trang trí | Taxi vàng đỗ, xe bán hot dog, vòi cứu hỏa đỏ, biển tên phố xanh lá ở góc, vòng sáng đèn đường trên mặt đường. |
 | Biểu tượng | Tượng Nữ thần Tự do (trên đảo ngoài khơi, rìa bản đồ); tòa tháp chóp nhọn kiểu Art Deco; cầu treo trụ đá; Times Square. |
-| Gắn cơ chế | **Taxi chở khách** → rất khớp Chương 3 "Trung tâm: chở khách, đổi xe" đang ghi "Sắp có". |
+| Gắn cơ chế | **Chương 3 — đường đông** (Times Square, taxi vàng đứng kín làn chỉ là trang trí). Taxi chở khách không dùng (D-64). |
 | Rủi ro & xử lý | Ban đêm giảm tương phản → mặt đường sáng hơn nền một bậc, vạch kẻ sáng, **ghim và biển báo có quầng sáng**; neon chỉ ở một khu; mini map và bản đồ lớn giữ bảng màu ngày (N8). Một số tòa nhà nổi tiếng có đăng ký nhãn hiệu hình ảnh → vẽ "lấy cảm hứng" (mục 4). |
 | Chi phí | **Cao** — cần bộ ánh sáng đêm (đèn, cửa sổ, quầng sáng). |
 
@@ -118,7 +120,7 @@ Mã màu là **giá trị gợi ý**; sẽ chỉnh khi làm mockup.
 | 5 loại đường | Thường: phố ngói đỏ. Lớn: đại lộ ven biển có vỉa hè sóng. Đông: phố trung tâm. Gồ ghề: đường đất lên đồi. Hẻm: **ngõ dốc favela** (xe ôm "mototáxi"). |
 | Vật trang trí | Dù bãi biển, xe bán nước dừa, cáp treo, cầu thang gạch men nhiều màu (một điểm). |
 | Biểu tượng | **Tượng Chúa Cứu Thế** trên đỉnh núi (từ trên thấy **hình chữ thập** rất rõ, đặt ở rìa); núi Sugarloaf + cáp treo; sân vận động hình tròn. |
-| Gắn cơ chế | Hẻm dốc + xe máy; đường gồ ghề lên đồi. |
+| Gắn cơ chế | **Chương 7 — ngõ cụt, quay đầu** (phố đồi dốc, đường cụt hướng ra biển). Bảng màu Chương 7: **buổi sáng, biển xanh, tông lạnh**. Kỳ quan dùng núi đá ven biển thay tượng (rủi ro pháp lý). |
 | Rủi ro & xử lý | Nhiều màu → **favela chỉ ở một khu đồi**, phần còn lại trắng kem. Địa hình đồi chỉ là trang trí rìa (đường chơi vẫn phẳng). Có thông tin tượng Chúa Cứu Thế bị đòi quyền hình ảnh → cần kiểm tra (mục 4). |
 | Chi phí | **Trung bình – cao** (biển, đồi, vỉa hè hoa văn). |
 
@@ -133,7 +135,7 @@ Mã màu là **giá trị gợi ý**; sẽ chỉnh khi làm mockup.
 | 5 loại đường | Thường: phố đất nện. Lớn: đại lộ ven sông Nile. Đông: chợ Khan el-Khalili có **mái vải che**. Gồ ghề: **đường cát** (cát phủ mặt đường). Hẻm: ngõ chợ. |
 | Vật trang trí | Lạc đà (đứng ngoài đường), xe lừa, tuk-tuk, thảm phơi trên mái, chum gốm. |
 | Biểu tượng | **Kim tự tháp Giza + tượng Nhân sư** ở rìa sa mạc (từ trên: hình vuông chia 4 tam giác — cực rõ); đền cổ hàng cột. |
-| Gắn cơ chế | Đường gồ ghề là nhân vật chính; chọn xe (xe tải chậm trên cát). |
+| Gắn cơ chế | **Chương 6 — đường gồ ghề + xe tải** (đường cát, xe tải chở đá). Kiểu tiến triển: khai quật. |
 | Rủi ro & xử lý | Mọi thứ cùng tông vàng nâu → **mặt đường nhựa tối rõ, vỉa hè đá sáng**, nhà sáng hoặc tối hơn nền một bậc, dùng xanh (cây, sông) để tách. Ghim cam/vàng có thể lẫn với nền cát → kiểm tra, có thể thêm viền tối. |
 | Chi phí | **Trung bình.** |
 
@@ -148,7 +150,7 @@ Mã màu là **giá trị gợi ý**; sẽ chỉnh khi làm mockup.
 | 5 loại đường | Thường: phố đá kem. Lớn: đại lộ hai hàng cây (kiểu Champs-Élysées). Đông: phố café. Gồ ghề: **đường đá cuội** (rất hợp nghĩa "xe rung, chậm"). Hẻm: passage lát đá. |
 | Vật trang trí | Bàn café tròn, ki-ốt báo xanh, cột quảng cáo tròn, cửa metro kiểu Art Nouveau, xe đạp. |
 | Biểu tượng | **Tháp Eiffel** (từ trên: hình vuông 4 chân hội tụ — rõ), Khải Hoàn Môn, nhà thờ Đức Bà. Đèn chiếu sáng ban đêm của tháp Eiffel được cho là có bản quyền → chỉ dùng cảnh ngày (mục 4). |
-| Gắn cơ chế | Gồ ghề = đá cuội; cầu qua sông. |
+| Gắn cơ chế | **Chương 8 — khu cấm tải** (khu trung tâm cổ); gồ ghề = đá cuội. Chỉ cảnh ngày. |
 | Rủi ro & xử lý | Thấp — bảng màu dịu, dễ đẹp. Quảng trường hình sao (Étoile) không hợp lưới ô vuông → chỉ làm trang trí trong ô. |
 | Chi phí | **Trung bình.** |
 
@@ -163,7 +165,7 @@ Mã màu là **giá trị gợi ý**; sẽ chỉnh khi làm mockup.
 | 5 loại đường | Thường: đường ven kênh lát gạch. Lớn: đại lộ có tàu điện. Đông: phố mua sắm. Gồ ghề: đường gạch lát cũ. Hẻm: **lối xe đạp/ngõ hẹp**. Giao cắt với kênh là **cầu vòm nhỏ**. |
 | Vật trang trí | Bãi xe đạp dày đặc, thuyền, tàu điện, chậu hoa. |
 | Biểu tượng | Cối xay gió, **cầu kéo gỗ trắng**, nhà ga trung tâm, bảo tàng gạch đỏ. |
-| Gắn cơ chế | **Cầu đóng/mở theo giờ (K5)** — cầu kéo nâng cho thuyền qua → rất khớp Chương 4 "Cảng: cầu đóng/mở theo giờ" đang ghi "Sắp có". |
+| Gắn cơ chế | **Chương 9 — cầu đóng/mở theo giờ** (cầu kéo nâng cho thuyền qua). |
 | Rủi ro & xử lý | Kênh không được trông giống đường: nước xanh có gợn, bờ kè đá, không có vạch. |
 | Chi phí | **Trung bình – cao** (nước, cầu, cầu kéo động). |
 
@@ -178,7 +180,7 @@ Mã màu là **giá trị gợi ý**; sẽ chỉnh khi làm mockup.
 | 5 loại đường | Thường: phố gỗ. Lớn: đại lộ ven sông Kamo. Đông: phố mua sắm có mái che. Gồ ghề: đường núi. Hẻm: **ngõ đá Gion**. |
 | Vật trang trí | Đèn lồng đá, xe kéo, máy bán hàng tự động, xe đạp. |
 | Biểu tượng | **Dãy cổng torii đỏ nối nhau** (Fushimi Inari — từ trên là chuỗi vạch đỏ song song, cực đặc trưng); **chùa Vàng bên hồ**; tháp Yasaka. |
-| Gắn cơ chế | Hẻm + xe máy; đường núi gồ ghề. |
+| Gắn cơ chế | **Chương 12 — đơn theo chuỗi** (giao theo thứ tự nghi lễ hội hoa). Bảng màu Chương 12: chiều, hồng anh đào và gỗ, tông ấm. |
 | Rủi ro & xử lý | Mái xám dễ trùng màu đường → mái ánh xanh hoặc đường sáng hơn. Cánh hoa rơi chỉ là hiệu ứng nhẹ, thưa. |
 | Chi phí | **Trung bình.** |
 
@@ -193,7 +195,7 @@ Mã màu là **giá trị gợi ý**; sẽ chỉnh khi làm mockup.
 | 5 loại đường | Thường: phố lát đá xám. Lớn: đường ven vách. Đông: phố chợ trung tâm. Gồ ghề: đường đá núi lửa. Hẻm: **lối bậc thang** (chỉ xe máy, lừa). |
 | Vật trang trí | Lừa, bàn ghế xanh trắng, chậu hoa giấy, thuyền buồm. |
 | Biểu tượng | **Nhà thờ 3 mái vòm xanh**, cối xay gió, núi lửa giữa vịnh. |
-| Gắn cơ chế | Hẻm mạnh nhất trong 10 chủ đề. |
+| Gắn cơ chế | **Chương 4 — hạn giao** (giao kịp trước khi phà rời bến). Bảng màu Chương 4: hoàng hôn cam hồng trên tường trắng, tông ấm. |
 | Rủi ro & xử lý | Trắng chói: vỉa hè trắng lẫn với nhà trắng → **mặt đường đá tối**, nhà có bóng đổ rõ, ghim viền tối. Bù lại bảng màu đơn giản nhất nên **dễ đạt mức đẹp**. |
 | Chi phí | **Thấp – trung bình.** |
 
@@ -208,7 +210,7 @@ Mã màu là **giá trị gợi ý**; sẽ chỉnh khi làm mockup.
 | 5 loại đường | Thường: **đường đã cào tuyết, hai bên là bờ tuyết** (thay vỉa hè). Lớn: đường chính có cột đèn. Đông: phố chợ Giáng sinh. Gồ ghề: **tuyết lún**. Hẻm: đường xe trượt tuyết. |
 | Vật trang trí | Tuần lộc, xe trượt, người tuyết, đèn dây, cây thông trang trí. |
 | Biểu tượng | Làng Ông già Noel trên vòng Bắc Cực, nhà thờ gỗ, lều băng. |
-| Gắn cơ chế | Hợp làm **chương sự kiện theo mùa** (cuối năm). |
+| Gắn cơ chế | **Chương sự kiện theo mùa** (cuối năm), ngoài 15 chương. |
 | Rủi ro & xử lý | Nền trắng: vỉa hè trắng biến mất, viền trắng của ghim mất → đường tối, bờ tuyết có bóng xanh, **ghim viền tối**. Chạng vạng gặp vấn đề tương phản giống ban đêm (N8). |
 | Chi phí | **Trung bình.** |
 
@@ -223,7 +225,7 @@ Mã màu là **giá trị gợi ý**; sẽ chỉnh khi làm mockup.
 | 5 loại đường | Thường: phố hồng. Lớn: đại lộ. Đông: **chợ Johari Bazaar**, mái che nhiều màu. Gồ ghề: đường đất làng. Hẻm: ngõ chợ. |
 | Vật trang trí | Xe tuk-tuk xanh vàng, xe bò, **bò nằm trên vỉa hè** (không lên đường — N9), sạp hoa vạn thọ, voi (ở cung điện). |
 | Biểu tượng | **Taj Mahal + vườn chia 4 + hồ phản chiếu** (mặt bằng cực đặc trưng); cung điện Hawa Mahal; đài thiên văn Jantar Mantar; giếng bậc thang. |
-| Gắn cơ chế | Đường đông (chợ) + hẻm. |
+| Gắn cơ chế | **Chương 15 — tổng hợp đỉnh**, Taj Mahal là kỳ quan lớn nhất game. Bảng màu Chương 15: bình minh, trắng ngà và mặt nước, tông lạnh. |
 | Rủi ro & xử lý | Rất nhiều màu → nền chỉ 2 tông hồng + trắng ngà; **màu rực chỉ ở khu chợ**. |
 | Chi phí | **Trung bình – cao.** |
 
@@ -244,23 +246,66 @@ Mã màu là **giá trị gợi ý**; sẽ chỉnh khi làm mockup.
 
 ---
 
-## 5. Gợi ý thứ tự chương
+## 5. Bố cục 15 chương (đã chốt 16/10/2026)
 
-| Chương | Chủ đề | Lý do |
+### 5.1. Tiêu chí chọn chủ đề
+
+| # | Tiêu chí | Lý do |
 |---|---|---|
-| 1 | Phố cổ Hà Nội | Gần gũi, chi phí thấp, hợp màn làm quen; có hẻm cho màn chọn xe |
-| 2 | Khu đô thị mới (giữ như hiện tại, phong cách Việt Nam ven đô) | Đang thử cơ chế xây dựng dần |
-| 3 | New York về đêm | Taxi chở khách — khớp "Trung tâm: chở khách, đổi xe" |
-| 4 | Amsterdam | Cầu kéo — khớp "Cảng: cầu đóng/mở theo giờ" |
-| 5 | Paris | Đổi không khí sau 2 chương khó; đá cuội |
-| 6 | Ai Cập | Đường cát, nóng, tương phản với Paris |
-| 7 | Kyoto | Mùa xuân, hẻm |
-| 8 | Rio | Nhiều màu, đồi dốc |
-| 9 | Santorini | Bảng màu trắng xanh, hẻm bậc thang |
-| 10 | Jaipur & Agra | Rực rỡ, Taj Mahal làm kỳ quan lớn |
-| Sự kiện | Làng tuyết Bắc Âu | Theo mùa cuối năm |
+| TĐ-1 | **Yếu tố mới của chương là thứ có thật ở nơi đó** (cầu kéo ở Amsterdam, hẻm và xe máy ở Hà Nội) | Người chơi hiểu luật mới bằng trực giác (D-15) |
+| TĐ-2 | **Vẽ được đủ mọi yếu tố đã học** ở các chương trước | Yếu tố tích lũy dần (khung độ khó mục 3.2) |
+| TĐ-3 | **Hai chương liền nhau khác rõ** về tông màu (ấm/lạnh), thời điểm trong ngày, vùng địa lý | Mỗi chương là "đến một nơi mới" |
+| TĐ-4 | **Dùng chung bộ tài nguyên** với 2–3 chương khác (mục 6.1) | Game nhẹ (PV-04), làm nhanh |
+| TĐ-5 | **Kỳ quan nhận ra được từ trên xuống** (N3), chiếm trọn ô phố (N7) | Kỳ quan là phần thưởng màn trùm |
+| TĐ-6 | **Ít rủi ro pháp lý**: tên chương hư cấu, kỳ quan cách điệu (mục 4) | CĐ-Q2 |
+| TĐ-7 | **Mỗi chủ đề một kiểu tiến triển** (xây mới, khai quật, chuẩn bị lễ hội…) | Tránh câu chuyện lặp 15 lần |
 
-Thứ tự đảm bảo **hai chương liền nhau khác nhau** về tông màu (ấm/lạnh), thời điểm (ngày/đêm) và mật độ (đông/thưa).
+### 5.2. Bảng phân bổ
+
+| Ch. | Yếu tố mới (khung độ khó) | Chủ đề | Vì sao khớp yếu tố | Tông · thời điểm | Kỳ quan (màn trùm) | Kiểu tiến triển | Bộ tài nguyên |
+|---|---|---|---|---|---|---|---|
+| 1 | Cơ bản, 1 kho | **Làng ven sông Việt Nam** | Hợp tác xã làm kho, giao các nhà trong làng; quốc lộ = đường lớn | Lạnh (xanh lá, nước) · sáng | Cây đa, đình làng, bến sông | Dựng chợ phiên | A |
+| 2 | Nhiều kho | **Khu đô thị mới ven đô** | Bãi vật liệu, kho tổng, xưởng gỗ | Ấm (pastel) · chiều | Công viên, tháp đồng hồ | Xây mới | A, B |
+| 3 | Đường đông | **New York về đêm** | Phố đông xe, taxi vàng kín làn | Lạnh · **đêm** | Tượng cầm đuốc, công viên trung tâm | Thắp sáng thành phố | B |
+| 4 | Hạn giao | **Santorini** | Giao kịp trước khi phà rời bến | Ấm · hoàng hôn | Nhà thờ ba mái vòm xanh | Chuẩn bị mùa du lịch | D |
+| 5 | Hẻm + xe máy | **Phố cổ Hà Nội** | Ngõ nhỏ, xe máy | Lạnh (sương sớm, hồ xanh rêu) · sáng sớm | Hồ Gươm, Tháp Rùa, cầu Thê Húc | Phục dựng phố nghề | A, F |
+| 6 | Gồ ghề + xe tải | **Ai Cập – sông Nile** | Đường cát; xe tải chở đá | Ấm (vàng cát) · hoàng hôn | Kim tự tháp, Nhân sư | Khai quật | E |
+| 7 | Ngõ cụt, quay đầu | **Rio de Janeiro** | Phố đồi dốc, đường cụt ra biển | Lạnh (biển xanh) · sáng | Núi đá ven biển, vỉa hè sóng | Chuẩn bị lễ hội diễu hành | D |
+| 8 | Khu cấm tải | **Paris** | Khu trung tâm cổ cấm tải; đá cuội = gồ ghề | Ấm (kem, mái kẽm) · chiều xuân | Tháp sắt (chỉ cảnh ngày), khối nhà sân trong | Trùng tu | C |
+| 9 | Cầu đóng/mở theo giờ | **Amsterdam** | Cầu kéo trên kênh | Lạnh (gạch nâu, nước xám xanh) · ngày mây | Vành đai kênh, cối xay gió | Dựng lại cầu, cối xay | C |
+| 10 | Hàng về kho theo đợt | **Thành phố cảng châu Á** (cách điệu Hồng Kông, Thượng Hải) | Tàu container cập cảng theo giờ | Ấm (bình minh cam) · bình minh | Cần cẩu cảng, cầu vượt biển | Mở rộng cảng | B |
+| 11 | Hàng tươi (hạn tính từ lúc lấy) | **Bangkok – chợ nổi** | Trái cây, hải sản giao nhanh | Lạnh (kênh xanh) · sáng sớm | Chùa mái vàng, chợ nổi | Lễ hội nước | A |
+| 12 | Đơn theo chuỗi | **Kyoto mùa hoa anh đào** | Giao theo thứ tự nghi lễ (A → B → C) | Ấm (hồng anh đào, gỗ) · chiều | Dãy cổng torii đỏ, chùa vàng bên hồ | Lễ hội hoa | F |
+| 13 | Xe đầu kéo | **Thành phố sa mạc hiện đại** (cách điệu Dubai) | Xa lộ nhiều làn, chỉ đầu kéo chở nổi | Lạnh (kính, đèn) · **đêm** | Đảo hình cây cọ | Xây thành phố tương lai | B, E |
+| 14 | Không thêm — tổng hợp | **London** | Đủ yếu tố: xe buýt đỏ trên đường đông, cầu kéo, phố cổ cấm tải, đá cuội | Ấm (gạch đỏ, đèn vàng) · chiều | Tháp đồng hồ, cầu tháp đôi | Hội chợ thành phố | C |
+| 15 | Không thêm — tổng hợp đỉnh | **Jaipur & Agra** | Chợ đông, hẻm, đường đất, sông và cầu | Lạnh (trắng ngà, mặt nước) · bình minh | **Taj Mahal + vườn chia bốn** — kỳ quan lớn nhất game | Lễ hội ánh sáng | E, F |
+| Sự kiện | — | Làng tuyết Bắc Âu | — | Chạng vạng | Làng Ông già Noel | — | — |
+
+- Tông màu **xen kẽ ấm/lạnh** suốt 15 chương. **Chỉ 2 chương ban đêm** (3 và 13), cách xa nhau (N8).
+- Giữ đủ 5 chủ đề CĐ-Q1, dùng cả 4 dự phòng, thêm Làng ven sông, Khu đô thị mới, Cảng châu Á, Bangkok, Dubai, London.
+- Tên chương hư cấu (CĐ-Q2) đặt khi làm mockup từng chương.
+
+### 5.3. Thể hiện các yếu tố đã học (TĐ-2)
+
+| Yếu tố | Học ở chương | Chủ đề khó thể hiện | Cách xử lý |
+|---|---|---|---|
+| Đường đông | 3 | — | Đổi loại xe đứng trên đường theo chủ đề (tuk-tuk, xe buýt đỏ…) |
+| Hẻm | 5 | Ai Cập, Dubai (6, 13) | Lối đi trong khu chợ cổ, phố cổ |
+| Gồ ghề | 6 | Amsterdam, Kyoto (9, 12) | Đá cuội, đường đất trong vườn |
+| Ngõ cụt | 7 | — | Rào "chưa thông xe" dùng được ở mọi chủ đề |
+| Khu cấm tải | 8 | — | Biển cấm tải dùng chung |
+| Cầu đóng/mở | 9 | Bangkok, Dubai (11, 13) | Cả hai có kênh hoặc lạch nước |
+| Hàng về theo đợt | 10 | — | Ga tàu, bến thuyền, xe hàng tùy chủ đề |
+| Đầu kéo (xa lộ) | 13 | London, Jaipur (14, 15) | Đường vành đai ven ngoài bản đồ |
+
+### 5.4. Rủi ro còn lại
+
+| Rủi ro | Chương | Cách giảm |
+|---|---|---|
+| Pháp lý: tượng Chúa Cứu Thế, công trình Dubai, đèn đêm tháp Eiffel | 7, 13, 8 | Rio dùng núi đá thay tượng; Dubai dùng đảo cách điệu; Paris chỉ cảnh ngày |
+| Ban đêm khó đọc | 3, 13 | Theo quy tắc đã kiểm chứng ở mockup New York (mục 8.2) |
+| Hai chương Việt Nam liền nhau | 1–2 | Làng thưa, xanh, buổi sáng ↔ đô thị dày, pastel, buổi chiều |
+| "Chuẩn bị lễ hội" lặp | 7, 11, 12 | Khác hình thức: diễu hành, lễ hội nước, hoa |
 
 ---
 
@@ -272,9 +317,24 @@ Thứ tự đảm bảo **hai chương liền nhau khác nhau** về tông màu 
 | Hình 3D low-poly | Mỗi chủ đề ước lượng: 8–12 mẫu nhà (dùng chung khối, đổi mái/vật liệu), 10–15 vật trang trí, 1–2 kỳ quan, 1 bộ mặt đất + 5 chất liệu đường, 1 thiết lập ánh sáng. |
 | Không đổi | Mạng đường, ký hiệu, biển báo, ghim, giao diện điều khiển, mini map (N1). |
 
+### 6.1. Bộ tài nguyên dùng chung (TĐ-4)
+
+Mỗi chương = **một hoặc hai bộ dùng chung** + bảng màu riêng + kỳ quan + các công trình riêng của chương. Không làm 15 bộ riêng.
+
+| Bộ | Gồm | Dùng cho chương |
+|---|---|---|
+| **A. Đông Nam Á** | Nhà ống, mái ngói, chợ, cây nhiệt đới, sông kênh | 1, 2, 5, 11 |
+| **B. Đô thị hiện đại** | Nhà cao tầng, kính, xa lộ, cần cẩu | 2, 3, 10, 13 |
+| **C. Châu Âu cổ** | Nhà gạch/đá, đá cuội, kênh, cầu | 8, 9, 14 |
+| **D. Địa Trung Hải / đồi biển** | Nhà trắng, bậc thang, vách, biển | 4, 7 |
+| **E. Sa mạc** | Cát, nhà đất, cây cọ | 6, 13, 15 |
+| **F. Châu Á cổ** | Chùa, mái cong, vườn, hồ | 5, 12, 15 |
+
+**Thứ tự làm:** A, B (Chương 1–3) → D (Chương 4) → E (Chương 6) → C, F (từ Chương 8). Cách đóng gói (cài sẵn hay tải chương khi mở tới) chưa chốt.
+
 ---
 
-## 7. Quyết định đã chốt (14/10/2026)
+## 7. Quyết định đã chốt (14/10 và 16/10/2026)
 
 | ID | Quyết định |
 |---|---|
@@ -285,12 +345,21 @@ Thứ tự đảm bảo **hai chương liền nhau khác nhau** về tông màu 
 | CĐ-Q5 | Kỳ quan **lộ dần** qua các màn của chương |
 | CĐ-Q6 | Mockup trước: **New York về đêm, Ai Cập, Santorini** |
 
+**Bổ sung 16/10/2026** (D-66):
+
+| ID | Quyết định |
+|---|---|
+| CĐ-Q7 | **15 chủ đề cho 15 chương** theo bảng mục 5.2; chủ đề đi theo yếu tố mới của chương. Hà Nội chuyển từ Chương 1 sang **Chương 5** |
+| CĐ-Q8 | Làm hình theo **bộ tài nguyên dùng chung** (mục 6.1) |
+| CĐ-Q9 | **Mọi chương, kể cả Chương 1, xây dựng dần** (thay HA-Q5) |
+| CĐ-Q10 | **Không dùng khung nhịp cố định** cho 10 màn; nhịp hình ảnh thiết kế theo cảnh quan thực tế của từng chủ đề (mục 9.1) |
+
 ### 7.1. Hệ quả cần lưu ý
 
 | # | Nội dung | Tình trạng |
 |---|---|---|
-| H1 | Amsterdam không được chọn → cơ chế **cầu đóng/mở theo giờ** (chương "Cảng" đang ghi "Sắp có") chưa có chủ đề khớp tự nhiên. Có thể gắn với cầu qua sông ở chủ đề Ai Cập, hoặc giữ chương Cảng riêng | Chờ BA |
-| H2 | Thứ tự chương mục 5 cần sắp lại theo 5 chủ đề đã chọn | Chờ BA |
+| H1 | Cầu đóng/mở theo giờ chưa có chủ đề khớp | **Đã xử lý** — Amsterdam, Chương 9 (CĐ-Q7) |
+| H2 | Thứ tự chương cần sắp lại | **Đã xử lý** — mục 5.2 (CĐ-Q7) |
 
 ---
 
@@ -304,6 +373,8 @@ Thứ tự đảm bảo **hai chương liền nhau khác nhau** về tông màu 
 | Tên chương (đề xuất, chờ BA duyệt) | **Thành phố Không Ngủ** (New York về đêm) · **Ốc đảo Sông Vàng** (Ai Cập) · **Đảo Mây Trắng** (Santorini) |
 
 ### 8.1. Kỳ quan lộ dần (CĐ-Q5) — mỗi màn thắng lộ thêm một phần
+
+> Mockup làm khi chương còn 5 màn. Nay mỗi chương 10 màn, nhịp lộ dần thiết kế lại theo từng chủ đề (CĐ-Q10).
 
 | Chủ đề | Màn 1 → 5 |
 |---|---|
@@ -333,16 +404,20 @@ Thứ tự đảm bảo **hai chương liền nhau khác nhau** về tông màu 
 
 ## 9. Chuẩn bắt buộc cho chương xây dựng dần (HA-Q4)
 
-BA chốt ngày 15/10/2026: mọi chương mới làm theo mô hình Chương 2 phải qua danh sách dưới đây trước khi duyệt. Nguồn: mục 5 của [Danh_Gia_Hinh_Anh_Tien_Trien_Man.md](Danh_Gia_Hinh_Anh_Tien_Trien_Man.md) (các mã P1–P10 là vấn đề đã gặp ở Chương 2). Chương 1 giữ nguyên, không áp dụng (HA-Q5).
+BA chốt ngày 15/10/2026: mọi chương xây dựng dần phải qua danh sách dưới đây trước khi duyệt. Nguồn: mục 5 của [Danh_Gia_Hinh_Anh_Tien_Trien_Man.md](Danh_Gia_Hinh_Anh_Tien_Trien_Man.md) (các mã P1–P10 là vấn đề đã gặp ở Chương 2 demo). Từ 16/10/2026 **áp dụng cho cả 15 chương, kể cả Chương 1** (CĐ-Q9 — thay HA-Q5).
 
-### 9.1. Khung một chương
+### 9.1. Khung một chương (10 màn)
 
-| Màn | Vai trò hình ảnh | Bắt buộc có |
+**Không có khung nhịp cố định** (CĐ-Q10): công trình nào xây ở màn nào, vùng nào mở ở màn nào do cảnh quan thực tế của chủ đề quyết định. Chỉ bắt buộc các điểm sau:
+
+| # | Bắt buộc | Liên quan |
 |---|---|---|
-| Màn 1 | Giới thiệu bối cảnh mới, khu nhỏ giữa vùng chưa khám phá | Bảng màu và nền khác hẳn chương trước; lô "Sắp xây" thấy được từ điểm xuất phát hoặc trong đoạn mở màn |
-| Màn 2–3 | Mở rộng đều | Mỗi màn mở **một vùng mới** và hoàn thành **một công trình**; điểm nhấn mới nằm trên tuyến đường bắt buộc |
-| Màn 4 | Khu đặc trưng | Một địa danh có quy mô lớn hơn các màn trước |
-| Màn cuối | Cao trào | Địa danh lớn nhất chương, có cảnh kết toàn cảnh, có "bưu thiếp" lưu ở Trang chủ (Chương 2: D-62) |
+| NC-01 | **Màn 1:** bối cảnh mới, bảng màu và nền khác hẳn chương trước; vùng xuất phát đã chứa các yếu tố của chương trước để ôn | Khung độ khó CT-02 |
+| NC-02 | **Mỗi màn có thay đổi thấy được** (K1): công trình, vùng mới, cụm nhà mọc, thông tuyến… | K1 |
+| NC-03 | **Màn 3 (màn có yếu tố mới):** vùng mở ở màn này chứa yếu tố mới; yếu tố mới **không xuất hiện** trong vùng chơi của màn 1–2 | Khung độ khó CT-02 |
+| NC-04 | **Màn 10 (trùm):** kỳ quan hoàn chỉnh, cảnh kết toàn cảnh, bưu thiếp ở Trang chủ | D-62, khung độ khó CM-04 |
+| NC-05 | Số công trình lớn mỗi chương **tùy chủ đề**, cân nhắc dung lượng (PV-04) — ưu tiên dùng lại khối của bộ tài nguyên | Mục 6.1 |
+| NC-06 | Được phép đóng/mở đoạn đường bằng rào "chưa thông xe" từng màn để đạt chuẩn độ khó, miễn đúng câu chuyện tiến triển | Khung độ khó mục 9 |
 
 ### 9.2. Danh sách kiểm tra cho mỗi màn
 
@@ -352,7 +427,7 @@ BA chốt ngày 15/10/2026: mọi chương mới làm theo mô hình Chương 2 
 | K2 | Có **đoạn mở màn** đưa camera qua điểm mới, hoặc điểm xuất phát gần điểm mới | P1 | D-55 |
 | K3 | Công trình đang xây / đã xây **không nằm sát mép trên hoặc phải** (dưới mini map, đồng hồ, cụm mũi tên); nếu buộc phải đặt ở mép thì camera có lề hoặc giao diện tự mờ | P6 | D-57 |
 | K4 | Công trình đã xây có **hình khối riêng**, lớn khoảng 1,5 lần nhà thường, nhận ra được khi chưa đọc nhãn | P3 | D-59 |
-| K5 | Công trình đã xây nằm **trong khu đô thị**, không đứng giữa ruộng | P5 | D-56 |
+| K5 | Công trình đã xây nằm **trong khu dân cư** (phố, hoặc xóm làng ở Chương 1), không đứng trơ trọi giữa ruộng, bãi trống | P5 | D-56 |
 | K6 | Cảnh quay: công trình **hiện trọn, không bị che ≥ 2 giây**; hộp thoại không đè; camera không lộ quá 15% vùng ngoài bản đồ | P2 | D-54 |
 | K7 | Mỗi màn có **câu thông xe / thông báo riêng**, và câu đó **có hình đi kèm** | P4 | D-54, D-56 |
 | K8 | Nhà phát triển mọc **thành cụm, có hiệu ứng mọc**, không rải ngẫu nhiên | P7 | D-60 |
@@ -366,3 +441,13 @@ BA chốt ngày 15/10/2026: mọi chương mới làm theo mô hình Chương 2 
 3. **Che khuất:** ở 844×390 và 667×375, công trình, điểm giao và xe không nằm dưới giao diện khi xe đang lái qua.
 4. **Gameplay không đổi:** chạy lại các tuyến autopilot, thời gian lệch không quá 1 giây.
 5. **Hiệu năng:** FPS giảm không quá 10% trên máy cấu hình thấp, kể cả lúc có cảnh quay.
+
+---
+
+## 10. Lịch sử
+
+| Ngày | Phiên bản | Nội dung |
+|---|---|---|
+| 14/10/2026 | 0.1 → 0.3 | 10 chủ đề, nguyên tắc N1–N9, chốt CĐ-Q1 → Q6, mockup vòng 1 |
+| 15/10/2026 | 0.4 | Mục 9: chuẩn bắt buộc cho chương xây dựng dần (HA-Q4) |
+| 16/10/2026 | 0.5 | Bố cục 15 chủ đề theo yếu tố mới (CĐ-Q7), bộ tài nguyên dùng chung (CĐ-Q8), mọi chương xây dựng dần (CĐ-Q9), bỏ khung nhịp cố định (CĐ-Q10); cập nhật "Gắn cơ chế" ở mục 3 |

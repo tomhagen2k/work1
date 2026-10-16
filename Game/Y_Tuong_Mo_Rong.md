@@ -80,7 +80,7 @@
 |---|---|
 | Người đề xuất | BA |
 | Ngày ghi nhận | 14/10/2026 |
-| Trạng thái | BA đã chọn 5 chủ đề, dùng tên hư cấu, kỳ quan lộ dần (14/10/2026); đang làm mockup New York về đêm, Ai Cập, Santorini. Chi tiết: [Chu_De_Khung_Canh.md](Chu_De_Khung_Canh.md) |
+| Trạng thái | **Đã chốt (16/10/2026, D-66):** 15 chủ đề cho 15 chương theo yếu tố mới của chương, bộ tài nguyên dùng chung, mọi chương xây dựng dần. Chi tiết: [Chu_De_Khung_Canh.md](Chu_De_Khung_Canh.md) bản 0.5 |
 
 ### Mô tả (theo BA)
 - Mỗi chương dùng khung cảnh của một vùng khác nhau (vd New York ban đêm sáng đèn, Brazil với kỳ quan thế giới, đường phố sa mạc…).
