@@ -12,6 +12,23 @@ Tóm tắt: Chương 1 mới "Làng ven sông" — 10 màn theo khung độ khó
 Tài liệu yêu cầu: (ghi khi chốt)
 
 ### Thêm
+- **Khung game đợt 1** ([Cau_Truc_Giao_Dien.md](Cau_Truc_Giao_Dien.md), GD-01 → GD-13), tên game **Little Routes / Cung Đường Nhỏ**, logo phương án D:
+  - **Khởi động**: logo, tên, thanh tải, mẹo chơi ngẫu nhiên, câu miễn trừ nội dung hư cấu.
+  - **Lần đầu**: chọn ngôn ngữ (gợi ý theo máy) → Đồng ý điều khoản (mở được Điều khoản, Quyền riêng tư) → Lưu tiến trình (Liên kết Google Play Games / Game Center — **mô phỏng**; có "Để sau", TK-01 → TK-04).
+  - **Trang chủ** (bản vẽ ④): hồ sơ (tên, tổng sao), ví, Hộp thư / Cửa hàng / Cài đặt; cột trái Điểm danh · Nhiệm vụ · Thành tựu và cột phải Garage · Sự kiện hiện nhãn "Sắp có" (đợt 2); nút **Chương** mở bản đồ chương; nền là khung cảnh chương đang chơi; thẻ chương (sao, 10 màn); nút **CHƠI** vào thẳng màn chưa qua đầu tiên.
+  - **Cài đặt** (từ Trang chủ, Bản đồ chương, popup tạm dừng): Chung (ngôn ngữ, rung, chất lượng hình, nhắc điểm danh, bật lại hướng dẫn Màn 1) · Âm thanh · Dữ liệu & mua hàng (tài khoản, sao lưu, khôi phục mua hàng, mã người chơi, xóa dữ liệu bấm 2 lần) · Hỗ trợ & pháp lý (câu hỏi thường gặp, email phản hồi, 3 văn bản pháp lý, giấy phép, giới thiệu).
+  - **Trang chính sách**: nhúng sẵn bản nháp Việt/Anh từ `phap_ly/` (đọc được khi offline) — sửa ở `phap_ly/` rồi chép lại.
+  - **Quảng cáo mô phỏng sau mỗi 5 lượt** (GD-06, GD-09): đếm lượt có kết quả (thắng/thua), không tính thoát giữa màn và màn thưởng; hiện khi rời màn kết quả / cảnh công trình của lượt thứ 5, đóng sau 5 giây rồi làm tiếp việc vừa bấm; bộ đếm lưu trên máy. **Gói Bỏ quảng cáo** (49.000đ, mô phỏng) ở Cửa hàng mục Ưu đãi.
+  - **Ngôn ngữ Việt/Anh** cho các màn đợt 1.
+- **Garage — bộ sưu tập ngoại hình xe** (phương án B, GA-Q1 → GA-Q7; đề xuất và hình từng ngoại hình: [mockups/garage_de_xuat.html](mockups/garage_de_xuat.html)):
+  - 19 ngoại hình: Van 7 · Xe máy 6 · Xe tải 6. Nguồn: có sẵn (3), thưởng chương khi thắng màn 10 (4), mua 300/400/500 💎 (7), mua tiền 49.000đ — khôi phục được (1: Vespa Bạc Hà), sự kiện theo mùa — không bán bằng tiền, quay lại năm sau (4).
+  - Màn Garage: tab loại xe (đếm đã có), lưới thẻ viền theo độ hiếm (đang dùng ✓, khóa, giá, nhãn MỚI), thanh sưu tập, khung xem trước xe chạy trên đường, "Xem trong màn chơi" (kích thước thật kèm nhãn sức chứa), nút Dùng / Mua 💎 (bấm 2 lần để xác nhận) / Mua tiền (hộp thanh toán mô phỏng).
+  - Ngoại hình đang dùng hiện ở xe trong màn chơi, màn chuẩn bị, cảnh công trình (G5, G7); ô Garage ở Trang chủ mở được, có nhãn MỚI khi có ngoại hình chưa xem; cảnh kết chương báo ngoại hình thưởng; "Khôi phục mua hàng" tính cả ngoại hình mua bằng tiền.
+  - Vị trí code: `SKIN` (dữ liệu + bộ vẽ, đầu script), `SKS` (lưu `lr_skins`: own, paid, eq, seen), `skOwned`, `eqSkin`, `drawVehicle` (vẽ theo ngoại hình); khối `/* Garage */` trước Khung hình (`openGarage`, `renderGarage`, `gStage`); lớp phủ `#garv`.
+- **Tiếng Anh cho toàn bộ phần chơi** (K1): màn chuẩn bị, luật chơi lần đầu, hướng dẫn Màn 1, bảng hỏi, popup Nhiệm vụ và Hướng dẫn (6 tab, kể cả hình minh họa), bản đồ lớn, hết giờ, kết quả, cảnh công trình, bưu thiếp, bản đồ chương, cửa hàng, nhãn nút và aria-label. Nội dung dữ liệu (tên và lời giới thiệu 22 màn, địa danh, tên công trình, câu thông báo, chương, xe, loại đường, tên cơ chế) có bản tiếng Anh; đổi ngôn ngữ trong Cài đặt là áp dụng ngay, đổi qua lại không mất bản tiếng Việt gốc. Giá hiển thị "20,000 VND" khi chọn tiếng Anh (bản thật do cửa hàng ứng dụng quy đổi theo quốc gia).
+  - Vị trí code: `LANG`, `TT(vi,en)`, `NUM`, `PCL` đặt ngay sau `LS` (đầu script, vì phần chơi dựng chữ khi tải); `applyStatic()` (chữ cố định trong HTML), `EN_DATA` + `applyData()` (dữ liệu nội dung, giữ bản gốc trong `VI0`) trong khối Khung game đợt 1, gọi từ `applyLang()`; `MECH_EN`, `MN()`, `MECHTXT_EN`, `ROADDESC_EN`; `ILL` đổi thành hàm `ILL_()`; `HSEC()` viết lại với hàm dòng `hr()`.
+  - Bản đồ chương: tên game thành nút **← Trang chủ**; nút âm thanh chuyển vào Cài đặt; thêm ⚙. Nút Trang chủ ở kết quả / tạm dừng / chuẩn bị về **đúng nơi đã mở màn** (Trang chủ hoặc Bản đồ chương — N1). Mở thẳng màn qua địa chỉ (`#lv=`, `#ch=`) bỏ qua màn khởi động như cũ.
+  - Vị trí code: khối `/* Khung game đợt 1 */` cuối thẻ script (`I18N`, `boot`, `showMain`, `renderSettings`, `openPolicy`, `adTick`, `showAd`); lớp phủ `#splash #langv #consv #linkv #mainv #setv #polv #adv`; `goHome` (đổi), `openChapters` (tên cũ của goHome), `end` (gọi `adTick`).
 - **Chương 1 · Làng ven sông** (10 màn, thay Chương 1 demo cũ "Khu phố nhỏ"): 1 kho (Hợp tác xã), xe van; yếu tố mới ở màn 1 (điều khiển), 3 (nhiều điểm giao), 5 (chia chuyến), 8 (đường lớn — đường đê); màn 10 là màn trùm. T0 theo CT-05 từ thời gian đo bằng autopilot. Thiết kế + số đo: `level_design/Thiet_Ke_Chuong_1.md` (D-63 → D-67).
 - **Khung cảnh Làng ven sông** (bộ tài nguyên A): ruộng lúa chia ô có bờ, lũy tre viền xóm, nhà ba gian có sân gạch, sông và đường đê, trâu, đống rơm; vườn rau là chỗ nhà mới sẽ mọc (D-66).
 - **10 công trình của làng** (mỗi màn thắng một công trình, câu thông báo riêng): lều chợ, giếng làng, trường làng, cụm nhà Xóm Đông, trạm y tế, ao cá, đình làng, bến đò, nhà văn hóa, chợ phiên dưới gốc đa (Chợ phiên xây 2 giai đoạn: màn 1 và màn 10). Cảnh kết chương và bưu thiếp dùng lại cơ chế Chương 2.
@@ -27,6 +44,8 @@ Tài liệu yêu cầu: (ghi khi chốt)
 - **Đặt trước lệnh Quay đầu khi đang dừng ở điểm** (D-69, QD-01): đang giao hàng, đang mở bảng hỏi hoặc đang lấy hàng thì bấm Quay đầu (hoặc phím U) để xe quay đầu ngay khi rời điểm. Nút Quay đầu sáng vàng như nút hướng đã chọn, trên xe có mũi tên chữ U; bấm lại để hủy; bấm một hướng thì lệnh quay đầu bị hủy (chỉ giữ một lệnh).
 
 ### Thay đổi
+- **Cửa hàng không còn tràn khung**: "Vật phẩm" và "Ưu đãi" xếp thành 2 cột, thẻ gói kim cương gọn hơn, mô tả ngắn hơn; phần thân cuộn được nếu vẫn dài (`#sBody`, `.shcols`, `renderShop`).
+- Sửa chữ: kết thúc màn thưởng Chương 2 không còn ghi "phiên chợ kết thúc" (đổi thành "màn thưởng kết thúc"); câu cuối chương nói bưu thiếp lưu ở **Bản đồ chương** (không phải Trang chủ).
 - **Engine đọc cấu hình chương** (`addChapter`, biến `CC`): bản đồ chung, vùng theo màn, công trình, câu thông báo, tiêu đề kết chương và bộ vẽ cảnh nằm trong cấu hình (`CH1`, `CH2`). Màn có `cc` là màn của chương xây dựng dần (thay `chapter===2`). Thêm chương mới = thêm cấu hình + bộ vẽ cảnh.
 - Chương 2 (khu đô thị) giữ nguyên nội dung, ghi là **bản thử nghiệm**; nay là màn 11–15. Autopilot Chương 2 giữ nguyên thời gian (24.6 / 49.4 / 55.3 / 96.6 / 128.8 / 116.7).
 - Danh sách chương "Sắp có" theo bố cục 15 chương (D-66): Chương 3 · Thành phố Không Ngủ (đường đông), Chương 4 · Đảo Mây Trắng (hạn giao) — thay "Trung tâm: chở khách, đổi xe" và "Cảng" (DK-Q7).
@@ -47,6 +66,9 @@ Tài liệu yêu cầu: (ghi khi chốt)
 - Màn thưởng: `CH1.bonus`, `addBonus`, `CH1_BONUS` (màn 16 trong danh sách), `getBonus`, `bonusOpen`, `gemSprite`, `gemCollect`, `bonusEnd`, `GEMG`, `mmGem`; nhánh `LV.bonus` trong `step`, `reset`, `renderMissions`, `buildMarks`, `renderPrep`, `introKeys`, `HSEC`, `restart`, `drawHomeMap` (nút + thẻ màn thưởng).
 - Luật chơi lần đầu: `#rulev`, `#pcCatch`, `#pcRing`, `#pcTip` (HTML + CSS), `rulesStart` (gọi từ `openLevel`), `rulesEnd` (gọi từ `startGame`), `pcSteps`, `pcShow`, `pcNext`, khóa `demo_rules_done`; tab `rule` trong `HSEC`.
 - Quay đầu đặt trước: `G.car.uq`, `cUturn`, `doUturn`, `leaveZone` (gọi từ `zoneProcess`, `askSkip`), nhánh `c.uq` trong `render()` (mũi tên chữ U, lớp `sel` của `#bUturn`), phím U trong bảng hỏi.
+
+### Sửa
+- **Danh sách màn không hiện màn đã qua khi trình duyệt chặn bộ nhớ** (mở file trực tiếp, chế độ riêng tư, khung xem trước): lưu kết quả thất bại âm thầm nên trang chủ không có ✓/sao. Thêm bộ nhớ dự phòng `LS` — vẫn lưu vào trình duyệt khi được, nếu bị chặn thì ghi nhớ trong phiên đang chơi. Vị trí code: đầu thẻ `<script>` (`const LS`), mọi chỗ đọc/ghi tiến trình dùng `LS.get` / `LS.set`.
 
 ## v1.3 · chốt 15/10/2026
 

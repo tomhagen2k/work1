@@ -3,7 +3,7 @@
   "configurations": [
     {
       "name": "game-demo",
-      "runtimeExecutable": "python",
+      "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8765", "--directory", "Game"],
       "port": 8765
     }
