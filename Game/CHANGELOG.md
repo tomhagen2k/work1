@@ -44,6 +44,12 @@ Tài liệu yêu cầu: (ghi khi chốt)
 - **Đặt trước lệnh Quay đầu khi đang dừng ở điểm** (D-69, QD-01): đang giao hàng, đang mở bảng hỏi hoặc đang lấy hàng thì bấm Quay đầu (hoặc phím U) để xe quay đầu ngay khi rời điểm. Nút Quay đầu sáng vàng như nút hướng đã chọn, trên xe có mũi tên chữ U; bấm lại để hủy; bấm một hướng thì lệnh quay đầu bị hủy (chỉ giữ một lệnh).
 
 ### Thay đổi
+- **Logo mới và bộ ngoại hình xe mới** (D-78; nguồn `logo&skin/`):
+  - Logo "hai ô đảo kho → nhà nối bằng con đường vàng" (`logo/little_routes_icon_120.svg`) ở màn khởi động, màn chọn ngôn ngữ; thêm biểu tượng tab trình duyệt. Bản 1024 (iOS), 512 (Android), nền trong suốt để dùng khi đóng gói ứng dụng.
+  - Bỏ 16 ngoại hình cũ (v1–v7, m1–m7, t1–t5), giữ 3 ngoại hình mặc định (Van Trắng, Xe Máy Đỏ, Xe Tải Xanh). Thêm 28 ngoại hình từ `vehicle_skin_studio.html`: Van 9, Xe máy 9, Xe tải 10 — có chuyển động (chuông lắc, đèn chớp, bánh răng quay…), thu về đúng cỡ xe trong game; giá theo tệp (390–680 💎; Xe Tải Két Vàng 99.000đ, khôi phục được); độ hiếm Hiếm / Sử thi / Huyền thoại hiện ở viền thẻ và nhãn Garage; tên + mô tả Việt/Anh.
+  - Dữ liệu cũ: ngoại hình đã bỏ được gỡ khỏi bộ nhớ, **hoàn lại 💎** đã mua (một lần), xe đang dùng ngoại hình cũ về mặc định.
+  - Garage: mô tả dài cuộn trong khung, nút Mua luôn hiện; tên ngoại hình 17 px.
+  - Vị trí code: `SKNEW` (dữ liệu sinh tự động, ngay trước `SKIN`), `SKIN.S` (3 mặc định + `SKNEW`), khối chuyển dữ liệu sau `saveSk`, hoàn 💎 sau `saveW`; Garage `RRC`, `RRT`, `RARX`; `LOGO()`; `<link rel="icon">`.
 - **Khung cảnh Chương 2 dùng ảnh theo thiết kế mới** (D-77, cùng cách Chương 1; thiết kế `design_moi/chuong_2/`, báo cáo `design_moi/kiem_thu_chuong_2/BAO_CAO_KIEM_THU.md`): 11 ảnh khổ 3500×1750 (0,50–0,59 MB/màn), ghim kiểu B, cảnh quay, trang chủ, bưu thiếp, cảnh kết chương. Logic 22 màn không đổi. `#canh=cu` mở lại `drawUrban`. Vị trí code: `CH2.draw` → `imgDraw(2,o)||drawUrban(o)`; ảnh `demo/canh/c2_*.webp`, khổ trong `canh/manifest.js` (`node tools/xuat_anh_canh.mjs 2 demo/canh`).
 - **Khung cảnh Chương 1 dùng ảnh theo thiết kế mới** (D-77; thiết kế ở `design_moi/chuong_1/`, báo cáo kiểm thử `design_moi/kiem_thu_chuong_1/BAO_CAO_KIEM_THU.md`):
   - Mỗi màn (10 màn chính + màn thưởng) là 1 ảnh WebP nét ×2 xuất từ `khung_canh_moi.svg` (khổ 3150×1750, lề trái/phải 600 px, trên/dưới 250 px — GH-Q2), khoảng 0,5 MB/màn. Ngoài mép ảnh soi gương ra 4 phía (dự phòng khung nhìn quá dẹt).
