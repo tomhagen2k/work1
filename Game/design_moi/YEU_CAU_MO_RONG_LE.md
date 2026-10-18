@@ -42,7 +42,7 @@ Cập nhật luôn thuộc tính `width` và `height` của thẻ `<svg>` theo k
 BA chép đè các tệp vào `Game/design_moi/chuong_X/man_YY/`, rồi nhờ Claude chạy:
 
 ```bash
-node tools/xuat_anh_canh.mjs 1 design_moi/thu_nghiem_anh/anh
+node tools/xuat_anh_canh.mjs 1 demo/canh
 ```
 
 Công cụ này đọc khổ mới từ từng SVG, nên **không phải sửa code game**.

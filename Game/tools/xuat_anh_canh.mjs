@@ -1,5 +1,5 @@
 // Xuất ảnh khung cảnh từng màn từ thiết kế (design_moi/chuong_N/man_XX/khung_canh_moi.svg) → WebP nét ×2 + manifest khổ ảnh.
-// Dùng: node tools/xuat_anh_canh.mjs <chương> <thư mục ra>    ví dụ: node tools/xuat_anh_canh.mjs 1 design_moi/thu_nghiem_anh/anh
+// Dùng: node tools/xuat_anh_canh.mjs <chương> <thư mục ra>    ví dụ: node tools/xuat_anh_canh.mjs 1 demo/canh
 // Khổ ảnh (viewBox: x, y, rộng, cao — toạ độ bản đồ chơi giữ gốc 0,0) đọc từ từng SVG, ghi vào <thư mục ra>/manifest.js để game đặt ảnh đúng chỗ,
 // nên thiết kế có thể đổi bề rộng lề (vd lề trái/phải 600 px — GH-Q2) mà không phải sửa code. Cần Google Chrome.
 import { spawn } from 'node:child_process';

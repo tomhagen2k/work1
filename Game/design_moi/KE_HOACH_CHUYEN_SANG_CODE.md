@@ -3,7 +3,7 @@
 | Mục | Nội dung |
 |---|---|
 | Ngày | 18/10/2026 |
-| Trạng thái | **Chờ BA chốt KH-Q1 → KH-Q6** (mục 6), sau đó mới bắt đầu làm |
+| Trạng thái | **Đã thay thế** — BA chọn dùng ảnh (D-77, 18/10/2026). Kế hoạch này (vẽ bằng code) chỉ còn để tham khảo; bản thử và `tools/chuyen_design.py` đã xóa (còn trong lịch sử git, commit d241528) |
 | Nguồn thiết kế | `design_moi/chuong_1/` và `chuong_2/`: mỗi chương 11 màn (man_01 → man_10, man_thuong), mỗi màn có `khung_canh_moi.svg/.png` (không ghim) và `khung_canh_moi_co_ghim.svg/.png` |
 | Phạm vi | **Chỉ thay phần hình ảnh khung cảnh** của Chương 1 và 2 trong `demo/index.html`. **Không đổi logic màn**: nút, đoạn đường, loại đường, đoạn chưa thông, kho và điểm giao, nhiệm vụ, thời gian, vị trí xuất phát, sao, kim cương |
 
