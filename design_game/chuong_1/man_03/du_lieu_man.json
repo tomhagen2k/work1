@@ -1,0 +1,807 @@
+{
+ "level": 3,
+ "chapter": 1,
+ "level_in_chapter": 3,
+ "name_vi": "Trường làng",
+ "name_en": "Village School",
+ "intro_vi": "Ba nơi cần hàng — giao nơi nào trước cho nhanh?",
+ "intro_en": "Three places need goods — which one first?",
+ "time_limit_s": 55,
+ "vehicles": [
+  "van"
+ ],
+ "map_px": [
+  1950,
+  1250
+ ],
+ "grid_cols_rows": [
+  6,
+  4
+ ],
+ "node_spacing_px": 350,
+ "open_region_max_col_row": [
+  4,
+  2
+ ],
+ "nodes": {
+  "c0r0": [
+   100,
+   100
+  ],
+  "c0r1": [
+   100,
+   450
+  ],
+  "c0r2": [
+   100,
+   800
+  ],
+  "c0r3": [
+   100,
+   1150
+  ],
+  "c1r0": [
+   450,
+   100
+  ],
+  "c1r1": [
+   450,
+   450
+  ],
+  "c1r2": [
+   450,
+   800
+  ],
+  "c1r3": [
+   450,
+   1150
+  ],
+  "c2r0": [
+   800,
+   100
+  ],
+  "c2r1": [
+   800,
+   450
+  ],
+  "c2r2": [
+   800,
+   800
+  ],
+  "c2r3": [
+   800,
+   1150
+  ],
+  "c3r0": [
+   1150,
+   100
+  ],
+  "c3r1": [
+   1150,
+   450
+  ],
+  "c3r2": [
+   1150,
+   800
+  ],
+  "c3r3": [
+   1150,
+   1150
+  ],
+  "c4r0": [
+   1500,
+   100
+  ],
+  "c4r1": [
+   1500,
+   450
+  ],
+  "c4r2": [
+   1500,
+   800
+  ],
+  "c4r3": [
+   1500,
+   1150
+  ],
+  "c5r0": [
+   1850,
+   100
+  ],
+  "c5r1": [
+   1850,
+   450
+  ],
+  "c5r2": [
+   1850,
+   800
+  ],
+  "c5r3": [
+   1850,
+   1150
+  ]
+ },
+ "start": {
+  "road": [
+   "c0r1",
+   "c1r1"
+  ],
+  "fraction": 0.11428571428571428
+ },
+ "construction_site": {
+  "id": "TruongLang",
+  "name_vi": "Trường làng",
+  "name_en": "Village School"
+ },
+ "buildings_already_built": [
+  {
+   "id": "ChoPhien",
+   "name_vi": "Lều chợ"
+  },
+  {
+   "id": "GiengLang",
+   "name_vi": "Giếng làng"
+  }
+ ],
+ "points": [
+  {
+   "id": "HTX",
+   "name_vi": "Hợp tác xã",
+   "name_en": "Co-op",
+   "role": "kho — lấy hàng (ô vuông ▲)",
+   "pin_color": "#1c7ed6",
+   "on_road": [
+    "c1r1",
+    "c2r1"
+   ],
+   "stop_xy": [
+    625,
+    450
+   ],
+   "stop_zone_len_px": 180,
+   "building": {
+    "x": 567,
+    "y": 490,
+    "w": 116,
+    "h": 58,
+    "pin_xy": [
+     625,
+     522
+    ]
+   }
+  },
+  {
+   "id": "ChoPhien",
+   "name_vi": "Chợ phiên",
+   "name_en": "Market Square",
+   "role": "điểm giao — giao hàng (hình tròn ▼)",
+   "pin_color": "#e64980",
+   "on_road": [
+    "c2r0",
+    "c3r0"
+   ],
+   "stop_xy": [
+    975,
+    100
+   ],
+   "stop_zone_len_px": 180,
+   "building": {
+    "x": 900,
+    "y": 8,
+    "w": 150,
+    "h": 60,
+    "pin_xy": [
+     975,
+     50
+    ]
+   }
+  },
+  {
+   "id": "XomTren",
+   "name_vi": "Xóm Trên",
+   "name_en": "Upper Hamlet",
+   "role": "điểm giao — giao hàng (hình tròn ▼)",
+   "pin_color": "#7048e8",
+   "on_road": [
+    "c0r0",
+    "c1r0"
+   ],
+   "stop_xy": [
+    275,
+    100
+   ],
+   "stop_zone_len_px": 180,
+   "building": {
+    "x": 217,
+    "y": 12,
+    "w": 116,
+    "h": 54,
+    "pin_xy": [
+     275,
+     52
+    ]
+   }
+  },
+  {
+   "id": "TruongLang",
+   "name_vi": "Trường làng",
+   "name_en": "Village School",
+   "role": "điểm giao — giao hàng (hình tròn ▼)",
+   "pin_color": "#f76707",
+   "on_road": [
+    "c4r0",
+    "c4r1"
+   ],
+   "stop_xy": [
+    1500,
+    275
+   ],
+   "stop_zone_len_px": 180,
+   "building": {
+    "x": 1538,
+    "y": 215,
+    "w": 124,
+    "h": 120,
+    "pin_xy": [
+     1600,
+     281
+    ]
+   }
+  }
+ ],
+ "missions": [
+  {
+   "from": "HTX",
+   "to": "ChoPhien",
+   "qty": 1,
+   "deadline_s": null
+  },
+  {
+   "from": "HTX",
+   "to": "XomTren",
+   "qty": 1,
+   "deadline_s": null
+  },
+  {
+   "from": "HTX",
+   "to": "TruongLang",
+   "qty": 1,
+   "deadline_s": null
+  }
+ ],
+ "gems_count": 0,
+ "edges": [
+  {
+   "a": "c0r0",
+   "b": "c1r0",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    100,
+    100
+   ],
+   "to_xy": [
+    450,
+    100
+   ]
+  },
+  {
+   "a": "c1r0",
+   "b": "c2r0",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    450,
+    100
+   ],
+   "to_xy": [
+    800,
+    100
+   ]
+  },
+  {
+   "a": "c2r0",
+   "b": "c3r0",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    800,
+    100
+   ],
+   "to_xy": [
+    1150,
+    100
+   ]
+  },
+  {
+   "a": "c3r0",
+   "b": "c4r0",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1150,
+    100
+   ],
+   "to_xy": [
+    1500,
+    100
+   ]
+  },
+  {
+   "a": "c4r0",
+   "b": "c5r0",
+   "type": "lon",
+   "open": false,
+   "from_xy": [
+    1500,
+    100
+   ],
+   "to_xy": [
+    1850,
+    100
+   ]
+  },
+  {
+   "a": "c0r1",
+   "b": "c1r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    100,
+    450
+   ],
+   "to_xy": [
+    450,
+    450
+   ]
+  },
+  {
+   "a": "c1r1",
+   "b": "c2r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    450,
+    450
+   ],
+   "to_xy": [
+    800,
+    450
+   ]
+  },
+  {
+   "a": "c2r1",
+   "b": "c3r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    800,
+    450
+   ],
+   "to_xy": [
+    1150,
+    450
+   ]
+  },
+  {
+   "a": "c3r1",
+   "b": "c4r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1150,
+    450
+   ],
+   "to_xy": [
+    1500,
+    450
+   ]
+  },
+  {
+   "a": "c4r1",
+   "b": "c5r1",
+   "type": "thuong",
+   "open": false,
+   "from_xy": [
+    1500,
+    450
+   ],
+   "to_xy": [
+    1850,
+    450
+   ]
+  },
+  {
+   "a": "c0r2",
+   "b": "c1r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    100,
+    800
+   ],
+   "to_xy": [
+    450,
+    800
+   ]
+  },
+  {
+   "a": "c1r2",
+   "b": "c2r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    450,
+    800
+   ],
+   "to_xy": [
+    800,
+    800
+   ]
+  },
+  {
+   "a": "c2r2",
+   "b": "c3r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    800,
+    800
+   ],
+   "to_xy": [
+    1150,
+    800
+   ]
+  },
+  {
+   "a": "c3r2",
+   "b": "c4r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1150,
+    800
+   ],
+   "to_xy": [
+    1500,
+    800
+   ]
+  },
+  {
+   "a": "c4r2",
+   "b": "c5r2",
+   "type": "thuong",
+   "open": false,
+   "from_xy": [
+    1500,
+    800
+   ],
+   "to_xy": [
+    1850,
+    800
+   ]
+  },
+  {
+   "a": "c0r3",
+   "b": "c1r3",
+   "type": "thuong",
+   "open": false,
+   "from_xy": [
+    100,
+    1150
+   ],
+   "to_xy": [
+    450,
+    1150
+   ]
+  },
+  {
+   "a": "c1r3",
+   "b": "c2r3",
+   "type": "thuong",
+   "open": false,
+   "from_xy": [
+    450,
+    1150
+   ],
+   "to_xy": [
+    800,
+    1150
+   ]
+  },
+  {
+   "a": "c2r3",
+   "b": "c3r3",
+   "type": "thuong",
+   "open": false,
+   "from_xy": [
+    800,
+    1150
+   ],
+   "to_xy": [
+    1150,
+    1150
+   ]
+  },
+  {
+   "a": "c3r3",
+   "b": "c4r3",
+   "type": "thuong",
+   "open": false,
+   "from_xy": [
+    1150,
+    1150
+   ],
+   "to_xy": [
+    1500,
+    1150
+   ]
+  },
+  {
+   "a": "c4r3",
+   "b": "c5r3",
+   "type": "lon",
+   "open": false,
+   "from_xy": [
+    1500,
+    1150
+   ],
+   "to_xy": [
+    1850,
+    1150
+   ]
+  },
+  {
+   "a": "c0r0",
+   "b": "c0r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    100,
+    100
+   ],
+   "to_xy": [
+    100,
+    450
+   ]
+  },
+  {
+   "a": "c0r1",
+   "b": "c0r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    100,
+    450
+   ],
+   "to_xy": [
+    100,
+    800
+   ]
+  },
+  {
+   "a": "c0r2",
+   "b": "c0r3",
+   "type": "thuong",
+   "open": false,
+   "from_xy": [
+    100,
+    800
+   ],
+   "to_xy": [
+    100,
+    1150
+   ]
+  },
+  {
+   "a": "c1r0",
+   "b": "c1r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    450,
+    100
+   ],
+   "to_xy": [
+    450,
+    450
+   ]
+  },
+  {
+   "a": "c1r1",
+   "b": "c1r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    450,
+    450
+   ],
+   "to_xy": [
+    450,
+    800
+   ]
+  },
+  {
+   "a": "c1r2",
+   "b": "c1r3",
+   "type": "thuong",
+   "open": false,
+   "from_xy": [
+    450,
+    800
+   ],
+   "to_xy": [
+    450,
+    1150
+   ]
+  },
+  {
+   "a": "c2r0",
+   "b": "c2r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    800,
+    100
+   ],
+   "to_xy": [
+    800,
+    450
+   ]
+  },
+  {
+   "a": "c2r1",
+   "b": "c2r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    800,
+    450
+   ],
+   "to_xy": [
+    800,
+    800
+   ]
+  },
+  {
+   "a": "c2r2",
+   "b": "c2r3",
+   "type": "thuong",
+   "open": false,
+   "from_xy": [
+    800,
+    800
+   ],
+   "to_xy": [
+    800,
+    1150
+   ]
+  },
+  {
+   "a": "c3r0",
+   "b": "c3r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1150,
+    100
+   ],
+   "to_xy": [
+    1150,
+    450
+   ]
+  },
+  {
+   "a": "c3r1",
+   "b": "c3r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1150,
+    450
+   ],
+   "to_xy": [
+    1150,
+    800
+   ]
+  },
+  {
+   "a": "c3r2",
+   "b": "c3r3",
+   "type": "thuong",
+   "open": false,
+   "from_xy": [
+    1150,
+    800
+   ],
+   "to_xy": [
+    1150,
+    1150
+   ]
+  },
+  {
+   "a": "c4r0",
+   "b": "c4r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1500,
+    100
+   ],
+   "to_xy": [
+    1500,
+    450
+   ]
+  },
+  {
+   "a": "c4r1",
+   "b": "c4r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1500,
+    450
+   ],
+   "to_xy": [
+    1500,
+    800
+   ]
+  },
+  {
+   "a": "c4r2",
+   "b": "c4r3",
+   "type": "thuong",
+   "open": false,
+   "from_xy": [
+    1500,
+    800
+   ],
+   "to_xy": [
+    1500,
+    1150
+   ]
+  },
+  {
+   "a": "c5r0",
+   "b": "c5r1",
+   "type": "lon",
+   "open": false,
+   "from_xy": [
+    1850,
+    100
+   ],
+   "to_xy": [
+    1850,
+    450
+   ]
+  },
+  {
+   "a": "c5r1",
+   "b": "c5r2",
+   "type": "lon",
+   "open": false,
+   "from_xy": [
+    1850,
+    450
+   ],
+   "to_xy": [
+    1850,
+    800
+   ]
+  },
+  {
+   "a": "c5r2",
+   "b": "c5r3",
+   "type": "lon",
+   "open": false,
+   "from_xy": [
+    1850,
+    800
+   ],
+   "to_xy": [
+    1850,
+    1150
+   ]
+  }
+ ]
+}

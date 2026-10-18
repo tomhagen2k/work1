@@ -1,0 +1,711 @@
+{
+ "level": 21,
+ "chapter": 1,
+ "level_in_chapter": "thưởng",
+ "name_vi": "Phiên chợ vàng",
+ "name_en": "Golden Market Day",
+ "intro_vi": "Làng mở hội! Lái xe nhặt kim cương rải trên các con đường của làng.",
+ "intro_en": "The village is celebrating! Drive around and collect the diamonds scattered on its roads.",
+ "time_limit_s": 90,
+ "vehicles": [
+  "van"
+ ],
+ "map_px": [
+  1950,
+  1250
+ ],
+ "grid_cols_rows": [
+  6,
+  4
+ ],
+ "node_spacing_px": 350,
+ "open_region_max_col_row": [
+  5,
+  3
+ ],
+ "nodes": {
+  "c0r0": [
+   100,
+   100
+  ],
+  "c0r1": [
+   100,
+   450
+  ],
+  "c0r2": [
+   100,
+   800
+  ],
+  "c0r3": [
+   100,
+   1150
+  ],
+  "c1r0": [
+   450,
+   100
+  ],
+  "c1r1": [
+   450,
+   450
+  ],
+  "c1r2": [
+   450,
+   800
+  ],
+  "c1r3": [
+   450,
+   1150
+  ],
+  "c2r0": [
+   800,
+   100
+  ],
+  "c2r1": [
+   800,
+   450
+  ],
+  "c2r2": [
+   800,
+   800
+  ],
+  "c2r3": [
+   800,
+   1150
+  ],
+  "c3r0": [
+   1150,
+   100
+  ],
+  "c3r1": [
+   1150,
+   450
+  ],
+  "c3r2": [
+   1150,
+   800
+  ],
+  "c3r3": [
+   1150,
+   1150
+  ],
+  "c4r0": [
+   1500,
+   100
+  ],
+  "c4r1": [
+   1500,
+   450
+  ],
+  "c4r2": [
+   1500,
+   800
+  ],
+  "c4r3": [
+   1500,
+   1150
+  ],
+  "c5r0": [
+   1850,
+   100
+  ],
+  "c5r1": [
+   1850,
+   450
+  ],
+  "c5r2": [
+   1850,
+   800
+  ],
+  "c5r3": [
+   1850,
+   1150
+  ]
+ },
+ "start": {
+  "road": [
+   "c0r1",
+   "c1r1"
+  ],
+  "fraction": 0.11428571428571428
+ },
+ "construction_site": null,
+ "buildings_already_built": [
+  {
+   "id": "ChoPhien",
+   "name_vi": "Lều chợ"
+  },
+  {
+   "id": "GiengLang",
+   "name_vi": "Giếng làng"
+  },
+  {
+   "id": "TruongLang",
+   "name_vi": "Trường làng"
+  },
+  {
+   "id": "XomDong",
+   "name_vi": "Xóm Đông"
+  },
+  {
+   "id": "TramYTe",
+   "name_vi": "Trạm y tế"
+  },
+  {
+   "id": "AoCa",
+   "name_vi": "Ao cá"
+  },
+  {
+   "id": "DinhLang",
+   "name_vi": "Đình làng"
+  },
+  {
+   "id": "BenDo",
+   "name_vi": "Bến đò"
+  },
+  {
+   "id": "NhaVanHoa",
+   "name_vi": "Nhà văn hóa"
+  },
+  {
+   "id": "ChoPhien",
+   "name_vi": "Chợ phiên"
+  }
+ ],
+ "points": [],
+ "missions": [],
+ "gems_count": 25,
+ "edges": [
+  {
+   "a": "c0r0",
+   "b": "c1r0",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    100,
+    100
+   ],
+   "to_xy": [
+    450,
+    100
+   ]
+  },
+  {
+   "a": "c1r0",
+   "b": "c2r0",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    450,
+    100
+   ],
+   "to_xy": [
+    800,
+    100
+   ]
+  },
+  {
+   "a": "c2r0",
+   "b": "c3r0",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    800,
+    100
+   ],
+   "to_xy": [
+    1150,
+    100
+   ]
+  },
+  {
+   "a": "c3r0",
+   "b": "c4r0",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1150,
+    100
+   ],
+   "to_xy": [
+    1500,
+    100
+   ]
+  },
+  {
+   "a": "c4r0",
+   "b": "c5r0",
+   "type": "lon",
+   "open": true,
+   "from_xy": [
+    1500,
+    100
+   ],
+   "to_xy": [
+    1850,
+    100
+   ]
+  },
+  {
+   "a": "c0r1",
+   "b": "c1r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    100,
+    450
+   ],
+   "to_xy": [
+    450,
+    450
+   ]
+  },
+  {
+   "a": "c1r1",
+   "b": "c2r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    450,
+    450
+   ],
+   "to_xy": [
+    800,
+    450
+   ]
+  },
+  {
+   "a": "c2r1",
+   "b": "c3r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    800,
+    450
+   ],
+   "to_xy": [
+    1150,
+    450
+   ]
+  },
+  {
+   "a": "c3r1",
+   "b": "c4r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1150,
+    450
+   ],
+   "to_xy": [
+    1500,
+    450
+   ]
+  },
+  {
+   "a": "c4r1",
+   "b": "c5r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1500,
+    450
+   ],
+   "to_xy": [
+    1850,
+    450
+   ]
+  },
+  {
+   "a": "c0r2",
+   "b": "c1r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    100,
+    800
+   ],
+   "to_xy": [
+    450,
+    800
+   ]
+  },
+  {
+   "a": "c1r2",
+   "b": "c2r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    450,
+    800
+   ],
+   "to_xy": [
+    800,
+    800
+   ]
+  },
+  {
+   "a": "c2r2",
+   "b": "c3r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    800,
+    800
+   ],
+   "to_xy": [
+    1150,
+    800
+   ]
+  },
+  {
+   "a": "c3r2",
+   "b": "c4r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1150,
+    800
+   ],
+   "to_xy": [
+    1500,
+    800
+   ]
+  },
+  {
+   "a": "c4r2",
+   "b": "c5r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1500,
+    800
+   ],
+   "to_xy": [
+    1850,
+    800
+   ]
+  },
+  {
+   "a": "c0r3",
+   "b": "c1r3",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    100,
+    1150
+   ],
+   "to_xy": [
+    450,
+    1150
+   ]
+  },
+  {
+   "a": "c1r3",
+   "b": "c2r3",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    450,
+    1150
+   ],
+   "to_xy": [
+    800,
+    1150
+   ]
+  },
+  {
+   "a": "c2r3",
+   "b": "c3r3",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    800,
+    1150
+   ],
+   "to_xy": [
+    1150,
+    1150
+   ]
+  },
+  {
+   "a": "c3r3",
+   "b": "c4r3",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1150,
+    1150
+   ],
+   "to_xy": [
+    1500,
+    1150
+   ]
+  },
+  {
+   "a": "c4r3",
+   "b": "c5r3",
+   "type": "lon",
+   "open": true,
+   "from_xy": [
+    1500,
+    1150
+   ],
+   "to_xy": [
+    1850,
+    1150
+   ]
+  },
+  {
+   "a": "c0r0",
+   "b": "c0r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    100,
+    100
+   ],
+   "to_xy": [
+    100,
+    450
+   ]
+  },
+  {
+   "a": "c0r1",
+   "b": "c0r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    100,
+    450
+   ],
+   "to_xy": [
+    100,
+    800
+   ]
+  },
+  {
+   "a": "c0r2",
+   "b": "c0r3",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    100,
+    800
+   ],
+   "to_xy": [
+    100,
+    1150
+   ]
+  },
+  {
+   "a": "c1r0",
+   "b": "c1r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    450,
+    100
+   ],
+   "to_xy": [
+    450,
+    450
+   ]
+  },
+  {
+   "a": "c1r1",
+   "b": "c1r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    450,
+    450
+   ],
+   "to_xy": [
+    450,
+    800
+   ]
+  },
+  {
+   "a": "c1r2",
+   "b": "c1r3",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    450,
+    800
+   ],
+   "to_xy": [
+    450,
+    1150
+   ]
+  },
+  {
+   "a": "c2r0",
+   "b": "c2r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    800,
+    100
+   ],
+   "to_xy": [
+    800,
+    450
+   ]
+  },
+  {
+   "a": "c2r1",
+   "b": "c2r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    800,
+    450
+   ],
+   "to_xy": [
+    800,
+    800
+   ]
+  },
+  {
+   "a": "c2r2",
+   "b": "c2r3",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    800,
+    800
+   ],
+   "to_xy": [
+    800,
+    1150
+   ]
+  },
+  {
+   "a": "c3r0",
+   "b": "c3r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1150,
+    100
+   ],
+   "to_xy": [
+    1150,
+    450
+   ]
+  },
+  {
+   "a": "c3r1",
+   "b": "c3r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1150,
+    450
+   ],
+   "to_xy": [
+    1150,
+    800
+   ]
+  },
+  {
+   "a": "c3r2",
+   "b": "c3r3",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1150,
+    800
+   ],
+   "to_xy": [
+    1150,
+    1150
+   ]
+  },
+  {
+   "a": "c4r0",
+   "b": "c4r1",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1500,
+    100
+   ],
+   "to_xy": [
+    1500,
+    450
+   ]
+  },
+  {
+   "a": "c4r1",
+   "b": "c4r2",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1500,
+    450
+   ],
+   "to_xy": [
+    1500,
+    800
+   ]
+  },
+  {
+   "a": "c4r2",
+   "b": "c4r3",
+   "type": "thuong",
+   "open": true,
+   "from_xy": [
+    1500,
+    800
+   ],
+   "to_xy": [
+    1500,
+    1150
+   ]
+  },
+  {
+   "a": "c5r0",
+   "b": "c5r1",
+   "type": "lon",
+   "open": true,
+   "from_xy": [
+    1850,
+    100
+   ],
+   "to_xy": [
+    1850,
+    450
+   ]
+  },
+  {
+   "a": "c5r1",
+   "b": "c5r2",
+   "type": "lon",
+   "open": true,
+   "from_xy": [
+    1850,
+    450
+   ],
+   "to_xy": [
+    1850,
+    800
+   ]
+  },
+  {
+   "a": "c5r2",
+   "b": "c5r3",
+   "type": "lon",
+   "open": true,
+   "from_xy": [
+    1850,
+    800
+   ],
+   "to_xy": [
+    1850,
+    1150
+   ]
+  }
+ ]
+}

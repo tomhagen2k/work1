@@ -1,0 +1,77 @@
+{
+ "road_types": {
+  "thuong": {
+   "name_vi": "Đường thường",
+   "desc_vi": "",
+   "speed_factor": {
+    "may": 1,
+    "van": 1,
+    "tai": 1
+   },
+   "minimap_color": null
+  },
+  "lon": {
+   "name_vi": "Đường lớn",
+   "desc_vi": "Rộng, nhiều làn — mọi xe chạy nhanh hơn",
+   "speed_factor": {
+    "may": 1.5,
+    "van": 1.5,
+    "tai": 1.5
+   },
+   "minimap_color": "#1f6feb"
+  },
+  "dong": {
+   "name_vi": "Đường đông",
+   "desc_vi": "Nhiều xe — xe càng to càng chậm",
+   "speed_factor": {
+    "may": 0.8,
+    "van": 0.45,
+    "tai": 0.35
+   },
+   "minimap_color": "#e8590c"
+  },
+  "gogh": {
+   "name_vi": "Đường gồ ghề",
+   "desc_vi": "Ổ gà — xe máy chậm nhất",
+   "speed_factor": {
+    "may": 0.5,
+    "van": 0.7,
+    "tai": 0.6
+   },
+   "minimap_color": "#8d6e63"
+  },
+  "hem": {
+   "name_vi": "Hẻm",
+   "desc_vi": "Hẹp — chỉ xe máy vào được",
+   "speed_factor": {
+    "may": 0.9,
+    "van": null,
+    "tai": null
+   },
+   "minimap_color": "#b8bcc2"
+  }
+ },
+ "vehicles": {
+  "van": {
+   "name_vi": "Xe van",
+   "speed": 90,
+   "capacity": 3
+  },
+  "may": {
+   "name_vi": "Xe máy",
+   "speed": 130,
+   "capacity": 1
+  },
+  "tai": {
+   "name_vi": "Xe tải",
+   "speed": 65,
+   "capacity": 6
+  }
+ },
+ "node_spacing_px": 350,
+ "stop_zone_half_px": 90,
+ "stage_px": [
+  844,
+  390
+ ]
+}
