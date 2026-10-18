@@ -44,6 +44,7 @@ Tài liệu yêu cầu: (ghi khi chốt)
 - **Đặt trước lệnh Quay đầu khi đang dừng ở điểm** (D-69, QD-01): đang giao hàng, đang mở bảng hỏi hoặc đang lấy hàng thì bấm Quay đầu (hoặc phím U) để xe quay đầu ngay khi rời điểm. Nút Quay đầu sáng vàng như nút hướng đã chọn, trên xe có mũi tên chữ U; bấm lại để hủy; bấm một hướng thì lệnh quay đầu bị hủy (chỉ giữ một lệnh).
 
 ### Thay đổi
+- **Khung cảnh Chương 2 dùng ảnh theo thiết kế mới** (D-77, cùng cách Chương 1; thiết kế `design_moi/chuong_2/`, báo cáo `design_moi/kiem_thu_chuong_2/BAO_CAO_KIEM_THU.md`): 11 ảnh khổ 3500×1750 (0,50–0,59 MB/màn), ghim kiểu B, cảnh quay, trang chủ, bưu thiếp, cảnh kết chương. Logic 22 màn không đổi. `#canh=cu` mở lại `drawUrban`. Vị trí code: `CH2.draw` → `imgDraw(2,o)||drawUrban(o)`; ảnh `demo/canh/c2_*.webp`, khổ trong `canh/manifest.js` (`node tools/xuat_anh_canh.mjs 2 demo/canh`).
 - **Khung cảnh Chương 1 dùng ảnh theo thiết kế mới** (D-77; thiết kế ở `design_moi/chuong_1/`, báo cáo kiểm thử `design_moi/kiem_thu_chuong_1/BAO_CAO_KIEM_THU.md`):
   - Mỗi màn (10 màn chính + màn thưởng) là 1 ảnh WebP nét ×2 xuất từ `khung_canh_moi.svg` (khổ 3150×1750, lề trái/phải 600 px, trên/dưới 250 px — GH-Q2), khoảng 0,5 MB/màn. Ngoài mép ảnh soi gương ra 4 phía (dự phòng khung nhìn quá dẹt).
   - Ghim và nhãn điểm kiểu B (GH-Q1): ghim 26 px cùng kiểu thiết kế ở góc trên công trình, nhãn chữ 11 px viền trắng dưới công trình — không che công trình; tên theo ngôn ngữ đang chọn.

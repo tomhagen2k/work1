@@ -1298,7 +1298,7 @@ const CH2={cols:7,rows:4,start:['c0r1','c1r1',40/350],big:'CongVien',
     'Bệnh viện đi vào hoạt động.','Nhà văn hóa khánh thành — thông xe tới Xưởng gỗ phía Đông.','Hồ điều hòa trong xanh — có đường dạo quanh hồ.',
     'Tháp văn phòng sáng đèn — sẵn sàng cho công viên trung tâm.','Công viên mở cửa — đủ 10 công trình, khu đô thị mới đã hoàn chỉnh.'],
   pal:{grass:'#a9d67a',dot:'#bde29a',lot:'#dccb9d',lotLine:'#cdb98a',roofs:['#e8a598','#9aa8b5','#d9b38c','#a3c9a8','#c99a8b','#b5a3c9']},
-  finTitle:'Khu đô thị mới đã hoàn thành!',draw:o=>drawUrban(o),postNote:'Đã xây xong khu đô thị mới',
+  finTitle:'Khu đô thị mới đã hoàn thành!',draw:o=>imgDraw(2,o)||drawUrban(o),postNote:'Đã xây xong khu đô thị mới',
   // màn thưởng (D-73): 25 kim cương, 7 cụm; vòng nhặt hết nhanh nhất ≈ 66 giây (demo) → T0 100 (+50%)
   bonus:{name:'Lễ khánh thành',intro:'Khu đô thị mới khánh thành! Lái xe nhặt kim cương rải trên các con đường.',T0:100,
     gems:[['c0r0','c1r0',4],['c3r0','c4r0',3],['c6r0','c6r1',4],['c4r2','c5r2',3],['c2r3','c3r3',4],['c5r2','c5r3',3],['c0r2','c0r3',4]]}};
