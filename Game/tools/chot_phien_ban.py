@@ -162,6 +162,9 @@ def main():
     os.makedirs(dst)
     saved = RE_SAVED.sub('const VER_SAVED=true;', s, count=1)
     open(os.path.join(dst, 'index.html'), 'w', encoding='utf-8').write(saved)
+    # ảnh khung cảnh (demo/canh: WebP từng màn + manifest.js) đi kèm index.html
+    if os.path.isdir(os.path.join(GAME, 'demo', 'canh')):
+        shutil.copytree(os.path.join(GAME, 'demo', 'canh'), os.path.join(dst, 'canh'))
     # 2. bản sao tài liệu yêu cầu tại thời điểm chốt
     os.makedirs(os.path.join(dst, 'tai_lieu'))
     shutil.copy2(REQ, os.path.join(dst, 'tai_lieu', 'Mo_Ta_Yeu_Cau_MVP.md'))

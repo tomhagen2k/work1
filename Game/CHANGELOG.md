@@ -44,6 +44,14 @@ Tài liệu yêu cầu: (ghi khi chốt)
 - **Đặt trước lệnh Quay đầu khi đang dừng ở điểm** (D-69, QD-01): đang giao hàng, đang mở bảng hỏi hoặc đang lấy hàng thì bấm Quay đầu (hoặc phím U) để xe quay đầu ngay khi rời điểm. Nút Quay đầu sáng vàng như nút hướng đã chọn, trên xe có mũi tên chữ U; bấm lại để hủy; bấm một hướng thì lệnh quay đầu bị hủy (chỉ giữ một lệnh).
 
 ### Thay đổi
+- **Khung cảnh Chương 1 dùng ảnh theo thiết kế mới** (D-77; thiết kế ở `design_moi/chuong_1/`, báo cáo kiểm thử `design_moi/kiem_thu_chuong_1/BAO_CAO_KIEM_THU.md`):
+  - Mỗi màn (10 màn chính + màn thưởng) là 1 ảnh WebP nét ×2 xuất từ `khung_canh_moi.svg` (khổ 3150×1750, lề trái/phải 600 px, trên/dưới 250 px — GH-Q2), khoảng 0,5 MB/màn. Ngoài mép ảnh soi gương ra 4 phía (dự phòng khung nhìn quá dẹt).
+  - Ghim và nhãn điểm kiểu B (GH-Q1): ghim 26 px cùng kiểu thiết kế ở góc trên công trình, nhãn chữ 11 px viền trắng dưới công trình — không che công trình; tên theo ngôn ngữ đang chọn.
+  - Cảnh quay hoàn thành công trình: nền là ảnh màn vừa chơi, ô công trình cắt từ ảnh màn sau "nảy" lên, rồi cả ảnh màn sau hiện ra (đường mới thông). Trang chủ, bưu thiếp, cảnh kết chương dùng ảnh theo tiến độ.
+  - Chú giải "Chưa thông xe" Chương 1 đổi màu theo đường đất của thiết kế (#d4b486).
+  - Logic 22 màn không đổi (so khớp từng ký tự với bản trước). Lái xe 60 khung/giây; dựng màn 0,4 ms (32 phần tử vẽ thay vì ~15.000).
+  - `#canh=cu` mở lại cảnh vẽ bằng code cũ (`drawVillage` giữ nguyên) để so sánh; `#anh=goc` dùng PNG gốc trong `design_moi`.
+  - Vị trí code: `<script src="canh/manifest.js">` trước script chính; khối `/* Khung cảnh bằng ẢNH … D-77 */` trước `buildMinimap` (`imgDraw`, `imgPin`, `imgLabel`); `CH1.draw`. Ảnh + manifest: `demo/canh/` (xuất bằng `node tools/xuat_anh_canh.mjs 1 demo/canh`). `tools/chot_phien_ban.py` chép thêm `demo/canh/` vào bản lưu.
 - **Cửa hàng không còn tràn khung**: "Vật phẩm" và "Ưu đãi" xếp thành 2 cột, thẻ gói kim cương gọn hơn, mô tả ngắn hơn; phần thân cuộn được nếu vẫn dài (`#sBody`, `.shcols`, `renderShop`).
 - Sửa chữ: kết thúc màn thưởng Chương 2 không còn ghi "phiên chợ kết thúc" (đổi thành "màn thưởng kết thúc"); câu cuối chương nói bưu thiếp lưu ở **Bản đồ chương** (không phải Trang chủ).
 - **Engine đọc cấu hình chương** (`addChapter`, biến `CC`): bản đồ chung, vùng theo màn, công trình, câu thông báo, tiêu đề kết chương và bộ vẽ cảnh nằm trong cấu hình (`CH1`, `CH2`). Màn có `cc` là màn của chương xây dựng dần (thay `chapter===2`). Thêm chương mới = thêm cấu hình + bộ vẽ cảnh.

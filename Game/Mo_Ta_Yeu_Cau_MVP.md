@@ -2,8 +2,8 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 1.26 — Bản đồ lớn khi chơi hiện nhiệm vụ còn lại (D-75). 1.25 — Chương 2 Khu đô thị mới dựng lại theo khung (D-74). 1.24 — Màn thưởng kim cương cuối chương (D-73). 1.23 — Hướng dẫn Màn 1 luôn chạy, mẹo Quay đầu ở điểm giao thứ nhất (D-72). 1.22 — Mẹo Quay đầu trong hướng dẫn Màn 1 (D-71). 1.21 — Luật chơi lần đầu ở Màn 1 (D-70). 1.20 — Đặt trước Quay đầu khi dừng ở điểm (D-69). 1.19 — Chương 1 Làng ven sông vào demo (D-68). 1.18 — Điều chỉnh CT-06, CT-07 (D-67). 1.17 — Chủ đề khung cảnh 15 chương (D-66). 1.16 — Bộ công thức độ khó và bố cục 15 chương (D-65). 1.15 — Chỉ vận chuyển hàng hóa; chở khách và đổi xe xếp cuối (D-64); khung độ khó chuyển sang file riêng [level_design/Khung_Do_Kho_Chuong_Man.md](level_design/Khung_Do_Kho_Chuong_Man.md). 1.14 — Khung tăng độ khó theo chương và màn (D-63), câu hỏi mở về cách đo độ khó (DK-Q1, DK-Q2). 1.13 — Chương 2 cho người chơi thấy khung cảnh tiến triển: cảnh quay mới, đoạn mở màn, đô thị hoá quanh công trình, cần cẩu, nhãn không chồng (D-54 → D-58); địa danh riêng, cụm nhà mọc, Trang chủ, cảnh kết chương và bưu thiếp (D-59 → D-62) |
-| Ngày | 15/10/2026 |
+| Phiên bản | 1.28 — Khung cảnh Chương 1 dùng ảnh theo thiết kế mới, ghim nhỏ kiểu B, lề ảnh 600 px (D-77). 1.27 — Dung lượng ứng dụng và cách vẽ khung cảnh (D-76); đề xuất công nghệ mobile chờ chốt (CN-Q1 → Q5). 1.26 — Bản đồ lớn khi chơi hiện nhiệm vụ còn lại (D-75). 1.25 — Chương 2 Khu đô thị mới dựng lại theo khung (D-74). 1.24 — Màn thưởng kim cương cuối chương (D-73). 1.23 — Hướng dẫn Màn 1 luôn chạy, mẹo Quay đầu ở điểm giao thứ nhất (D-72). 1.22 — Mẹo Quay đầu trong hướng dẫn Màn 1 (D-71). 1.21 — Luật chơi lần đầu ở Màn 1 (D-70). 1.20 — Đặt trước Quay đầu khi dừng ở điểm (D-69). 1.19 — Chương 1 Làng ven sông vào demo (D-68). 1.18 — Điều chỉnh CT-06, CT-07 (D-67). 1.17 — Chủ đề khung cảnh 15 chương (D-66). 1.16 — Bộ công thức độ khó và bố cục 15 chương (D-65). 1.15 — Chỉ vận chuyển hàng hóa; chở khách và đổi xe xếp cuối (D-64); khung độ khó chuyển sang file riêng [level_design/Khung_Do_Kho_Chuong_Man.md](level_design/Khung_Do_Kho_Chuong_Man.md). 1.14 — Khung tăng độ khó theo chương và màn (D-63), câu hỏi mở về cách đo độ khó (DK-Q1, DK-Q2). 1.13 — Chương 2 cho người chơi thấy khung cảnh tiến triển: cảnh quay mới, đoạn mở màn, đô thị hoá quanh công trình, cần cẩu, nhãn không chồng (D-54 → D-58); địa danh riêng, cụm nhà mọc, Trang chủ, cảnh kết chương và bưu thiếp (D-59 → D-62) |
+| Ngày | 18/10/2026 |
 | Nguồn | Tài liệu ý tưởng game (mục 1–21), flowchart vòng chơi, ảnh tham chiếu giao diện, phản hồi xác nhận của BA |
 | Mục đích | Cơ sở tham chiếu để thiết kế giao diện và viết tài liệu (BRD/SRS/GDD). Không thay thế BRD/SRS. |
 | Ý tưởng chờ xem xét | [Y_Tuong_Mo_Rong.md](Y_Tuong_Mo_Rong.md) — chưa phải yêu cầu |
@@ -116,6 +116,8 @@ Thử thách đến từ:
 | D-73 | **Màn thưởng kim cương cuối mỗi chương** ([Y_Tuong_Mo_Rong.md](Y_Tuong_Mo_Rong.md) YT-03, quy tắc MT-1 → MT-8): bản đồ chương hoàn thiện, 20–30 kim cương trên các tuyến, xe đi qua tự nhặt; không tính sao; thưởng đúng số nhặt được; thoát giữa chừng không tính, chơi lại được; nhận thưởng xong thì khóa; không dùng Thêm giờ; mở sau khi thắng màn 10 (nút 🎁 sau cờ Hết chương). Ngoài khung độ khó (CM-05). | [XN] phản hồi BA 16/10 |
 | D-74 | **Chương 2 · Khu đô thị mới dựng lại theo khung độ khó**, thay 5 màn thử nghiệm: 10 màn ĐK 6–15, yếu tố mới nhiều kho (2 kho từ màn 3, 3 kho từ màn 8), bản đồ chung 7×4, khung cảnh xây mới 10 công trình, màn thưởng "Lễ khánh thành". Thiết kế + số đo: [level_design/Thiet_Ke_Chuong_2.md](level_design/Thiet_Ke_Chuong_2.md). C2-1 đã chốt: màn 7, 9 chấp nhận 22 kế hoạch; màn trùm đánh giá bằng số kế hoạch đạt 3★ (khung độ khó bản 0.5). | [XN] yêu cầu BA 16/10 |
 | D-75 | **Bản đồ lớn mở khi đang chơi** (từ mini map / popup tạm dừng) hiện nhiệm vụ dưới tên điểm giao như màn chuẩn bị, theo tiến độ: "Còn N kiện từ <kho>", thêm "· đang chở n" khi xe đang chở hàng tới điểm đó, "⏱ hạn còn m:ss" với đơn có hạn; điểm đã giao đủ chỉ còn ký hiệu xám ✓. Bổ sung D-33. | [XN] phản hồi BA 16/10 / [GĐ] câu chữ |
+| D-76 | **Dung lượng và cách vẽ khung cảnh:** (DL-Q1) khung cảnh mọi chương **vẽ bằng code từ dữ liệu màn**, không dùng ảnh nền vẽ sẵn cho từng màn; (DL-Q2) gói tải về từ cửa hàng **dưới 100 MB**, sự kiện và nội dung lớn tải thêm từ máy chủ khi cần; (DL-Q3) nhạc dùng **định dạng nén**, bản nhạc cụ thể chọn sau vì liên quan bản quyền **[MỞ]**. Hướng làm ứng dụng: [De_Xuat_Cong_Nghe_Mobile.md](De_Xuat_Cong_Nghe_Mobile.md) (CN-Q1 → Q5, chờ chốt). | [XN] phản hồi BA 18/10 |
+| D-77 | **Khung cảnh dùng ẢNH theo thiết kế** (thay DL-Q1 của D-76 cho phần khung cảnh; mục tiêu dưới 100 MB giữ nguyên): mỗi màn 1 ảnh xuất từ `design_moi/chuong_N/man_XX/khung_canh_moi.svg` (WebP nét ×2, khoảng 0,5 MB/màn — 15 chương ≈ 80 MB, chương sau tải khi tới). (GH-Q1 = B) ghim 26 px cùng kiểu thiết kế ở góc trên công trình, nhãn chữ 11 px dưới công trình; (GH-Q2 = cách 1) ảnh có lề trái/phải 600 px, trên/dưới 250 px, lề giống nhau mọi màn trong chương; ngoài mép ảnh game soi gương. Logic màn không đổi. Áp dụng Chương 1 (18/10); Chương 2 làm tiếp. | [XN] phản hồi BA 18/10 |
 | D-08 | Nhiên liệu/pin, gia tốc, phanh: ngoài MVP. | [XN] |
 | D-09 | Giao thông xác định, dự đoán được (chỉ còn yếu tố tĩnh: hạn chế loại xe, ngõ cụt). | [XN] / D-21, D-22 |
 | D-10 | Màn thiết kế thủ công, kiểm tra khả năng hoàn thành trước khi phát hành. | [XN] |
@@ -439,6 +441,8 @@ PASS = all_missions_completed
 | VP-Q8 | +5 kim cương mỗi lần thắng hay **chỉ lần đầu** thắng mỗi màn? | Chỉ lần đầu — chống cày màn dễ (đang làm theo **[GĐ]**) |
 | VP-Q9 | Tặng kim cương khi mới chơi? | Chưa tặng (bản thử bắt đầu 0 kim cương) |
 | VP-Q11 | Số kim cương hiện ở đâu? | Trang chủ (góc trên phải, chạm mở cửa hàng), màn kết quả, popup hết giờ; **không hiện trên màn chơi** (đang làm theo **[GĐ]**) |
+| DL-Q3 | Chọn bản nhạc cụ thể (bản quyền)? | Chỉ dùng nhạc có giấy phép thương mại rõ ràng, lưu chứng từ trong `phap_ly/` |
+| CN-Q1 → Q5 | Hướng làm ứng dụng mobile, nền tảng phát hành trước, sao lưu đám mây, quảng cáo, người làm | Xem [De_Xuat_Cong_Nghe_Mobile.md](De_Xuat_Cong_Nghe_Mobile.md) mục 7 |
 
 Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 
@@ -687,6 +691,8 @@ Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 | YT-03 | Màn thưởng kim cương cuối chương (D-73) | 1.24 |
 | Dựng Chương 2 | Chương 2 Khu đô thị mới theo khung độ khó + màn thưởng (D-74) | 1.25 |
 | Phản hồi demo v1.4 | Bản đồ lớn khi chơi hiện nhiệm vụ còn lại (D-75) | 1.26 |
+| DL-Q1 → Q3 | Vẽ khung cảnh bằng code, gói tải dưới 100 MB, nhạc nén chọn sau (D-76) | 1.27 |
+| TH-Q5, GH-Q1, GH-Q2 | Khung cảnh bằng ảnh thiết kế, ghim kiểu B, lề ảnh 600 px — Chương 1 (D-77) | 1.28 |
 
 ---
 

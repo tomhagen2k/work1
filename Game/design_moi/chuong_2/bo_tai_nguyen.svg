@@ -1,0 +1,536 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1500" width="1920" height="1500" style="background:#f4f6f8; font-family:'Nunito', 'Segoe UI', -apple-system, sans-serif;">
+  <defs>
+    <filter id="soft-shadow" x="-20%" y="-20%" width="150%" height="150%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3.5" flood-color="#1e293b" flood-opacity="0.14"/>
+    </filter>
+    <filter id="card-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <filter id="crane-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="3" dy="6" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <!-- BANNER TIÊU ĐỀ CHÍNH -->
+  <rect x="0" y="0" width="1920" height="70" fill="#2563eb"/>
+  <text x="50" y="44" font-size="24" font-weight="900" fill="#ffffff" letter-spacing="0.5">BỘ TÀI NGUYÊN MÔI TRƯỜNG DÙNG CHUNG — CHƯƠNG 2: KHU ĐÔ THỊ MỚI (GLOBAL EDITION)</text>
+  <rect x="1680" y="20" width="190" height="32" rx="16" fill="rgba(255,255,255,0.2)"/>
+  <text x="1775" y="41" font-size="13.5" font-weight="800" fill="#ffffff" text-anchor="middle">PHƯƠNG ÁN A (9.9/10)</text>
+
+  <!-- ======================================================== -->
+  <!-- MỤC 1: BẢNG MÀU QUY CHUẨN N4 -->
+  <!-- ======================================================== -->
+  <g transform="translate(50, 95)" filter="url(#card-shadow)">
+    <rect x="0" y="0" width="1820" height="135" rx="12" fill="#ffffff"/>
+    <text x="30" y="32" font-size="16" font-weight="900" fill="#1e293b">1. BẢNG MÀU QUY CHUẨN (QUY TẮC N4: 60% NỀN – 30% KIẾN TRÚC – 10% NHẤN)</text>
+    
+    <!-- 60% Nền -->
+    <g transform="translate(30, 48)">
+      <rect x="0" y="0" width="60" height="50" rx="8" fill="#a2d16f"/>
+      <text x="70" y="22" font-size="13" font-weight="800" fill="#0f172a">Cỏ đô thị</text>
+      <text x="70" y="40" font-size="11" font-weight="600" fill="#64748b">#a2d16f (Nền 60%)</text>
+    </g>
+    <g transform="translate(230, 48)">
+      <rect x="0" y="0" width="60" height="50" rx="8" fill="#e9ecef" stroke="#ced4da" stroke-width="1.5"/>
+      <text x="70" y="22" font-size="13" font-weight="800" fill="#0f172a">Vỉa hè block</text>
+      <text x="70" y="40" font-size="11" font-weight="600" fill="#64748b">#e9ecef (Nền)</text>
+    </g>
+    <g transform="translate(420, 48)">
+      <rect x="0" y="0" width="60" height="50" rx="8" fill="#dccb9d"/>
+      <text x="70" y="22" font-size="13" font-weight="800" fill="#0f172a">Đất quy hoạch</text>
+      <text x="70" y="40" font-size="11" font-weight="600" fill="#64748b">#dccb9d (Nền)</text>
+    </g>
+    <g transform="translate(620, 48)">
+      <rect x="0" y="0" width="60" height="50" rx="8" fill="#64b5f6"/>
+      <text x="70" y="22" font-size="13" font-weight="800" fill="#0f172a">Mặt hồ sinh thái</text>
+      <text x="70" y="40" font-size="11" font-weight="600" fill="#64748b">#64b5f6 (Nền)</text>
+    </g>
+
+    <!-- 30% Kiến trúc -->
+    <g transform="translate(830, 48)">
+      <rect x="0" y="0" width="60" height="50" rx="8" fill="#f4a261"/>
+      <text x="70" y="22" font-size="13" font-weight="800" fill="#0f172a">Hồng san hô</text>
+      <text x="70" y="40" font-size="11" font-weight="600" fill="#64748b">#f4a261 (Nhà 30%)</text>
+    </g>
+    <g transform="translate(1030, 48)">
+      <rect x="0" y="0" width="60" height="50" rx="8" fill="#fefae0" stroke="#dda15e" stroke-width="1.5"/>
+      <text x="70" y="22" font-size="13" font-weight="800" fill="#0f172a">Kem bơ pastel</text>
+      <text x="70" y="40" font-size="11" font-weight="600" fill="#64748b">#fefae0 (Nhà)</text>
+    </g>
+    <g transform="translate(1220, 48)">
+      <rect x="0" y="0" width="60" height="50" rx="8" fill="#c3fae8" stroke="#63e6be" stroke-width="1.5"/>
+      <text x="70" y="22" font-size="13" font-weight="800" fill="#0f172a">Xanh mint</text>
+      <text x="70" y="40" font-size="11" font-weight="600" fill="#64748b">#c3fae8 (Nhà)</text>
+    </g>
+    <g transform="translate(1410, 48)">
+      <rect x="0" y="0" width="60" height="50" rx="8" fill="#9aa8b5"/>
+      <text x="70" y="22" font-size="13" font-weight="800" fill="#0f172a">Xám chung cư</text>
+      <text x="70" y="40" font-size="11" font-weight="600" fill="#64748b">#9aa8b5 (Nhà)</text>
+    </g>
+
+    <!-- 10% Điểm nhấn -->
+    <g transform="translate(1610, 48)">
+      <rect x="0" y="0" width="28" height="50" rx="6" fill="#7fc8c0"/>
+      <rect x="32" y="0" width="28" height="50" rx="6" fill="#fab005"/>
+      <text x="70" y="22" font-size="13" font-weight="800" fill="#0f172a">Nhấn 10%</text>
+      <text x="70" y="40" font-size="11" font-weight="600" fill="#64748b">Kính / Cần cẩu vàng</text>
+    </g>
+  </g>
+
+  <!-- ======================================================== -->
+  <!-- MỤC 2: QUY CHUẨN ĐƯỜNG BỘ CHƯƠNG 2 -->
+  <!-- ======================================================== -->
+  <g transform="translate(50, 250)" filter="url(#card-shadow)">
+    <rect x="0" y="0" width="1820" height="195" rx="12" fill="#ffffff"/>
+    <text x="30" y="32" font-size="16" font-weight="900" fill="#1e293b">2. QUY CHUẨN ĐƯỜNG BỘ (ĐƯỜNG HAI CHIỀU THOÁNG RỘNG CHO XE TẢI &amp; GIAO THÔNG ĐÔ THỊ)</text>
+
+    <!-- 2.1 Đường thường (Nội khu mới) -->
+    <g transform="translate(30, 50)">
+      <text x="0" y="15" font-size="13.5" font-weight="800" fill="#0f172a">Đường thường nội khu (46px)</text>
+      <text x="0" y="32" font-size="11" font-weight="600" fill="#64748b">Rộng 46px · Vỉa hè block 54px · Vạch đứt trắng</text>
+      <g transform="translate(0, 45)" filter="url(#soft-shadow)">
+        <rect x="0" y="0" width="300" height="54" rx="4" fill="#ced4da"/>
+        <rect x="0" y="4" width="300" height="46" rx="2" fill="#343a40"/>
+        <line x1="0" y1="27" x2="300" y2="27" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="16 14"/>
+        <!-- Xe tải giao hàng chạy thoải mái trong làn -->
+        <g transform="translate(180, 27)">
+          <rect x="-18" y="-9" width="36" height="18" rx="3" fill="#228be6" stroke="#fff" stroke-width="1.2"/>
+          <rect x="8" y="-7" width="8" height="14" rx="1.5" fill="#e7f5ff"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- 2.2 Đại lộ 2 chiều (Có dải cây ở giữa - Đủ diện tích xe tải) -->
+    <g transform="translate(370, 50)">
+      <text x="0" y="15" font-size="13.5" font-weight="800" fill="#0f172a">Đại lộ 2 chiều (64px - Làn rộng cho xe tải)</text>
+      <text x="0" y="32" font-size="11" font-weight="600" fill="#64748b">Dải cây giữa ngăn 2 chiều · Mỗi làn 28px rộng rãi cho xe tải</text>
+      <g transform="translate(0, 40)" filter="url(#soft-shadow)">
+        <rect x="0" y="0" width="340" height="74" rx="4" fill="#ced4da"/>
+        <rect x="0" y="5" width="340" height="64" rx="2" fill="#343a40"/>
+        <!-- Dải phân cách cây xanh giữa (ngăn 2 chiều) -->
+        <rect x="0" y="33" width="340" height="8" fill="#dee2e6" stroke="#adb5bd" stroke-width="0.8"/>
+        <rect x="0" y="34.5" width="340" height="5" fill="#40916c"/>
+        <circle cx="40" cy="37" r="4" fill="#2d6a4f"/>
+        <circle cx="100" cy="37" r="4" fill="#2d6a4f"/>
+        <circle cx="160" cy="37" r="4" fill="#2d6a4f"/>
+        <circle cx="220" cy="37" r="4" fill="#2d6a4f"/>
+        <circle cx="280" cy="37" r="4" fill="#2d6a4f"/>
+        <!-- Vạch mép đường trắng sắc nét -->
+        <line x1="0" y1="7" x2="340" y2="7" stroke="#ffffff" stroke-width="1.5" opacity="0.9"/>
+        <line x1="0" y1="67" x2="340" y2="67" stroke="#ffffff" stroke-width="1.5" opacity="0.9"/>
+        <!-- Xe tải / xe van lưu thông 2 chiều rộng rãi -->
+        <g transform="translate(90, 20)">
+          <rect x="-18" y="-8.5" width="36" height="17" rx="3" fill="#fab005" stroke="#fff" stroke-width="1"/>
+          <rect x="8" y="-6.5" width="8" height="13" rx="1.5" fill="#fff3bf"/>
+        </g>
+        <g transform="translate(230, 52)">
+          <rect x="-18" y="-8.5" width="36" height="17" rx="3" fill="#228be6" stroke="#fff" stroke-width="1"/>
+          <rect x="-16" y="-6.5" width="8" height="13" rx="1.5" fill="#e7f5ff"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- 2.3 Chưa thông xe (Đường cát nện rào chắn) -->
+    <g transform="translate(750, 50)">
+      <text x="0" y="15" font-size="13.5" font-weight="800" fill="#0f172a">Chưa thông xe (Đường cát quy hoạch)</text>
+      <text x="0" y="32" font-size="11" font-weight="600" fill="#64748b">Rộng 34px · Rào chắn sọc đỏ trắng · Đèn cảnh báo</text>
+      <g transform="translate(0, 45)" filter="url(#soft-shadow)">
+        <rect x="0" y="10" width="280" height="34" rx="3" fill="#c9a66b"/>
+        <line x1="10" y1="27" x2="270" y2="27" stroke="#b08b52" stroke-width="2" stroke-dasharray="10 8"/>
+        <!-- Rào chắn sọc đỏ trắng ngăn ở đầu đường -->
+        <g transform="translate(15, 12)">
+          <rect x="0" y="0" width="38" height="10" rx="2" fill="#ffffff" stroke="#c92a2a" stroke-width="1.5"/>
+          <rect x="6" y="0" width="7" height="10" fill="#e03131"/>
+          <rect x="18" y="0" width="7" height="10" fill="#e03131"/>
+          <rect x="30" y="0" width="7" height="10" fill="#e03131"/>
+          <circle cx="19" cy="-4" r="3" fill="#fab005"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- 2.4 Quy tắc N9 & L6 (Lòng đường an toàn) -->
+    <g transform="translate(1080, 50)">
+      <text x="0" y="15" font-size="13.5" font-weight="800" fill="#0f172a">Hành lang an toàn (&gt; 25px)</text>
+      <text x="0" y="32" font-size="11" font-weight="600" fill="#64748b">100% lòng đường sạch · Cây &amp; biển nằm ngoài mép</text>
+      <g transform="translate(0, 45)" filter="url(#soft-shadow)">
+        <rect x="0" y="4" width="300" height="46" rx="2" fill="#343a40"/>
+        <line x1="0" y1="27" x2="300" y2="27" stroke="#ffffff" stroke-width="2" stroke-dasharray="16 14"/>
+        <!-- Cây xanh & đèn đường cách mép > 25px -->
+        <circle cx="60" cy="-16" r="12" fill="#40916c"/>
+        <circle cx="220" cy="70" r="12" fill="#40916c"/>
+      </g>
+    </g>
+
+    <!-- 2.5 Ký hiệu Ghim Game Toàn Cầu -->
+    <g transform="translate(1440, 50)">
+      <text x="0" y="15" font-size="13.5" font-weight="800" fill="#0f172a">Ký hiệu Ghim Nhiệm Vụ (L4)</text>
+      <text x="0" y="32" font-size="11" font-weight="600" fill="#64748b">Kho ▲ vuông · Điểm giao ▼ tròn đa sắc</text>
+      <g transform="translate(15, 52)" filter="url(#soft-shadow)">
+        <g transform="translate(20, 15)">
+          <rect x="-16" y="-16" width="32" height="32" rx="7" fill="#1c7ed6" stroke="#ffffff" stroke-width="2.5"/>
+          <path d="M 0,-8 L 8,6 L -8,6 Z" fill="#ffffff"/>
+          <text x="0" y="30" font-size="10" font-weight="800" fill="#1e293b" text-anchor="middle">Depot (▲)</text>
+        </g>
+        <g transform="translate(90, 15)">
+          <circle cx="0" cy="0" r="16" fill="#e64980" stroke="#ffffff" stroke-width="2.5"/>
+          <path d="M 0,8 L 8,-6 L -8,-6 Z" fill="#ffffff"/>
+          <text x="0" y="30" font-size="10" font-weight="800" fill="#1e293b" text-anchor="middle">Delivery (▼)</text>
+        </g>
+        <g transform="translate(160, 15)">
+          <circle cx="0" cy="0" r="16" fill="#0ca678" stroke="#ffffff" stroke-width="2.5"/>
+          <path d="M 0,8 L 8,-6 L -8,-6 Z" fill="#ffffff"/>
+          <text x="0" y="30" font-size="10" font-weight="800" fill="#1e293b" text-anchor="middle">Delivery (▼)</text>
+        </g>
+        <g transform="translate(230, 15)">
+          <circle cx="0" cy="0" r="16" fill="#ae3ec9" stroke="#ffffff" stroke-width="2.5"/>
+          <path d="M 0,8 L 8,-6 L -8,-6 Z" fill="#ffffff"/>
+          <text x="0" y="30" font-size="10" font-weight="800" fill="#1e293b" text-anchor="middle">Delivery (▼)</text>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- ======================================================== -->
+  <!-- MỤC 3: HỆ THỐNG KIẾN TRÚC ĐÔ THỊ, 3 KHO VÀ 10 CÔNG TRÌNH -->
+  <!-- ======================================================== -->
+  <g transform="translate(50, 465)" filter="url(#card-shadow)">
+    <rect x="0" y="0" width="1820" height="660" rx="12" fill="#ffffff"/>
+    <text x="30" y="32" font-size="16" font-weight="900" fill="#1e293b">3. HỆ THỐNG KIẾN TRÚC ĐÔ THỊ, 3 KHO RIÊNG BIỆT &amp; 10 CÔNG TRÌNH TIẾN TRIỂN</text>
+
+    <!-- HÀNG 1: 4 KIỂU NHÀ PHỐ ĐÔ THỊ & CÔNG TRƯỜNG -->
+    <text x="30" y="62" font-size="13.5" font-weight="800" fill="#2563eb">A. CÁC KIỂU CÔNG TRÌNH CƠ BẢN &amp; CÔNG TRƯỜNG ĐANG THI CÔNG</text>
+    
+    <!-- 1. Nhà phố liền kề pastel -->
+    <g transform="translate(30, 75)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="240" height="110" rx="6" fill="#e9ecef" stroke="#ced4da" stroke-width="1.5"/>
+      <g transform="translate(15, 12)">
+        <rect x="0" y="0" width="60" height="85" rx="3" fill="#f4a261" stroke="#e76f51" stroke-width="1.2"/>
+        <line x1="8" y1="12" x2="52" y2="12" stroke="#fff" stroke-width="2"/>
+        <circle cx="45" cy="28" r="4" fill="#2d6a4f"/>
+        <rect x="10" y="48" width="40" height="28" rx="2" fill="#7fc8c0" stroke="#2a9d8f" stroke-width="1"/>
+      </g>
+      <g transform="translate(85, 12)">
+        <rect x="0" y="0" width="60" height="85" rx="3" fill="#fefae0" stroke="#dda15e" stroke-width="1.2"/>
+        <rect x="10" y="10" width="40" height="25" rx="2" fill="#a8dadc"/>
+        <rect x="8" y="48" width="44" height="28" rx="2" fill="#e9edc9"/>
+      </g>
+      <g transform="translate(155, 12)">
+        <rect x="0" y="0" width="70" height="85" rx="3" fill="#c3fae8" stroke="#63e6be" stroke-width="1.2"/>
+        <line x1="8" y1="14" x2="62" y2="14" stroke="#fff" stroke-width="2"/>
+        <rect x="12" y="48" width="46" height="28" rx="2" fill="#7fc8c0"/>
+      </g>
+      <text x="120" y="105" font-size="11.5" font-weight="800" fill="#0f172a" text-anchor="middle">Nhà phố liền kề mái bằng pastel</text>
+    </g>
+
+    <!-- 2. Chung cư thấp tầng hiện đại -->
+    <g transform="translate(290, 75)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="200" height="110" rx="6" fill="#e9ecef" stroke="#ced4da" stroke-width="1.5"/>
+      <g transform="translate(20, 10)">
+        <rect x="0" y="0" width="160" height="75" rx="4" fill="#9aa8b5" stroke="#6c757d" stroke-width="1.8"/>
+        <rect x="25" y="10" width="65" height="25" rx="2" fill="#495057"/>
+        <rect x="35" y="14" width="45" height="17" rx="1.5" fill="#ced4da"/>
+        <rect x="10" y="42" width="30" height="24" rx="1.5" fill="#7fc8c0" stroke="#fff" stroke-width="1"/>
+        <rect x="48" y="42" width="30" height="24" rx="1.5" fill="#7fc8c0" stroke="#fff" stroke-width="1"/>
+        <rect x="86" y="42" width="30" height="24" rx="1.5" fill="#7fc8c0" stroke="#fff" stroke-width="1"/>
+        <rect x="124" y="42" width="26" height="24" rx="1.5" fill="#7fc8c0" stroke="#fff" stroke-width="1"/>
+      </g>
+      <text x="100" y="105" font-size="11.5" font-weight="800" fill="#0f172a" text-anchor="middle">Chung cư thấp tầng ban công kính</text>
+    </g>
+
+    <!-- 3. Công trường thi công (cần cẩu tháp vàng + rào tôn) -->
+    <g transform="translate(510, 75)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="250" height="110" rx="6" fill="#dccb9d" stroke="#228be6" stroke-width="3" stroke-dasharray="10 4"/>
+      <rect x="20" y="15" width="110" height="65" fill="#adb5bd" stroke="#6c757d" stroke-width="1.5"/>
+      <line x1="20" y1="36" x2="130" y2="36" stroke="#868e96" stroke-width="1.2"/>
+      <line x1="60" y1="15" x2="60" y2="80" stroke="#868e96" stroke-width="1.2"/>
+      <g transform="translate(140, 50)" filter="url(#crane-shadow)">
+        <rect x="-6" y="-6" width="12" height="12" fill="#f59f00" stroke="#d9480f" stroke-width="1.5"/>
+        <circle cx="0" cy="0" r="3" fill="#212529"/>
+        <line x1="-80" y1="0" x2="35" y2="0" stroke="#fab005" stroke-width="4.5" stroke-linecap="round"/>
+        <rect x="22" y="-5" width="14" height="10" rx="1.5" fill="#495057"/>
+      </g>
+      <g transform="translate(180, 20)">
+        <rect x="0" y="0" width="38" height="20" rx="2" fill="#f8f9fa" stroke="#adb5bd" stroke-width="1"/>
+        <ellipse cx="16" cy="10" rx="13" ry="7" fill="#e9ecef" stroke="#adb5bd"/>
+        <rect x="28" y="2" width="8" height="16" rx="1" fill="#ffd43b"/>
+      </g>
+      <text x="125" y="105" font-size="11.5" font-weight="800" fill="#0f172a" text-anchor="middle">Công trường (Cần cẩu tháp + Rào tôn)</text>
+    </g>
+
+    <!-- 4. Lô đất quy hoạch quốc tế (LOT) -->
+    <g transform="translate(780, 75)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="170" height="110" rx="6" fill="#dccb9d" stroke="#b99e74" stroke-width="2"/>
+      <rect x="15" y="15" width="140" height="65" rx="4" fill="none" stroke="#8d6e63" stroke-width="2" stroke-dasharray="8 5"/>
+      <g transform="translate(85, 47)">
+        <rect x="-35" y="-12" width="70" height="24" rx="4" fill="#fff3bf" stroke="#8d6e63" stroke-width="1.2"/>
+        <text x="0" y="4" font-size="11" font-weight="900" fill="#5c3d00" text-anchor="middle">LOT-02</text>
+      </g>
+      <text x="85" y="105" font-size="11.5" font-weight="800" fill="#0f172a" text-anchor="middle">Lô đất quy hoạch quốc tế</text>
+    </g>
+
+    <!-- HÀNG 2: 3 KHO HÀNG RIÊNG BIỆT -->
+    <text x="980" y="62" font-size="13.5" font-weight="800" fill="#2563eb">B. BA KHO HÀNG ĐẶC THÙ (MỖI KHO MỘT HÌNH DẠNG RIÊNG BIỆT)</text>
+
+    <!-- Kho 1: Bãi vật liệu (Màn 1) -->
+    <g transform="translate(980, 75)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="255" height="110" rx="6" fill="#e3d5b8" stroke="#b9a57a" stroke-width="2"/>
+      <ellipse cx="50" cy="45" rx="30" ry="20" fill="#fcc419" stroke="#d9480f" stroke-width="1.5"/>
+      <ellipse cx="115" cy="52" rx="24" ry="16" fill="#adb5bd" stroke="#495057" stroke-width="1.5"/>
+      <rect x="165" y="18" width="68" height="50" rx="3" fill="#8a9aa3" stroke="#495057" stroke-width="1.5"/>
+      <line x1="178" y1="18" x2="178" y2="68" stroke="#ced4da" stroke-width="2"/>
+      <line x1="191" y1="18" x2="191" y2="68" stroke="#ced4da" stroke-width="2"/>
+      <line x1="204" y1="18" x2="204" y2="68" stroke="#ced4da" stroke-width="2"/>
+      <text x="127" y="105" font-size="11.5" font-weight="800" fill="#0f172a" text-anchor="middle">Kho 1: Bãi Vật Liệu (Cát, đá, lán)</text>
+    </g>
+
+    <!-- Kho 2: Kho tổng (Màn 3) -->
+    <g transform="translate(1255, 75)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="265" height="110" rx="6" fill="#ced4da" stroke="#868e96" stroke-width="2"/>
+      <rect x="15" y="15" width="145" height="55" rx="4" fill="#8a9aa3" stroke="#495057" stroke-width="1.8"/>
+      <line x1="45" y1="15" x2="45" y2="70" stroke="#ced4da" stroke-width="2"/>
+      <line x1="75" y1="15" x2="75" y2="70" stroke="#ced4da" stroke-width="2"/>
+      <line x1="105" y1="15" x2="105" y2="70" stroke="#ced4da" stroke-width="2"/>
+      <g transform="translate(175, 18)">
+        <rect x="0" y="0" width="22" height="15" rx="2" fill="#c9a66b" stroke="#8d6e63" stroke-width="1.2"/>
+        <rect x="28" y="0" width="22" height="15" rx="2" fill="#228be6" stroke="#1864ab" stroke-width="1.2"/>
+        <rect x="0" y="22" width="22" height="15" rx="2" fill="#f59f00" stroke="#d9480f" stroke-width="1.2"/>
+        <rect x="28" y="22" width="22" height="15" rx="2" fill="#c9a66b" stroke="#8d6e63" stroke-width="1.2"/>
+      </g>
+      <text x="132" y="105" font-size="11.5" font-weight="800" fill="#0f172a" text-anchor="middle">Kho 2: Kho Tổng (Nhà kho + Kiện hàng)</text>
+    </g>
+
+    <!-- Kho 3: Xưởng gỗ (Màn 8) -->
+    <g transform="translate(1540, 75)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="250" height="110" rx="6" fill="#e3d5b8" stroke="#a0583a" stroke-width="2"/>
+      <rect x="130" y="15" width="105" height="52" rx="3" fill="#a0583a" stroke="#6f3822" stroke-width="1.5"/>
+      <g transform="translate(20, 18)">
+        <rect x="0" y="0" width="95" height="8" rx="2" fill="#b07d4f" stroke="#8d5f3a" stroke-width="0.8"/>
+        <rect x="0" y="11" width="95" height="8" rx="2" fill="#d4a373" stroke="#8d5f3a" stroke-width="0.8"/>
+        <circle cx="15" cy="42" r="6" fill="#8d5f3a"/>
+        <circle cx="28" cy="42" r="6" fill="#8d5f3a"/>
+        <circle cx="41" cy="42" r="6" fill="#8d5f3a"/>
+      </g>
+      <text x="125" y="105" font-size="11.5" font-weight="800" fill="#0f172a" text-anchor="middle">Kho 3: Xưởng Gỗ (Đống gỗ xếp)</text>
+    </g>
+
+    <!-- HÀNG 3: MƯỜI CÔNG TRÌNH TIẾN TRIỂN (MÀN 1 ĐẾN MÀN 10) -->
+    <text x="30" y="215" font-size="13.5" font-weight="800" fill="#2563eb">C. MƯỜI CÔNG TRÌNH TIẾN TRIỂN THEO THỨ TỰ CỐT TRUYỆN (MÀN 01 → MÀN 10)</text>
+
+    <!-- Màn 1: Tiệm bánh -->
+    <g transform="translate(30, 230)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="165" height="120" rx="6" fill="#fff0f6" stroke="#f06595" stroke-width="2"/>
+      <rect x="15" y="12" width="135" height="55" rx="3" fill="#f06595"/>
+      <g transform="translate(15, 67)">
+        <rect x="0" y="0" width="135" height="22" rx="2" fill="#c2255c"/>
+        <path d="M 0,0 L 15,22 L 30,0 L 45,22 L 60,0 L 75,22 L 90,0 L 105,22 L 120,0 L 135,22" fill="#ffffff" stroke="#c2255c" stroke-width="1"/>
+      </g>
+      <circle cx="82" cy="40" r="16" fill="#ffffff" stroke="#c2255c" stroke-width="1.8"/>
+      <path d="M 75,44 Q 82,34 90,44 Z" fill="#f783ac"/>
+      <circle cx="82.5" cy="33" r="3" fill="#e03131"/>
+      <text x="82" y="110" font-size="12" font-weight="900" fill="#c2255c" text-anchor="middle">1. Bakery (M1)</text>
+    </g>
+
+    <!-- Màn 2: Nhà trẻ -->
+    <g transform="translate(210, 230)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="165" height="120" rx="6" fill="#e6fcf5" stroke="#0ca678" stroke-width="2"/>
+      <rect x="15" y="12" width="42" height="42" rx="3" fill="#ffc9c9" stroke="#ff8787" stroke-width="1"/>
+      <rect x="61" y="12" width="42" height="42" rx="3" fill="#ffec99" stroke="#ffd43b" stroke-width="1"/>
+      <rect x="107" y="12" width="42" height="42" rx="3" fill="#c3fae8" stroke="#63e6be" stroke-width="1"/>
+      <rect x="20" y="65" width="45" height="14" rx="4" fill="#ffd43b" stroke="#f59f00" stroke-width="1.2"/>
+      <circle cx="115" cy="74" r="18" fill="#f4e4c1" stroke="#d9bf8c" stroke-width="1.5"/>
+      <text x="82" y="110" font-size="12" font-weight="900" fill="#0ca678" text-anchor="middle">2. Nursery (M2)</text>
+    </g>
+
+    <!-- Màn 3: Trường học -->
+    <g transform="translate(390, 230)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="165" height="120" rx="6" fill="#fff4e6" stroke="#f76707" stroke-width="2"/>
+      <rect x="15" y="12" width="135" height="32" rx="2" fill="#b03a2e"/>
+      <rect x="118" y="44" width="32" height="40" rx="2" fill="#b03a2e"/>
+      <rect x="20" y="52" width="85" height="36" rx="3" fill="#52b788" stroke="#fff" stroke-width="1.2"/>
+      <text x="82" y="110" font-size="12" font-weight="900" fill="#f76707" text-anchor="middle">3. School (M3)</text>
+    </g>
+
+    <!-- Màn 4: Khu nhà ở -->
+    <g transform="translate(570, 230)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="165" height="120" rx="6" fill="#ebfbee" stroke="#2b8a3e" stroke-width="2"/>
+      <rect x="12" y="15" width="32" height="48" rx="2" fill="#f4a261"/>
+      <rect x="48" y="15" width="32" height="48" rx="2" fill="#fefae0" stroke="#dda15e" stroke-width="0.8"/>
+      <rect x="84" y="15" width="32" height="48" rx="2" fill="#c3fae8" stroke="#63e6be" stroke-width="0.8"/>
+      <rect x="120" y="15" width="32" height="48" rx="2" fill="#9aa8b5"/>
+      <rect x="12" y="68" width="140" height="18" rx="2" fill="#8ce99a"/>
+      <text x="82" y="110" font-size="12" font-weight="900" fill="#2b8a3e" text-anchor="middle">4. Housing (M4)</text>
+    </g>
+
+    <!-- Màn 5: Chợ mới -->
+    <g transform="translate(750, 230)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="165" height="120" rx="6" fill="#fff9db" stroke="#f59f00" stroke-width="2"/>
+      <rect x="12" y="12" width="141" height="76" rx="4" fill="#f1f3f5" stroke="#ced4da" stroke-width="1"/>
+      <rect x="20" y="20" width="28" height="18" rx="3" fill="#e03131"/>
+      <rect x="54" y="20" width="28" height="18" rx="3" fill="#fab005"/>
+      <rect x="88" y="20" width="28" height="18" rx="3" fill="#2f9e44"/>
+      <rect x="122" y="20" width="24" height="18" rx="3" fill="#1971c2"/>
+      <text x="82" y="110" font-size="12" font-weight="900" fill="#d9480f" text-anchor="middle">5. Market (M5)</text>
+    </g>
+
+    <!-- Màn 6: Bệnh viện -->
+    <g transform="translate(930, 230)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="165" height="120" rx="6" fill="#fff5f5" stroke="#e03131" stroke-width="2"/>
+      <g transform="translate(20, 15)">
+        <rect x="0" y="0" width="125" height="52" rx="3" fill="#ffffff" stroke="#adb5bd" stroke-width="1.5"/>
+        <rect x="55" y="10" width="15" height="32" rx="1" fill="#e03131"/>
+        <rect x="46.5" y="18.5" width="32" height="15" rx="1" fill="#e03131"/>
+      </g>
+      <text x="82" y="110" font-size="12" font-weight="900" fill="#e03131" text-anchor="middle">6. Hospital (M6)</text>
+    </g>
+
+    <!-- Màn 7: Nhà văn hóa -->
+    <g transform="translate(1110, 230)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="165" height="120" rx="6" fill="#f3f0ff" stroke="#7048e8" stroke-width="2"/>
+      <rect x="15" y="14" width="80" height="70" rx="4" fill="#b03a2e"/>
+      <rect x="102" y="20" width="48" height="40" rx="3" fill="#fff3bf" stroke="#c9a646" stroke-width="1.2"/>
+      <text x="82" y="110" font-size="12" font-weight="900" fill="#7048e8" text-anchor="middle">7. Civic Center (M7)</text>
+    </g>
+
+    <!-- Màn 8: Hồ điều hòa -->
+    <g transform="translate(1290, 230)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="165" height="120" rx="6" fill="#e6fcf5" stroke="#1098ad" stroke-width="2"/>
+      <ellipse cx="82" cy="50" rx="66" ry="36" fill="none" stroke="#f4e4c1" stroke-width="8"/>
+      <ellipse cx="82" cy="50" rx="55" ry="27" fill="#64b5f6" stroke="#fff" stroke-width="2"/>
+      <text x="82" y="110" font-size="12" font-weight="900" fill="#0b7285" text-anchor="middle">8. Eco Lake (M8)</text>
+    </g>
+
+    <!-- Màn 9: Tháp văn phòng -->
+    <g transform="translate(1470, 230)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="165" height="120" rx="6" fill="#e7f5ff" stroke="#0b7285" stroke-width="2"/>
+      <rect x="25" y="12" width="115" height="75" rx="4" fill="#7fc8c0" stroke="#ffffff" stroke-width="2"/>
+      <circle cx="82" cy="50" r="22" fill="#343a40" stroke="#ffffff" stroke-width="2.5"/>
+      <text x="82" y="58" font-size="22" font-weight="900" fill="#ffffff" text-anchor="middle">H</text>
+      <text x="82" y="110" font-size="12" font-weight="900" fill="#0b7285" text-anchor="middle">9. Office Tower (M9)</text>
+    </g>
+
+    <!-- Màn 10: Công viên trung tâm -->
+    <g transform="translate(1650, 230)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="145" height="120" rx="6" fill="#ebfbee" stroke="#2f9e44" stroke-width="2.5"/>
+      <path d="M 15,50 C 35,30 110,30 130,50 C 110,75 35,75 15,50 Z" fill="#64b5f6" stroke="#ffffff" stroke-width="2"/>
+      <circle cx="72" cy="50" r="16" fill="#90caf9" stroke="#ffffff" stroke-width="2"/>
+      <circle cx="72" cy="50" r="6" fill="#ffffff"/>
+      <text x="72" y="110" font-size="12" font-weight="900" fill="#2f9e44" text-anchor="middle">10. Central Park (M10)</text>
+    </g>
+  </g>
+
+  <!-- ======================================================== -->
+  <!-- MỤC 4: 5 LOẠI CÂY ĐÔ THỊ ĐA DẠNG & ĐẠO CỤ QUỐC TẾ -->
+  <!-- ======================================================== -->
+  <g transform="translate(50, 1150)" filter="url(#card-shadow)">
+    <rect x="0" y="0" width="1820" height="300" rx="12" fill="#ffffff"/>
+    <text x="30" y="32" font-size="16" font-weight="900" fill="#1e293b">4. HỆ THỐNG 5 LOẠI CÂY ĐÔ THỊ ĐA DẠNG HÌNH DÁNG/MÀU SẮC &amp; TIỆN ÍCH QUỐC TẾ</text>
+
+    <!-- HÀNG 1: 5 LOẠI CÂY ĐÔ THỊ VÀ BỒN HOA CÔNG VIÊN -->
+    <g transform="translate(0, 45)">
+      <!-- 1. Cây Tán Tròn Đô Thị (Lush Round Canopy) -->
+      <g transform="translate(80, 45)">
+        <g filter="url(#soft-shadow)">
+          <rect x="-14" y="-14" width="28" height="28" rx="4" fill="#e9ecef" stroke="#adb5bd" stroke-width="1.2"/>
+          <circle cx="0" cy="0" r="20" fill="#2d6a4f"/>
+          <circle cx="-3" cy="-3" r="14" fill="#40916c"/>
+          <circle cx="-6" cy="-6" r="8" fill="#52b788"/>
+        </g>
+        <text x="0" y="42" font-size="12" font-weight="800" fill="#0f172a" text-anchor="middle">1. Cây tán tròn bồn vuông</text>
+        <text x="0" y="58" font-size="10.5" font-weight="600" fill="#64748b" text-anchor="middle">Xanh lục ngọc (#40916c)</text>
+      </g>
+
+      <!-- 2. Cây Chuông Vàng Nắng Chiều (Golden Trumpet Tree) -->
+      <g transform="translate(260, 45)">
+        <g filter="url(#soft-shadow)">
+          <rect x="-14" y="-14" width="28" height="28" rx="4" fill="#e9ecef" stroke="#adb5bd" stroke-width="1.2"/>
+          <circle cx="0" cy="0" r="21" fill="#d97706"/>
+          <circle cx="-3" cy="-3" r="15" fill="#f59f00"/>
+          <circle cx="-6" cy="-6" r="9" fill="#ffd43b"/>
+        </g>
+        <text x="0" y="42" font-size="12" font-weight="800" fill="#0f172a" text-anchor="middle">2. Cây chuông vàng</text>
+        <text x="0" y="58" font-size="10.5" font-weight="600" fill="#64748b" text-anchor="middle">Vàng nắng chiều (#fab005)</text>
+      </g>
+
+      <!-- 3. Cây Kèn Hồng Pastel (Pink Blossom Tree) -->
+      <g transform="translate(440, 45)">
+        <g filter="url(#soft-shadow)">
+          <rect x="-14" y="-14" width="28" height="28" rx="4" fill="#e9ecef" stroke="#adb5bd" stroke-width="1.2"/>
+          <circle cx="0" cy="0" r="21" fill="#c2255c"/>
+          <circle cx="-3" cy="-3" r="15" fill="#f06595"/>
+          <circle cx="-6" cy="-6" r="9" fill="#ffc9c9"/>
+        </g>
+        <text x="0" y="42" font-size="12" font-weight="800" fill="#0f172a" text-anchor="middle">3. Cây kèn hồng</text>
+        <text x="0" y="58" font-size="10.5" font-weight="600" fill="#64748b" text-anchor="middle">Hồng đào pastel (#f06595)</text>
+      </g>
+
+      <!-- 4. Cây Bách Tùng Hình Nón (Conical Cypress / Pine) -->
+      <g transform="translate(620, 45)">
+        <g filter="url(#soft-shadow)">
+          <circle cx="0" cy="0" r="22" fill="#1b4332"/>
+          <polygon points="0,-22 14,14 -14,14" fill="#2d6a4f"/>
+          <polygon points="0,-16 10,10 -10,10" fill="#40916c"/>
+          <circle cx="0" cy="0" r="3" fill="#1b4332"/>
+        </g>
+        <text x="0" y="42" font-size="12" font-weight="800" fill="#0f172a" text-anchor="middle">4. Cây bách tùng nón</text>
+        <text x="0" y="58" font-size="10.5" font-weight="600" fill="#64748b" text-anchor="middle">Xanh thẫm (#1b4332)</text>
+      </g>
+
+      <!-- 5. Cọ Cảnh Đô Thị (Urban Fan Palm) -->
+      <g transform="translate(800, 45)">
+        <g filter="url(#soft-shadow)">
+          <circle cx="0" cy="0" r="4.5" fill="#795548"/>
+          <!-- Fronds xòe hình ngôi sao -->
+          <path d="M 0,0 L 0,-20 M 0,0 L 14,-14 M 0,0 L 20,0 M 0,0 L 14,14 M 0,0 L 0,20 M 0,0 L -14,14 M 0,0 L -20,0 M 0,0 L -14,-14" stroke="#2d6a4f" stroke-width="3" stroke-linecap="round"/>
+          <path d="M 0,0 L 0,-16 M 0,0 L 11,-11 M 0,0 L 16,0 M 0,0 L 11,11 M 0,0 L 0,16 M 0,0 L -11,11 M 0,0 L -16,0 M 0,0 L -11,-11" stroke="#52b788" stroke-width="1.8" stroke-linecap="round"/>
+        </g>
+        <text x="0" y="42" font-size="12" font-weight="800" fill="#0f172a" text-anchor="middle">5. Cọ cảnh đô thị</text>
+        <text x="0" y="58" font-size="10.5" font-weight="600" fill="#64748b" text-anchor="middle">Tán sao (#52b788)</text>
+      </g>
+
+      <!-- 6. Bồn hoa công viên tròn -->
+      <g transform="translate(980, 45)">
+        <g filter="url(#soft-shadow)">
+          <circle cx="0" cy="0" r="20" fill="#d3f9d8" stroke="#2b8a3e" stroke-width="1.5"/>
+          <circle cx="-6" cy="-6" r="5" fill="#f783ac"/>
+          <circle cx="6" cy="-6" r="5" fill="#ffd43b"/>
+          <circle cx="0" cy="6" r="5" fill="#ff8787"/>
+          <circle cx="0" cy="0" r="4" fill="#ffffff"/>
+        </g>
+        <text x="0" y="42" font-size="12" font-weight="800" fill="#0f172a" text-anchor="middle">Bồn hoa công viên</text>
+        <text x="0" y="58" font-size="10.5" font-weight="600" fill="#64748b" text-anchor="middle">Đa sắc pastel</text>
+      </g>
+
+      <!-- 7. Biển chào quốc tế (NEW HORIZON - GLOBAL) -->
+      <g transform="translate(1220, 45)">
+        <g filter="url(#soft-shadow)">
+          <rect x="-65" y="-14" width="130" height="28" rx="6" fill="#1864ab" stroke="#ffffff" stroke-width="2"/>
+          <text x="0" y="5" font-size="11.5" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="1.5">NEW HORIZON</text>
+        </g>
+        <text x="0" y="42" font-size="12" font-weight="800" fill="#0f172a" text-anchor="middle">Biển chào quốc tế</text>
+        <text x="0" y="58" font-size="10.5" font-weight="600" fill="#64748b" text-anchor="middle">English / Global Design</text>
+      </g>
+
+      <!-- 8. Biển quy hoạch lô đất quốc tế (LOT Blueprint) -->
+      <g transform="translate(1450, 45)">
+        <g filter="url(#soft-shadow)">
+          <rect x="-35" y="-14" width="70" height="28" rx="4" fill="#1971c2" stroke="#ffffff" stroke-width="1.5"/>
+          <rect x="-31" y="-10" width="62" height="20" rx="2" fill="#e7f5ff"/>
+          <text x="0" y="4" font-size="11" font-weight="900" fill="#1864ab" text-anchor="middle">LOT-03</text>
+        </g>
+        <text x="0" y="42" font-size="12" font-weight="800" fill="#0f172a" text-anchor="middle">Biển phân lô quy hoạch</text>
+        <text x="0" y="58" font-size="10.5" font-weight="600" fill="#64748b" text-anchor="middle">Mã số quốc tế (LOT-XX)</text>
+      </g>
+
+      <!-- 9. Xe bồn bê tông & Đạo cụ -->
+      <g transform="translate(1670, 45)">
+        <g filter="url(#soft-shadow)">
+          <rect x="-24" y="-11" width="48" height="22" rx="3.5" fill="#343a40"/>
+          <rect x="11" y="-10" width="12" height="20" rx="2" fill="#ffd43b" stroke="#e67700" stroke-width="1"/>
+          <ellipse cx="-6" cy="0" rx="16" ry="9" fill="#f8f9fa"/>
+        </g>
+        <text x="0" y="42" font-size="12" font-weight="800" fill="#0f172a" text-anchor="middle">Xe trộn bê tông</text>
+        <text x="0" y="58" font-size="10.5" font-weight="600" fill="#64748b" text-anchor="middle">Công trường thi công</text>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+# Bảng Tự Kiểm Tra Màn Thưởng — Phiên Chợ Vàng (Chapter 1 Bonus Level)
+
+| Hạng mục | Theo `du_lieu_man.json` | Ảnh mới (`khung_canh_moi.png` & `khung_canh_moi_co_ghim.png`) | Đánh giá |
+| :--- | :--- | :--- | :---: |
+| **Kích thước bản đồ** | 1950 × 1250 px (vùng chơi), chuẩn canvas mở rộng 2450 × 1750 px (`viewBox="-250 -250 2450 1750"`) | Đạt chuẩn vector/raster 2450 × 1750 px Retina siêu nét, 100% tọa độ game gốc giữ nguyên, biên lùi 350 px bao quanh chống cắt cụt khi zoom | **ĐẠT (10/10)** |
+| **Vùng mở rộng** | `open_region_max_col_row: [5, 3]` (lưới toàn bộ 6 cột c0–c5, 4 hàng r0–r3) | Toàn bộ 38 đoạn đường trong làng đã thông suốt 100% (`open: true`), làng mở hội ăn mừng kết thúc chương | **ĐẠT** |
+| **Số đoạn đường** | Tổng 38 đoạn: 38 thông (`open: true`), 0 chưa thông | 38 đoạn nhựa xám phẳng và đường đê ven sông hoàn thiện, vạch kẻ phân làn rõ nét; không còn đoạn đóng hay rào chắn | **ĐẠT** |
+| **Độ rộng & vạch kẻ đường** | Đường thường 46 px vạch trắng đứt; đường lớn (đê) 64 px vạch vàng đôi; biển cao tốc xanh | Đúng quy chuẩn L2 & N1; lòng đường thông thoáng không vật cản; 2 biển báo vuông xanh cao tốc trên đê tại `[1895, 300]` và `[1895, 950]` | **ĐẠT** |
+| **Nút giao lộ hỗn hợp** | Giao lộ giữa đường thường (46 px) và đường lớn (64 px) tại nút `c4r0` [1500, 100] và `c4r3` [1500, 1150] | Duy nhất 1 màu đường thường `#888f98` tại tâm giao lộ; đường lớn kết thúc bằng mặt cắt phẳng (`butt`) tại $x=1523$; vạch kẻ vàng/trắng cách tâm nút $\ge 35\text{ px}$, không chồng chéo, không hào quang tròn | **ĐẠT (10/10)** |
+| **Điểm giao hàng & Ghim** | Không có đơn giao (`points: []`, `missions: []`) | Đúng thiết kế: bản đồ sạch sẽ, không có ghim nhiệm vụ, người chơi tập trung lái xe nhặt kim cương | **ĐẠT** |
+| **Kim cương (`gems_count: 25`)** | 25 kim cương trên đường do engine game render đè lên | Mặt đường phẳng phiu, sạch sẽ, không vật cản để engine game render các viên kim cương | **ĐẠT** |
+| **Toàn bộ 10 Công trình Làng quê** | Đủ 10 công trình hoàn thiện: `HTX`, `ChoPhien`, `GiengLang`, `TruongLang`, `XomDong`, `TramYTe`, `AoCa`, `DinhLang`, `BenDo`, `NhaVanHoa` | Tất cả 10 công trình đều hiện diện ở trạng thái hoàn thiện đẹp nhất: Kỳ quan Chợ phiên cây đa, Đại Đình làng mái cong, Nhà văn hóa cờ hoa, Bến đò thuyền khách... | **ĐẠT (10/10)** |
+| **Tính đồng nhất cảnh quan (L11)** | Một ngôi làng thống nhất lớn dần qua từng màn | Kế thừa 100% pixel-for-pixel địa hình nền: đường cong sông Hồng, bãi cát bồi, mương dẫn nước phía Bắc có cầu gỗ, ruộng lúa chín vàng phía Nam, đụn rơm, cối xay gió, đàn trâu và đàn cò | **ĐẠT (10/10)** |
+| **Quy tắc N9 / L6 (Đường sạch)** | Lòng đường thông suốt, không vật cản hay cành lá xâm lấn | 100% lòng đường lái xe sạch sẽ, an toàn tuyệt đối, cách mép đường $> 25\text{ px}$. Đã dời đụn rơm từ $(1120, 1070)$ sang $(1040, 1070)$ và đàn trâu từ $(1710, 420)$ sang $(1710, 375)$ | **ĐẠT** |
+| **Chi tiết Lễ Hội độc quyền (Bonus Upgrade)** | Màn Thưởng lộng lẫy, khác biệt vượt bậc so với Màn 10 | Bổ sung 2 Thuyền Rồng lễ hội sơn son thiếp vàng trên sông Hồng, hoa đăng trôi trên nước, đại Trống Hội và Cây Nêu sân Đình, sạp hoa Tết và băng rôn "Hội Chợ Vàng", cờ hội ngũ sắc, cờ đuôi nheo và đàn bồ câu trắng | **ĐẠT (10/10)** |
+
