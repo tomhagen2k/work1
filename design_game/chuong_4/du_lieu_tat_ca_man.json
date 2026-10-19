@@ -1,0 +1,12042 @@
+[
+ {
+  "level": 34,
+  "chapter": 4,
+  "level_in_chapter": 1,
+  "name_vi": "Quán taverna",
+  "name_en": "Taverna",
+  "intro_vi": "Ngày đầu trên đảo: hai kho, phố chợ đông nghẹt xe — gom chuyến và chọn đường cho khéo.",
+  "intro_en": "First day on the island: two depots and a packed market street — group your trips and pick your roads wisely.",
+  "time_limit_s": 115,
+  "vehicles": [
+   "van"
+  ],
+  "map_px": [
+   2650,
+   1250
+  ],
+  "grid_cols_rows": [
+   8,
+   4
+  ],
+  "node_spacing_px": 350,
+  "open_region_max_col_row": [
+   5,
+   3
+  ],
+  "nodes": {
+   "c0r0": [
+    100,
+    100
+   ],
+   "c0r1": [
+    100,
+    450
+   ],
+   "c0r2": [
+    100,
+    800
+   ],
+   "c0r3": [
+    100,
+    1150
+   ],
+   "c1r0": [
+    450,
+    100
+   ],
+   "c1r1": [
+    450,
+    450
+   ],
+   "c1r2": [
+    450,
+    800
+   ],
+   "c1r3": [
+    450,
+    1150
+   ],
+   "c2r0": [
+    800,
+    100
+   ],
+   "c2r1": [
+    800,
+    450
+   ],
+   "c2r2": [
+    800,
+    800
+   ],
+   "c2r3": [
+    800,
+    1150
+   ],
+   "c3r0": [
+    1150,
+    100
+   ],
+   "c3r1": [
+    1150,
+    450
+   ],
+   "c3r2": [
+    1150,
+    800
+   ],
+   "c3r3": [
+    1150,
+    1150
+   ],
+   "c4r0": [
+    1500,
+    100
+   ],
+   "c4r1": [
+    1500,
+    450
+   ],
+   "c4r2": [
+    1500,
+    800
+   ],
+   "c4r3": [
+    1500,
+    1150
+   ],
+   "c5r0": [
+    1850,
+    100
+   ],
+   "c5r1": [
+    1850,
+    450
+   ],
+   "c5r2": [
+    1850,
+    800
+   ],
+   "c5r3": [
+    1850,
+    1150
+   ],
+   "c6r0": [
+    2200,
+    100
+   ],
+   "c6r1": [
+    2200,
+    450
+   ],
+   "c6r2": [
+    2200,
+    800
+   ],
+   "c6r3": [
+    2200,
+    1150
+   ],
+   "c7r0": [
+    2550,
+    100
+   ],
+   "c7r1": [
+    2550,
+    450
+   ],
+   "c7r2": [
+    2550,
+    800
+   ],
+   "c7r3": [
+    2550,
+    1150
+   ]
+  },
+  "start": {
+   "road": [
+    "c0r1",
+    "c1r1"
+   ],
+   "fraction": 0.11428571428571428
+  },
+  "construction_site": {
+   "id": "Taverna",
+   "name_vi": "Quán taverna",
+   "name_en": "Taverna"
+  },
+  "buildings_already_built": [],
+  "points": [
+   {
+    "id": "KhoCang",
+    "name_vi": "Kho cảng",
+    "name_en": "Harbour Store",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1c7ed6",
+    "on_road": [
+     "c0r1",
+     "c0r2"
+    ],
+    "stop_xy": [
+     100,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 140,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      186,
+      631
+     ]
+    }
+   },
+   {
+    "id": "KhoSon",
+    "name_vi": "Kho sơn",
+    "name_en": "Paint Depot",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1864ab",
+    "on_road": [
+     "c4r0",
+     "c4r1"
+    ],
+    "stop_xy": [
+     1500,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1540,
+     "y": 229,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      1586,
+      281
+     ]
+    }
+   },
+   {
+    "id": "Taverna",
+    "name_vi": "Quán taverna",
+    "name_en": "Taverna",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#2b8a3e",
+    "on_road": [
+     "c1r0",
+     "c1r1"
+    ],
+    "stop_xy": [
+     450,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 488,
+     "y": 215,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      550,
+      281
+     ]
+    }
+   },
+   {
+    "id": "LuuNiem",
+    "name_vi": "Đồ lưu niệm",
+    "name_en": "Gift Shop",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#d6336c",
+    "on_road": [
+     "c3r1",
+     "c4r1"
+    ],
+    "stop_xy": [
+     1325,
+     450
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1267,
+     "y": 490,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      1325,
+      522
+     ]
+    }
+   },
+   {
+    "id": "PhongTranh",
+    "name_vi": "Phòng tranh",
+    "name_en": "Gallery",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#5f3dc4",
+    "on_road": [
+     "c4r1",
+     "c5r1"
+    ],
+    "stop_xy": [
+     1675,
+     450
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1617,
+     "y": 490,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      1675,
+      522
+     ]
+    }
+   },
+   {
+    "id": "BaiBien",
+    "name_vi": "Quán bãi biển",
+    "name_en": "Beach Bar",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#0c8599",
+    "on_road": [
+     "c3r3",
+     "c4r3"
+    ],
+    "stop_xy": [
+     1325,
+     1150
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1267,
+     "y": 1190,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      1325,
+      1222
+     ]
+    }
+   }
+  ],
+  "missions": [
+   {
+    "from": "KhoCang",
+    "to": "Taverna",
+    "qty": 1,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoCang",
+    "to": "LuuNiem",
+    "qty": 3,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoSon",
+    "to": "PhongTranh",
+    "qty": 1,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoCang",
+    "to": "BaiBien",
+    "qty": 3,
+    "deadline_s": null
+   }
+  ],
+  "gems_count": 0,
+  "edges": [
+   {
+    "a": "c0r0",
+    "b": "c1r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     450,
+     100
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c2r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     800,
+     100
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c3r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     1150,
+     100
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c4r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1500,
+     100
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c5r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1850,
+     100
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c6r0",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     2200,
+     100
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c7r0",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2550,
+     100
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c3r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c4r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c5r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c4r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c0r3",
+    "b": "c1r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     1150
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c1r3",
+    "b": "c2r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     450,
+     1150
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c2r3",
+    "b": "c3r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     800,
+     1150
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c3r3",
+    "b": "c4r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1150,
+     1150
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c4r3",
+    "b": "c5r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1500,
+     1150
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c5r3",
+    "b": "c6r3",
+    "type": "lon",
+    "open": false,
+    "from_xy": [
+     1850,
+     1150
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c6r3",
+    "b": "c7r3",
+    "type": "lon",
+    "open": false,
+    "from_xy": [
+     2200,
+     1150
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   },
+   {
+    "a": "c0r0",
+    "b": "c0r1",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     100,
+     450
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c0r2",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     100,
+     800
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c0r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     100,
+     1150
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c1r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c2r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c3r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c3r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c4r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c4r2",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c4r3",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c5r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c5r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c6r3",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c7r0",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     100
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c7r1",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     450
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c7r2",
+    "b": "c7r3",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     800
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   }
+  ]
+ },
+ {
+  "level": 35,
+  "chapter": 4,
+  "level_in_chapter": 2,
+  "name_vi": "Phố sơn mới",
+  "name_en": "Fresh-Paint Lane",
+  "intro_vi": "Đường ven vách và đường ven biển rộng, nhanh — thử đi vòng qua đường lớn.",
+  "intro_en": "The cliff road and the coast road are wide and fast — try going around by the main road.",
+  "time_limit_s": 115,
+  "vehicles": [
+   "van"
+  ],
+  "map_px": [
+   2650,
+   1250
+  ],
+  "grid_cols_rows": [
+   8,
+   4
+  ],
+  "node_spacing_px": 350,
+  "open_region_max_col_row": [
+   5,
+   3
+  ],
+  "nodes": {
+   "c0r0": [
+    100,
+    100
+   ],
+   "c0r1": [
+    100,
+    450
+   ],
+   "c0r2": [
+    100,
+    800
+   ],
+   "c0r3": [
+    100,
+    1150
+   ],
+   "c1r0": [
+    450,
+    100
+   ],
+   "c1r1": [
+    450,
+    450
+   ],
+   "c1r2": [
+    450,
+    800
+   ],
+   "c1r3": [
+    450,
+    1150
+   ],
+   "c2r0": [
+    800,
+    100
+   ],
+   "c2r1": [
+    800,
+    450
+   ],
+   "c2r2": [
+    800,
+    800
+   ],
+   "c2r3": [
+    800,
+    1150
+   ],
+   "c3r0": [
+    1150,
+    100
+   ],
+   "c3r1": [
+    1150,
+    450
+   ],
+   "c3r2": [
+    1150,
+    800
+   ],
+   "c3r3": [
+    1150,
+    1150
+   ],
+   "c4r0": [
+    1500,
+    100
+   ],
+   "c4r1": [
+    1500,
+    450
+   ],
+   "c4r2": [
+    1500,
+    800
+   ],
+   "c4r3": [
+    1500,
+    1150
+   ],
+   "c5r0": [
+    1850,
+    100
+   ],
+   "c5r1": [
+    1850,
+    450
+   ],
+   "c5r2": [
+    1850,
+    800
+   ],
+   "c5r3": [
+    1850,
+    1150
+   ],
+   "c6r0": [
+    2200,
+    100
+   ],
+   "c6r1": [
+    2200,
+    450
+   ],
+   "c6r2": [
+    2200,
+    800
+   ],
+   "c6r3": [
+    2200,
+    1150
+   ],
+   "c7r0": [
+    2550,
+    100
+   ],
+   "c7r1": [
+    2550,
+    450
+   ],
+   "c7r2": [
+    2550,
+    800
+   ],
+   "c7r3": [
+    2550,
+    1150
+   ]
+  },
+  "start": {
+   "road": [
+    "c0r1",
+    "c1r1"
+   ],
+   "fraction": 0.11428571428571428
+  },
+  "construction_site": {
+   "id": "PhoSon",
+   "name_vi": "Phố sơn mới",
+   "name_en": "Fresh-Paint Lane"
+  },
+  "buildings_already_built": [
+   {
+    "id": "Taverna",
+    "name_vi": "Quán taverna"
+   }
+  ],
+  "points": [
+   {
+    "id": "KhoCang",
+    "name_vi": "Kho cảng",
+    "name_en": "Harbour Store",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1c7ed6",
+    "on_road": [
+     "c0r1",
+     "c0r2"
+    ],
+    "stop_xy": [
+     100,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 140,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      186,
+      631
+     ]
+    }
+   },
+   {
+    "id": "KhoSon",
+    "name_vi": "Kho sơn",
+    "name_en": "Paint Depot",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1864ab",
+    "on_road": [
+     "c4r0",
+     "c4r1"
+    ],
+    "stop_xy": [
+     1500,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1540,
+     "y": 229,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      1586,
+      281
+     ]
+    }
+   },
+   {
+    "id": "PhoSon",
+    "name_vi": "Phố sơn mới",
+    "name_en": "Fresh-Paint Lane",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#a61e4d",
+    "on_road": [
+     "c2r2",
+     "c3r2"
+    ],
+    "stop_xy": [
+     975,
+     800
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 917,
+     "y": 840,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      975,
+      872
+     ]
+    }
+   },
+   {
+    "id": "PhongTranh",
+    "name_vi": "Phòng tranh",
+    "name_en": "Gallery",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#5f3dc4",
+    "on_road": [
+     "c4r1",
+     "c5r1"
+    ],
+    "stop_xy": [
+     1675,
+     450
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1617,
+     "y": 490,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      1675,
+      522
+     ]
+    }
+   },
+   {
+    "id": "TiemKem",
+    "name_vi": "Tiệm kem",
+    "name_en": "Ice Cream",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#e64980",
+    "on_road": [
+     "c5r2",
+     "c5r3"
+    ],
+    "stop_xy": [
+     1850,
+     975
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1890,
+     "y": 929,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      1936,
+      981
+     ]
+    }
+   }
+  ],
+  "missions": [
+   {
+    "from": "KhoSon",
+    "to": "PhoSon",
+    "qty": 3,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoCang",
+    "to": "TiemKem",
+    "qty": 2,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoCang",
+    "to": "PhongTranh",
+    "qty": 2,
+    "deadline_s": null
+   }
+  ],
+  "gems_count": 0,
+  "edges": [
+   {
+    "a": "c0r0",
+    "b": "c1r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     450,
+     100
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c2r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     800,
+     100
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c3r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     1150,
+     100
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c4r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1500,
+     100
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c5r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1850,
+     100
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c6r0",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     2200,
+     100
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c7r0",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2550,
+     100
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c3r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c4r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c5r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c4r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c0r3",
+    "b": "c1r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     1150
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c1r3",
+    "b": "c2r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     450,
+     1150
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c2r3",
+    "b": "c3r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     800,
+     1150
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c3r3",
+    "b": "c4r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1150,
+     1150
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c4r3",
+    "b": "c5r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1500,
+     1150
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c5r3",
+    "b": "c6r3",
+    "type": "lon",
+    "open": false,
+    "from_xy": [
+     1850,
+     1150
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c6r3",
+    "b": "c7r3",
+    "type": "lon",
+    "open": false,
+    "from_xy": [
+     2200,
+     1150
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   },
+   {
+    "a": "c0r0",
+    "b": "c0r1",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     100,
+     450
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c0r2",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     100,
+     800
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c0r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     100,
+     1150
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c1r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c2r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c3r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c3r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c4r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c4r2",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c4r3",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c5r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c5r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c6r3",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c7r0",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     100
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c7r1",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     450
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c7r2",
+    "b": "c7r3",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     800
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   }
+  ]
+ },
+ {
+  "level": 36,
+  "chapter": 4,
+  "level_in_chapter": 3,
+  "name_vi": "Bến phà",
+  "name_en": "Ferry Pier",
+  "intro_vi": "Phà rời bến đúng giờ! Đơn có ⏱ hạn phải giao kịp — trễ hạn là thua ngay.",
+  "intro_en": "The ferry leaves on time! Orders with a ⏱ deadline must arrive in time — late means you lose.",
+  "time_limit_s": 135,
+  "vehicles": [
+   "van"
+  ],
+  "map_px": [
+   2650,
+   1250
+  ],
+  "grid_cols_rows": [
+   8,
+   4
+  ],
+  "node_spacing_px": 350,
+  "open_region_max_col_row": [
+   6,
+   3
+  ],
+  "nodes": {
+   "c0r0": [
+    100,
+    100
+   ],
+   "c0r1": [
+    100,
+    450
+   ],
+   "c0r2": [
+    100,
+    800
+   ],
+   "c0r3": [
+    100,
+    1150
+   ],
+   "c1r0": [
+    450,
+    100
+   ],
+   "c1r1": [
+    450,
+    450
+   ],
+   "c1r2": [
+    450,
+    800
+   ],
+   "c1r3": [
+    450,
+    1150
+   ],
+   "c2r0": [
+    800,
+    100
+   ],
+   "c2r1": [
+    800,
+    450
+   ],
+   "c2r2": [
+    800,
+    800
+   ],
+   "c2r3": [
+    800,
+    1150
+   ],
+   "c3r0": [
+    1150,
+    100
+   ],
+   "c3r1": [
+    1150,
+    450
+   ],
+   "c3r2": [
+    1150,
+    800
+   ],
+   "c3r3": [
+    1150,
+    1150
+   ],
+   "c4r0": [
+    1500,
+    100
+   ],
+   "c4r1": [
+    1500,
+    450
+   ],
+   "c4r2": [
+    1500,
+    800
+   ],
+   "c4r3": [
+    1500,
+    1150
+   ],
+   "c5r0": [
+    1850,
+    100
+   ],
+   "c5r1": [
+    1850,
+    450
+   ],
+   "c5r2": [
+    1850,
+    800
+   ],
+   "c5r3": [
+    1850,
+    1150
+   ],
+   "c6r0": [
+    2200,
+    100
+   ],
+   "c6r1": [
+    2200,
+    450
+   ],
+   "c6r2": [
+    2200,
+    800
+   ],
+   "c6r3": [
+    2200,
+    1150
+   ],
+   "c7r0": [
+    2550,
+    100
+   ],
+   "c7r1": [
+    2550,
+    450
+   ],
+   "c7r2": [
+    2550,
+    800
+   ],
+   "c7r3": [
+    2550,
+    1150
+   ]
+  },
+  "start": {
+   "road": [
+    "c0r1",
+    "c1r1"
+   ],
+   "fraction": 0.11428571428571428
+  },
+  "construction_site": {
+   "id": "BenPhaDao",
+   "name_vi": "Bến phà",
+   "name_en": "Ferry Pier"
+  },
+  "buildings_already_built": [
+   {
+    "id": "Taverna",
+    "name_vi": "Quán taverna"
+   },
+   {
+    "id": "PhoSon",
+    "name_vi": "Phố sơn mới"
+   }
+  ],
+  "points": [
+   {
+    "id": "KhoCang",
+    "name_vi": "Kho cảng",
+    "name_en": "Harbour Store",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1c7ed6",
+    "on_road": [
+     "c0r1",
+     "c0r2"
+    ],
+    "stop_xy": [
+     100,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 140,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      186,
+      631
+     ]
+    }
+   },
+   {
+    "id": "KhoSon",
+    "name_vi": "Kho sơn",
+    "name_en": "Paint Depot",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1864ab",
+    "on_road": [
+     "c4r0",
+     "c4r1"
+    ],
+    "stop_xy": [
+     1500,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1540,
+     "y": 229,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      1586,
+      281
+     ]
+    }
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà",
+    "name_en": "Ferry Pier",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#0b7285",
+    "on_road": [
+     "c5r3",
+     "c6r3"
+    ],
+    "stop_xy": [
+     2025,
+     1150
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1967,
+     "y": 1190,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      2025,
+      1222
+     ]
+    }
+   },
+   {
+    "id": "VuonNho",
+    "name_vi": "Vườn nho",
+    "name_en": "Vineyard",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#2f9e44",
+    "on_road": [
+     "c6r1",
+     "c6r2"
+    ],
+    "stop_xy": [
+     2200,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 2240,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      2286,
+      631
+     ]
+    }
+   },
+   {
+    "id": "NhaDan",
+    "name_vi": "Xóm vôi trắng",
+    "name_en": "Whitewashed Homes",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#a61e4d",
+    "on_road": [
+     "c2r0",
+     "c2r1"
+    ],
+    "stop_xy": [
+     800,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 840,
+     "y": 229,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      886,
+      281
+     ]
+    }
+   }
+  ],
+  "missions": [
+   {
+    "from": "KhoSon",
+    "to": "BenPhaDao",
+    "qty": 3,
+    "deadline_s": 80
+   },
+   {
+    "from": "KhoCang",
+    "to": "VuonNho",
+    "qty": 2,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoCang",
+    "to": "NhaDan",
+    "qty": 3,
+    "deadline_s": null
+   }
+  ],
+  "gems_count": 0,
+  "edges": [
+   {
+    "a": "c0r0",
+    "b": "c1r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     450,
+     100
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c2r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     800,
+     100
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c3r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     1150,
+     100
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c4r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1500,
+     100
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c5r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1850,
+     100
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c6r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     2200,
+     100
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c7r0",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2550,
+     100
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c3r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c4r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c5r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c4r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c0r3",
+    "b": "c1r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     1150
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c1r3",
+    "b": "c2r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     450,
+     1150
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c2r3",
+    "b": "c3r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     800,
+     1150
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c3r3",
+    "b": "c4r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1150,
+     1150
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c4r3",
+    "b": "c5r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1500,
+     1150
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c5r3",
+    "b": "c6r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1850,
+     1150
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c6r3",
+    "b": "c7r3",
+    "type": "lon",
+    "open": false,
+    "from_xy": [
+     2200,
+     1150
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   },
+   {
+    "a": "c0r0",
+    "b": "c0r1",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     100,
+     450
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c0r2",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     100,
+     800
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c0r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     100,
+     1150
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c1r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c2r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c3r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c3r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c4r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c4r2",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c4r3",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c5r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c5r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c6r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c7r0",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     100
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c7r1",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     450
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c7r2",
+    "b": "c7r3",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     800
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   }
+  ]
+ },
+ {
+  "level": 37,
+  "chapter": 4,
+  "level_in_chapter": 4,
+  "name_vi": "Tháp chuông",
+  "name_en": "Bell Tower",
+  "intro_vi": "Hàng cho phà và cho tháp chuông cùng ở một kho — chở chung hay giao phà trước?",
+  "intro_en": "Goods for the ferry and the bell tower wait at the same depot — carry them together or rush the ferry first?",
+  "time_limit_s": 150,
+  "vehicles": [
+   "van"
+  ],
+  "map_px": [
+   2650,
+   1250
+  ],
+  "grid_cols_rows": [
+   8,
+   4
+  ],
+  "node_spacing_px": 350,
+  "open_region_max_col_row": [
+   6,
+   3
+  ],
+  "nodes": {
+   "c0r0": [
+    100,
+    100
+   ],
+   "c0r1": [
+    100,
+    450
+   ],
+   "c0r2": [
+    100,
+    800
+   ],
+   "c0r3": [
+    100,
+    1150
+   ],
+   "c1r0": [
+    450,
+    100
+   ],
+   "c1r1": [
+    450,
+    450
+   ],
+   "c1r2": [
+    450,
+    800
+   ],
+   "c1r3": [
+    450,
+    1150
+   ],
+   "c2r0": [
+    800,
+    100
+   ],
+   "c2r1": [
+    800,
+    450
+   ],
+   "c2r2": [
+    800,
+    800
+   ],
+   "c2r3": [
+    800,
+    1150
+   ],
+   "c3r0": [
+    1150,
+    100
+   ],
+   "c3r1": [
+    1150,
+    450
+   ],
+   "c3r2": [
+    1150,
+    800
+   ],
+   "c3r3": [
+    1150,
+    1150
+   ],
+   "c4r0": [
+    1500,
+    100
+   ],
+   "c4r1": [
+    1500,
+    450
+   ],
+   "c4r2": [
+    1500,
+    800
+   ],
+   "c4r3": [
+    1500,
+    1150
+   ],
+   "c5r0": [
+    1850,
+    100
+   ],
+   "c5r1": [
+    1850,
+    450
+   ],
+   "c5r2": [
+    1850,
+    800
+   ],
+   "c5r3": [
+    1850,
+    1150
+   ],
+   "c6r0": [
+    2200,
+    100
+   ],
+   "c6r1": [
+    2200,
+    450
+   ],
+   "c6r2": [
+    2200,
+    800
+   ],
+   "c6r3": [
+    2200,
+    1150
+   ],
+   "c7r0": [
+    2550,
+    100
+   ],
+   "c7r1": [
+    2550,
+    450
+   ],
+   "c7r2": [
+    2550,
+    800
+   ],
+   "c7r3": [
+    2550,
+    1150
+   ]
+  },
+  "start": {
+   "road": [
+    "c0r1",
+    "c1r1"
+   ],
+   "fraction": 0.11428571428571428
+  },
+  "construction_site": {
+   "id": "ThapChuong",
+   "name_vi": "Tháp chuông",
+   "name_en": "Bell Tower"
+  },
+  "buildings_already_built": [
+   {
+    "id": "Taverna",
+    "name_vi": "Quán taverna"
+   },
+   {
+    "id": "PhoSon",
+    "name_vi": "Phố sơn mới"
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà"
+   }
+  ],
+  "points": [
+   {
+    "id": "KhoCang",
+    "name_vi": "Kho cảng",
+    "name_en": "Harbour Store",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1c7ed6",
+    "on_road": [
+     "c0r1",
+     "c0r2"
+    ],
+    "stop_xy": [
+     100,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 140,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      186,
+      631
+     ]
+    }
+   },
+   {
+    "id": "KhoSon",
+    "name_vi": "Kho sơn",
+    "name_en": "Paint Depot",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1864ab",
+    "on_road": [
+     "c4r0",
+     "c4r1"
+    ],
+    "stop_xy": [
+     1500,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1540,
+     "y": 229,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      1586,
+      281
+     ]
+    }
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà",
+    "name_en": "Ferry Pier",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#0b7285",
+    "on_road": [
+     "c5r3",
+     "c6r3"
+    ],
+    "stop_xy": [
+     2025,
+     1150
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1967,
+     "y": 1190,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      2025,
+      1222
+     ]
+    }
+   },
+   {
+    "id": "ThapChuong",
+    "name_vi": "Tháp chuông",
+    "name_en": "Bell Tower",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#7048e8",
+    "on_road": [
+     "c3r0",
+     "c3r1"
+    ],
+    "stop_xy": [
+     1150,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1188,
+     "y": 215,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      1250,
+      281
+     ]
+    }
+   },
+   {
+    "id": "VuonNho",
+    "name_vi": "Vườn nho",
+    "name_en": "Vineyard",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#2f9e44",
+    "on_road": [
+     "c6r1",
+     "c6r2"
+    ],
+    "stop_xy": [
+     2200,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 2240,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      2286,
+      631
+     ]
+    }
+   }
+  ],
+  "missions": [
+   {
+    "from": "KhoSon",
+    "to": "ThapChuong",
+    "qty": 2,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoSon",
+    "to": "BenPhaDao",
+    "qty": 2,
+    "deadline_s": 60
+   },
+   {
+    "from": "KhoCang",
+    "to": "VuonNho",
+    "qty": 3,
+    "deadline_s": null
+   }
+  ],
+  "gems_count": 0,
+  "edges": [
+   {
+    "a": "c0r0",
+    "b": "c1r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     450,
+     100
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c2r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     800,
+     100
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c3r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     1150,
+     100
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c4r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1500,
+     100
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c5r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1850,
+     100
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c6r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     2200,
+     100
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c7r0",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2550,
+     100
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c3r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c4r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c5r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c4r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c0r3",
+    "b": "c1r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     1150
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c1r3",
+    "b": "c2r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     450,
+     1150
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c2r3",
+    "b": "c3r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     800,
+     1150
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c3r3",
+    "b": "c4r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1150,
+     1150
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c4r3",
+    "b": "c5r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1500,
+     1150
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c5r3",
+    "b": "c6r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1850,
+     1150
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c6r3",
+    "b": "c7r3",
+    "type": "lon",
+    "open": false,
+    "from_xy": [
+     2200,
+     1150
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   },
+   {
+    "a": "c0r0",
+    "b": "c0r1",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     100,
+     450
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c0r2",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     100,
+     800
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c0r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     100,
+     1150
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c1r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c2r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c3r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c3r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c4r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c4r2",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c4r3",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c5r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c5r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c6r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c7r0",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     100
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c7r1",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     450
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c7r2",
+    "b": "c7r3",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     800
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   }
+  ]
+ },
+ {
+  "level": 38,
+  "chapter": 4,
+  "level_in_chapter": 5,
+  "name_vi": "Khách sạn bể bơi",
+  "name_en": "Pool Hotel",
+  "intro_vi": "Nhiều hàng phải chia chuyến, phà vẫn rời bến đúng giờ — chuyến nào đi trước?",
+  "intro_en": "Lots of goods to split into trips, and the ferry won't wait — which trip goes first?",
+  "time_limit_s": 160,
+  "vehicles": [
+   "van"
+  ],
+  "map_px": [
+   2650,
+   1250
+  ],
+  "grid_cols_rows": [
+   8,
+   4
+  ],
+  "node_spacing_px": 350,
+  "open_region_max_col_row": [
+   6,
+   3
+  ],
+  "nodes": {
+   "c0r0": [
+    100,
+    100
+   ],
+   "c0r1": [
+    100,
+    450
+   ],
+   "c0r2": [
+    100,
+    800
+   ],
+   "c0r3": [
+    100,
+    1150
+   ],
+   "c1r0": [
+    450,
+    100
+   ],
+   "c1r1": [
+    450,
+    450
+   ],
+   "c1r2": [
+    450,
+    800
+   ],
+   "c1r3": [
+    450,
+    1150
+   ],
+   "c2r0": [
+    800,
+    100
+   ],
+   "c2r1": [
+    800,
+    450
+   ],
+   "c2r2": [
+    800,
+    800
+   ],
+   "c2r3": [
+    800,
+    1150
+   ],
+   "c3r0": [
+    1150,
+    100
+   ],
+   "c3r1": [
+    1150,
+    450
+   ],
+   "c3r2": [
+    1150,
+    800
+   ],
+   "c3r3": [
+    1150,
+    1150
+   ],
+   "c4r0": [
+    1500,
+    100
+   ],
+   "c4r1": [
+    1500,
+    450
+   ],
+   "c4r2": [
+    1500,
+    800
+   ],
+   "c4r3": [
+    1500,
+    1150
+   ],
+   "c5r0": [
+    1850,
+    100
+   ],
+   "c5r1": [
+    1850,
+    450
+   ],
+   "c5r2": [
+    1850,
+    800
+   ],
+   "c5r3": [
+    1850,
+    1150
+   ],
+   "c6r0": [
+    2200,
+    100
+   ],
+   "c6r1": [
+    2200,
+    450
+   ],
+   "c6r2": [
+    2200,
+    800
+   ],
+   "c6r3": [
+    2200,
+    1150
+   ],
+   "c7r0": [
+    2550,
+    100
+   ],
+   "c7r1": [
+    2550,
+    450
+   ],
+   "c7r2": [
+    2550,
+    800
+   ],
+   "c7r3": [
+    2550,
+    1150
+   ]
+  },
+  "start": {
+   "road": [
+    "c0r1",
+    "c1r1"
+   ],
+   "fraction": 0.11428571428571428
+  },
+  "construction_site": {
+   "id": "KSBeBoi",
+   "name_vi": "Khách sạn bể bơi",
+   "name_en": "Pool Hotel"
+  },
+  "buildings_already_built": [
+   {
+    "id": "Taverna",
+    "name_vi": "Quán taverna"
+   },
+   {
+    "id": "PhoSon",
+    "name_vi": "Phố sơn mới"
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà"
+   },
+   {
+    "id": "ThapChuong",
+    "name_vi": "Tháp chuông"
+   }
+  ],
+  "points": [
+   {
+    "id": "KhoCang",
+    "name_vi": "Kho cảng",
+    "name_en": "Harbour Store",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1c7ed6",
+    "on_road": [
+     "c0r1",
+     "c0r2"
+    ],
+    "stop_xy": [
+     100,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 140,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      186,
+      631
+     ]
+    }
+   },
+   {
+    "id": "KhoSon",
+    "name_vi": "Kho sơn",
+    "name_en": "Paint Depot",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1864ab",
+    "on_road": [
+     "c4r0",
+     "c4r1"
+    ],
+    "stop_xy": [
+     1500,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1540,
+     "y": 229,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      1586,
+      281
+     ]
+    }
+   },
+   {
+    "id": "Taverna",
+    "name_vi": "Quán taverna",
+    "name_en": "Taverna",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#2b8a3e",
+    "on_road": [
+     "c1r0",
+     "c1r1"
+    ],
+    "stop_xy": [
+     450,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 488,
+     "y": 215,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      550,
+      281
+     ]
+    }
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà",
+    "name_en": "Ferry Pier",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#0b7285",
+    "on_road": [
+     "c5r3",
+     "c6r3"
+    ],
+    "stop_xy": [
+     2025,
+     1150
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1967,
+     "y": 1190,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      2025,
+      1222
+     ]
+    }
+   },
+   {
+    "id": "KSBeBoi",
+    "name_vi": "Khách sạn bể bơi",
+    "name_en": "Pool Hotel",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#1098ad",
+    "on_road": [
+     "c4r2",
+     "c4r3"
+    ],
+    "stop_xy": [
+     1500,
+     975
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1538,
+     "y": 915,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      1600,
+      981
+     ]
+    }
+   },
+   {
+    "id": "HieuBanh",
+    "name_vi": "Hiệu bánh",
+    "name_en": "Bakery",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#66a80f",
+    "on_road": [
+     "c1r3",
+     "c2r3"
+    ],
+    "stop_xy": [
+     625,
+     1150
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 567,
+     "y": 1190,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      625,
+      1222
+     ]
+    }
+   }
+  ],
+  "missions": [
+   {
+    "from": "KhoSon",
+    "to": "KSBeBoi",
+    "qty": 3,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoSon",
+    "to": "BenPhaDao",
+    "qty": 3,
+    "deadline_s": 75
+   },
+   {
+    "from": "KhoSon",
+    "to": "HieuBanh",
+    "qty": 3,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoCang",
+    "to": "Taverna",
+    "qty": 1,
+    "deadline_s": null
+   }
+  ],
+  "gems_count": 0,
+  "edges": [
+   {
+    "a": "c0r0",
+    "b": "c1r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     450,
+     100
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c2r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     800,
+     100
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c3r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     1150,
+     100
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c4r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1500,
+     100
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c5r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1850,
+     100
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c6r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     2200,
+     100
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c7r0",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2550,
+     100
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c3r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c4r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c5r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c4r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c0r3",
+    "b": "c1r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     1150
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c1r3",
+    "b": "c2r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     450,
+     1150
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c2r3",
+    "b": "c3r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     800,
+     1150
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c3r3",
+    "b": "c4r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1150,
+     1150
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c4r3",
+    "b": "c5r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1500,
+     1150
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c5r3",
+    "b": "c6r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1850,
+     1150
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c6r3",
+    "b": "c7r3",
+    "type": "lon",
+    "open": false,
+    "from_xy": [
+     2200,
+     1150
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   },
+   {
+    "a": "c0r0",
+    "b": "c0r1",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     100,
+     450
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c0r2",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     100,
+     800
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c0r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     100,
+     1150
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c1r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c2r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c3r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c3r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c4r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c4r2",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c4r3",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c5r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c5r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c6r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c7r0",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     100
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c7r1",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     450
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c7r2",
+    "b": "c7r3",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     800
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   }
+  ]
+ },
+ {
+  "level": 39,
+  "chapter": 4,
+  "level_in_chapter": 6,
+  "name_vi": "Quán hoàng hôn",
+  "name_en": "Sunset Bar",
+  "intro_vi": "Tiệc hoàng hôn không chờ ai — hàng phải tới quán trước khi mặt trời lặn.",
+  "intro_en": "The sunset party waits for no one — get the goods to the bar before the sun goes down.",
+  "time_limit_s": 160,
+  "vehicles": [
+   "van"
+  ],
+  "map_px": [
+   2650,
+   1250
+  ],
+  "grid_cols_rows": [
+   8,
+   4
+  ],
+  "node_spacing_px": 350,
+  "open_region_max_col_row": [
+   6,
+   3
+  ],
+  "nodes": {
+   "c0r0": [
+    100,
+    100
+   ],
+   "c0r1": [
+    100,
+    450
+   ],
+   "c0r2": [
+    100,
+    800
+   ],
+   "c0r3": [
+    100,
+    1150
+   ],
+   "c1r0": [
+    450,
+    100
+   ],
+   "c1r1": [
+    450,
+    450
+   ],
+   "c1r2": [
+    450,
+    800
+   ],
+   "c1r3": [
+    450,
+    1150
+   ],
+   "c2r0": [
+    800,
+    100
+   ],
+   "c2r1": [
+    800,
+    450
+   ],
+   "c2r2": [
+    800,
+    800
+   ],
+   "c2r3": [
+    800,
+    1150
+   ],
+   "c3r0": [
+    1150,
+    100
+   ],
+   "c3r1": [
+    1150,
+    450
+   ],
+   "c3r2": [
+    1150,
+    800
+   ],
+   "c3r3": [
+    1150,
+    1150
+   ],
+   "c4r0": [
+    1500,
+    100
+   ],
+   "c4r1": [
+    1500,
+    450
+   ],
+   "c4r2": [
+    1500,
+    800
+   ],
+   "c4r3": [
+    1500,
+    1150
+   ],
+   "c5r0": [
+    1850,
+    100
+   ],
+   "c5r1": [
+    1850,
+    450
+   ],
+   "c5r2": [
+    1850,
+    800
+   ],
+   "c5r3": [
+    1850,
+    1150
+   ],
+   "c6r0": [
+    2200,
+    100
+   ],
+   "c6r1": [
+    2200,
+    450
+   ],
+   "c6r2": [
+    2200,
+    800
+   ],
+   "c6r3": [
+    2200,
+    1150
+   ],
+   "c7r0": [
+    2550,
+    100
+   ],
+   "c7r1": [
+    2550,
+    450
+   ],
+   "c7r2": [
+    2550,
+    800
+   ],
+   "c7r3": [
+    2550,
+    1150
+   ]
+  },
+  "start": {
+   "road": [
+    "c0r1",
+    "c1r1"
+   ],
+   "fraction": 0.11428571428571428
+  },
+  "construction_site": {
+   "id": "QuanHH",
+   "name_vi": "Quán hoàng hôn",
+   "name_en": "Sunset Bar"
+  },
+  "buildings_already_built": [
+   {
+    "id": "Taverna",
+    "name_vi": "Quán taverna"
+   },
+   {
+    "id": "PhoSon",
+    "name_vi": "Phố sơn mới"
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà"
+   },
+   {
+    "id": "ThapChuong",
+    "name_vi": "Tháp chuông"
+   },
+   {
+    "id": "KSBeBoi",
+    "name_vi": "Khách sạn bể bơi"
+   }
+  ],
+  "points": [
+   {
+    "id": "KhoCang",
+    "name_vi": "Kho cảng",
+    "name_en": "Harbour Store",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1c7ed6",
+    "on_road": [
+     "c0r1",
+     "c0r2"
+    ],
+    "stop_xy": [
+     100,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 140,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      186,
+      631
+     ]
+    }
+   },
+   {
+    "id": "KhoSon",
+    "name_vi": "Kho sơn",
+    "name_en": "Paint Depot",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1864ab",
+    "on_road": [
+     "c4r0",
+     "c4r1"
+    ],
+    "stop_xy": [
+     1500,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1540,
+     "y": 229,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      1586,
+      281
+     ]
+    }
+   },
+   {
+    "id": "KSBeBoi",
+    "name_vi": "Khách sạn bể bơi",
+    "name_en": "Pool Hotel",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#1098ad",
+    "on_road": [
+     "c4r2",
+     "c4r3"
+    ],
+    "stop_xy": [
+     1500,
+     975
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1538,
+     "y": 915,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      1600,
+      981
+     ]
+    }
+   },
+   {
+    "id": "QuanHH",
+    "name_vi": "Quán hoàng hôn",
+    "name_en": "Sunset Bar",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#c2255c",
+    "on_road": [
+     "c0r0",
+     "c0r1"
+    ],
+    "stop_xy": [
+     100,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 138,
+     "y": 215,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      200,
+      281
+     ]
+    }
+   },
+   {
+    "id": "VuonNho",
+    "name_vi": "Vườn nho",
+    "name_en": "Vineyard",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#2f9e44",
+    "on_road": [
+     "c6r1",
+     "c6r2"
+    ],
+    "stop_xy": [
+     2200,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 2240,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      2286,
+      631
+     ]
+    }
+   },
+   {
+    "id": "TiemHoa",
+    "name_vi": "Tiệm hoa",
+    "name_en": "Florist",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#d6336c",
+    "on_road": [
+     "c5r1",
+     "c5r2"
+    ],
+    "stop_xy": [
+     1850,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1890,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      1936,
+      631
+     ]
+    }
+   }
+  ],
+  "missions": [
+   {
+    "from": "KhoSon",
+    "to": "QuanHH",
+    "qty": 2,
+    "deadline_s": 85
+   },
+   {
+    "from": "KhoSon",
+    "to": "KSBeBoi",
+    "qty": 2,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoCang",
+    "to": "TiemHoa",
+    "qty": 3,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoCang",
+    "to": "VuonNho",
+    "qty": 3,
+    "deadline_s": null
+   }
+  ],
+  "gems_count": 0,
+  "edges": [
+   {
+    "a": "c0r0",
+    "b": "c1r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     450,
+     100
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c2r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     800,
+     100
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c3r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     1150,
+     100
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c4r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1500,
+     100
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c5r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1850,
+     100
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c6r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     2200,
+     100
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c7r0",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2550,
+     100
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c3r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c4r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c5r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c4r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c0r3",
+    "b": "c1r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     1150
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c1r3",
+    "b": "c2r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     450,
+     1150
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c2r3",
+    "b": "c3r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     800,
+     1150
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c3r3",
+    "b": "c4r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1150,
+     1150
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c4r3",
+    "b": "c5r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1500,
+     1150
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c5r3",
+    "b": "c6r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1850,
+     1150
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c6r3",
+    "b": "c7r3",
+    "type": "lon",
+    "open": false,
+    "from_xy": [
+     2200,
+     1150
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   },
+   {
+    "a": "c0r0",
+    "b": "c0r1",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     100,
+     450
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c0r2",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     100,
+     800
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c0r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     100,
+     1150
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c1r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c2r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c3r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c3r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c4r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c4r2",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c4r3",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c5r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c5r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c6r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c7r0",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     100
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c7r1",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     450
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c7r2",
+    "b": "c7r3",
+    "type": "thuong",
+    "open": false,
+    "from_xy": [
+     2550,
+     800
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   }
+  ]
+ },
+ {
+  "level": 40,
+  "chapter": 4,
+  "level_in_chapter": 7,
+  "name_vi": "Cảng cũ",
+  "name_en": "Old Port",
+  "intro_vi": "Thêm Xưởng rượu vang — 3 kho; phà và tàu ở Cảng cũ đều rời bến đúng giờ.",
+  "intro_en": "A Winery joins in — 3 depots, and both the ferry and the Old Port boat leave on time.",
+  "time_limit_s": 165,
+  "vehicles": [
+   "van"
+  ],
+  "map_px": [
+   2650,
+   1250
+  ],
+  "grid_cols_rows": [
+   8,
+   4
+  ],
+  "node_spacing_px": 350,
+  "open_region_max_col_row": [
+   7,
+   3
+  ],
+  "nodes": {
+   "c0r0": [
+    100,
+    100
+   ],
+   "c0r1": [
+    100,
+    450
+   ],
+   "c0r2": [
+    100,
+    800
+   ],
+   "c0r3": [
+    100,
+    1150
+   ],
+   "c1r0": [
+    450,
+    100
+   ],
+   "c1r1": [
+    450,
+    450
+   ],
+   "c1r2": [
+    450,
+    800
+   ],
+   "c1r3": [
+    450,
+    1150
+   ],
+   "c2r0": [
+    800,
+    100
+   ],
+   "c2r1": [
+    800,
+    450
+   ],
+   "c2r2": [
+    800,
+    800
+   ],
+   "c2r3": [
+    800,
+    1150
+   ],
+   "c3r0": [
+    1150,
+    100
+   ],
+   "c3r1": [
+    1150,
+    450
+   ],
+   "c3r2": [
+    1150,
+    800
+   ],
+   "c3r3": [
+    1150,
+    1150
+   ],
+   "c4r0": [
+    1500,
+    100
+   ],
+   "c4r1": [
+    1500,
+    450
+   ],
+   "c4r2": [
+    1500,
+    800
+   ],
+   "c4r3": [
+    1500,
+    1150
+   ],
+   "c5r0": [
+    1850,
+    100
+   ],
+   "c5r1": [
+    1850,
+    450
+   ],
+   "c5r2": [
+    1850,
+    800
+   ],
+   "c5r3": [
+    1850,
+    1150
+   ],
+   "c6r0": [
+    2200,
+    100
+   ],
+   "c6r1": [
+    2200,
+    450
+   ],
+   "c6r2": [
+    2200,
+    800
+   ],
+   "c6r3": [
+    2200,
+    1150
+   ],
+   "c7r0": [
+    2550,
+    100
+   ],
+   "c7r1": [
+    2550,
+    450
+   ],
+   "c7r2": [
+    2550,
+    800
+   ],
+   "c7r3": [
+    2550,
+    1150
+   ]
+  },
+  "start": {
+   "road": [
+    "c0r1",
+    "c1r1"
+   ],
+   "fraction": 0.11428571428571428
+  },
+  "construction_site": {
+   "id": "CangCu",
+   "name_vi": "Cảng cũ",
+   "name_en": "Old Port"
+  },
+  "buildings_already_built": [
+   {
+    "id": "Taverna",
+    "name_vi": "Quán taverna"
+   },
+   {
+    "id": "PhoSon",
+    "name_vi": "Phố sơn mới"
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà"
+   },
+   {
+    "id": "ThapChuong",
+    "name_vi": "Tháp chuông"
+   },
+   {
+    "id": "KSBeBoi",
+    "name_vi": "Khách sạn bể bơi"
+   },
+   {
+    "id": "QuanHH",
+    "name_vi": "Quán hoàng hôn"
+   }
+  ],
+  "points": [
+   {
+    "id": "KhoCang",
+    "name_vi": "Kho cảng",
+    "name_en": "Harbour Store",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1c7ed6",
+    "on_road": [
+     "c0r1",
+     "c0r2"
+    ],
+    "stop_xy": [
+     100,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 140,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      186,
+      631
+     ]
+    }
+   },
+   {
+    "id": "KhoSon",
+    "name_vi": "Kho sơn",
+    "name_en": "Paint Depot",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1864ab",
+    "on_road": [
+     "c4r0",
+     "c4r1"
+    ],
+    "stop_xy": [
+     1500,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1540,
+     "y": 229,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      1586,
+      281
+     ]
+    }
+   },
+   {
+    "id": "XuongRuou",
+    "name_vi": "Xưởng rượu vang",
+    "name_en": "Winery",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1971c2",
+    "on_road": [
+     "c7r1",
+     "c7r2"
+    ],
+    "stop_xy": [
+     2550,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 2418,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      2464,
+      631
+     ]
+    }
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà",
+    "name_en": "Ferry Pier",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#0b7285",
+    "on_road": [
+     "c5r3",
+     "c6r3"
+    ],
+    "stop_xy": [
+     2025,
+     1150
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1967,
+     "y": 1190,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      2025,
+      1222
+     ]
+    }
+   },
+   {
+    "id": "CangCu",
+    "name_vi": "Cảng cũ",
+    "name_en": "Old Port",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#5c940d",
+    "on_road": [
+     "c0r2",
+     "c0r3"
+    ],
+    "stop_xy": [
+     100,
+     975
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 138,
+     "y": 915,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      200,
+      981
+     ]
+    }
+   },
+   {
+    "id": "HieuBanh",
+    "name_vi": "Hiệu bánh",
+    "name_en": "Bakery",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#66a80f",
+    "on_road": [
+     "c1r3",
+     "c2r3"
+    ],
+    "stop_xy": [
+     625,
+     1150
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 567,
+     "y": 1190,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      625,
+      1222
+     ]
+    }
+   },
+   {
+    "id": "BaiBien",
+    "name_vi": "Quán bãi biển",
+    "name_en": "Beach Bar",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#0c8599",
+    "on_road": [
+     "c3r3",
+     "c4r3"
+    ],
+    "stop_xy": [
+     1325,
+     1150
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1267,
+     "y": 1190,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      1325,
+      1222
+     ]
+    }
+   }
+  ],
+  "missions": [
+   {
+    "from": "XuongRuou",
+    "to": "CangCu",
+    "qty": 2,
+    "deadline_s": 115
+   },
+   {
+    "from": "XuongRuou",
+    "to": "BenPhaDao",
+    "qty": 3,
+    "deadline_s": 65
+   },
+   {
+    "from": "KhoSon",
+    "to": "BaiBien",
+    "qty": 2,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoCang",
+    "to": "HieuBanh",
+    "qty": 3,
+    "deadline_s": null
+   }
+  ],
+  "gems_count": 0,
+  "edges": [
+   {
+    "a": "c0r0",
+    "b": "c1r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     450,
+     100
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c2r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     800,
+     100
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c3r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     1150,
+     100
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c4r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1500,
+     100
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c5r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1850,
+     100
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c6r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     2200,
+     100
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c7r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2550,
+     100
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c3r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c4r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c5r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c4r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c0r3",
+    "b": "c1r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     1150
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c1r3",
+    "b": "c2r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     450,
+     1150
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c2r3",
+    "b": "c3r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     800,
+     1150
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c3r3",
+    "b": "c4r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1150,
+     1150
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c4r3",
+    "b": "c5r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1500,
+     1150
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c5r3",
+    "b": "c6r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1850,
+     1150
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c6r3",
+    "b": "c7r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     2200,
+     1150
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   },
+   {
+    "a": "c0r0",
+    "b": "c0r1",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     100,
+     450
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c0r2",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     100,
+     800
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c0r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     100,
+     1150
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c1r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c2r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c3r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c3r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c4r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c4r2",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c4r3",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c5r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c5r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c6r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c7r0",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     100
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c7r1",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     450
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c7r2",
+    "b": "c7r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     800
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   }
+  ]
+ },
+ {
+  "level": 41,
+  "chapter": 4,
+  "level_in_chapter": 8,
+  "name_vi": "Cối xay gió",
+  "name_en": "Windmills",
+  "intro_vi": "Tiệc hoàng hôn và tàu ở Cảng cũ cùng chờ hàng từ Kho sơn — chở chung hay chia hai chuyến?",
+  "intro_en": "The sunset party and the Old Port boat both wait for goods from the Paint Depot — one trip or two?",
+  "time_limit_s": 170,
+  "vehicles": [
+   "van"
+  ],
+  "map_px": [
+   2650,
+   1250
+  ],
+  "grid_cols_rows": [
+   8,
+   4
+  ],
+  "node_spacing_px": 350,
+  "open_region_max_col_row": [
+   7,
+   3
+  ],
+  "nodes": {
+   "c0r0": [
+    100,
+    100
+   ],
+   "c0r1": [
+    100,
+    450
+   ],
+   "c0r2": [
+    100,
+    800
+   ],
+   "c0r3": [
+    100,
+    1150
+   ],
+   "c1r0": [
+    450,
+    100
+   ],
+   "c1r1": [
+    450,
+    450
+   ],
+   "c1r2": [
+    450,
+    800
+   ],
+   "c1r3": [
+    450,
+    1150
+   ],
+   "c2r0": [
+    800,
+    100
+   ],
+   "c2r1": [
+    800,
+    450
+   ],
+   "c2r2": [
+    800,
+    800
+   ],
+   "c2r3": [
+    800,
+    1150
+   ],
+   "c3r0": [
+    1150,
+    100
+   ],
+   "c3r1": [
+    1150,
+    450
+   ],
+   "c3r2": [
+    1150,
+    800
+   ],
+   "c3r3": [
+    1150,
+    1150
+   ],
+   "c4r0": [
+    1500,
+    100
+   ],
+   "c4r1": [
+    1500,
+    450
+   ],
+   "c4r2": [
+    1500,
+    800
+   ],
+   "c4r3": [
+    1500,
+    1150
+   ],
+   "c5r0": [
+    1850,
+    100
+   ],
+   "c5r1": [
+    1850,
+    450
+   ],
+   "c5r2": [
+    1850,
+    800
+   ],
+   "c5r3": [
+    1850,
+    1150
+   ],
+   "c6r0": [
+    2200,
+    100
+   ],
+   "c6r1": [
+    2200,
+    450
+   ],
+   "c6r2": [
+    2200,
+    800
+   ],
+   "c6r3": [
+    2200,
+    1150
+   ],
+   "c7r0": [
+    2550,
+    100
+   ],
+   "c7r1": [
+    2550,
+    450
+   ],
+   "c7r2": [
+    2550,
+    800
+   ],
+   "c7r3": [
+    2550,
+    1150
+   ]
+  },
+  "start": {
+   "road": [
+    "c0r1",
+    "c1r1"
+   ],
+   "fraction": 0.11428571428571428
+  },
+  "construction_site": {
+   "id": "CoiXay",
+   "name_vi": "Cối xay gió",
+   "name_en": "Windmills"
+  },
+  "buildings_already_built": [
+   {
+    "id": "Taverna",
+    "name_vi": "Quán taverna"
+   },
+   {
+    "id": "PhoSon",
+    "name_vi": "Phố sơn mới"
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà"
+   },
+   {
+    "id": "ThapChuong",
+    "name_vi": "Tháp chuông"
+   },
+   {
+    "id": "KSBeBoi",
+    "name_vi": "Khách sạn bể bơi"
+   },
+   {
+    "id": "QuanHH",
+    "name_vi": "Quán hoàng hôn"
+   },
+   {
+    "id": "CangCu",
+    "name_vi": "Cảng cũ"
+   }
+  ],
+  "points": [
+   {
+    "id": "KhoCang",
+    "name_vi": "Kho cảng",
+    "name_en": "Harbour Store",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1c7ed6",
+    "on_road": [
+     "c0r1",
+     "c0r2"
+    ],
+    "stop_xy": [
+     100,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 140,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      186,
+      631
+     ]
+    }
+   },
+   {
+    "id": "KhoSon",
+    "name_vi": "Kho sơn",
+    "name_en": "Paint Depot",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1864ab",
+    "on_road": [
+     "c4r0",
+     "c4r1"
+    ],
+    "stop_xy": [
+     1500,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1540,
+     "y": 229,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      1586,
+      281
+     ]
+    }
+   },
+   {
+    "id": "XuongRuou",
+    "name_vi": "Xưởng rượu vang",
+    "name_en": "Winery",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1971c2",
+    "on_road": [
+     "c7r1",
+     "c7r2"
+    ],
+    "stop_xy": [
+     2550,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 2418,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      2464,
+      631
+     ]
+    }
+   },
+   {
+    "id": "QuanHH",
+    "name_vi": "Quán hoàng hôn",
+    "name_en": "Sunset Bar",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#c2255c",
+    "on_road": [
+     "c0r0",
+     "c0r1"
+    ],
+    "stop_xy": [
+     100,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 138,
+     "y": 215,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      200,
+      281
+     ]
+    }
+   },
+   {
+    "id": "CangCu",
+    "name_vi": "Cảng cũ",
+    "name_en": "Old Port",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#5c940d",
+    "on_road": [
+     "c0r2",
+     "c0r3"
+    ],
+    "stop_xy": [
+     100,
+     975
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 138,
+     "y": 915,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      200,
+      981
+     ]
+    }
+   },
+   {
+    "id": "CoiXay",
+    "name_vi": "Cối xay gió",
+    "name_en": "Windmills",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#862e9c",
+    "on_road": [
+     "c6r0",
+     "c6r1"
+    ],
+    "stop_xy": [
+     2200,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 2238,
+     "y": 215,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      2300,
+      281
+     ]
+    }
+   },
+   {
+    "id": "HieuBanh",
+    "name_vi": "Hiệu bánh",
+    "name_en": "Bakery",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#66a80f",
+    "on_road": [
+     "c1r3",
+     "c2r3"
+    ],
+    "stop_xy": [
+     625,
+     1150
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 567,
+     "y": 1190,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      625,
+      1222
+     ]
+    }
+   }
+  ],
+  "missions": [
+   {
+    "from": "XuongRuou",
+    "to": "CoiXay",
+    "qty": 3,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoSon",
+    "to": "CangCu",
+    "qty": 3,
+    "deadline_s": 110
+   },
+   {
+    "from": "KhoSon",
+    "to": "QuanHH",
+    "qty": 3,
+    "deadline_s": 70
+   },
+   {
+    "from": "KhoCang",
+    "to": "HieuBanh",
+    "qty": 2,
+    "deadline_s": null
+   }
+  ],
+  "gems_count": 0,
+  "edges": [
+   {
+    "a": "c0r0",
+    "b": "c1r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     450,
+     100
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c2r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     800,
+     100
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c3r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     1150,
+     100
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c4r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1500,
+     100
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c5r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1850,
+     100
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c6r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     2200,
+     100
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c7r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2550,
+     100
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c3r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c4r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c5r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c4r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c0r3",
+    "b": "c1r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     1150
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c1r3",
+    "b": "c2r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     450,
+     1150
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c2r3",
+    "b": "c3r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     800,
+     1150
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c3r3",
+    "b": "c4r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1150,
+     1150
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c4r3",
+    "b": "c5r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1500,
+     1150
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c5r3",
+    "b": "c6r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1850,
+     1150
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c6r3",
+    "b": "c7r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     2200,
+     1150
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   },
+   {
+    "a": "c0r0",
+    "b": "c0r1",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     100,
+     450
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c0r2",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     100,
+     800
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c0r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     100,
+     1150
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c1r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c2r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c3r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c3r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c4r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c4r2",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c4r3",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c5r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c5r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c6r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c7r0",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     100
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c7r1",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     450
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c7r2",
+    "b": "c7r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     800
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   }
+  ]
+ },
+ {
+  "level": 42,
+  "chapter": 4,
+  "level_in_chapter": 9,
+  "name_vi": "Hải đăng",
+  "name_en": "Lighthouse",
+  "intro_vi": "Phà ở phía Nam, tiệc trên vách phía Tây — hai hạn ở hai đầu đảo, đơn nào trước?",
+  "intro_en": "The ferry in the south, the party on the western cliff — two deadlines at opposite ends of the island. Which first?",
+  "time_limit_s": 175,
+  "vehicles": [
+   "van"
+  ],
+  "map_px": [
+   2650,
+   1250
+  ],
+  "grid_cols_rows": [
+   8,
+   4
+  ],
+  "node_spacing_px": 350,
+  "open_region_max_col_row": [
+   7,
+   3
+  ],
+  "nodes": {
+   "c0r0": [
+    100,
+    100
+   ],
+   "c0r1": [
+    100,
+    450
+   ],
+   "c0r2": [
+    100,
+    800
+   ],
+   "c0r3": [
+    100,
+    1150
+   ],
+   "c1r0": [
+    450,
+    100
+   ],
+   "c1r1": [
+    450,
+    450
+   ],
+   "c1r2": [
+    450,
+    800
+   ],
+   "c1r3": [
+    450,
+    1150
+   ],
+   "c2r0": [
+    800,
+    100
+   ],
+   "c2r1": [
+    800,
+    450
+   ],
+   "c2r2": [
+    800,
+    800
+   ],
+   "c2r3": [
+    800,
+    1150
+   ],
+   "c3r0": [
+    1150,
+    100
+   ],
+   "c3r1": [
+    1150,
+    450
+   ],
+   "c3r2": [
+    1150,
+    800
+   ],
+   "c3r3": [
+    1150,
+    1150
+   ],
+   "c4r0": [
+    1500,
+    100
+   ],
+   "c4r1": [
+    1500,
+    450
+   ],
+   "c4r2": [
+    1500,
+    800
+   ],
+   "c4r3": [
+    1500,
+    1150
+   ],
+   "c5r0": [
+    1850,
+    100
+   ],
+   "c5r1": [
+    1850,
+    450
+   ],
+   "c5r2": [
+    1850,
+    800
+   ],
+   "c5r3": [
+    1850,
+    1150
+   ],
+   "c6r0": [
+    2200,
+    100
+   ],
+   "c6r1": [
+    2200,
+    450
+   ],
+   "c6r2": [
+    2200,
+    800
+   ],
+   "c6r3": [
+    2200,
+    1150
+   ],
+   "c7r0": [
+    2550,
+    100
+   ],
+   "c7r1": [
+    2550,
+    450
+   ],
+   "c7r2": [
+    2550,
+    800
+   ],
+   "c7r3": [
+    2550,
+    1150
+   ]
+  },
+  "start": {
+   "road": [
+    "c0r1",
+    "c1r1"
+   ],
+   "fraction": 0.11428571428571428
+  },
+  "construction_site": {
+   "id": "HaiDang",
+   "name_vi": "Hải đăng",
+   "name_en": "Lighthouse"
+  },
+  "buildings_already_built": [
+   {
+    "id": "Taverna",
+    "name_vi": "Quán taverna"
+   },
+   {
+    "id": "PhoSon",
+    "name_vi": "Phố sơn mới"
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà"
+   },
+   {
+    "id": "ThapChuong",
+    "name_vi": "Tháp chuông"
+   },
+   {
+    "id": "KSBeBoi",
+    "name_vi": "Khách sạn bể bơi"
+   },
+   {
+    "id": "QuanHH",
+    "name_vi": "Quán hoàng hôn"
+   },
+   {
+    "id": "CangCu",
+    "name_vi": "Cảng cũ"
+   },
+   {
+    "id": "CoiXay",
+    "name_vi": "Cối xay gió"
+   }
+  ],
+  "points": [
+   {
+    "id": "KhoCang",
+    "name_vi": "Kho cảng",
+    "name_en": "Harbour Store",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1c7ed6",
+    "on_road": [
+     "c0r1",
+     "c0r2"
+    ],
+    "stop_xy": [
+     100,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 140,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      186,
+      631
+     ]
+    }
+   },
+   {
+    "id": "KhoSon",
+    "name_vi": "Kho sơn",
+    "name_en": "Paint Depot",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1864ab",
+    "on_road": [
+     "c4r0",
+     "c4r1"
+    ],
+    "stop_xy": [
+     1500,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1540,
+     "y": 229,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      1586,
+      281
+     ]
+    }
+   },
+   {
+    "id": "XuongRuou",
+    "name_vi": "Xưởng rượu vang",
+    "name_en": "Winery",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1971c2",
+    "on_road": [
+     "c7r1",
+     "c7r2"
+    ],
+    "stop_xy": [
+     2550,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 2418,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      2464,
+      631
+     ]
+    }
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà",
+    "name_en": "Ferry Pier",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#0b7285",
+    "on_road": [
+     "c5r3",
+     "c6r3"
+    ],
+    "stop_xy": [
+     2025,
+     1150
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1967,
+     "y": 1190,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      2025,
+      1222
+     ]
+    }
+   },
+   {
+    "id": "QuanHH",
+    "name_vi": "Quán hoàng hôn",
+    "name_en": "Sunset Bar",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#c2255c",
+    "on_road": [
+     "c0r0",
+     "c0r1"
+    ],
+    "stop_xy": [
+     100,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 138,
+     "y": 215,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      200,
+      281
+     ]
+    }
+   },
+   {
+    "id": "HaiDang",
+    "name_vi": "Hải đăng",
+    "name_en": "Lighthouse",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#e03131",
+    "on_road": [
+     "c7r2",
+     "c7r3"
+    ],
+    "stop_xy": [
+     2550,
+     975
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 2388,
+     "y": 915,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      2450,
+      981
+     ]
+    }
+   },
+   {
+    "id": "PhongTranh",
+    "name_vi": "Phòng tranh",
+    "name_en": "Gallery",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#5f3dc4",
+    "on_road": [
+     "c4r1",
+     "c5r1"
+    ],
+    "stop_xy": [
+     1675,
+     450
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1617,
+     "y": 490,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      1675,
+      522
+     ]
+    }
+   },
+   {
+    "id": "TiemHoa",
+    "name_vi": "Tiệm hoa",
+    "name_en": "Florist",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#d6336c",
+    "on_road": [
+     "c5r1",
+     "c5r2"
+    ],
+    "stop_xy": [
+     1850,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1890,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      1936,
+      631
+     ]
+    }
+   }
+  ],
+  "missions": [
+   {
+    "from": "KhoSon",
+    "to": "HaiDang",
+    "qty": 2,
+    "deadline_s": null
+   },
+   {
+    "from": "XuongRuou",
+    "to": "BenPhaDao",
+    "qty": 2,
+    "deadline_s": 80
+   },
+   {
+    "from": "KhoCang",
+    "to": "QuanHH",
+    "qty": 2,
+    "deadline_s": 95
+   },
+   {
+    "from": "KhoCang",
+    "to": "TiemHoa",
+    "qty": 3,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoCang",
+    "to": "PhongTranh",
+    "qty": 3,
+    "deadline_s": null
+   }
+  ],
+  "gems_count": 0,
+  "edges": [
+   {
+    "a": "c0r0",
+    "b": "c1r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     450,
+     100
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c2r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     800,
+     100
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c3r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     1150,
+     100
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c4r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1500,
+     100
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c5r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1850,
+     100
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c6r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     2200,
+     100
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c7r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2550,
+     100
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c3r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c4r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c5r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c4r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c0r3",
+    "b": "c1r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     1150
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c1r3",
+    "b": "c2r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     450,
+     1150
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c2r3",
+    "b": "c3r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     800,
+     1150
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c3r3",
+    "b": "c4r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1150,
+     1150
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c4r3",
+    "b": "c5r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1500,
+     1150
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c5r3",
+    "b": "c6r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1850,
+     1150
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c6r3",
+    "b": "c7r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     2200,
+     1150
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   },
+   {
+    "a": "c0r0",
+    "b": "c0r1",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     100,
+     450
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c0r2",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     100,
+     800
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c0r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     100,
+     1150
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c1r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c2r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c3r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c3r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c4r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c4r2",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c4r3",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c5r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c5r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c6r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c7r0",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     100
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c7r1",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     450
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c7r2",
+    "b": "c7r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     800
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   }
+  ]
+ },
+ {
+  "level": 43,
+  "chapter": 4,
+  "level_in_chapter": 10,
+  "name_vi": "Nhà thờ mái vòm xanh",
+  "name_en": "Blue Dome Church",
+  "intro_vi": "Ngày khai mùa du lịch: phà, tàu và tiệc hoàng hôn đều chờ hàng — dùng hết những gì đã học.",
+  "intro_en": "Opening day of the season: the ferry, the boat and the sunset party all need goods — use everything you've learned.",
+  "time_limit_s": 185,
+  "vehicles": [
+   "van"
+  ],
+  "map_px": [
+   2650,
+   1250
+  ],
+  "grid_cols_rows": [
+   8,
+   4
+  ],
+  "node_spacing_px": 350,
+  "open_region_max_col_row": [
+   7,
+   3
+  ],
+  "nodes": {
+   "c0r0": [
+    100,
+    100
+   ],
+   "c0r1": [
+    100,
+    450
+   ],
+   "c0r2": [
+    100,
+    800
+   ],
+   "c0r3": [
+    100,
+    1150
+   ],
+   "c1r0": [
+    450,
+    100
+   ],
+   "c1r1": [
+    450,
+    450
+   ],
+   "c1r2": [
+    450,
+    800
+   ],
+   "c1r3": [
+    450,
+    1150
+   ],
+   "c2r0": [
+    800,
+    100
+   ],
+   "c2r1": [
+    800,
+    450
+   ],
+   "c2r2": [
+    800,
+    800
+   ],
+   "c2r3": [
+    800,
+    1150
+   ],
+   "c3r0": [
+    1150,
+    100
+   ],
+   "c3r1": [
+    1150,
+    450
+   ],
+   "c3r2": [
+    1150,
+    800
+   ],
+   "c3r3": [
+    1150,
+    1150
+   ],
+   "c4r0": [
+    1500,
+    100
+   ],
+   "c4r1": [
+    1500,
+    450
+   ],
+   "c4r2": [
+    1500,
+    800
+   ],
+   "c4r3": [
+    1500,
+    1150
+   ],
+   "c5r0": [
+    1850,
+    100
+   ],
+   "c5r1": [
+    1850,
+    450
+   ],
+   "c5r2": [
+    1850,
+    800
+   ],
+   "c5r3": [
+    1850,
+    1150
+   ],
+   "c6r0": [
+    2200,
+    100
+   ],
+   "c6r1": [
+    2200,
+    450
+   ],
+   "c6r2": [
+    2200,
+    800
+   ],
+   "c6r3": [
+    2200,
+    1150
+   ],
+   "c7r0": [
+    2550,
+    100
+   ],
+   "c7r1": [
+    2550,
+    450
+   ],
+   "c7r2": [
+    2550,
+    800
+   ],
+   "c7r3": [
+    2550,
+    1150
+   ]
+  },
+  "start": {
+   "road": [
+    "c0r1",
+    "c1r1"
+   ],
+   "fraction": 0.11428571428571428
+  },
+  "construction_site": {
+   "id": "NhaTho",
+   "name_vi": "Nhà thờ ba mái vòm xanh",
+   "name_en": "Blue Dome Church"
+  },
+  "buildings_already_built": [
+   {
+    "id": "Taverna",
+    "name_vi": "Quán taverna"
+   },
+   {
+    "id": "PhoSon",
+    "name_vi": "Phố sơn mới"
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà"
+   },
+   {
+    "id": "ThapChuong",
+    "name_vi": "Tháp chuông"
+   },
+   {
+    "id": "KSBeBoi",
+    "name_vi": "Khách sạn bể bơi"
+   },
+   {
+    "id": "QuanHH",
+    "name_vi": "Quán hoàng hôn"
+   },
+   {
+    "id": "CangCu",
+    "name_vi": "Cảng cũ"
+   },
+   {
+    "id": "CoiXay",
+    "name_vi": "Cối xay gió"
+   },
+   {
+    "id": "HaiDang",
+    "name_vi": "Hải đăng"
+   }
+  ],
+  "points": [
+   {
+    "id": "KhoCang",
+    "name_vi": "Kho cảng",
+    "name_en": "Harbour Store",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1c7ed6",
+    "on_road": [
+     "c0r1",
+     "c0r2"
+    ],
+    "stop_xy": [
+     100,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 140,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      186,
+      631
+     ]
+    }
+   },
+   {
+    "id": "KhoSon",
+    "name_vi": "Kho sơn",
+    "name_en": "Paint Depot",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1864ab",
+    "on_road": [
+     "c4r0",
+     "c4r1"
+    ],
+    "stop_xy": [
+     1500,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1540,
+     "y": 229,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      1586,
+      281
+     ]
+    }
+   },
+   {
+    "id": "XuongRuou",
+    "name_vi": "Xưởng rượu vang",
+    "name_en": "Winery",
+    "role": "kho — lấy hàng (ô vuông ▲)",
+    "pin_color": "#1971c2",
+    "on_road": [
+     "c7r1",
+     "c7r2"
+    ],
+    "stop_xy": [
+     2550,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 2418,
+     "y": 579,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      2464,
+      631
+     ]
+    }
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà",
+    "name_en": "Ferry Pier",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#0b7285",
+    "on_road": [
+     "c5r3",
+     "c6r3"
+    ],
+    "stop_xy": [
+     2025,
+     1150
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 1967,
+     "y": 1190,
+     "w": 116,
+     "h": 58,
+     "pin_xy": [
+      2025,
+      1222
+     ]
+    }
+   },
+   {
+    "id": "QuanHH",
+    "name_vi": "Quán hoàng hôn",
+    "name_en": "Sunset Bar",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#c2255c",
+    "on_road": [
+     "c0r0",
+     "c0r1"
+    ],
+    "stop_xy": [
+     100,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 138,
+     "y": 215,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      200,
+      281
+     ]
+    }
+   },
+   {
+    "id": "CangCu",
+    "name_vi": "Cảng cũ",
+    "name_en": "Old Port",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#5c940d",
+    "on_road": [
+     "c0r2",
+     "c0r3"
+    ],
+    "stop_xy": [
+     100,
+     975
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 138,
+     "y": 915,
+     "w": 124,
+     "h": 120,
+     "pin_xy": [
+      200,
+      981
+     ]
+    }
+   },
+   {
+    "id": "NhaTho",
+    "name_vi": "Nhà thờ mái vòm",
+    "name_en": "Blue Dome Church",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#ae3ec9",
+    "on_road": [
+     "c1r1",
+     "c1r2"
+    ],
+    "stop_xy": [
+     450,
+     625
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 250,
+     "y": 545,
+     "w": 160,
+     "h": 160,
+     "pin_xy": [
+      330,
+      631
+     ]
+    }
+   },
+   {
+    "id": "LangDong",
+    "name_vi": "Làng phía Đông",
+    "name_en": "East Village",
+    "role": "điểm giao — giao hàng (hình tròn ▼)",
+    "pin_color": "#5c940d",
+    "on_road": [
+     "c7r0",
+     "c7r1"
+    ],
+    "stop_xy": [
+     2550,
+     275
+    ],
+    "stop_zone_len_px": 180,
+    "building": {
+     "x": 2418,
+     "y": 229,
+     "w": 92,
+     "h": 92,
+     "pin_xy": [
+      2464,
+      281
+     ]
+    }
+   }
+  ],
+  "missions": [
+   {
+    "from": "KhoSon",
+    "to": "NhaTho",
+    "qty": 3,
+    "deadline_s": null
+   },
+   {
+    "from": "KhoSon",
+    "to": "QuanHH",
+    "qty": 3,
+    "deadline_s": 90
+   },
+   {
+    "from": "XuongRuou",
+    "to": "BenPhaDao",
+    "qty": 2,
+    "deadline_s": 135
+   },
+   {
+    "from": "KhoCang",
+    "to": "CangCu",
+    "qty": 2,
+    "deadline_s": 45
+   },
+   {
+    "from": "XuongRuou",
+    "to": "LangDong",
+    "qty": 2,
+    "deadline_s": null
+   }
+  ],
+  "gems_count": 0,
+  "edges": [
+   {
+    "a": "c0r0",
+    "b": "c1r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     450,
+     100
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c2r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     800,
+     100
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c3r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     1150,
+     100
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c4r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1500,
+     100
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c5r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1850,
+     100
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c6r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     2200,
+     100
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c7r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2550,
+     100
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c3r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c4r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c5r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c4r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c0r3",
+    "b": "c1r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     1150
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c1r3",
+    "b": "c2r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     450,
+     1150
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c2r3",
+    "b": "c3r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     800,
+     1150
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c3r3",
+    "b": "c4r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1150,
+     1150
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c4r3",
+    "b": "c5r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1500,
+     1150
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c5r3",
+    "b": "c6r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1850,
+     1150
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c6r3",
+    "b": "c7r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     2200,
+     1150
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   },
+   {
+    "a": "c0r0",
+    "b": "c0r1",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     100,
+     450
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c0r2",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     100,
+     800
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c0r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     100,
+     1150
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c1r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c2r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c3r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c3r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c4r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c4r2",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c4r3",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c5r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c5r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c6r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c7r0",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     100
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c7r1",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     450
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c7r2",
+    "b": "c7r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     800
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   }
+  ]
+ },
+ {
+  "level": 44,
+  "chapter": 4,
+  "level_in_chapter": "thưởng",
+  "name_vi": "Lễ hội hoàng hôn",
+  "name_en": "Sunset Festival",
+  "intro_vi": "Đảo mở hội đón mùa du lịch! Lái xe nhặt kim cương rải trên các con đường.",
+  "intro_en": "The island celebrates the new season! Drive around and collect the diamonds scattered on the roads.",
+  "time_limit_s": 120,
+  "vehicles": [
+   "van"
+  ],
+  "map_px": [
+   2650,
+   1250
+  ],
+  "grid_cols_rows": [
+   8,
+   4
+  ],
+  "node_spacing_px": 350,
+  "open_region_max_col_row": [
+   7,
+   3
+  ],
+  "nodes": {
+   "c0r0": [
+    100,
+    100
+   ],
+   "c0r1": [
+    100,
+    450
+   ],
+   "c0r2": [
+    100,
+    800
+   ],
+   "c0r3": [
+    100,
+    1150
+   ],
+   "c1r0": [
+    450,
+    100
+   ],
+   "c1r1": [
+    450,
+    450
+   ],
+   "c1r2": [
+    450,
+    800
+   ],
+   "c1r3": [
+    450,
+    1150
+   ],
+   "c2r0": [
+    800,
+    100
+   ],
+   "c2r1": [
+    800,
+    450
+   ],
+   "c2r2": [
+    800,
+    800
+   ],
+   "c2r3": [
+    800,
+    1150
+   ],
+   "c3r0": [
+    1150,
+    100
+   ],
+   "c3r1": [
+    1150,
+    450
+   ],
+   "c3r2": [
+    1150,
+    800
+   ],
+   "c3r3": [
+    1150,
+    1150
+   ],
+   "c4r0": [
+    1500,
+    100
+   ],
+   "c4r1": [
+    1500,
+    450
+   ],
+   "c4r2": [
+    1500,
+    800
+   ],
+   "c4r3": [
+    1500,
+    1150
+   ],
+   "c5r0": [
+    1850,
+    100
+   ],
+   "c5r1": [
+    1850,
+    450
+   ],
+   "c5r2": [
+    1850,
+    800
+   ],
+   "c5r3": [
+    1850,
+    1150
+   ],
+   "c6r0": [
+    2200,
+    100
+   ],
+   "c6r1": [
+    2200,
+    450
+   ],
+   "c6r2": [
+    2200,
+    800
+   ],
+   "c6r3": [
+    2200,
+    1150
+   ],
+   "c7r0": [
+    2550,
+    100
+   ],
+   "c7r1": [
+    2550,
+    450
+   ],
+   "c7r2": [
+    2550,
+    800
+   ],
+   "c7r3": [
+    2550,
+    1150
+   ]
+  },
+  "start": {
+   "road": [
+    "c0r1",
+    "c1r1"
+   ],
+   "fraction": 0.11428571428571428
+  },
+  "construction_site": null,
+  "buildings_already_built": [
+   {
+    "id": "Taverna",
+    "name_vi": "Quán taverna"
+   },
+   {
+    "id": "PhoSon",
+    "name_vi": "Phố sơn mới"
+   },
+   {
+    "id": "BenPhaDao",
+    "name_vi": "Bến phà"
+   },
+   {
+    "id": "ThapChuong",
+    "name_vi": "Tháp chuông"
+   },
+   {
+    "id": "KSBeBoi",
+    "name_vi": "Khách sạn bể bơi"
+   },
+   {
+    "id": "QuanHH",
+    "name_vi": "Quán hoàng hôn"
+   },
+   {
+    "id": "CangCu",
+    "name_vi": "Cảng cũ"
+   },
+   {
+    "id": "CoiXay",
+    "name_vi": "Cối xay gió"
+   },
+   {
+    "id": "HaiDang",
+    "name_vi": "Hải đăng"
+   },
+   {
+    "id": "NhaTho",
+    "name_vi": "Nhà thờ ba mái vòm xanh"
+   }
+  ],
+  "points": [],
+  "missions": [],
+  "gems_count": 25,
+  "edges": [
+   {
+    "a": "c0r0",
+    "b": "c1r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     450,
+     100
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c2r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     800,
+     100
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c3r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     1150,
+     100
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c4r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1500,
+     100
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c5r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1850,
+     100
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c6r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     2200,
+     100
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c7r0",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2550,
+     100
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c3r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c4r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c5r1",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c4r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c0r3",
+    "b": "c1r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     1150
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c1r3",
+    "b": "c2r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     450,
+     1150
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c2r3",
+    "b": "c3r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     800,
+     1150
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c3r3",
+    "b": "c4r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1150,
+     1150
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c4r3",
+    "b": "c5r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1500,
+     1150
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c5r3",
+    "b": "c6r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     1850,
+     1150
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c6r3",
+    "b": "c7r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     2200,
+     1150
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   },
+   {
+    "a": "c0r0",
+    "b": "c0r1",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     100
+    ],
+    "to_xy": [
+     100,
+     450
+    ]
+   },
+   {
+    "a": "c0r1",
+    "b": "c0r2",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     450
+    ],
+    "to_xy": [
+     100,
+     800
+    ]
+   },
+   {
+    "a": "c0r2",
+    "b": "c0r3",
+    "type": "lon",
+    "open": true,
+    "from_xy": [
+     100,
+     800
+    ],
+    "to_xy": [
+     100,
+     1150
+    ]
+   },
+   {
+    "a": "c1r0",
+    "b": "c1r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     100
+    ],
+    "to_xy": [
+     450,
+     450
+    ]
+   },
+   {
+    "a": "c1r1",
+    "b": "c1r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     450
+    ],
+    "to_xy": [
+     450,
+     800
+    ]
+   },
+   {
+    "a": "c1r2",
+    "b": "c1r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     450,
+     800
+    ],
+    "to_xy": [
+     450,
+     1150
+    ]
+   },
+   {
+    "a": "c2r0",
+    "b": "c2r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     100
+    ],
+    "to_xy": [
+     800,
+     450
+    ]
+   },
+   {
+    "a": "c2r1",
+    "b": "c2r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     450
+    ],
+    "to_xy": [
+     800,
+     800
+    ]
+   },
+   {
+    "a": "c2r2",
+    "b": "c2r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     800,
+     800
+    ],
+    "to_xy": [
+     800,
+     1150
+    ]
+   },
+   {
+    "a": "c3r0",
+    "b": "c3r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     100
+    ],
+    "to_xy": [
+     1150,
+     450
+    ]
+   },
+   {
+    "a": "c3r1",
+    "b": "c3r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     450
+    ],
+    "to_xy": [
+     1150,
+     800
+    ]
+   },
+   {
+    "a": "c3r2",
+    "b": "c3r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1150,
+     800
+    ],
+    "to_xy": [
+     1150,
+     1150
+    ]
+   },
+   {
+    "a": "c4r0",
+    "b": "c4r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1500,
+     100
+    ],
+    "to_xy": [
+     1500,
+     450
+    ]
+   },
+   {
+    "a": "c4r1",
+    "b": "c4r2",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     450
+    ],
+    "to_xy": [
+     1500,
+     800
+    ]
+   },
+   {
+    "a": "c4r2",
+    "b": "c4r3",
+    "type": "dong",
+    "open": true,
+    "from_xy": [
+     1500,
+     800
+    ],
+    "to_xy": [
+     1500,
+     1150
+    ]
+   },
+   {
+    "a": "c5r0",
+    "b": "c5r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     100
+    ],
+    "to_xy": [
+     1850,
+     450
+    ]
+   },
+   {
+    "a": "c5r1",
+    "b": "c5r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     450
+    ],
+    "to_xy": [
+     1850,
+     800
+    ]
+   },
+   {
+    "a": "c5r2",
+    "b": "c5r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     1850,
+     800
+    ],
+    "to_xy": [
+     1850,
+     1150
+    ]
+   },
+   {
+    "a": "c6r0",
+    "b": "c6r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     100
+    ],
+    "to_xy": [
+     2200,
+     450
+    ]
+   },
+   {
+    "a": "c6r1",
+    "b": "c6r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     450
+    ],
+    "to_xy": [
+     2200,
+     800
+    ]
+   },
+   {
+    "a": "c6r2",
+    "b": "c6r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2200,
+     800
+    ],
+    "to_xy": [
+     2200,
+     1150
+    ]
+   },
+   {
+    "a": "c7r0",
+    "b": "c7r1",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     100
+    ],
+    "to_xy": [
+     2550,
+     450
+    ]
+   },
+   {
+    "a": "c7r1",
+    "b": "c7r2",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     450
+    ],
+    "to_xy": [
+     2550,
+     800
+    ]
+   },
+   {
+    "a": "c7r2",
+    "b": "c7r3",
+    "type": "thuong",
+    "open": true,
+    "from_xy": [
+     2550,
+     800
+    ],
+    "to_xy": [
+     2550,
+     1150
+    ]
+   }
+  ]
+ }
+]
