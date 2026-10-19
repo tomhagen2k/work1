@@ -100,6 +100,12 @@ def autopilot(exe, page_html, out_txt):
         for k, r in json.load(open(p3, encoding='utf-8')).items():
             lid, v = k.split('_')
             plans.append([21 + int(lid[3:]), v, conv(r['path']), round(r['opt'], 1)])
+    # Chương 4 (Đảo Mây Trắng, từ v1.5): màn 34–43 (sau màn thưởng Chương 3 ở vị trí 33)
+    p4 = os.path.join(LD, 'ket_qua_ch4.json')
+    if os.path.exists(p4):
+        for k, r in json.load(open(p4, encoding='utf-8')).items():
+            lid, v = k.split('_')
+            plans.append([32 + int(lid[3:]), v, conv(r['path']), round(r['opt'], 1)])
     runner = '''
 (function(){const PLANS=%s,VN={van:'Xe van',may:'Xe máy',tai:'Xe tải'};
 const out=PLANS.map(([li,v,p,opt])=>{try{const r=runPlan(li,v,JSON.parse(JSON.stringify(p)));

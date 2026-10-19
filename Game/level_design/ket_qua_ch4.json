@@ -1,0 +1,922 @@
+{
+ "C4L1_van": {
+  "opt": 95.62962962962962,
+  "path": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy BaiBien"
+   ],
+   [
+    19.7,
+    "BaiBien",
+    "giao BaiBien"
+   ],
+   [
+    36.2,
+    "KhoCang",
+    "lấy Taverna"
+   ],
+   [
+    44.8,
+    "Taverna",
+    "giao Taverna"
+   ],
+   [
+    55.4,
+    "KhoCang",
+    "lấy LuuNiem"
+   ],
+   [
+    78.1,
+    "LuuNiem",
+    "giao LuuNiem"
+   ],
+   [
+    86.4,
+    "KhoSon",
+    "lấy PhongTranh"
+   ],
+   [
+    95.6,
+    "PhongTranh",
+    "giao PhongTranh"
+   ]
+  ],
+  "naive": 173.24074074074073,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    7.2,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    17.4,
+    "Taverna",
+    "giao"
+   ],
+   [
+    39.2,
+    "LuuNiem",
+    "giao"
+   ],
+   [
+    47.4,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    56.7,
+    "PhongTranh",
+    "giao"
+   ],
+   [
+    92.9,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    117.9,
+    "LuuNiem",
+    "giao"
+   ],
+   [
+    142.3,
+    "BaiBien",
+    "giao"
+   ],
+   [
+    157.3,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    173.2,
+    "BaiBien",
+    "giao"
+   ]
+  ]
+ },
+ "C4L2_van": {
+  "opt": 95.82716049382715,
+  "path": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy PhongTranh"
+   ],
+   [
+    35.7,
+    "PhongTranh",
+    "giao PhongTranh"
+   ],
+   [
+    44.0,
+    "KhoSon",
+    "lấy PhoSon"
+   ],
+   [
+    61.0,
+    "PhoSon",
+    "giao PhoSon"
+   ],
+   [
+    74.0,
+    "KhoCang",
+    "lấy TiemKem"
+   ],
+   [
+    95.8,
+    "TiemKem",
+    "giao TiemKem"
+   ]
+  ],
+  "naive": 137.1111111111111,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    7.2,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    40.9,
+    "PhongTranh",
+    "giao"
+   ],
+   [
+    52.6,
+    "TiemKem",
+    "giao"
+   ],
+   [
+    72.5,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    91.9,
+    "PhoSon",
+    "giao"
+   ],
+   [
+    104.9,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    137.1,
+    "PhongTranh",
+    "giao"
+   ]
+  ]
+ },
+ "C4L3_van": {
+  "opt": 104.01234567901236,
+  "path": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy NhaDan"
+   ],
+   [
+    19.3,
+    "NhaDan",
+    "giao NhaDan"
+   ],
+   [
+    32.9,
+    "KhoSon",
+    "lấy BenPhaDao"
+   ],
+   [
+    54.1,
+    "BenPhaDao",
+    "giao BenPhaDao"
+   ],
+   [
+    75.7,
+    "KhoCang",
+    "lấy VuonNho"
+   ],
+   [
+    104.0,
+    "VuonNho",
+    "giao VuonNho"
+   ]
+  ],
+  "naive": 138.16666666666666,
+  "naive_fail": "trễ hạn BenPhaDao",
+  "naive_log": [
+   [
+    7.2,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    21.3,
+    "NhaDan",
+    "giao"
+   ],
+   [
+    58.0,
+    "VuonNho",
+    "giao"
+   ],
+   [
+    77.9,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    104.0,
+    "BenPhaDao",
+    "giao"
+   ],
+   [
+    125.6,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    138.2,
+    "NhaDan",
+    "giao"
+   ]
+  ]
+ },
+ "C4L4_van": {
+  "opt": 121.72839506172838,
+  "path": [
+   [
+    22.9,
+    "KhoSon",
+    "lấy BenPhaDao"
+   ],
+   [
+    44.1,
+    "BenPhaDao",
+    "giao BenPhaDao"
+   ],
+   [
+    65.8,
+    "KhoCang",
+    "lấy VuonNho"
+   ],
+   [
+    94.0,
+    "VuonNho",
+    "giao VuonNho"
+   ],
+   [
+    112.5,
+    "KhoSon",
+    "lấy ThapChuong"
+   ],
+   [
+    121.7,
+    "ThapChuong",
+    "giao ThapChuong"
+   ]
+  ],
+  "naive": 133.4506172839506,
+  "naive_fail": "trễ hạn BenPhaDao",
+  "naive_log": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    33.3,
+    "VuonNho",
+    "giao"
+   ],
+   [
+    53.7,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    63.0,
+    "ThapChuong",
+    "giao"
+   ],
+   [
+    80.7,
+    "BenPhaDao",
+    "giao"
+   ],
+   [
+    107.3,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    133.5,
+    "BenPhaDao",
+    "giao"
+   ]
+  ]
+ },
+ "C4L5_van": {
+  "opt": 134.0864197530864,
+  "path": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy Taverna"
+   ],
+   [
+    15.4,
+    "Taverna",
+    "giao Taverna"
+   ],
+   [
+    32.9,
+    "KhoSon",
+    "lấy BenPhaDao"
+   ],
+   [
+    54.1,
+    "BenPhaDao",
+    "giao BenPhaDao"
+   ],
+   [
+    76.4,
+    "KhoSon",
+    "lấy KSBeBoi"
+   ],
+   [
+    92.8,
+    "KSBeBoi",
+    "giao KSBeBoi"
+   ],
+   [
+    111.2,
+    "KhoSon",
+    "lấy HieuBanh"
+   ],
+   [
+    134.1,
+    "HieuBanh",
+    "giao HieuBanh"
+   ]
+  ],
+  "naive": 151.77777777777777,
+  "naive_fail": "trễ hạn BenPhaDao",
+  "naive_log": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    15.4,
+    "Taverna",
+    "giao"
+   ],
+   [
+    32.9,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    49.3,
+    "KSBeBoi",
+    "giao"
+   ],
+   [
+    67.7,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    93.9,
+    "BenPhaDao",
+    "giao"
+   ],
+   [
+    120.5,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    151.8,
+    "HieuBanh",
+    "giao"
+   ]
+  ]
+ },
+ "C4L6_van": {
+  "opt": 129.58641975308643,
+  "path": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy TiemHoa"
+   ],
+   [
+    29.4,
+    "TiemHoa",
+    "giao TiemHoa"
+   ],
+   [
+    44.0,
+    "KhoSon",
+    "lấy QuanHH"
+   ],
+   [
+    64.3,
+    "QuanHH",
+    "giao QuanHH"
+   ],
+   [
+    68.8,
+    "KhoCang",
+    "lấy VuonNho"
+   ],
+   [
+    95.6,
+    "VuonNho",
+    "giao VuonNho"
+   ],
+   [
+    113.2,
+    "KhoSon",
+    "lấy KSBeBoi"
+   ],
+   [
+    129.6,
+    "KSBeBoi",
+    "giao KSBeBoi"
+   ]
+  ],
+  "naive": 161.12345679012344,
+  "naive_fail": "trễ hạn QuanHH",
+  "naive_log": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    29.4,
+    "TiemHoa",
+    "giao"
+   ],
+   [
+    46.0,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    63.9,
+    "KSBeBoi",
+    "giao"
+   ],
+   [
+    90.6,
+    "QuanHH",
+    "giao"
+   ],
+   [
+    96.7,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    124.8,
+    "VuonNho",
+    "giao"
+   ],
+   [
+    143.2,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    161.1,
+    "KSBeBoi",
+    "giao"
+   ]
+  ]
+ },
+ "C4L7_van": {
+  "opt": 137.9753086419753,
+  "path": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy HieuBanh"
+   ],
+   [
+    14.5,
+    "HieuBanh",
+    "giao HieuBanh"
+   ],
+   [
+    36.6,
+    "XuongRuou",
+    "lấy BenPhaDao"
+   ],
+   [
+    49.3,
+    "BenPhaDao",
+    "giao BenPhaDao"
+   ],
+   [
+    62.6,
+    "XuongRuou",
+    "lấy CangCu"
+   ],
+   [
+    90.8,
+    "CangCu",
+    "giao CangCu"
+   ],
+   [
+    116.8,
+    "KhoSon",
+    "lấy BaiBien"
+   ],
+   [
+    138.0,
+    "BaiBien",
+    "giao BaiBien"
+   ]
+  ],
+  "naive": 174.95061728395058,
+  "naive_fail": "trễ hạn CangCu",
+  "naive_log": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    14.5,
+    "HieuBanh",
+    "giao"
+   ],
+   [
+    44.8,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    68.3,
+    "BaiBien",
+    "giao"
+   ],
+   [
+    97.4,
+    "XuongRuou",
+    "lấy"
+   ],
+   [
+    111.4,
+    "BenPhaDao",
+    "giao"
+   ],
+   [
+    128.5,
+    "CangCu",
+    "giao"
+   ],
+   [
+    160.9,
+    "XuongRuou",
+    "lấy"
+   ],
+   [
+    175.0,
+    "BenPhaDao",
+    "giao"
+   ]
+  ]
+ },
+ "C4L8_van": {
+  "opt": 142.25925925925927,
+  "path": [
+   [
+    22.9,
+    "KhoSon",
+    "lấy QuanHH"
+   ],
+   [
+    44.7,
+    "QuanHH",
+    "giao QuanHH"
+   ],
+   [
+    67.0,
+    "KhoSon",
+    "lấy CangCu"
+   ],
+   [
+    94.0,
+    "CangCu",
+    "giao CangCu"
+   ],
+   [
+    100.1,
+    "KhoCang",
+    "lấy HieuBanh"
+   ],
+   [
+    110.9,
+    "HieuBanh",
+    "giao HieuBanh"
+   ],
+   [
+    133.0,
+    "XuongRuou",
+    "lấy CoiXay"
+   ],
+   [
+    142.3,
+    "CoiXay",
+    "giao CoiXay"
+   ]
+  ],
+  "naive": 190.9074074074074,
+  "naive_fail": "trễ hạn QuanHH",
+  "naive_log": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    14.5,
+    "HieuBanh",
+    "giao"
+   ],
+   [
+    44.8,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    78.7,
+    "CangCu",
+    "giao"
+   ],
+   [
+    113.1,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    133.4,
+    "QuanHH",
+    "giao"
+   ],
+   [
+    180.1,
+    "XuongRuou",
+    "lấy"
+   ],
+   [
+    190.9,
+    "CoiXay",
+    "giao"
+   ]
+  ]
+ },
+ "C4L9_van": {
+  "opt": 148.19753086419752,
+  "path": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy TiemHoa"
+   ],
+   [
+    29.4,
+    "TiemHoa",
+    "giao TiemHoa"
+   ],
+   [
+    43.1,
+    "XuongRuou",
+    "lấy BenPhaDao"
+   ],
+   [
+    54.3,
+    "BenPhaDao",
+    "giao BenPhaDao"
+   ],
+   [
+    74.5,
+    "KhoCang",
+    "lấy QuanHH"
+   ],
+   [
+    78.6,
+    "QuanHH",
+    "giao QuanHH"
+   ],
+   [
+    84.6,
+    "KhoCang",
+    "lấy PhongTranh"
+   ],
+   [
+    115.1,
+    "PhongTranh",
+    "giao PhongTranh"
+   ],
+   [
+    123.4,
+    "KhoSon",
+    "lấy HaiDang"
+   ],
+   [
+    148.2,
+    "HaiDang",
+    "giao HaiDang"
+   ]
+  ],
+  "naive": 236.37037037037035,
+  "naive_fail": "trễ hạn BenPhaDao",
+  "naive_log": [
+   [
+    7.2,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    12.8,
+    "QuanHH",
+    "giao"
+   ],
+   [
+    52.8,
+    "TiemHoa",
+    "giao"
+   ],
+   [
+    68.8,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    96.0,
+    "HaiDang",
+    "giao"
+   ],
+   [
+    103.4,
+    "XuongRuou",
+    "lấy"
+   ],
+   [
+    117.4,
+    "BenPhaDao",
+    "giao"
+   ],
+   [
+    139.6,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    171.7,
+    "PhongTranh",
+    "giao"
+   ],
+   [
+    179.5,
+    "TiemHoa",
+    "giao"
+   ],
+   [
+    204.2,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    236.4,
+    "PhongTranh",
+    "giao"
+   ]
+  ]
+ },
+ "C4L10_van": {
+  "opt": 157.67901234567898,
+  "path": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy CangCu"
+   ],
+   [
+    9.3,
+    "CangCu",
+    "giao CangCu"
+   ],
+   [
+    36.8,
+    "KhoSon",
+    "lấy QuanHH"
+   ],
+   [
+    58.6,
+    "QuanHH",
+    "giao QuanHH"
+   ],
+   [
+    91.1,
+    "XuongRuou",
+    "lấy LangDong"
+   ],
+   [
+    96.5,
+    "LangDong",
+    "giao LangDong"
+   ],
+   [
+    103.9,
+    "XuongRuou",
+    "lấy BenPhaDao"
+   ],
+   [
+    115.1,
+    "BenPhaDao",
+    "giao BenPhaDao"
+   ],
+   [
+    136.7,
+    "KhoSon",
+    "lấy NhaTho"
+   ],
+   [
+    157.7,
+    "NhaTho",
+    "giao NhaTho"
+   ]
+  ],
+  "naive": 215.37037037037035,
+  "naive_fail": "trễ hạn QuanHH",
+  "naive_log": [
+   [
+    5.2,
+    "KhoCang",
+    "lấy"
+   ],
+   [
+    9.3,
+    "CangCu",
+    "giao"
+   ],
+   [
+    45.0,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    73.1,
+    "NhaTho",
+    "giao"
+   ],
+   [
+    101.6,
+    "KhoSon",
+    "lấy"
+   ],
+   [
+    121.9,
+    "QuanHH",
+    "giao"
+   ],
+   [
+    170.7,
+    "XuongRuou",
+    "lấy"
+   ],
+   [
+    177.6,
+    "LangDong",
+    "giao"
+   ],
+   [
+    195.5,
+    "BenPhaDao",
+    "giao"
+   ],
+   [
+    210.0,
+    "XuongRuou",
+    "lấy"
+   ],
+   [
+    215.4,
+    "LangDong",
+    "giao"
+   ]
+  ]
+ }
+}

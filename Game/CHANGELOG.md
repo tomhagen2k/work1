@@ -7,7 +7,7 @@ Mỗi thay đổi ghi kèm mã quyết định (D-xx, Q-xx) và **vị trí code
 
 ## v1.5 · đang làm
 
-Tóm tắt: Chương 3 "Thành phố Không Ngủ" — 10 màn theo khung độ khó với yếu tố mới đường đông, khung cảnh đêm vẽ bằng code, mẹo đường đông, màn thưởng "Đêm pháo hoa" (D-79 → D-81)
+Tóm tắt: Chương 3 "Thành phố Không Ngủ" — 10 màn theo khung độ khó với yếu tố mới đường đông, khung cảnh đêm vẽ bằng code, mẹo đường đông, màn thưởng "Đêm pháo hoa" (D-79 → D-81); Chương 4 "Đảo Mây Trắng" — 10 màn với yếu tố mới hạn giao (bến phà, tiệc hoàng hôn, cảng cũ; dư hạn ≥ 15 giây), khung cảnh Santorini hoàng hôn vẽ bằng code, mẹo hạn giao, màn thưởng "Lễ hội hoàng hôn" (D-82, D-83)
 
 Tài liệu yêu cầu: (ghi khi chốt)
 
@@ -17,12 +17,18 @@ Tài liệu yêu cầu: (ghi khi chốt)
 - **Mẹo đường đông** (D-80): lần đầu mở màn 3 Chương 3 (Màn 23), 2 bước khoanh — các đoạn đường đông trên bản đồ chuẩn bị, rồi mục "Đường đông" ở chú giải. Văn bản cơ chế "Đường đông" ở tab "Màn này".
 - **Màn thưởng "Đêm pháo hoa"**: 25 kim cương, 7 cụm (2 cụm trên phố đông), T0 120 giây.
 - Tiếng Anh cho toàn bộ nội dung Chương 3 (tên màn, giới thiệu, địa danh, công trình, câu thông báo, chương).
+- **Chương 4 · Đảo Mây Trắng** (D-82; thiết kế + số đo: `level_design/Thiet_Ke_Chuong_4.md`): bản đồ chung 8×4, đường lớn ven vách (cột 0) và ven biển phía Nam (hàng 3), **phố chợ đông** (hàng 1 cột 2→5 + cột 4) có từ màn 1 để ôn; 2 kho (Kho cảng, Kho sơn), thêm Xưởng rượu vang từ màn 7. **Hạn giao** từ màn 3: hàng phải kịp chuyến phà (Bến phà), kịp tiệc (Quán hoàng hôn, màn 6), kịp tàu (Cảng cũ, màn 7); hạn rộng — lời giải chuẩn còn dư ≥ 15 giây (đo trong demo: 18–36 giây), hạn đầu tiên của màn buộc đổi kế hoạch. 10 màn ĐK 16–25 đều đúng ĐK (CT-05, CT-06, CT-07), T0 115 → 185 giây tính từ thời gian đo bằng bộ lái tự động; cách chơi không tính toán thua vì trễ hạn ở cả 8 màn có hạn.
+- **Khung cảnh Santorini vẽ bằng code** (`drawSanto`): biển caldera và vách núi lửa nhiều lớp đá phía Tây (đảo núi lửa ngoài khơi, nhà hang xếp tầng trên vách, bậc thang zíc zắc và cáp treo xuống Cảng cũ), bãi cát đen phía Nam, vườn nho cuộn tròn và cối xay phía Đông; nhà khối trắng mái bằng / mái vòm thùng, lối đi lát trắng trong ô phố, lừa trong ô phố; phố chợ có mái hiên sọc trắng – hồng, xe buýt nhỏ, ATV, xe máy kín làn; phà trắng đậu ở Bến phà, tàu gỗ ở Cảng cũ. Tiến triển "chuẩn bị mùa du lịch": nhà trong vùng thông xe đã quét vôi, ngoài vùng bạc màu, quanh công trình xong được sơn mới (cửa xanh, hoa giấy, bể bơi trên mái — hiệu ứng mọc của cảnh quay). 3 kho và 10 công trình mỗi cái một hình khối riêng; mái vòm xanh coban chỉ ở công trình; ghim có viền tối trên nền trắng. Nhà thờ ba mái vòm xanh (màn 10) hiện trong cảnh kết và bưu thiếp.
+- **Mẹo hạn giao** (D-83): lần đầu mở màn 3 Chương 4 (Màn 33), 2 bước khoanh — điểm giao có hạn + dòng "⏱ hạn", rồi kho của đơn đó. Văn bản cơ chế "Hạn giao" (tab "Màn này") viết lại: hạn tính từ lúc xe xuất phát, Thêm giờ không cứu được, giao đơn có hạn trước.
+- **Màn thưởng "Lễ hội hoàng hôn"**: 25 kim cương, 7 cụm (2 cụm trên phố chợ đông), T0 120 giây.
+- Tiếng Anh cho toàn bộ nội dung Chương 4 (tên màn, giới thiệu, địa danh, công trình, câu thông báo, chương, mẹo).
 - Cấu hình xem trước `game-demo-win` trong `.claude/launch.json` (dùng `python` trên Windows; `game-demo` giữ `python3` cho máy Mac).
 
 ### Thay đổi
 - **Số màn hiển thị đếm liên tục, bỏ qua màn thưởng** (D-81 [GĐ]): Chương 3 là Màn 21–30 (trước đó sẽ hiện 23–32). Áp dụng ở Trang chủ, thẻ màn, màn chuẩn bị, popup Nhiệm vụ. Khóa lưu tiến trình không đổi.
-- Danh sách chương: Chương 3 bỏ nhãn "Sắp có"; Chương 4 · Đảo Mây Trắng vẫn "Sắp có".
+- Danh sách chương: Chương 3 và Chương 4 · Đảo Mây Trắng bỏ nhãn "Sắp có" (Chương 4 lúc đầu vẫn "Sắp có", mở khi dựng xong — D-82).
 - `tools/chot_phien_ban.py`: bộ lái tự động chạy thêm 10 màn Chương 3 (đọc `level_design/ket_qua_ch3.json`).
+- `tools/chot_phien_ban.py`: bộ lái tự động chạy thêm 10 màn Chương 4 (đọc `level_design/ket_qua_ch4.json`) — 40/40 màn đạt.
 
 ### Bỏ
 
@@ -36,6 +42,10 @@ Tài liệu yêu cầu: (ghi khi chốt)
 - Số màn: `LVNO` (trước `CHAPTERS`), dùng ở `drawHomeMap`, `renderHome`, `renderPrep`, `openInfo`.
 - Văn bản: `MECHTXT['Đường đông']`, `MECH_EN`, `MECHTXT_EN`; `EN_DATA` (place, lv, ch, cc[2]); `applyData` lặp qua `[CH1,CH2,CH3]`.
 - Dữ liệu màn: `level_design/levels_ch3.py`, `level_design/ket_qua_ch3.json`. Ảnh kiểm chứng: `playtest_evidence/chuong3_v15/`.
+- Chương 4: cấu hình `CH4`, `C4_` (tham số thứ 4 là hạn giây), `CH4_LV`, `CH4_BONUS` ngay sau `PLACE`/`PCOL` của Chương 3 (màn 34–43, màn thưởng 44 trong danh sách; Màn 31–40 hiển thị); `PLACE`/`PCOL` của Chương 4 (mã `BenPhaDao`, `KSBeBoi`, `CafeVach` để không trùng Chương 2–3); `KHO` thêm 3 kho; `MECH` thêm 11 mục; `CHAPTERS[3]`.
+- Bộ vẽ Chương 4: khối `/* Bộ vẽ cảnh Đảo Mây Trắng (Chương 4) */` trước bộ vẽ Làng ven sông — `SPAL`, `sHouse`, `sBox`, `sOlive`, `sVines`, `sDonkey`, `sSail`, `sFerry`, `sLot`, `sBuild`, `santoKho`, `santoLandmark`, `drawSanto`.
+- Mẹo hạn giao: `HAN_KEY`, `hanTipStart` (gọi từ `openLevel`, ngay sau `dongTipStart`). Văn bản: `MECHTXT['Hạn giao']`, `MECHTXT_EN['Hạn giao']`; `EN_DATA` (place, lv, ch[3], cc[3]); `applyData` lặp qua `[CH1,CH2,CH3,CH4]`.
+- Dữ liệu màn: `level_design/levels_ch4.py` (hạn theo giây demo, quy đổi theo `TI_LE` đo bằng bộ lái), `level_design/ket_qua_ch4.json`. Ảnh kiểm chứng: `playtest_evidence/chuong4_v15/`.
 
 ## v1.4 · chốt 19/10/2026
 

@@ -151,6 +151,7 @@ Danh mục phân tích ngày 14/10, giữ để tham khảo; chi tiết chính t
 | Thể hiện yếu tố | **Hạn giao: bến phà** — phà đậu ở bến, rời bến đúng giờ hạn; đơn có hạn là hàng phải kịp chuyến phà |
 | Vật trang trí | Lừa (trong ô phố), bàn ghế xanh trắng, chậu hoa giấy, thuyền buồm |
 | Kỳ quan (màn trùm) | **Nhà thờ ba mái vòm xanh** |
+| Đã dựng trong demo (19/10, D-82) | Tên **Đảo Mây Trắng** (BA chốt). Khung cảnh vẽ bằng code (`drawSanto`) chờ ảnh thiết kế. Vách núi lửa và biển caldera ở **phía Tây** (đảo núi lửa ngoài khơi, nhà xếp tầng trên vách), bãi cát đen phía Nam, vườn nho – cối xay – hải đăng phía Đông. Hạn giao thể hiện bằng **Bến phà** (phà đậu sẵn), **Cảng cũ** dưới vách (bậc thang zíc zắc, cáp treo, tàu gỗ) và **Quán hoàng hôn** (tiệc). Đường đông là **phố chợ** (mái hiên sọc trắng – hồng, xe buýt nhỏ, ATV, xe máy). Nhà thờ ba mái vòm xanh đặt trong ô phố sát vách (màn 10). Chi tiết: [level_design/Thiet_Ke_Chuong_4.md](level_design/Thiet_Ke_Chuong_4.md) mục 4 |
 | Kiểu tiến triển | Chuẩn bị mùa du lịch: sơn lại nhà, mở quán, dựng cối xay |
 | Bộ tài nguyên | D (Địa Trung Hải) |
 | Rủi ro & xử lý | Trắng chói → mặt đường đá tối, bóng đổ rõ, ghim viền tối (mục 8.2). Mái vòm xanh coban gần màu đường lớn trên mini map → mái vòm chỉ ở công trình, không rải đều |
@@ -519,7 +520,7 @@ Mỗi chương = **một hoặc hai bộ dùng chung** + bảng màu riêng + k�
 | File | [mockups/chu_de_canh.html](mockups/chu_de_canh.html) — chọn chủ đề, chọn tiến độ chương (màn 1 → hoàn thành) |
 | Ảnh | [newyork_dau](mockups/chu_de_newyork_dau.jpg) · [newyork_cuoi](mockups/chu_de_newyork_cuoi.jpg) · [aicap_dau](mockups/chu_de_aicap_dau.jpg) · [aicap_cuoi](mockups/chu_de_aicap_cuoi.jpg) · [santorini_dau](mockups/chu_de_santorini_dau.jpg) · [santorini_cuoi](mockups/chu_de_santorini_cuoi.jpg) |
 | Cách dựng | Nhìn từ trên, camera **nghiêng nhẹ** như ảnh tham chiếu (thấy mái + mặt tiền hướng nam, bóng đổ mềm). Khung lái xe đúng tỉ lệ demo 844×390, có giao diện điều khiển |
-| Tên chương (đề xuất, chờ BA duyệt) | **Thành phố Không Ngủ** (New York về đêm) · **Ốc đảo Sông Vàng** (Ai Cập) · **Đảo Mây Trắng** (Santorini) |
+| Tên chương | **Thành phố Không Ngủ** (New York về đêm — BA chốt 19/10) · **Ốc đảo Sông Vàng** (Ai Cập — đề xuất, chờ BA duyệt) · **Đảo Mây Trắng** (Santorini — BA chốt 19/10) |
 
 ### 8.1. Kỳ quan lộ dần (CĐ-Q5) — mỗi màn thắng lộ thêm một phần
 

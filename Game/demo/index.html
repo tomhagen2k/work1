@@ -1330,21 +1330,70 @@ Object.assign(PCOL,{BenCang:'#1c7ed6',KhoGa:'#1864ab',TrungTam:'#1971c2',GaTau:'
   ThapNuoc:'#5c940d',CauTreo:'#0b7285',ArtDeco:'#7048e8',ChoDem:'#f59f00',SanBang:'#1098ad',BenPha:'#0ca678',ToaBao:'#495057',Pizza:'#e03131',
   CanHo:'#9c36b5',KhachSan:'#ae3ec9',Deli:'#66a80f',HotDog:'#d6336c',BaoTang:'#862e9c',Studio:'#5f3dc4',RapPhim:'#c92a2a',CuaHangNhac:'#d9480f',Cafe:'#a61e4d'});
 
+// ---------- Chương 4: Đảo Mây Trắng — khớp level_design/levels_ch4.py (thiết kế + số đo: level_design/Thiet_Ke_Chuong_4.md) ----------
+// Yếu tố mới: HẠN GIAO (từ màn 3) — hàng phải kịp chuyến phà (Bến phà, màn 3), kịp tiệc ở Quán hoàng hôn (màn 6), kịp tàu ở Cảng cũ (màn 7).
+// Hạn đặt rộng: lời giải tốt nhất còn dư ≥ 15 giây (BA chốt 19/10). Ôn: 2 kho (3 kho từ màn 7), đường lớn ven vách + ven biển Nam, phố chợ đông.
+// Hoàng hôn, tông ấm (Chu_De_Khung_Canh mục 3.4). Màn 34–43 trong danh sách (Màn 31–40 hiển thị), màn thưởng 44.
+const CH4={cols:8,rows:4,start:['c0r1','c1r1',40/350],big:'NhaTho',
+  types:{lon:[...col(0,0,3),...row(3,0,7)],dong:[...row(1,2,5),...col(4,1,3)]},
+  points:{KhoCang:['c0r1','c0r2',.5],KhoSon:['c4r0','c4r1',.5],XuongRuou:['c7r1','c7r2',.5],
+    Taverna:['c1r0','c1r1',.5],PhoSon:['c2r2','c3r2',.5],BenPhaDao:['c5r3','c6r3',.5],ThapChuong:['c3r0','c3r1',.5],KSBeBoi:['c4r2','c4r3',.5],
+    QuanHH:['c0r0','c0r1',.5],CangCu:['c0r2','c0r3',.5],CoiXay:['c6r0','c6r1',.5],HaiDang:['c7r2','c7r3',.5],NhaTho:['c1r1','c1r2',.5],
+    NhaHang:['c2r0','c3r0',.5],TiemGom:['c2r1','c2r2',.5],NhaNghi:['c1r2','c2r2',.5],LuuNiem:['c3r1','c4r1',.5],HieuBanh:['c1r3','c2r3',.5],
+    PhongTranh:['c4r1','c5r1',.5],TiemKem:['c5r2','c5r3',.5],NhaTro:['c3r2','c3r3',.5],VuonNho:['c6r1','c6r2',.5],BaiBien:['c3r3','c4r3',.5],
+    NhaDan:['c2r0','c2r1',.5],TiemHoa:['c5r1','c5r2',.5],CafeVach:['c6r2','c7r2',.5],LangDong:['c7r0','c7r1',.5]},
+  sites:['Taverna','PhoSon','BenPhaDao','ThapChuong','KSBeBoi','QuanHH','CangCu','CoiXay','HaiDang','NhaTho'],
+  siteNames:['Quán taverna','Phố sơn mới','Bến phà','Tháp chuông','Khách sạn bể bơi','Quán hoàng hôn','Cảng cũ','Cối xay gió','Hải đăng','Nhà thờ ba mái vòm xanh'],
+  regions:[[5,3],[5,3],[6,3],[6,3],[6,3],[6,3],[7,3],[7,3],[7,3],[7,3]],
+  openNote:['Quán taverna mở cửa — giàn hoa giấy đã nở, mùa du lịch bắt đầu.','Phố sơn mới trắng tinh, cửa xanh — đường xuống Bến phà phía Nam đã thông.',
+    'Bến phà đón chuyến phà đầu mùa — hàng lên tàu kịp giờ!','Tháp chuông vang tiếng — phố quanh tháp được quét vôi mới.',
+    'Khách sạn bể bơi mở cửa — làn nước xanh nhìn ra biển.','Quán hoàng hôn khai trương đúng lúc mặt trời lặn. Đường sang Xưởng rượu vang phía Đông đã thông.',
+    'Cảng cũ đón tàu du lịch — bậc thang và cáp treo xuống vách đã sửa xong.','Cối xay gió quay cánh trở lại trên đồi.',
+    'Hải đăng sáng trên mũi đất — sẵn sàng cho ngày khai mùa.','Nhà thờ ba mái vòm xanh hoàn tất — Đảo Mây Trắng sẵn sàng đón khách.'],
+  finTitle:'Đảo Mây Trắng sẵn sàng đón khách!',draw:o=>drawSanto(o),postNote:'Đã chuẩn bị xong mùa du lịch trên đảo',
+  // màn thưởng (D-73): 25 kim cương, 7 cụm (2 cụm trên phố chợ đông); T0 = vòng nhặt hết nhanh nhất + 50%
+  bonus:{name:'Lễ hội hoàng hôn',intro:'Đảo mở hội đón mùa du lịch! Lái xe nhặt kim cương rải trên các con đường.',T0:120,
+    gems:[['c0r0','c1r0',4],['c2r1','c3r1',3],['c4r1','c4r2',4],['c6r0','c7r0',3],['c5r3','c6r3',4],['c1r2','c1r3',3],['c7r1','c7r2',4]]}
+};
+const C4_=(f,to,qty,dl)=>dl?{from:f,to,qty,dl}:{from:f,to,qty};
+const CH4_LV=addChapter(CH4,[
+ {name:'Quán taverna',intro:'Ngày đầu trên đảo: hai kho, phố chợ đông nghẹt xe — gom chuyến và chọn đường cho khéo.',T0:115,vehicles:['van'],missions:[C4_('KhoCang','Taverna',1),C4_('KhoCang','LuuNiem',3),C4_('KhoSon','PhongTranh',1),C4_('KhoCang','BaiBien',3)]},
+ {name:'Phố sơn mới',intro:'Đường ven vách và đường ven biển rộng, nhanh — thử đi vòng qua đường lớn.',T0:115,vehicles:['van'],missions:[C4_('KhoSon','PhoSon',3),C4_('KhoCang','TiemKem',2),C4_('KhoCang','PhongTranh',2)]},
+ {name:'Bến phà',intro:'Phà rời bến đúng giờ! Đơn có ⏱ hạn phải giao kịp — trễ hạn là thua ngay.',T0:135,vehicles:['van'],missions:[C4_('KhoSon','BenPhaDao',3,80),C4_('KhoCang','VuonNho',2),C4_('KhoCang','NhaDan',3)]},
+ {name:'Tháp chuông',intro:'Hàng cho phà và cho tháp chuông cùng ở một kho — chở chung hay giao phà trước?',T0:150,vehicles:['van'],missions:[C4_('KhoSon','ThapChuong',2),C4_('KhoSon','BenPhaDao',2,60),C4_('KhoCang','VuonNho',3)]},
+ {name:'Khách sạn bể bơi',intro:'Nhiều hàng phải chia chuyến, phà vẫn rời bến đúng giờ — chuyến nào đi trước?',T0:160,vehicles:['van'],missions:[C4_('KhoSon','KSBeBoi',3),C4_('KhoSon','BenPhaDao',3,75),C4_('KhoSon','HieuBanh',3),C4_('KhoCang','Taverna',1)]},
+ {name:'Quán hoàng hôn',intro:'Tiệc hoàng hôn không chờ ai — hàng phải tới quán trước khi mặt trời lặn.',T0:160,vehicles:['van'],missions:[C4_('KhoSon','QuanHH',2,85),C4_('KhoSon','KSBeBoi',2),C4_('KhoCang','TiemHoa',3),C4_('KhoCang','VuonNho',3)]},
+ {name:'Cảng cũ',intro:'Thêm Xưởng rượu vang — 3 kho; phà và tàu ở Cảng cũ đều rời bến đúng giờ.',T0:165,vehicles:['van'],missions:[C4_('XuongRuou','CangCu',2,115),C4_('XuongRuou','BenPhaDao',3,65),C4_('KhoSon','BaiBien',2),C4_('KhoCang','HieuBanh',3)]},
+ {name:'Cối xay gió',intro:'Tiệc hoàng hôn và tàu ở Cảng cũ cùng chờ hàng từ Kho sơn — chở chung hay chia hai chuyến?',T0:170,vehicles:['van'],missions:[C4_('XuongRuou','CoiXay',3),C4_('KhoSon','CangCu',3,110),C4_('KhoSon','QuanHH',3,70),C4_('KhoCang','HieuBanh',2)]},
+ {name:'Hải đăng',intro:'Phà ở phía Nam, tiệc trên vách phía Tây — hai hạn ở hai đầu đảo, đơn nào trước?',T0:175,vehicles:['van'],missions:[C4_('KhoSon','HaiDang',2),C4_('XuongRuou','BenPhaDao',2,80),C4_('KhoCang','QuanHH',2,95),C4_('KhoCang','TiemHoa',3),C4_('KhoCang','PhongTranh',3)]},
+ {name:'Nhà thờ mái vòm xanh',intro:'Ngày khai mùa du lịch: phà, tàu và tiệc hoàng hôn đều chờ hàng — dùng hết những gì đã học.',T0:185,vehicles:['van'],missions:[C4_('KhoSon','NhaTho',3),C4_('KhoSon','QuanHH',3,90),C4_('XuongRuou','BenPhaDao',2,135),C4_('KhoCang','CangCu',2,45),C4_('XuongRuou','LangDong',2)]}
+]);
+const CH4_BONUS=addBonus(CH4); // màn 44
+Object.assign(PLACE,{KhoCang:'Kho cảng',KhoSon:'Kho sơn',XuongRuou:'Xưởng rượu vang',Taverna:'Quán taverna',PhoSon:'Phố sơn mới',BenPhaDao:'Bến phà',
+  ThapChuong:'Tháp chuông',KSBeBoi:'Khách sạn bể bơi',QuanHH:'Quán hoàng hôn',CangCu:'Cảng cũ',CoiXay:'Cối xay gió',HaiDang:'Hải đăng',NhaTho:'Nhà thờ mái vòm',
+  NhaHang:'Nhà hàng cá',TiemGom:'Tiệm gốm',NhaNghi:'Nhà nghỉ hang',LuuNiem:'Đồ lưu niệm',HieuBanh:'Hiệu bánh',PhongTranh:'Phòng tranh',TiemKem:'Tiệm kem',
+  NhaTro:'Nhà trọ',VuonNho:'Vườn nho',BaiBien:'Quán bãi biển',NhaDan:'Xóm vôi trắng',TiemHoa:'Tiệm hoa',CafeVach:'Cà phê ven vách',LangDong:'Làng phía Đông'});
+Object.assign(PCOL,{KhoCang:'#1c7ed6',KhoSon:'#1864ab',XuongRuou:'#1971c2',Taverna:'#2b8a3e',PhoSon:'#a61e4d',BenPhaDao:'#0b7285',ThapChuong:'#7048e8',
+  KSBeBoi:'#1098ad',QuanHH:'#c2255c',CangCu:'#5c940d',CoiXay:'#862e9c',HaiDang:'#e03131',NhaTho:'#ae3ec9',NhaHang:'#0ca678',TiemGom:'#c92a2a',NhaNghi:'#9c36b5',
+  LuuNiem:'#d6336c',HieuBanh:'#66a80f',PhongTranh:'#5f3dc4',TiemKem:'#e64980',NhaTro:'#495057',VuonNho:'#2f9e44',BaiBien:'#0c8599',NhaDan:'#a61e4d',
+  TiemHoa:'#d6336c',CafeVach:'#862e9c',LangDong:'#5c940d'});
+
 Object.assign(PLACE,{HTX:'Hợp tác xã',ChoPhien:'Chợ phiên',GiengLang:'Giếng làng',XomTren:'Xóm Trên',XomGiua:'Xóm Giữa',NhaLy:'Nhà ông Lý',
   TruongLang:'Trường làng',XomDong:'Xóm Đông',TramYTe:'Trạm y tế',XomNam:'Xóm Nam',AoCa:'Ao cá',DinhLang:'Đình làng',BenDo:'Bến đò',NhaVanHoa:'Nhà văn hóa',XomBai:'Xóm Bãi'});
 Object.assign(PCOL,{HTX:'#1c7ed6',ChoPhien:'#e64980',GiengLang:'#0ca678',XomTren:'#7048e8',XomGiua:'#f59f00',NhaLy:'#ae3ec9',TruongLang:'#f76707',
   XomDong:'#d6336c',TramYTe:'#e03131',XomNam:'#5c940d',AoCa:'#1098ad',DinhLang:'#a61e4d',BenDo:'#0b7285',NhaVanHoa:'#9c36b5',XomBai:'#66a80f'});
-const KHO=new Set(['KhoA','KhoB','BaiVL','KhoTong','XuongGo','HTX','BenCang','KhoGa','TrungTam']);
+const KHO=new Set(['KhoA','KhoB','BaiVL','KhoTong','XuongGo','HTX','BenCang','KhoGa','TrungTam','KhoCang','KhoSon','XuongRuou']);
 const MECH=['Điều khiển','Điều khiển','Nhiều điểm giao','Nhiều điểm giao','Chia chuyến','Chia chuyến','Chia chuyến','Đường lớn','Đường lớn','Tổng hợp',
   'Chia chuyến','Đường lớn','Nhiều kho','Nhiều kho','Nhiều kho','Nhiều kho','Nhiều kho','Nhiều kho','Nhiều kho','Tổng hợp','Thưởng','Thưởng',
-  'Nhiều kho','Đường lớn','Đường đông','Đường đông','Đường đông','Đường đông','Nhiều kho','Đường đông','Đường đông','Tổng hợp','Thưởng'];
+  'Nhiều kho','Đường lớn','Đường đông','Đường đông','Đường đông','Đường đông','Nhiều kho','Đường đông','Đường đông','Tổng hợp','Thưởng',
+  'Đường đông','Đường lớn','Hạn giao','Hạn giao','Hạn giao','Hạn giao','Nhiều kho','Hạn giao','Hạn giao','Tổng hợp','Thưởng'];
 // số màn hiển thị: đếm liên tục qua các chương, bỏ qua màn thưởng (Chương 3 là màn 21–30 dù nằm ở vị trí 23–32 trong danh sách)
 const LVNO=i=>LEVELS.slice(0,i).filter(l=>!l.bonus).length+1;
 const CHAPTERS=[
   {name:'Làng ven sông',mech:'1 kho, nhiều điểm giao, chia chuyến, đường lớn',levels:CH1_LV,cc:CH1,bonus:CH1_BONUS},
   {name:'Khu đô thị mới',mech:'Nhiều kho: 2 kho từ màn 3, 3 kho từ màn 8',levels:CH2_LV,cc:CH2,bonus:CH2_BONUS},
   {name:'Thành phố Không Ngủ',mech:'Đường đông từ màn 3 · 3 kho từ màn 7',levels:CH3_LV,cc:CH3,bonus:CH3_BONUS},
-  {name:'Đảo Mây Trắng',mech:'Hạn giao',soon:true}
+  {name:'Đảo Mây Trắng',mech:'Hạn giao từ màn 3 · 3 kho từ màn 7',levels:CH4_LV,cc:CH4,bonus:CH4_BONUS}
 ];
 
 /* ======================= Tiện ích SVG ======================= */
@@ -1838,6 +1887,253 @@ function drawNight(opts){
   if(opts.growI)opts.growI.sort((a,b)=>a.d-b.d);
   // ghim có quầng sáng + nhãn (chỉ khi chơi)
   if(opts.pins)pinLayer(()=>ZONES.forEach(z=>{const b=chRect(z.id);el('circle',{cx:b.px,cy:b.py-26,r:30,fill:'url(#nPinGlow)'});pin(b.px,b.py,z.col,z.kho);label(b.lx,b.ly,z.name);}));
+}
+/* ======================= Bộ vẽ cảnh Đảo Mây Trắng (Chương 4) =======================
+   Theo Chu_De_Khung_Canh.md mục 3.4 + 8.2: hoàng hôn trên đảo núi lửa, tông ấm. Nhà khối trắng mái bằng / mái vòm thùng, đất nung;
+   mái vòm xanh coban CHỈ ở công trình (không rải đều — gần màu đường lớn trên mini map). Nhấn: hoa giấy hồng tím, vàng nắng chiều.
+   Độ đọc trên nền trắng: mặt đường đá núi lửa sẫm, vỉa hè xám nhạt, bóng đổ xanh lam, ghim viền tối.
+   Bản đồ: vách núi lửa đổ xuống biển caldera ở phía Tây (đảo núi lửa ngoài khơi, nhà xếp tầng trên vách), bãi cát đen phía Nam,
+   vườn nho và cối xay phía Đông. Đường ven vách (cột 0) và đường ven biển phía Nam (hàng 3) là đường lớn; phố chợ là đường đông
+   (xe buýt nhỏ, xe ATV, xe máy kín làn + mái hiên chợ). Lối bậc thang chỉ là lối đi bộ (hẻm chưa học).
+   Hạn giao (yếu tố mới): đơn có hạn là hàng phải kịp chuyến phà (Bến phà, màn 3), kịp tàu ở Cảng cũ (màn 7) hoặc kịp tiệc ở
+   Quán hoàng hôn (màn 6) — phà / tàu đậu sẵn ở bến từ khi vùng có bến thông xe.
+   Tiến triển "chuẩn bị mùa du lịch": nhà trong vùng thông xe đã quét vôi, nhà ngoài vùng còn bạc màu; công trình xong thì phố quanh
+   nó được sơn mới, có hoa giấy, bể bơi trên mái (hiệu ứng mọc của cảnh quay — K8).
+   Vẽ bằng code (như Chương 3 — D-79) — khi có ảnh thiết kế thì đổi draw thành imgDraw(4,o)||drawSanto(o) (D-77). */
+const SPAL={sea:'#1b8fc4',seaD:'#167aa8',seaL:'#5fb8e0',sun:'#f2c14e',land:'#a08a74',soil:'#8c7663',block:'#e6dacb',blockD:'#cfc2b1',
+  walk:'#ddd4c7',road:'#5b4f48',lon:'#4d4440',dong:'#5e4d49',line:'#efe6d8',white:'#fbf8f3',plain:'#efe9df',dusty:'#d3c8b9',
+  cobalt:'#1f5fae',terra:'#c97b5a',ochre:'#e3c18f',bou:'#c2187f',bouL:'#e0559f',pool:'#4fc3d9',vine:'#6b8f3a',vineD:'#4f6e2a',
+  olive:'#9aa68a',rock:['#7d4a38','#a8664a','#4a3a35','#b98a5e','#8f5a44'],sand:'#3d3533',shadow:'rgba(52,70,120,.24)'};
+// nhà khối trắng nhìn từ trên, nghiêng nhẹ (mái + mặt tiền phía Nam). st: 0 = bạc màu (ngoài vùng), 1 = đã quét vôi, 2 = sơn mới quanh công trình
+function sHouse(x,y,w,h,r,st,o){o=o||{};const q=r(),acc=st>0&&r()<.08?(r()<.5?SPAL.terra:SPAL.ochre):null;
+  const wall=acc?shade(acc,st===2?.06:.14):st===0?SPAL.dusty:st===1?SPAL.plain:SPAL.white,fh=Math.min(10,Math.max(6,h*.22));
+  el('rect',{x:x+5,y:y+6,width:w,height:h,rx:2,fill:SPAL.shadow});
+  el('rect',{x,y:y+h-fh,width:w,height:fh,fill:shade(wall,-.13)});
+  if(st>0&&w>16){const dx=x+w*(.2+r()*.5);el('rect',{x:dx,y:y+h-fh+1.5,width:5,height:fh-1.5,fill:st===2?SPAL.cobalt:'#8a9aa3'});
+    if(w>30)el('rect',{x:x+(dx-x>w/2?5:w-11),y:y+h-fh+2,width:5,height:3.5,fill:st===2?'#4f86c6':'#9aa6ad'});}
+  el('rect',{x,y,width:w,height:h-fh,rx:2,fill:wall,stroke:shade(wall,-.2),'stroke-width':1.2});
+  if(q<.32){const vw=Math.min(w,h-fh)*.5;el('rect',{x:x+(w-vw)/2,y:y+2,width:vw,height:h-fh-4,rx:vw/2,fill:shade(wall,-.05),stroke:shade(wall,-.16),'stroke-width':1}); // mái vòm thùng
+    el('rect',{x:x+(w-vw)/2+vw*.18,y:y+3,width:vw*.22,height:h-fh-6,rx:vw*.11,fill:'#fff',opacity:.8});}
+  else if(q<.55&&w>26&&h>26)el('rect',{x:x+3,y:y+3,width:w*.45,height:(h-fh)*.45,rx:1.5,fill:shade(wall,-.08)}); // sân thượng thấp
+  if(st===2&&!o.noPool&&w>34&&h>32&&r()<.3)el('rect',{x:x+w*.5,y:y+(h-fh)*.45,width:w*.4,height:(h-fh)*.42,rx:2,fill:SPAL.pool,stroke:'#fff','stroke-width':1.5});
+  if(st===2&&r()<.7){const bx=r()<.5?x+3:x+w-3,by=y+h-fh-2;[[0,0,5],[4,-3,4],[-3,-4,3.5]].forEach(([a,b2,rr])=>el('circle',{cx:bx+a,cy:by+b2,r:rr,fill:rr>4?SPAL.bou:SPAL.bouL}));}}
+function sBox(x,y,w,h,c){c=c||SPAL.white;const fh=Math.min(10,Math.max(5,h*.2));el('rect',{x:x+5,y:y+6,width:w,height:h,rx:2,fill:SPAL.shadow});
+  el('rect',{x,y:y+h-fh,width:w,height:fh,fill:shade(c,-.14)});el('rect',{x,y,width:w,height:h-fh,rx:2,fill:c,stroke:shade(c,-.2),'stroke-width':1.2});}
+function sOlive(x,y,r){el('circle',{cx:x+3,cy:y+4,r,fill:SPAL.shadow});el('circle',{cx:x,cy:y,r,fill:SPAL.olive});el('circle',{cx:x-r*.3,cy:y-r*.3,r:r*.5,fill:shade(SPAL.olive,.18)});}
+function sVines(x,y,w,h,r){el('rect',{x,y,width:w,height:h,rx:8,fill:SPAL.soil});
+  for(let yy=y+12;yy<y+h-6;yy+=18)for(let xx=x+12+(Math.round((yy-y)/18)%2)*8;xx<x+w-6;xx+=17){el('circle',{cx:xx,cy:yy,r:6,fill:SPAL.vineD});el('circle',{cx:xx-1,cy:yy-1,r:3.6,fill:SPAL.vine});}} // vườn nho cuộn tròn sát đất
+function sDonkey(x,y){el('ellipse',{cx:x+3,cy:y+4,rx:9,ry:5,fill:SPAL.shadow});el('ellipse',{cx:x,cy:y,rx:9,ry:5,fill:'#8d7b6a'});el('circle',{cx:x+9,cy:y-1,r:3.4,fill:'#7a6857'});
+  el('path',{d:`M${x+10} ${y-4} l2 -4 M${x+8} ${y-4} l0 -4`,stroke:'#5e4f42','stroke-width':1.5});}
+function sSail(x,y,s){const g=el('g',{transform:`translate(${x},${y}) scale(${s||1})`});el('path',{d:'M-14 4 Q0 10 14 4 L10 -2 L-10 -2Z',fill:'#f8f9fa',stroke:'#adb5bd','stroke-width':1},g);
+  el('path',{d:'M0 -2 L0 -26 L12 -4Z',fill:'#fff',stroke:'#ced4da','stroke-width':1},g);el('path',{d:'M-14 6 q-12 2 -26 0',stroke:'#fff','stroke-width':1.5,opacity:.6,fill:'none'},g);}
+// phà nhìn từ trên: thân trắng, 2 tầng boong, ống khói; hướng mũi theo ang
+function sFerry(x,y,ang,s){const g=el('g',{transform:`translate(${x},${y}) rotate(${ang}) scale(${s||1})`});
+  el('path',{d:'M-46 -15 L34 -15 Q52 0 34 15 L-46 15Z',fill:'rgba(0,0,0,.18)',transform:'translate(4 5)'},g);
+  el('path',{d:'M-46 -15 L34 -15 Q52 0 34 15 L-46 15Z',fill:'#f8f9fa',stroke:'#868e96','stroke-width':1.5},g);
+  el('rect',{x:-38,y:-10,width:58,height:20,rx:4,fill:'#e9ecef',stroke:'#adb5bd','stroke-width':1},g);el('rect',{x:-30,y:-6,width:40,height:12,rx:3,fill:'#fff'},g);
+  el('rect',{x:-6,y:-4,width:10,height:8,rx:2,fill:'#c92a2a'},g);for(let k=-34;k<18;k+=7){el('rect',{x:k,y:-13,width:4,height:2.5,fill:'#4f86c6'},g);el('rect',{x:k,y:10.5,width:4,height:2.5,fill:'#4f86c6'},g);}}
+function sLot(b){el('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx:4,fill:'#d9c9b0',stroke:'#8d6e63','stroke-width':3,'stroke-dasharray':'8 5'});
+  const g=el('g',{transform:`translate(${b.cx},${b.cy})`});el('rect',{x:-26,y:-11,width:52,height:20,rx:4,fill:'#fff3bf',stroke:'#8d6e63','stroke-width':1.5},g);
+  const t=el('text',{y:4,'text-anchor':'middle','font-size':9,'font-weight':900,fill:'#5c3d00','font-family':'Nunito,Segoe UI'},g);t.textContent=TT('Sắp xây','Planned');}
+// công trường: giàn giáo + xô vôi + cần cẩu (D-57)
+function sBuild(b,opts){el('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx:4,fill:'#d9c9b0'});
+  el('rect',{x:b.x+10,y:b.y+10,width:b.w-20,height:b.h-20,fill:'rgba(251,248,243,.75)',stroke:'#8d6e63','stroke-width':3});
+  for(let q=1;q<3;q++){el('line',{x1:b.x+10+q*(b.w-20)/3,y1:b.y+10,x2:b.x+10+q*(b.w-20)/3,y2:b.y+b.h-10,stroke:'#8d6e63','stroke-width':2});
+    el('line',{x1:b.x+10,y1:b.y+10+q*(b.h-20)/3,x2:b.x+b.w-10,y2:b.y+10+q*(b.h-20)/3,stroke:'#8d6e63','stroke-width':2});}
+  const mx=b.x+b.w-8,top=Math.max(-50,b.y-60);
+  el('line',{x1:mx,y1:b.y+b.h-6,x2:mx,y2:top,stroke:'#f59f00','stroke-width':7});
+  for(let y=b.y+b.h-6;y>top+8;y-=14)el('line',{x1:mx-3.5,y1:y,x2:mx+3.5,y2:y-7,stroke:'#c77c00','stroke-width':1.5});
+  const jib=el('g',{});
+  el('animateTransform',{attributeName:'transform',type:'rotate',values:`-10 ${mx} ${top};10 ${mx} ${top};-10 ${mx} ${top}`,dur:'7s',repeatCount:'indefinite'},jib);
+  el('line',{x1:mx+26,y1:top,x2:b.x-6,y2:top,stroke:'#f59f00','stroke-width':6},jib);el('rect',{x:mx+14,y:top-6,width:16,height:12,rx:2,fill:'#495057'},jib);
+  el('line',{x1:b.x+22,y1:top,x2:b.x+22,y2:top+38,stroke:'#495057','stroke-width':1.5},jib);
+  el('rect',{x:b.x+13,y:top+38,width:18,height:11,rx:2,fill:SPAL.terra,stroke:shade(SPAL.terra,-.3),'stroke-width':1.5},jib);
+  el('rect',{x:mx-8,y:top-9,width:16,height:12,rx:2,fill:'#fff3bf',stroke:'#c77c00','stroke-width':1.5});
+  [[b.x+14,b.y+b.h-18],[b.x+26,b.y+b.h-14],[b.x+b.w-36,b.y+16]].forEach(([x,y],i)=>{el('circle',{cx:x+2,cy:y+3,r:6,fill:SPAL.shadow}); // xô vôi trắng, sơn xanh
+    el('circle',{cx:x,cy:y,r:6,fill:i===1?'#4f86c6':'#fff',stroke:'#868e96','stroke-width':1.5});});
+  opts.siteR={x0:b.x-10,y0:top-12,x1:mx+32,y1:b.y+b.h};}
+// kho: mỗi kho một hình dạng riêng (K4)
+function santoKho(id,b){const R=(x,y,w,h,a)=>el('rect',Object.assign({x,y,width:w,height:h},a||{}));
+  if(id==='KhoCang'){R(b.x,b.y,b.w,b.h,{rx:4,fill:'#cfc2b1',stroke:'#a8998a','stroke-width':2}); // kho cảng hàng: nhà kho + thùng hàng + cáp tời xuống cảng
+    R(b.x+6,b.y+6,b.w*.55,b.h-12,{rx:2,fill:'#e9ecef',stroke:'#adb5bd','stroke-width':1.5});for(let k=1;k<4;k++)el('line',{x1:b.x+6+k*b.w*.55/4,y1:b.y+6,x2:b.x+6+k*b.w*.55/4,y2:b.y+b.h-6,stroke:'#ced4da','stroke-width':1.5});
+    [[.66,.15],[.82,.15],[.66,.4],[.82,.4],[.74,.65]].forEach(([fx,fy],i)=>R(b.x+b.w*fx,b.y+b.h*fy,14,14,{rx:1.5,fill:i%2?'#b07d4f':SPAL.terra,stroke:'rgba(0,0,0,.3)','stroke-width':1}));
+    el('line',{x1:b.x,y1:b.cy,x2:-40,y2:b.cy+60,stroke:'#495057','stroke-width':2});el('rect',{x:-50,y:b.cy+54,width:16,height:12,rx:2,fill:'#868e96'});return true;}
+  if(id==='KhoSon'){R(b.x,b.y,b.w,b.h,{rx:4,fill:'#ddd4c7',stroke:'#b9ab99','stroke-width':2}); // kho sơn & vật liệu: xô vôi trắng, sơn xanh, ngói đất nung, lán
+    sBox(b.x+b.w-38,b.y+6,32,30,'#8a9aa3');
+    for(let a=0;a<3;a++)for(let k=0;k<3;k++){const cx=b.x+14+k*16,cy=b.y+16+a*18;el('circle',{cx:cx+2,cy:cy+3,r:6.5,fill:SPAL.shadow});el('circle',{cx,cy,r:6.5,fill:(a+k)%3===1?'#4f86c6':'#fff',stroke:'#868e96','stroke-width':1.3});}
+    for(let k=0;k<4;k++)R(b.x+b.w-40,b.y+44+k*8,34,6,{rx:2,fill:k%2?SPAL.terra:shade(SPAL.terra,-.15)});return true;}
+  if(id==='XuongRuou'){R(b.x,b.y,b.w,b.h,{rx:4,fill:SPAL.soil}); // xưởng rượu vang: nhà xưởng + thùng gỗ tròn + vườn nho
+    sBox(b.x+4,b.y+4,b.w-8,b.h*.42,SPAL.terra);
+    for(let k=0;k<4;k++){const cx=b.x+14+k*20,cy=b.y+b.h*.6;el('circle',{cx:cx+2,cy:cy+3,r:8,fill:SPAL.shadow});el('circle',{cx,cy,r:8,fill:'#8d5f3a',stroke:'#5e3b24','stroke-width':1.5});el('circle',{cx,cy,r:3,fill:'#5e3b24'});}
+    for(let k=0;k<5;k++){el('circle',{cx:b.x+10+k*18,cy:b.y+b.h-10,r:5.5,fill:SPAL.vineD});el('circle',{cx:b.x+9+k*18,cy:b.y+b.h-11,r:3.2,fill:SPAL.vine});}return true;}
+  return false;}
+// 10 công trình — mỗi công trình một hình khối riêng (K4), "lấy cảm hứng" (mục 4); mái vòm xanh chỉ ở công trình
+function santoLandmark(id,b){const R=(x,y,w,h,a)=>el('rect',Object.assign({x,y,width:w,height:h},a||{})),cx=b.x+b.w/2,cy=b.y+b.h/2;
+  const dome=(x,y,r)=>{el('circle',{cx:x+3,cy:y+4,r,fill:SPAL.shadow});el('circle',{cx:x,cy:y,r,fill:SPAL.cobalt,stroke:'#fff','stroke-width':2});
+    el('circle',{cx:x-r*.3,cy:y-r*.3,r:r*.38,fill:'#4f86c6'});el('path',{d:`M${x} ${y-r*.45} v${r*.9} M${x-r*.3} ${y-r*.1} h${r*.6}`,stroke:'#fff','stroke-width':1.6});};
+  const bou=(x,y)=>[[0,0,6],[5,-4,4.5],[-5,-3,4],[2,5,4]].forEach(([a,c,r])=>el('circle',{cx:x+a,cy:y+c,r,fill:r>5?SPAL.bou:SPAL.bouL}));
+  if(id==='Taverna'){R(b.x,b.y,b.w,b.h,{rx:4,fill:'#efe6d8'}); // quán taverna: nhà trắng + giàn gỗ hoa giấy + bàn ghế xanh trắng
+    sBox(b.x+6,b.y+6,b.w*.42,b.h*.5,SPAL.white);
+    const px=b.x+b.w*.5,py=b.y+8,pw=b.w*.46,ph=b.h-16;for(let k=0;k<6;k++)R(px,py+k*ph/6,pw,3,{fill:'#a0703f'});R(px,py,3,ph,{fill:'#8d5f3a'});R(px+pw-3,py,3,ph,{fill:'#8d5f3a'});
+    bou(px+8,py+8);bou(px+pw-10,py+ph-10);
+    for(let a=0;a<2;a++)for(let k=0;k<3;k++){const tx=b.x+14+k*20,ty=b.y+b.h*.68+a*18;el('circle',{cx:tx,cy:ty,r:5,fill:'#fff',stroke:'#4f86c6','stroke-width':2});
+      [[-8,0],[8,0]].forEach(([d])=>R(tx+d-2.5,ty-2.5,5,5,{rx:1,fill:'#4f86c6'}));}return;}
+  if(id==='PhoSon'){R(b.x,b.y,b.w,b.h,{rx:3,fill:'#efe6d8'}); // phố sơn mới: dãy nhà trắng cửa xanh, hoa giấy, xô vôi
+    const n=4,w=(b.w-8)/n;for(let k=0;k<n;k++){const x=b.x+4+k*w;R(x+3,b.y+5,w-2,b.h-12,{rx:2,fill:SPAL.shadow});R(x,b.y+3,w-2,b.h-12,{rx:2,fill:SPAL.white,stroke:'#d6cbbd','stroke-width':1});
+      R(x+w/2-4,b.y+b.h-17,7,8,{fill:SPAL.cobalt});R(x+3,b.y+8,6,5,{fill:'#4f86c6'});}
+    bou(b.x+8,b.y+b.h-8);bou(b.x+b.w-10,b.y+b.h-8);el('circle',{cx:cx,cy:b.y+b.h-5,r:4.5,fill:'#fff',stroke:'#868e96','stroke-width':1.3});return;}
+  if(id==='BenPhaDao'){R(b.x,b.y,b.w,b.h,{rx:3,fill:'#ddd4c7'}); // nhà chờ bến phà (cầu tàu + phà vẽ ngoài khung trong drawSanto)
+    sBox(b.x+8,b.y+6,b.w*.55,b.h-14,SPAL.white);R(b.x+8,b.y+6,b.w*.55,6,{fill:SPAL.cobalt});
+    R(b.x+b.w*.68,b.y+8,b.w*.26,b.h-16,{rx:3,fill:'#fff3bf',stroke:'#c9a646','stroke-width':1.5});
+    const t=el('text',{x:b.x+b.w*.81,y:b.y+b.h/2+4,'text-anchor':'middle','font-size':11,'font-weight':900,fill:'#5c3d00','font-family':'Nunito,Segoe UI'});t.textContent='⛴';return;}
+  if(id==='ThapChuong'){R(b.x,b.y,b.w,b.h,{rx:5,fill:'#e9dfd0',stroke:'#d1c4b2','stroke-width':2}); // tháp chuông trắng có vòm xanh + sân lát đá
+    for(let k=1;k<5;k++)el('line',{x1:b.x+4,y1:b.y+k*b.h/5,x2:b.x+b.w-4,y2:b.y+k*b.h/5,stroke:'#d8ccbb','stroke-width':1});
+    R(cx-26,cy-34,52,62,{rx:3,fill:SPAL.shadow,transform:'translate(5 6)'});R(cx-26,cy-34,52,62,{rx:3,fill:SPAL.white,stroke:'#cfc2b1','stroke-width':1.5});
+    [[-14,-20],[0,-20],[14,-20]].forEach(([dx,dy])=>{R(cx+dx-5,cy+dy-7,10,14,{rx:5,fill:'#ced4da'});el('circle',{cx:cx+dx,cy:cy+dy-1,r:2.6,fill:'#c9a646'});}); // vòm treo chuông
+    dome(cx,cy+8,13);bou(b.x+12,b.y+b.h-10);return;}
+  if(id==='KSBeBoi'){R(b.x,b.y,b.w,b.h,{rx:4,fill:'#efe6d8'}); // khách sạn bể bơi vô cực: phòng hang trắng + bể bơi xanh ngọc nối tầng + ghế nằm
+    [[0,0],[0,1],[1,0]].forEach(([a,c])=>sBox(b.x+6+a*(b.w*.5),b.y+6+c*(b.h*.5),b.w*.42,b.h*.38,SPAL.white));
+    R(b.x+b.w*.52,b.y+b.h*.52,b.w*.42,b.h*.4,{rx:4,fill:SPAL.pool,stroke:'#fff','stroke-width':3});R(b.x+b.w*.56,b.y+b.h*.56,b.w*.16,b.h*.08,{rx:2,fill:'#a5ecf5'});
+    R(b.x+b.w*.06,b.y+b.h*.88,b.w*.4,b.h*.08,{rx:3,fill:SPAL.pool,stroke:'#fff','stroke-width':2});
+    for(let k=0;k<3;k++)R(b.x+b.w*.56+k*13,b.y+b.h*.43,9,5,{rx:1.5,fill:'#f8f9fa',stroke:'#adb5bd','stroke-width':1});bou(b.x+b.w-8,b.y+8);return;}
+  if(id==='QuanHH'){R(b.x,b.y,b.w,b.h,{rx:4,fill:'#e6d6bf'}); // quán hoàng hôn trên vách: sân hiên, dù vàng nắng chiều, nệm, dây đèn
+    sBox(b.x+b.w*.55,b.y+6,b.w*.4,b.h*.36,SPAL.white);
+    [[.22,.25],[.22,.62],[.52,.62],[.8,.7]].forEach(([fx,fy])=>{const x=b.x+b.w*fx,y=b.y+b.h*fy;el('circle',{cx:x+3,cy:y+4,r:13,fill:SPAL.shadow});
+      el('circle',{cx:x,cy:y,r:13,fill:SPAL.sun,stroke:'#fff','stroke-width':2});for(let a=0;a<4;a++)el('line',{x1:x,y1:y,x2:x+13*Math.cos(a*Math.PI/4),y2:y+13*Math.sin(a*Math.PI/4),stroke:'#e0a800','stroke-width':1});});
+    for(let x=b.x+6;x<b.x+b.w-4;x+=8)el('circle',{cx:x,cy:b.y+b.h-6+Math.sin(x/8)*2,r:1.8,fill:'#fff3bf',stroke:'#e0a800','stroke-width':.6});
+    bou(b.x+8,b.y+b.h*.45);return;}
+  if(id==='CangCu'){R(b.x,b.y,b.w,b.h,{rx:4,fill:'#e6d6bf'}); // cảng cũ: trạm lừa + đầu cáp treo trên vách (bậc thang, cầu cảng, tàu vẽ ngoài khung trong drawSanto)
+    sBox(b.x+8,b.y+8,b.w*.5,b.h*.36,SPAL.white);R(b.x+8,b.y+8,b.w*.5,6,{fill:SPAL.terra});
+    R(b.x+b.w*.66,b.y+10,b.w*.26,b.h*.3,{rx:3,fill:'#ced4da',stroke:'#868e96','stroke-width':1.5});R(b.x+b.w*.7,b.y+16,b.w*.18,b.h*.16,{rx:2,fill:'#c92a2a'}); // ga cáp treo
+    [[.25,.66],[.45,.74],[.65,.64]].forEach(([fx,fy])=>sDonkey(b.x+b.w*fx,b.y+b.h*fy));
+    for(let k=0;k<5;k++)R(b.x+6,b.y+b.h*.52+k*9,22,5,{fill:'#d8ccbb'});return;}
+  if(id==='CoiXay'){R(b.x,b.y,b.w,b.h,{rx:6,fill:'#cbb79d'}); // dãy cối xay gió trắng: tháp tròn, mái nón, cánh buồm
+    [[.28,.32],[.72,.3],[.5,.74]].forEach(([fx,fy],i)=>{const x=b.x+b.w*fx,y=b.y+b.h*fy;el('circle',{cx:x+4,cy:y+5,r:15,fill:SPAL.shadow});
+      el('circle',{cx:x,cy:y,r:15,fill:SPAL.white,stroke:'#cfc2b1','stroke-width':2});el('circle',{cx:x,cy:y,r:9,fill:'#a0703f',stroke:'#7a5134','stroke-width':1.5});
+      const g=el('g',{});el('animateTransform',{attributeName:'transform',type:'rotate',values:`0 ${x} ${y};360 ${x} ${y}`,dur:`${9+i*2}s`,repeatCount:'indefinite'},g);
+      for(let a=0;a<6;a++){const an=a*Math.PI/3,ex=x+28*Math.cos(an),ey=y+28*Math.sin(an);el('line',{x1:x,y1:y,x2:ex,y2:ey,stroke:'#6d4c41','stroke-width':1.6},g);
+        el('path',{d:`M${x+10*Math.cos(an)} ${y+10*Math.sin(an)} L${ex} ${ey} L${x+24*Math.cos(an+.32)} ${y+24*Math.sin(an+.32)}Z`,fill:'#fff',opacity:.92},g);}
+      el('circle',{cx:x,cy:y,r:2.5,fill:'#5e3b24'});});return;}
+  if(id==='HaiDang'){R(b.x,b.y,b.w,b.h,{rx:6,fill:'#b8a58f'}); // hải đăng trên mũi đất: nhà canh trắng + tháp tròn, đèn vàng quét
+    sBox(b.x+10,b.y+b.h*.45,b.w*.5,b.h*.42,SPAL.white);
+    const x=b.x+b.w*.7,y=b.y+b.h*.35,g=el('g',{});
+    el('path',{d:`M${x} ${y} L${x+70} ${y-18} L${x+70} ${y+18}Z`,fill:SPAL.sun,opacity:.35},g);
+    el('animateTransform',{attributeName:'transform',type:'rotate',values:`0 ${x} ${y};360 ${x} ${y}`,dur:'6s',repeatCount:'indefinite'},g);
+    el('circle',{cx:x+4,cy:y+5,r:17,fill:SPAL.shadow});el('circle',{cx:x,cy:y,r:17,fill:'#fff',stroke:'#cfc2b1','stroke-width':2});el('circle',{cx:x,cy:y,r:10,fill:'#495057'});el('circle',{cx:x,cy:y,r:6,fill:SPAL.sun});
+    sOlive(b.x+14,b.y+16,8);return;}
+  if(id==='NhaTho'){R(b.x,b.y,b.w,b.h,{rx:8,fill:'#ebe2d4',stroke:'#d1c4b2','stroke-width':2.5}); // nhà thờ ba mái vòm xanh (kỳ quan): thân trắng hình chữ thập, 3 mái vòm, tháp chuông, sân lát đá
+    for(let k=1;k<8;k++)el('line',{x1:b.x+6,y1:b.y+k*b.h/8,x2:b.x+b.w-6,y2:b.y+k*b.h/8,stroke:'#dccfbd','stroke-width':1});
+    const W2=b.w*.72,H2=b.h*.36,x0=cx-W2/2,y0=cy-H2/2-6;
+    R(x0+6,y0+8,W2,H2,{rx:4,fill:SPAL.shadow});R(cx-H2/2+6,y0-H2*.5+8,H2,H2*2,{rx:4,fill:SPAL.shadow});
+    R(x0,y0,W2,H2,{rx:4,fill:SPAL.white,stroke:'#cfc2b1','stroke-width':1.5});R(cx-H2/2,y0-H2*.5,H2,H2*2,{rx:4,fill:SPAL.white,stroke:'#cfc2b1','stroke-width':1.5});
+    dome(cx,cy-6,20);dome(x0+18,cy-6,13);dome(x0+W2-18,cy-6,13);
+    const bt=el('g',{transform:`translate(${cx},${y0+H2*1.5+16})`});el('rect',{x:-16,y:-14,width:32,height:24,rx:3,fill:SPAL.white,stroke:'#cfc2b1','stroke-width':1.5},bt);
+    [-8,0,8].forEach(d=>{el('rect',{x:d-3,y:-10,width:6,height:10,rx:3,fill:'#ced4da'},bt);el('circle',{cx:d,cy:-3,r:1.8,fill:'#c9a646'},bt);});
+    el('path',{d:'M0 -26 v12 M-5 -21 h10',stroke:'#c9a646','stroke-width':2.2},bt);
+    bou(b.x+12,b.y+12);bou(b.x+b.w-12,b.y+12);bou(b.x+12,b.y+b.h-12);bou(b.x+b.w-12,b.y+b.h-12);return;}
+  landmark(id,b);}
+function drawSanto(opts){
+  if(TARGET===ST)ST.innerHTML='';
+  const C=CC,[c1,r1]=opts.region,Wc=200+(C.cols-1)*SP,Hc=200+(C.rows-1)*SP,ns=C.sites.length;
+  const P=n=>{const m=n.match(/c(\d+)r(\d+)/);return{x:100+ +m[1]*SP,y:100+ +m[2]*SP,i:+m[1],j:+m[2]};};
+  const inR=(i,j)=>i<=c1&&j<=r1;
+  const R=sd=>{let q=sd;return()=>{q=(q*16807)%2147483647;return(q-1)/2147483646;};};
+  const RES=Object.keys(C.points).map(chRect);
+  const hit=(x,y,w,h)=>RES.some(r=>x<r.x+r.w+8&&x+w+8>r.x&&y<r.y+r.h+8&&y+h+8>r.y);
+  const SC=C.sites.map(id=>{const r=chRect(id);return{x:r.cx,y:r.cy};});
+  const built=k=>!!opts.built[k],nb=opts.built.filter(Boolean).length;
+  // nền: biển caldera bao quanh; đảo — vách núi lửa phía Tây, bãi cát đen phía Nam, bờ Đông sau vườn nho
+  el('rect',{x:-1600,y:-1600,width:Wc+3200,height:Hc+3200,fill:SPAL.sea});
+  {const r=R(31);for(let i=0;i<90;i++){const x=-580+r()*(Wc+1160),y=-580+r()*(Hc+1160);if(x>-80&&x<Wc+110&&y<Hc+40)continue;
+    el('path',{d:`M${x} ${y} q8 -4 16 0 t16 0`,stroke:x<0?SPAL.sun:SPAL.seaL,'stroke-width':2,fill:'none',opacity:x<0?.55:.6});}}
+  // đảo núi lửa giữa caldera (ngoài mép Tây)
+  el('path',{d:'M-470 380 Q-380 300 -300 360 Q-210 330 -200 450 Q-170 560 -260 640 Q-330 720 -420 660 Q-520 600 -500 500Z',fill:'#4a3a33',stroke:'#6b5245','stroke-width':4});
+  el('ellipse',{cx:-340,cy:500,rx:46,ry:34,fill:'#3a2e29',stroke:'#7d6050','stroke-width':3});el('ellipse',{cx:-350,cy:495,rx:18,ry:12,fill:'#2b2220'});
+  sSail(-140,260,1.1);sSail(-230,880,1);sSail(-120,1120,.9);sFerry(-260,180,200,1);
+  // mặt đảo
+  el('path',{d:`M58 -600 L${Wc+120} -600 L${Wc+120} ${Hc+20} Q${Wc/2} ${Hc+45} 58 ${Hc+30}Z`,fill:SPAL.land});
+  el('path',{d:`M58 ${Hc+30} Q${Wc/2} ${Hc+45} ${Wc+120} ${Hc+20} L${Wc+120} ${Hc+62} Q${Wc/2} ${Hc+90} 40 ${Hc+72}Z`,fill:SPAL.sand}); // bãi cát đen
+  el('path',{d:`M${Wc+90} -600 L${Wc+150} -600 L${Wc+160} ${Hc+60} L${Wc+100} ${Hc+60}Z`,fill:SPAL.sand});
+  // vách núi lửa phía Tây: các lớp đá đỏ nâu, đen, vàng đất + nhà hang trắng xếp tầng trên vách
+  {const r=R(77);for(let k=0;k<5;k++){const x0=-74+k*26;let d=`M${x0} -600`;for(let y=-600;y<=Hc+60;y+=60)d+=` L${x0+(r()-.5)*16} ${y}`;d+=` L${x0+30} ${Hc+60} L${x0+30} -600Z`;
+      el('path',{d,fill:SPAL.rock[k]});}
+    el('rect',{x:52,y:-600,width:8,height:Hc+650,fill:'#f4efe6'}); // tường thấp mép vách
+    for(let y=-80;y<Hc-20;y+=46){const yy=y+r()*20;if(yy>870&&yy<1080)continue;for(let k=0;k<2;k++){const x=-44+k*36+r()*10,w=20+r()*10;sHouse(x,yy+k*14,w,16+r()*8,r,inR(0,Math.min(3,Math.max(0,Math.round((yy-100)/SP))))?1:0,{noPool:true});}}}
+  // ô phố: trong vùng = phố trắng đã quét vôi (sơn mới quanh công trình xong), ngoài vùng = nhà bạc màu; phía Đông là vườn nho
+  for(let i=0;i<C.cols-1;i++)for(let j=0;j<C.rows-1;j++){
+    const x0=100+i*SP+40,y0=100+j*SP+40,open=inR(i+1,j+1),r=R(1000+i*131+j*37),rural=i>=5;
+    el('rect',{x:x0-6,y:y0-6,width:SP-68,height:SP-68,rx:6,fill:rural?SPAL.soil:open?SPAL.block:SPAL.blockD});
+    if(rural){for(let a=0;a<2;a++)for(let b=0;b<2;b++){const x=x0+4+a*(SP-80)/2,y=y0+4+b*(SP-80)/2,w=(SP-80)/2-12,h=(SP-80)/2-12;
+        if(!hit(x,y,w,h))sVines(x,y,w,h,r);else if(!hit(x+w/2-10,y+h/2-10,20,20))sOlive(x+w/2,y+h/2,8);}
+      continue;}
+    { // lối đi bộ lát trắng uốn khúc giữa các dãy nhà (bậc thang chỉ là lối đi bộ — hẻm chưa học)
+      const mx=x0+(SP-80)/2+(r()-.5)*40,my=y0+(SP-80)/2+(r()-.5)*40;
+      el('path',{d:`M${x0-6} ${my} Q${mx} ${my-24} ${x0+SP-74} ${my+10} M${mx} ${y0-6} Q${mx+20} ${my} ${mx-10} ${y0+SP-74}`,stroke:open?'#f4efe6':'#ddd2c3','stroke-width':12,fill:'none',opacity:.9});}
+    const cw=(SP-80)/4;
+    for(let b=0;b<4;b++)for(let a=0;a<4;a++){if(r()<.08)continue;const wide=a<3&&r()<.18,w=(wide?2*cw:cw)-6-r()*12,h=cw-6-r()*14,x=x0+a*cw+((wide?2*cw:cw)-w)*r(),y=y0+b*cw+(cw-h)*r();
+      if(wide)a++; // nhà rộng chiếm 2 ô — bỏ qua ô kế bên trong cùng hàng
+      if(hit(x,y,w,h)){if(!hit(x+w/2-8,y+h/2-8,16,16))sOlive(x+w/2,y+h/2,6);continue;}
+      const cx=x+w/2,cy=y+h/2;let dev=-1,best=300;SC.forEach((p,k)=>{const dd=Math.hypot(p.x-cx,p.y-cy);if(dd<best){best=dd;dev=k;}});
+      const fresh=dev>=0&&built(dev),T_=TARGET;
+      if(fresh&&opts.grow===dev){const g=el('g',{});(opts.growI=opts.growI||[]).push({g,cx,cy,d:best});TARGET=g;}
+      sHouse(x,y,w,h,r,fresh?2:open?1:0);TARGET=T_;}
+    if(open&&r()<.5){const x=x0+20+r()*(SP-130),y=y0+20+r()*(SP-130);if(!hit(x-12,y-8,24,16))sDonkey(x,y);}
+  }
+  // dải đất ven mép (phía Bắc ngoài bản đồ, phía Nam trước bãi cát, phía Đông trước bờ biển)
+  {const r=R(57);for(let x=40;x<Wc-60;x+=64){if(!hit(x,-70,44,40))sHouse(x,-80+r()*16,40+r()*8,34,r,0);
+      if(x>200&&!hit(x,Hc-56,40,30)&&r()<.5)(x/SP>5?sOlive(x+16,Hc-34,9):sHouse(x,Hc-58,38,30,r,inR(Math.floor((x-100)/SP)+1,3)?1:0));}
+    for(let y=140;y<Hc-120;y+=70)if(!hit(Wc-56,y,30,30))sOlive(Wc-38,y+r()*20,9);}
+  // bến phà: cầu tàu ra biển phía Nam + phà đậu (từ khi vùng có bến thông xe)
+  {const b=chRect('BenPhaDao'),x=b.x+b.w/2,on=inR(6,3);
+    if(on){el('rect',{x:x-12,y:Hc-6,width:24,height:110,fill:'#a0703f',stroke:'#7a5134','stroke-width':2});for(let y=Hc;y<Hc+100;y+=12)el('line',{x1:x-12,y1:y,x2:x+12,y2:y,stroke:'#7a5134','stroke-width':1.2});
+      sFerry(x+66,Hc+86,0,1.15);}}
+  // cảng cũ dưới vách: bậc thang zíc zắc (lối đi bộ) + cáp treo xuống cầu cảng, tàu gỗ du lịch đậu
+  {const b=chRect('CangCu'),on=inR(0,3)&&nb>=6,y=b.cy;
+    el('path',{d:`M58 ${y-50} L-10 ${y-34} L50 ${y-18} L-14 ${y-2} L46 ${y+14} L-20 ${y+30} L30 ${y+46}`,fill:'none',stroke:'#efe6d8','stroke-width':7,'stroke-linejoin':'round'});
+    el('path',{d:`M58 ${y-50} L-10 ${y-34} L50 ${y-18} L-14 ${y-2} L46 ${y+14} L-20 ${y+30} L30 ${y+46}`,fill:'none',stroke:'#b9ab99','stroke-width':7,'stroke-dasharray':'2 4','stroke-linejoin':'round'});
+    el('line',{x1:b.x+b.w*.78,y1:b.y+20,x2:-110,y2:y+70,stroke:'#495057','stroke-width':2});
+    el('rect',{x:-150,y:y+40,width:84,height:50,rx:4,fill:'#cfc2b1',stroke:'#8d7b6a','stroke-width':2}); // cầu cảng
+    if(on){const g=el('g',{transform:`translate(${-200},${y+18}) rotate(-90)`});el('path',{d:'M-34 -10 L24 -10 Q38 0 24 10 L-34 10Z',fill:'#a0703f',stroke:'#5e3b24','stroke-width':1.5},g);
+      el('rect',{x:-22,y:-6,width:30,height:12,rx:3,fill:'#f8f9fa'},g);el('line',{x1:-4,y1:-22,x2:-4,y2:22,stroke:'#5e3b24','stroke-width':2},g);el('path',{d:'M-4 -20 Q10 -12 -4 -2Z M-4 4 Q10 12 -4 20Z',fill:'#fff'},g);}}
+  // đường: trong vùng vẽ theo loại; ngoài vùng là đường đất "chưa thông xe" có rào chắn
+  const types={};for(const t in C.types)for(const [a,b] of C.types[t])types[keyE(a,b)]=t;
+  const all=[];for(let j=0;j<C.rows;j++)for(let i=0;i<C.cols-1;i++)all.push([`c${i}r${j}`,`c${i+1}r${j}`]);
+  for(let i=0;i<C.cols;i++)for(let j=0;j<C.rows-1;j++)all.push([`c${i}r${j}`,`c${i}r${j+1}`]);
+  const RW={thuong:46,lon:64,dong:46,gogh:46,hem:24},RC={thuong:SPAL.road,lon:SPAL.lon,dong:SPAL.dong,gogh:'#8a6a4a',hem:'#7d838c'};
+  const open=[],closed=[];all.forEach(([a,b])=>{const A=P(a),B=P(b);(inR(A.i,A.j)&&inR(B.i,B.j)?open:closed).push({a,b,A,B,type:types[keyE(a,b)]||'thuong'});});
+  closed.forEach(e=>el('line',{x1:e.A.x,y1:e.A.y,x2:e.B.x,y2:e.B.y,stroke:'#b9a58f','stroke-width':34,'stroke-linecap':'square'}));
+  open.forEach(e=>el('line',{x1:e.A.x,y1:e.A.y,x2:e.B.x,y2:e.B.y,stroke:SPAL.walk,'stroke-width':RW[e.type]+14,'stroke-linecap':'square'}));
+  open.forEach(e=>el('line',{x1:e.A.x,y1:e.A.y,x2:e.B.x,y2:e.B.y,stroke:RC[e.type],'stroke-width':RW[e.type],'stroke-linecap':'square'}));
+  const rr=R(555);
+  open.forEach(e=>{const u=unit(e.A,e.B),px=-u.y,py=u.x,ang=Math.atan2(u.y,u.x)*180/Math.PI;const p=(d,o)=>({x:e.A.x+u.x*d+px*o,y:e.A.y+u.y*d+py*o});
+    if(e.type==='thuong'||e.type==='dong'){const s=p(36,0),t=p(SP-36,0);el('line',{x1:s.x,y1:s.y,x2:t.x,y2:t.y,stroke:SPAL.line,'stroke-width':2,'stroke-dasharray':'12 12',opacity:.55});}
+    if(e.type==='lon'){[-2.5,2.5].forEach(o=>{const s=p(40,o),t=p(SP-40,o);el('line',{x1:s.x,y1:s.y,x2:t.x,y2:t.y,stroke:'#ffd43b','stroke-width':2});});}
+    if(e.type==='dong'){ // phố chợ: mái hiên sọc trắng – hồng hai bên vỉa hè + xe buýt nhỏ, ATV, xe máy kín hai làn
+      [1,-1].forEach(sg=>{for(let d=26;d<SP-30;d+=30){const q=p(d,sg*(RW.dong/2+10));el('rect',{x:-12,y:-4,width:24,height:8,rx:2,fill:(d/30|0)%2?SPAL.bouL:'#fff',stroke:'rgba(0,0,0,.18)','stroke-width':1,transform:`translate(${q.x},${q.y}) rotate(${ang})`});}});
+      for(let d=46;d<SP-40;d+=30+rr()*14){const o=rr()<.5?-11:11,q=p(d,o),k=rr(),a2=ang+(o<0?0:180),g=el('g',{transform:`translate(${q.x},${q.y}) rotate(${a2})`});
+        if(k<.35){el('rect',{x:-15,y:-6,width:30,height:12,rx:3,fill:'#f8f9fa',stroke:'rgba(0,0,0,.3)','stroke-width':1},g);el('rect',{x:-15,y:-1.5,width:30,height:3,fill:'#1098ad'},g);el('rect',{x:9,y:-5,width:5,height:10,rx:1.5,fill:'#495057'},g);d+=10;}
+        else if(k<.7){el('rect',{x:-8,y:-5.5,width:16,height:11,rx:3,fill:'#e03131',stroke:'rgba(0,0,0,.3)','stroke-width':1},g);el('rect',{x:-2,y:-3.5,width:6,height:7,rx:1.5,fill:'#2d3440'},g);}
+        else{el('rect',{x:-7,y:-2.5,width:14,height:5,rx:2.5,fill:'#ffd43b',stroke:'rgba(0,0,0,.3)','stroke-width':1},g);el('circle',{cx:0,cy:0,r:2.2,fill:'#2d3440'},g);}}}});
+  closed.forEach(e=>{[[e.A,e.B],[e.B,e.A]].forEach(([X,Y])=>{if(!inR(X.i,X.j))return;const u=unit(X,Y),q={x:X.x+u.x*40,y:X.y+u.y*40},ang=Math.atan2(u.y,u.x)*180/Math.PI+90;
+    const g=el('g',{transform:`translate(${q.x},${q.y}) rotate(${ang})`});el('rect',{x:-22,y:-5,width:44,height:10,rx:2,fill:'#fff',stroke:'#c92a2a','stroke-width':1.5},g);
+    [-14,0,14].forEach(dx=>el('rect',{x:dx-4,y:-5,width:7,height:10,fill:'#e03131'},g));});});
+  const tOf=(a,b)=>{const A=P(a),B=P(b);return inR(A.i,A.j)&&inR(B.i,B.j)?(types[keyE(a,b)]||'thuong'):null;};
+  const runs=[];
+  for(let j=0;j<C.rows;j++){let r=null;for(let i=0;i<C.cols-1;i++){const t=tOf(`c${i}r${j}`,`c${i+1}r${j}`);if(t&&t!=='thuong'&&r&&r.t===t)r.n++;else{r=t&&t!=='thuong'?{t,h:1,i,j,n:1}:null;if(r)runs.push(r);}}}
+  for(let i=0;i<C.cols;i++){let r=null;for(let j=0;j<C.rows-1;j++){const t=tOf(`c${i}r${j}`,`c${i}r${j+1}`);if(t&&t!=='thuong'&&r&&r.t===t)r.n++;else{r=t&&t!=='thuong'?{t,h:0,i,j,n:1}:null;if(r)runs.push(r);}}}
+  runs.forEach(r=>{const mid=r.n*SP/2,x0=100+r.i*SP,y0=100+r.j*SP,d=(mid%SP===0)?mid-SP/2:mid,off=RW[r.t]/2+20;
+    if(r.h)signSVG(r.t,TARGET,x0+d,y0-off,12);else signSVG(r.t,TARGET,x0+off,y0+d,12);});
+  // kho, điểm giao, công trình
+  Object.keys(C.points).forEach(id=>{const b=chRect(id),k=C.sites.indexOf(id);
+    if(k<0){if(!santoKho(id,b)){const r=R(id.length*97+id.charCodeAt(0));const w=b.w,h=b.h;el('rect',{x:b.x,y:b.y,width:w,height:h,rx:4,fill:'#e9dfd0'});
+      sHouse(b.x+6,b.y+6,w*.55,h-14,r,inR(1,1)?2:1,{noPool:true});sHouse(b.x+w*.6,b.y+8,w*.34,h*.5,r,1,{noPool:true});}return;}
+    const st=built(k)?'done':opts.constructing===k?'build':'lot',T_=TARGET;
+    if(opts.pop===k&&st==='done'){opts.popG=el('g',{});TARGET=opts.popG;}
+    if(st==='lot')sLot(b);else if(st==='build')sBuild(b,opts);else santoLandmark(id,b);
+    TARGET=T_;});
+  if(opts.growI)opts.growI.sort((a,b)=>a.d-b.d);
+  // ghim viền tối (nền trắng — mục 8.2) + nhãn (chỉ khi chơi)
+  if(opts.pins)pinLayer(()=>ZONES.forEach(z=>{const b=chRect(z.id);el('circle',{cx:b.px,cy:b.py-27,r:19.5,fill:'#3b2f2a',opacity:.55});pin(b.px,b.py,z.col,z.kho);label(b.lx,b.ly,z.name);}));
 }
 /* ======================= Bộ vẽ cảnh Làng ven sông (Chương 1) =======================
    Bảng màu theo Chu_De_Khung_Canh.md mục 3.1: lúa non, đất bờ, sông ao; ngói đỏ cũ, tường vôi vàng, mái tôn; nhấn đỏ cờ, vàng rơm.
@@ -2520,7 +2816,7 @@ function legendSVG(type){const s=document.createElementNS(NS,'svg');s.setAttribu
 function openLevel(i){
   buildLevel(i);buildCarLayer();INTRO_LV=-1;HOME_FLASH=null;
   if(!LV.vehicles.includes(VK))VK=LV.vehicles.includes('van')?'van':LV.vehicles[0];
-  reset();renderPrep();show('prep');rulesStart();dongTipStart();
+  reset();renderPrep();show('prep');rulesStart();dongTipStart();hanTipStart();
 }
 /* ---------- Màn chuẩn bị (PA2 — D-34): nhiệm vụ ghi ngay trên bản đồ (xem buildMarks), cột phải: tên màn, thời gian, xe, nút ---------- */
 const HOMEIC='<svg viewBox="0 0 28 28"><path d="M5 13 L14 5 L23 13 M8 11 V23 H20 V11 M12 23 V17 H16 V23"/></svg>';
@@ -2580,6 +2876,17 @@ function dongTipStart(){if(!LV.cc||LV.cc!==CH3||LV.stage!==2)return;try{if(LS.ge
       el={getBoundingClientRect:()=>u};}
     return[{el,pad:8,t:TT('Đây là <b>đường đông</b> (vạch cam): taxi kín làn, xe van chạy <b>chậm hơn một nửa</b>.','These are <b>busy roads</b> (orange): taxis fill every lane, so the van moves at <b>less than half speed</b>.')},
       {el:document.querySelector('#pLeg .li[data-t=dong]'),pad:6,t:TT('Đi thẳng qua phố đông <b>chưa chắc nhanh</b> — so với đường vòng hoặc đại lộ rồi hãy chọn.','Going straight through <b>isn\'t always quickest</b> — compare it with going around or taking an avenue.')}];}};
+  requestAnimationFrame(()=>requestAnimationFrame(pcShow));}
+/* Mẹo hạn giao (D-83): lần đầu mở Màn 3 Chương 4 — hạn tính từ lúc xe xuất phát, trễ là thua ngay, Thêm giờ không cứu (VP-06).
+   Bước 1 khoanh điểm giao có hạn + dòng "⏱ hạn" trên bản đồ chuẩn bị, bước 2 khoanh kho của đơn đó. Xem lại ở tab "Màn này" của nút ?. */
+const HAN_KEY=()=>`${SK}demo_han_tip`;
+function hanTipStart(){if(!LV.cc||LV.cc!==CH4||LV.stage!==2)return;try{if(LS.get(HAN_KEY())==='1')return;}catch(e){}
+  const m=LV.missions.find(x=>x.dl);if(!m)return;
+  PC={i:0,key:HAN_KEY(),steps:()=>{const it=vPrep.items,k=ZONES.findIndex(z=>z.id===m.to),kk=ZONES.findIndex(z=>z.id===m.from);
+    const un=(...es)=>{const rs=es.filter(Boolean).map(e=>e.getBoundingClientRect());if(!rs.length)return null;
+      const u={left:Math.min(...rs.map(r=>r.left)),top:Math.min(...rs.map(r=>r.top)),right:Math.max(...rs.map(r=>r.right)),bottom:Math.max(...rs.map(r=>r.bottom))};return{getBoundingClientRect:()=>u};};
+    return[{el:it[k]&&un(it[k].g,it[k].lab),pad:8,t:TT(`Đơn tới <b>${PLACE[m.to]}</b> có <b>⏱ hạn ${fmt(m.dl)}</b>: phải giao xong trong ${fmt(m.dl)} đầu, tính từ lúc xe xuất phát. <b>Trễ hạn là thua ngay.</b>`,`The order for <b>${PLACE[m.to]}</b> has a <b>⏱ deadline of ${fmt(m.dl)}</b>: deliver it within the first ${fmt(m.dl)} after you set off. <b>Late means you lose straight away.</b>`)},
+      {el:it[kk]&&it[kk].g,pad:16,t:TT(`Hàng của đơn này lấy ở <b>${PLACE[m.from]}</b>. Giao đơn có hạn trước rồi mới gom các đơn khác — <b>Thêm giờ không cứu được</b> đơn trễ hạn.`,`Pick up this order at <b>${PLACE[m.from]}</b>. Deliver deadline orders first, then group the rest — <b>extra time can't save</b> a late order.`)}];}};
   requestAnimationFrame(()=>requestAnimationFrame(pcShow));}
 function pcNext(){if(!PC)return;PC.i++;if(PC.i>=pcSteps().length){rulesEnd(true);return;}pcShow();}
 let hintT=null;function startHint(){const h=$('pHint');h.classList.add('on');clearTimeout(hintT);hintT=setTimeout(()=>h.classList.remove('on'),2600);}
@@ -2869,10 +3176,10 @@ const MECH_EN={'Đường đông':'Busy roads','Điều khiển':'Controls','Nhi
 const MN=m=>LANG==='en'?(MECH_EN[m]||m):m;
 const MECHTXT_EN={'Đường đông':"Busy roads (orange): taxis fill every lane and the van moves at less than half speed. Driving straight through isn't always quickest — compare it with going around or taking an avenue.",'Nhiều kho':'Several depots — each order comes from its own depot. Group orders from the same depot and choose which depot to visit first.','Điều khiển':'Choose a direction at junctions; the vehicle stops at points by itself; pick goods from the menu.','Nhiều điểm giao':'Several places need goods — choose a delivery order that drives the least.',
   'Đường lớn':'Main roads are faster — going around via a main road can beat the straight route.','Tổng hợp':"Last level of the chapter: use everything you've learned.",'Chia chuyến':'More goods than the vehicle can carry — split into trips and group nearby orders.',
-  'Đường lớn & đông':"Main roads are fast, busy roads are slow — the straight route isn't always quickest.",'Hạn giao':'Some orders have a ⏱ deadline — deliver late and you lose straight away.','Chọn xe':'Pick the right vehicle: motorbikes fit in alleys but carry little, trucks carry a lot but are slow.'};
+  'Đường lớn & đông':"Main roads are fast, busy roads are slow — the straight route isn't always quickest.",'Hạn giao':"Some orders have a ⏱ deadline, counted from the moment you set off — deliver late and you lose straight away (extra time can't save it). Deliver those first, then group the rest.",'Chọn xe':'Pick the right vehicle: motorbikes fit in alleys but carry little, trucks carry a lot but are slow.'};
 const MECHTXT={'Đường đông':'Đường đông (vạch cam): taxi kín làn, xe van chạy chậm hơn một nửa. Đi thẳng qua phố đông chưa chắc nhanh — so với đường vòng hoặc đại lộ.','Nhiều kho':'Có nhiều kho — mỗi đơn lấy ở đúng kho của nó. Gom các đơn cùng kho, chọn kho nào đi trước.','Điều khiển':'Chọn hướng ở giao lộ, xe tự dừng ở điểm, chọn hàng ở bảng hỏi.','Nhiều điểm giao':'Nhiều nơi cần hàng — chọn thứ tự giao để đi ít đường nhất.',
   'Đường lớn':'Đường lớn chạy nhanh hơn — đường vòng qua đường lớn có khi nhanh hơn đường thẳng.','Tổng hợp':'Màn cuối chương: dùng mọi điều đã học trong chương.','Chia chuyến':'Hàng nhiều hơn sức chứa của xe — phải chia chuyến, gom đơn gần nhau đi chung.',
-  'Đường lớn & đông':'Đường lớn chạy nhanh, đường đông chạy chậm — đường thẳng chưa chắc nhanh nhất.','Hạn giao':'Có đơn ghi ⏱ hạn — giao trễ hạn là thua ngay.','Chọn xe':'Chọn xe phù hợp: xe máy vào được hẻm nhưng chở ít, xe tải chở nhiều nhưng chậm.'};
+  'Đường lớn & đông':'Đường lớn chạy nhanh, đường đông chạy chậm — đường thẳng chưa chắc nhanh nhất.','Hạn giao':'Có đơn ghi ⏱ hạn, tính từ lúc xe xuất phát — giao trễ hạn là thua ngay (Thêm giờ không cứu được). Giao đơn có hạn trước, rồi mới gom các đơn còn lại.','Chọn xe':'Chọn xe phù hợp: xe máy vào được hẻm nhưng chở ít, xe tải chở nhiều nhưng chậm.'};
 function eff(t,k){const f=ROAD[t].f[k];if(f===null)return['x',TT('✕ Không vào',"✕ Can't enter")];if(f>=1.2)return['f',TT('Nhanh hơn','Faster')];if(f>=.95)return['n',TT('Bình thường','Normal')];if(f>=.75)return['n',TT('Hơi chậm','A bit slower')];if(f>=.55)return['s',TT('Chậm','Slow')];return['vs',TT('Rất chậm','Very slow')];}
 const ROADDESC={thuong:'Mốc so sánh',lon:'Rộng, nhiều làn',dong:'Xe càng to càng chậm',gogh:'Ổ gà, xe máy chậm nhất',hem:'Chỉ xe máy vào được'},
   ROADDESC_EN={thuong:'Baseline',lon:'Wide, multi-lane',dong:'Bigger vehicles are slower',gogh:'Potholes, motorbikes slowest',hem:'Motorbikes only'};
@@ -3065,7 +3372,11 @@ const EN_DATA={
     SieuThi:'Supermarket',QuanCafe:'Café',NhaPho:'Townhouses',
     BenCang:'Harbour',KhoGa:'Rail Depot',TrungTam:'Distribution Hub',GaTau:'Subway Station',Brownstone:'Brownstones',QuangTruong:'LED Square',NhaHat:'Theatre',
     ThapNuoc:'Water Tower',CauTreo:'Suspension Bridge',ArtDeco:'Art Deco Tower',ChoDem:'Night Market',SanBang:'Ice Rink',BenPha:'Ferry Pier',ToaBao:'Newspaper',
-    Pizza:'Pizzeria',CanHo:'Apartments',KhachSan:'Hotel',Deli:'Deli',HotDog:'Hot Dog Cart',BaoTang:'Museum',Studio:'Studio',RapPhim:'Cinema',CuaHangNhac:'Music Store',Cafe:'Café'},
+    Pizza:'Pizzeria',CanHo:'Apartments',KhachSan:'Hotel',Deli:'Deli',HotDog:'Hot Dog Cart',BaoTang:'Museum',Studio:'Studio',RapPhim:'Cinema',CuaHangNhac:'Music Store',Cafe:'Café',
+    KhoCang:'Harbour Store',KhoSon:'Paint Depot',XuongRuou:'Winery',Taverna:'Taverna',PhoSon:'Fresh-Paint Lane',BenPhaDao:'Ferry Pier',ThapChuong:'Bell Tower',
+    KSBeBoi:'Pool Hotel',QuanHH:'Sunset Bar',CangCu:'Old Port',CoiXay:'Windmills',HaiDang:'Lighthouse',NhaTho:'Blue Dome Church',NhaHang:'Fish Taverna',TiemGom:'Pottery',
+    NhaNghi:'Cave Inn',LuuNiem:'Gift Shop',HieuBanh:'Bakery',PhongTranh:'Gallery',TiemKem:'Ice Cream',NhaTro:'Guesthouse',VuonNho:'Vineyard',BaiBien:'Beach Bar',
+    NhaDan:'Whitewashed Homes',TiemHoa:'Florist',CafeVach:'Cliffside Café',LangDong:'East Village'},
   veh:{van:['Van','Medium'],may:['Motorbike','Fast','fits in alleys'],tai:['Truck','Slow']},
   road:{thuong:['Street'],lon:['Main road','Wide, multi-lane — every vehicle goes faster'],dong:['Busy road','Heavy traffic — the bigger the vehicle, the slower'],gogh:['Bumpy road','Potholes — motorbikes are slowest'],hem:['Alley','Narrow — motorbikes only']},
   lv:[['First Day on the Job','Your first day at the Co-op: take goods to the Market Square and Upper Hamlet.'],['Village Well','Carry bricks and tiles to repair the village well.'],
@@ -3089,9 +3400,20 @@ const EN_DATA={
     ["Night Market", "Busy streets split two groups of stops — which group first?"],
     ["Ice Rink", "3 depots, lots of orders, busy streets everywhere — plan every trip carefully."],
     ["Torch Statue", "The city’s biggest night — use everything you’ve learned."],
-    ['Fireworks Night','Fireworks for the city lights! Drive around and collect the diamonds scattered on the roads.']
+    ['Fireworks Night','Fireworks for the city lights! Drive around and collect the diamonds scattered on the roads.'],
+    ["Taverna", "First day on the island: two depots and a packed market street — group your trips and pick your roads wisely."],
+    ["Fresh-Paint Lane", "The cliff road and the coast road are wide and fast — try going around by the main road."],
+    ["Ferry Pier", "The ferry leaves on time! Orders with a ⏱ deadline must arrive in time — late means you lose."],
+    ["Bell Tower", "Goods for the ferry and the bell tower wait at the same depot — carry them together or rush the ferry first?"],
+    ["Pool Hotel", "Lots of goods to split into trips, and the ferry won't wait — which trip goes first?"],
+    ["Sunset Bar", "The sunset party waits for no one — get the goods to the bar before the sun goes down."],
+    ["Old Port", "A Winery joins in — 3 depots, and both the ferry and the Old Port boat leave on time."],
+    ["Windmills", "The sunset party and the Old Port boat both wait for goods from the Paint Depot — one trip or two?"],
+    ["Lighthouse", "The ferry in the south, the party on the western cliff — two deadlines at opposite ends of the island. Which first?"],
+    ["Blue Dome Church", "Opening day of the season: the ferry, the boat and the sunset party all need goods — use everything you've learned."],
+    ['Sunset Festival','The island celebrates the new season! Drive around and collect the diamonds scattered on the roads.']
   ],
-  ch:[['Riverside Village','1 depot, multiple stops, split trips, main roads'],['New Town','Multiple depots: 2 from level 3, 3 from level 8'],['City That Never Sleeps','Busy roads from level 3 · 3 depots from level 7'],['White Cloud Island','Deadlines']],
+  ch:[['Riverside Village','1 depot, multiple stops, split trips, main roads'],['New Town','Multiple depots: 2 from level 3, 3 from level 8'],['City That Never Sleeps','Busy roads from level 3 · 3 depots from level 7'],['White Cloud Island','Deadlines from level 3 · 3 depots from level 7']],
   cc:[{siteNames:['Market Stalls','Village Well','Village School','East Hamlet','Health Post','Fish Pond','Communal House','Ferry Dock','Village Hall','Market Square'],
       openNote:['The first market stalls are up — the village has a place to trade!','The well is fixed — clean water for everyone. The road to East Hamlet is open.',
         'The village school opens — its drum echoes across East Hamlet.','New homes spring up around the school. The road to South Hamlet is open.',
@@ -3110,7 +3432,14 @@ const EN_DATA={
         'The rooftop water tower lights up and the roof garden opens.','The suspension bridge lights up — the road to the eastern Distribution Hub is open.',
         'The Art Deco tower lights its silver spire.','The night market buzzes under strings of lights.','The ice rink opens in the park — ready for the big night.',
         'The torch statue shines over the harbour — the whole city is lit.'],
-      finTitle:'The City That Never Sleeps is lit!',postNote:'The city that never sleeps is lit'}]};
+      finTitle:'The City That Never Sleeps is lit!',postNote:'The city that never sleeps is lit'},
+    {siteNames:['Taverna','Fresh-Paint Lane','Ferry Pier','Bell Tower','Pool Hotel','Sunset Bar','Old Port','Windmills','Lighthouse','Blue Dome Church'],
+      openNote:['The taverna opens — the bougainvillea is in bloom and the season begins.','Fresh-Paint Lane gleams white and blue — the road down to the southern Ferry Pier is open.',
+        'The Ferry Pier welcomes the first ferry of the season — the cargo made it on time!','The bell tower rings — the streets around it get a fresh coat of whitewash.',
+        'The pool hotel opens — blue water looking out to sea.','The Sunset Bar opens just as the sun goes down. The road east to the Winery is open.',
+        'The Old Port welcomes the tour boats — the cliff steps and cable car are repaired.','The windmills turn again on the hill.',
+        'The lighthouse shines on the cape — ready for opening day.','The blue dome church is complete — White Cloud Island is ready for visitors.'],
+      finTitle:'White Cloud Island is ready for visitors!',postNote:'The island is ready for the tourist season'}]};
 const VI0=new WeakMap();
 function loc(o,k,v){let s=VI0.get(o);if(!s){s={};VI0.set(o,s);}if(!(k in s))s[k]=o[k];o[k]=LANG==='en'&&v!=null?v:s[k];}
 function applyData(){const D=EN_DATA;
@@ -3119,7 +3448,7 @@ function applyData(){const D=EN_DATA;
   Object.entries(D.road).forEach(([k,[n,d]])=>{loc(ROAD[k],'name',n);if(ROAD[k].desc)loc(ROAD[k],'desc',d);});
   LEVELS.forEach((L,i)=>{const e=D.lv[i]||[];loc(L,'name',e[0]);loc(L,'intro',e[1]);});
   CHAPTERS.forEach((c,i)=>{const e=D.ch[i]||[];loc(c,'name',e[0]);loc(c,'mech',e[1]);});
-  [CH1,CH2,CH3].forEach((C,i)=>{const e=D.cc[i];['siteNames','openNote','finTitle','postNote'].forEach(k=>loc(C,k,e[k]));});
+  [CH1,CH2,CH3,CH4].forEach((C,i)=>{const e=D.cc[i];['siteNames','openNote','finTitle','postNote'].forEach(k=>loc(C,k,e[k]));});
   if(ZONES)ZONES.forEach(z=>z.name=PLACE[z.id]);
   if(G&&G.M)G.M.forEach(m=>{m.name=PLACE[m.to];m.src=PLACE[m.from];});}
 // ---------- Khởi động & lần đầu ----------
