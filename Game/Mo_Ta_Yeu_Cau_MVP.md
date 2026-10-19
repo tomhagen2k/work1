@@ -2,8 +2,8 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Phiên bản | 1.30 — Logo mới, bộ ngoại hình xe mới 28 mẫu (D-78). 1.29 — Chương 2 cũng dùng khung cảnh ảnh (D-77). 1.28 — Khung cảnh Chương 1 dùng ảnh theo thiết kế mới, ghim nhỏ kiểu B, lề ảnh 600 px (D-77). 1.27 — Dung lượng ứng dụng và cách vẽ khung cảnh (D-76); đề xuất công nghệ mobile chờ chốt (CN-Q1 → Q5). 1.26 — Bản đồ lớn khi chơi hiện nhiệm vụ còn lại (D-75). 1.25 — Chương 2 Khu đô thị mới dựng lại theo khung (D-74). 1.24 — Màn thưởng kim cương cuối chương (D-73). 1.23 — Hướng dẫn Màn 1 luôn chạy, mẹo Quay đầu ở điểm giao thứ nhất (D-72). 1.22 — Mẹo Quay đầu trong hướng dẫn Màn 1 (D-71). 1.21 — Luật chơi lần đầu ở Màn 1 (D-70). 1.20 — Đặt trước Quay đầu khi dừng ở điểm (D-69). 1.19 — Chương 1 Làng ven sông vào demo (D-68). 1.18 — Điều chỉnh CT-06, CT-07 (D-67). 1.17 — Chủ đề khung cảnh 15 chương (D-66). 1.16 — Bộ công thức độ khó và bố cục 15 chương (D-65). 1.15 — Chỉ vận chuyển hàng hóa; chở khách và đổi xe xếp cuối (D-64); khung độ khó chuyển sang file riêng [level_design/Khung_Do_Kho_Chuong_Man.md](level_design/Khung_Do_Kho_Chuong_Man.md). 1.14 — Khung tăng độ khó theo chương và màn (D-63), câu hỏi mở về cách đo độ khó (DK-Q1, DK-Q2). 1.13 — Chương 2 cho người chơi thấy khung cảnh tiến triển: cảnh quay mới, đoạn mở màn, đô thị hoá quanh công trình, cần cẩu, nhãn không chồng (D-54 → D-58); địa danh riêng, cụm nhà mọc, Trang chủ, cảnh kết chương và bưu thiếp (D-59 → D-62) |
-| Ngày | 18/10/2026 |
+| Phiên bản | 1.31 — Hoãn chốt ngoại hình xe và phần thưởng xe khi hết chương (SK-Q1 → Q3). 1.30 — Logo mới, bộ ngoại hình xe mới 28 mẫu (D-78). 1.29 — Chương 2 cũng dùng khung cảnh ảnh (D-77). 1.28 — Khung cảnh Chương 1 dùng ảnh theo thiết kế mới, ghim nhỏ kiểu B, lề ảnh 600 px (D-77). 1.27 — Dung lượng ứng dụng và cách vẽ khung cảnh (D-76); đề xuất công nghệ mobile chờ chốt (CN-Q1 → Q5). 1.26 — Bản đồ lớn khi chơi hiện nhiệm vụ còn lại (D-75). 1.25 — Chương 2 Khu đô thị mới dựng lại theo khung (D-74). 1.24 — Màn thưởng kim cương cuối chương (D-73). 1.23 — Hướng dẫn Màn 1 luôn chạy, mẹo Quay đầu ở điểm giao thứ nhất (D-72). 1.22 — Mẹo Quay đầu trong hướng dẫn Màn 1 (D-71). 1.21 — Luật chơi lần đầu ở Màn 1 (D-70). 1.20 — Đặt trước Quay đầu khi dừng ở điểm (D-69). 1.19 — Chương 1 Làng ven sông vào demo (D-68). 1.18 — Điều chỉnh CT-06, CT-07 (D-67). 1.17 — Chủ đề khung cảnh 15 chương (D-66). 1.16 — Bộ công thức độ khó và bố cục 15 chương (D-65). 1.15 — Chỉ vận chuyển hàng hóa; chở khách và đổi xe xếp cuối (D-64); khung độ khó chuyển sang file riêng [level_design/Khung_Do_Kho_Chuong_Man.md](level_design/Khung_Do_Kho_Chuong_Man.md). 1.14 — Khung tăng độ khó theo chương và màn (D-63), câu hỏi mở về cách đo độ khó (DK-Q1, DK-Q2). 1.13 — Chương 2 cho người chơi thấy khung cảnh tiến triển: cảnh quay mới, đoạn mở màn, đô thị hoá quanh công trình, cần cẩu, nhãn không chồng (D-54 → D-58); địa danh riêng, cụm nhà mọc, Trang chủ, cảnh kết chương và bưu thiếp (D-59 → D-62) |
+| Ngày | 19/10/2026 |
 | Nguồn | Tài liệu ý tưởng game (mục 1–21), flowchart vòng chơi, ảnh tham chiếu giao diện, phản hồi xác nhận của BA |
 | Mục đích | Cơ sở tham chiếu để thiết kế giao diện và viết tài liệu (BRD/SRS/GDD). Không thay thế BRD/SRS. |
 | Ý tưởng chờ xem xét | [Y_Tuong_Mo_Rong.md](Y_Tuong_Mo_Rong.md) — chưa phải yêu cầu |
@@ -444,9 +444,9 @@ PASS = all_missions_completed
 | VP-Q11 | Số kim cương hiện ở đâu? | Trang chủ (góc trên phải, chạm mở cửa hàng), màn kết quả, popup hết giờ; **không hiện trên màn chơi** (đang làm theo **[GĐ]**) |
 | DL-Q3 | Chọn bản nhạc cụ thể (bản quyền)? | Chỉ dùng nhạc có giấy phép thương mại rõ ràng, lưu chứng từ trong `phap_ly/` |
 | CN-Q1 → Q5 | Hướng làm ứng dụng mobile, nền tảng phát hành trước, sao lưu đám mây, quảng cáo, người làm | Xem [De_Xuat_Cong_Nghe_Mobile.md](De_Xuat_Cong_Nghe_Mobile.md) mục 7 |
-| SK-Q1 | Bộ mới không có ngoại hình **thưởng chương** (GA-Q4 trước đây: thắng màn 10 nhận ngoại hình). Giữ cơ chế này không, mẫu nào cho chương nào? | Giữ: Chương 1 → Van Pizza Lò Nướng Củi Lửa, Chương 2 → Xe Tải Vườn Trái Cây (đổi từ "mua" sang "thưởng chương") |
-| SK-Q2 | Bộ mới không có ngoại hình **sự kiện** (GA-Q7). Chọn mẫu nào làm hàng sự kiện, hay để dành cho bộ sau? | Để dành bộ riêng khi làm sự kiện |
-| SK-Q3 | Ngoại hình cũ mua bằng **tiền** (Vespa Bạc Hà) đã bỏ — người đã mua nhận gì? | Bản demo không có người mua thật; khi phát hành không xóa hàng đã bán bằng tiền |
+| SK-Q1 | **[HOÃN — BA chốt sau, 19/10]** Bộ mới không có ngoại hình **thưởng chương** (GA-Q4 trước đây: thắng màn 10 nhận ngoại hình). Giữ cơ chế này không, mẫu nào cho chương nào? | Giữ: Chương 1 → Van Pizza Lò Nướng Củi Lửa, Chương 2 → Xe Tải Vườn Trái Cây (đổi từ "mua" sang "thưởng chương") |
+| SK-Q2 | **[HOÃN — BA chốt sau, 19/10]** Bộ mới không có ngoại hình **sự kiện** (GA-Q7). Chọn mẫu nào làm hàng sự kiện, hay để dành cho bộ sau? | Để dành bộ riêng khi làm sự kiện |
+| SK-Q3 | **[HOÃN — BA chốt sau, 19/10]** Ngoại hình cũ mua bằng **tiền** (Vespa Bạc Hà) đã bỏ — người đã mua nhận gì? | Bản demo không có người mua thật; khi phát hành không xóa hàng đã bán bằng tiền |
 
 Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 
@@ -699,6 +699,7 @@ Các giả định **[GĐ]** khác trong tài liệu vẫn chờ BA xác nhận.
 | TH-Q5, GH-Q1, GH-Q2 | Khung cảnh bằng ảnh thiết kế, ghim kiểu B, lề ảnh 600 px — Chương 1 (D-77) | 1.28 |
 | D-77 | Khung cảnh ảnh cho Chương 2 | 1.29 |
 | Bổ sung logo & skin | Logo mới, 28 ngoại hình mới thay bộ cũ (D-78) | 1.30 |
+| Phản hồi BA 19/10 | Ngoại hình xe và thưởng xe khi hết chương chốt sau (SK-Q1 → Q3, hoàn 💎 của D-78) | 1.31 |
 
 ---
 

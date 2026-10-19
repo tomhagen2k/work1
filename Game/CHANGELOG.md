@@ -5,11 +5,25 @@ Quy trình: [Quy_Trinh_Phien_Ban.md](Quy_Trinh_Phien_Ban.md) · Danh sách và s
 Mỗi mục ứng với một phiên bản. Mục "đang làm" được ghi dần trong lúc làm; khi chốt, script đổi thành "chốt dd/mm/yyyy" và mở mục mới.
 Mỗi thay đổi ghi kèm mã quyết định (D-xx, Q-xx) và **vị trí code** để sau này lấy lại được.
 
-## v1.4 · đang làm
+## v1.5 · đang làm
 
-Tóm tắt: Chương 1 mới "Làng ven sông" — 10 màn theo khung độ khó (D-63 → D-67), khung cảnh làng xây dựng dần (D-66); engine đọc cấu hình chương
+Tóm tắt: (chưa có thay đổi)
 
 Tài liệu yêu cầu: (ghi khi chốt)
+
+### Thêm
+
+### Thay đổi
+
+### Bỏ
+
+### Vị trí code
+
+## v1.4 · chốt 19/10/2026
+
+Tóm tắt: Chương 1 "Làng ven sông" và Chương 2 "Khu đô thị mới" dựng theo khung độ khó, màn thưởng kim cương; khung cảnh bằng ảnh thiết kế (D-77); khung game đợt 1 Little Routes (Trang chủ, Cài đặt, Việt/Anh, quảng cáo mô phỏng); Garage với logo và 28 ngoại hình mới (D-78 — ngoại hình và thưởng xe khi hết chương BA chốt sau)
+
+Tài liệu yêu cầu: v1.31
 
 ### Thêm
 - **Khung game đợt 1** ([Cau_Truc_Giao_Dien.md](Cau_Truc_Giao_Dien.md), GD-01 → GD-13), tên game **Little Routes / Cung Đường Nhỏ**, logo phương án D:
