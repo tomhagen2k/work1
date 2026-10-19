@@ -6,6 +6,12 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8765", "--directory", "Game"],
       "port": 8765
+    },
+    {
+      "name": "game-demo-win",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "Game"],
+      "port": 8765
     }
   ]
 }

@@ -1,0 +1,877 @@
+{
+ "C3L1_van": {
+  "opt": 67.74074074074073,
+  "path": [
+   [
+    5.9,
+    "BenCang",
+    "lấy BaoTang"
+   ],
+   [
+    21.2,
+    "BaoTang",
+    "giao BaoTang"
+   ],
+   [
+    26.4,
+    "KhoGa",
+    "lấy GaTau"
+   ],
+   [
+    39.6,
+    "GaTau",
+    "giao GaTau"
+   ],
+   [
+    50.7,
+    "KhoGa",
+    "lấy CanHo"
+   ],
+   [
+    67.7,
+    "CanHo",
+    "giao CanHo"
+   ]
+  ],
+  "naive": 91.29629629629629,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    5.9,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    22.5,
+    "BaoTang",
+    "giao"
+   ],
+   [
+    29.7,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    42.9,
+    "GaTau",
+    "giao"
+   ],
+   [
+    53.7,
+    "CanHo",
+    "giao"
+   ],
+   [
+    72.7,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    91.3,
+    "CanHo",
+    "giao"
+   ]
+  ]
+ },
+ "C3L2_van": {
+  "opt": 77.0185185185185,
+  "path": [
+   [
+    5.9,
+    "BenCang",
+    "lấy GaTau"
+   ],
+   [
+    16.7,
+    "GaTau",
+    "giao GaTau"
+   ],
+   [
+    27.7,
+    "KhoGa",
+    "lấy CanHo"
+   ],
+   [
+    46.1,
+    "CanHo",
+    "giao CanHo"
+   ],
+   [
+    55.9,
+    "BenCang",
+    "lấy Brownstone"
+   ],
+   [
+    77.0,
+    "Brownstone",
+    "giao Brownstone"
+   ]
+  ],
+  "naive": 108.55555555555556,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    7.9,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    18.7,
+    "GaTau",
+    "giao"
+   ],
+   [
+    41.1,
+    "Brownstone",
+    "giao"
+   ],
+   [
+    56.3,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    74.8,
+    "CanHo",
+    "giao"
+   ],
+   [
+    86.1,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    108.6,
+    "Brownstone",
+    "giao"
+   ]
+  ]
+ },
+ "C3L3_van": {
+  "opt": 88.44444444444444,
+  "path": [
+   [
+    5.9,
+    "BenCang",
+    "lấy GaTau"
+   ],
+   [
+    16.7,
+    "GaTau",
+    "giao GaTau"
+   ],
+   [
+    27.9,
+    "BenCang",
+    "lấy QuangTruong"
+   ],
+   [
+    52.6,
+    "QuangTruong",
+    "giao QuangTruong"
+   ],
+   [
+    75.3,
+    "KhoGa",
+    "lấy RapPhim"
+   ],
+   [
+    88.4,
+    "RapPhim",
+    "giao RapPhim"
+   ]
+  ],
+  "naive": 148.75308641975306,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    7.9,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    18.7,
+    "GaTau",
+    "giao"
+   ],
+   [
+    52.1,
+    "QuangTruong",
+    "giao"
+   ],
+   [
+    78.3,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    91.5,
+    "RapPhim",
+    "giao"
+   ],
+   [
+    116.8,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    148.8,
+    "QuangTruong",
+    "giao"
+   ]
+  ]
+ },
+ "C3L4_van": {
+  "opt": 77.93827160493828,
+  "path": [
+   [
+    7.9,
+    "BenCang",
+    "lấy QuangTruong+Deli"
+   ],
+   [
+    21.1,
+    "Deli",
+    "giao Deli"
+   ],
+   [
+    30.8,
+    "KhoGa",
+    "lấy NhaHat"
+   ],
+   [
+    38.2,
+    "NhaHat",
+    "giao NhaHat"
+   ],
+   [
+    47.5,
+    "KhoGa",
+    "lấy RapPhim"
+   ],
+   [
+    59.2,
+    "RapPhim",
+    "giao RapPhim"
+   ],
+   [
+    77.9,
+    "QuangTruong",
+    "giao QuangTruong"
+   ]
+  ],
+  "naive": 123.32716049382714,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    7.9,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    21.1,
+    "Deli",
+    "giao"
+   ],
+   [
+    46.7,
+    "QuangTruong",
+    "giao"
+   ],
+   [
+    74.9,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    82.3,
+    "NhaHat",
+    "giao"
+   ],
+   [
+    98.0,
+    "RapPhim",
+    "giao"
+   ],
+   [
+    110.2,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    123.3,
+    "RapPhim",
+    "giao"
+   ]
+  ]
+ },
+ "C3L5_van": {
+  "opt": 101.03086419753086,
+  "path": [
+   [
+    5.9,
+    "BenCang",
+    "lấy CanHo"
+   ],
+   [
+    15.2,
+    "CanHo",
+    "giao CanHo"
+   ],
+   [
+    26.4,
+    "BenCang",
+    "lấy NhaHat"
+   ],
+   [
+    45.4,
+    "NhaHat",
+    "giao NhaHat"
+   ],
+   [
+    54.8,
+    "KhoGa",
+    "lấy RapPhim"
+   ],
+   [
+    66.4,
+    "RapPhim",
+    "giao RapPhim"
+   ],
+   [
+    80.1,
+    "KhoGa",
+    "lấy ThapNuoc"
+   ],
+   [
+    101.0,
+    "ThapNuoc",
+    "giao ThapNuoc"
+   ]
+  ],
+  "naive": 150.26543209876542,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    5.9,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    30.3,
+    "NhaHat",
+    "giao"
+   ],
+   [
+    39.6,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    70.1,
+    "ThapNuoc",
+    "giao"
+   ],
+   [
+    102.5,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    115.7,
+    "RapPhim",
+    "giao"
+   ],
+   [
+    141.0,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    150.3,
+    "CanHo",
+    "giao"
+   ]
+  ]
+ },
+ "C3L6_van": {
+  "opt": 94.76543209876543,
+  "path": [
+   [
+    5.9,
+    "BenCang",
+    "lấy Pizza"
+   ],
+   [
+    16.7,
+    "Pizza",
+    "giao Pizza"
+   ],
+   [
+    26.4,
+    "KhoGa",
+    "lấy BaoTang"
+   ],
+   [
+    31.2,
+    "BaoTang",
+    "giao BaoTang"
+   ],
+   [
+    37.9,
+    "KhoGa",
+    "lấy CauTreo"
+   ],
+   [
+    55.6,
+    "CauTreo",
+    "giao CauTreo"
+   ],
+   [
+    75.3,
+    "KhoGa",
+    "lấy CuaHangNhac"
+   ],
+   [
+    94.8,
+    "CuaHangNhac",
+    "giao CuaHangNhac"
+   ]
+  ],
+  "naive": 141.2222222222222,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    5.9,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    16.7,
+    "Pizza",
+    "giao"
+   ],
+   [
+    26.4,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    45.6,
+    "CauTreo",
+    "giao"
+   ],
+   [
+    67.4,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    72.1,
+    "BaoTang",
+    "giao"
+   ],
+   [
+    97.1,
+    "CuaHangNhac",
+    "giao"
+   ],
+   [
+    119.4,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    141.2,
+    "CuaHangNhac",
+    "giao"
+   ]
+  ]
+ },
+ "C3L7_van": {
+  "opt": 98.65432098765432,
+  "path": [
+   [
+    5.9,
+    "BenCang",
+    "lấy GaTau"
+   ],
+   [
+    16.7,
+    "GaTau",
+    "giao GaTau"
+   ],
+   [
+    27.7,
+    "KhoGa",
+    "lấy ArtDeco"
+   ],
+   [
+    41.8,
+    "ArtDeco",
+    "giao ArtDeco"
+   ],
+   [
+    50.9,
+    "TrungTam",
+    "lấy CauTreo"
+   ],
+   [
+    62.1,
+    "CauTreo",
+    "giao CauTreo"
+   ],
+   [
+    75.3,
+    "TrungTam",
+    "lấy RapPhim"
+   ],
+   [
+    98.7,
+    "RapPhim",
+    "giao RapPhim"
+   ]
+  ],
+  "naive": 148.16049382716048,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    5.9,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    16.7,
+    "GaTau",
+    "giao"
+   ],
+   [
+    27.7,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    41.8,
+    "ArtDeco",
+    "giao"
+   ],
+   [
+    52.9,
+    "TrungTam",
+    "lấy"
+   ],
+   [
+    70.2,
+    "CauTreo",
+    "giao"
+   ],
+   [
+    94.6,
+    "RapPhim",
+    "giao"
+   ],
+   [
+    121.6,
+    "TrungTam",
+    "lấy"
+   ],
+   [
+    148.2,
+    "RapPhim",
+    "giao"
+   ]
+  ]
+ },
+ "C3L8_van": {
+  "opt": 124.17283950617282,
+  "path": [
+   [
+    5.9,
+    "BenCang",
+    "lấy Deli"
+   ],
+   [
+    19.1,
+    "Deli",
+    "giao Deli"
+   ],
+   [
+    28.8,
+    "KhoGa",
+    "lấy ChoDem"
+   ],
+   [
+    52.4,
+    "ChoDem",
+    "giao ChoDem"
+   ],
+   [
+    59.8,
+    "TrungTam",
+    "lấy ToaBao"
+   ],
+   [
+    83.9,
+    "ToaBao",
+    "giao ToaBao"
+   ],
+   [
+    93.1,
+    "BenCang",
+    "lấy Cafe"
+   ],
+   [
+    124.2,
+    "Cafe",
+    "giao Cafe"
+   ]
+  ],
+  "naive": 235.02469135802465,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    7.9,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    21.1,
+    "Deli",
+    "giao"
+   ],
+   [
+    55.4,
+    "Cafe",
+    "giao"
+   ],
+   [
+    63.6,
+    "TrungTam",
+    "lấy"
+   ],
+   [
+    109.9,
+    "ToaBao",
+    "giao"
+   ],
+   [
+    119.0,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    159.6,
+    "Cafe",
+    "giao"
+   ],
+   [
+    194.4,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    235.0,
+    "ChoDem",
+    "giao"
+   ]
+  ]
+ },
+ "C3L9_van": {
+  "opt": 119.19135802469135,
+  "path": [
+   [
+    5.9,
+    "BenCang",
+    "lấy KhachSan"
+   ],
+   [
+    19.1,
+    "KhachSan",
+    "giao KhachSan"
+   ],
+   [
+    34.2,
+    "BenCang",
+    "lấy RapPhim"
+   ],
+   [
+    57.5,
+    "RapPhim",
+    "giao RapPhim"
+   ],
+   [
+    71.2,
+    "KhoGa",
+    "lấy SanBang"
+   ],
+   [
+    88.3,
+    "SanBang",
+    "giao SanBang"
+   ],
+   [
+    102.8,
+    "TrungTam",
+    "lấy CuaHangNhac"
+   ],
+   [
+    119.2,
+    "CuaHangNhac",
+    "giao CuaHangNhac"
+   ]
+  ],
+  "naive": 166.53703703703704,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    7.9,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    21.1,
+    "KhachSan",
+    "giao"
+   ],
+   [
+    36.6,
+    "RapPhim",
+    "giao"
+   ],
+   [
+    50.3,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    78.3,
+    "SanBang",
+    "giao"
+   ],
+   [
+    92.8,
+    "TrungTam",
+    "lấy"
+   ],
+   [
+    109.3,
+    "CuaHangNhac",
+    "giao"
+   ],
+   [
+    141.7,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    166.5,
+    "RapPhim",
+    "giao"
+   ]
+  ]
+ },
+ "C3L10_van": {
+  "opt": 124.41975308641973,
+  "path": [
+   [
+    5.9,
+    "BenCang",
+    "lấy Cafe"
+   ],
+   [
+    37.0,
+    "Cafe",
+    "giao Cafe"
+   ],
+   [
+    45.3,
+    "TrungTam",
+    "lấy HotDog"
+   ],
+   [
+    72.9,
+    "HotDog",
+    "giao HotDog"
+   ],
+   [
+    90.0,
+    "KhoGa",
+    "lấy BenPha+ChoDem"
+   ],
+   [
+    105.8,
+    "BenPha",
+    "giao BenPha"
+   ],
+   [
+    111.7,
+    "TrungTam",
+    "lấy CauTreo"
+   ],
+   [
+    117.1,
+    "ChoDem",
+    "giao ChoDem"
+   ],
+   [
+    124.4,
+    "CauTreo",
+    "giao CauTreo"
+   ]
+  ],
+  "naive": 182.12345679012344,
+  "naive_fail": null,
+  "naive_log": [
+   [
+    5.9,
+    "BenCang",
+    "lấy"
+   ],
+   [
+    46.5,
+    "Cafe",
+    "giao"
+   ],
+   [
+    56.8,
+    "TrungTam",
+    "lấy"
+   ],
+   [
+    75.5,
+    "CauTreo",
+    "giao"
+   ],
+   [
+    91.9,
+    "HotDog",
+    "giao"
+   ],
+   [
+    109.1,
+    "KhoGa",
+    "lấy"
+   ],
+   [
+    124.9,
+    "BenPha",
+    "giao"
+   ],
+   [
+    134.1,
+    "ChoDem",
+    "giao"
+   ],
+   [
+    141.5,
+    "TrungTam",
+    "lấy"
+   ],
+   [
+    182.1,
+    "HotDog",
+    "giao"
+   ]
+  ]
+ }
+}

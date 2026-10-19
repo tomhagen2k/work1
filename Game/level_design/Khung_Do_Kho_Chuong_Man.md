@@ -157,7 +157,9 @@ Từ Chương 5 bản đồ không to thêm: quá mức này khó đọc trên k
 | 9 | 14 | 3 kho + chia chuyến + đường lớn | 99 | 28,5% | 130 | 5–20 |
 | 10 | 15 | **Trùm:** tổ hợp toàn chương | 105 | 28% | 135 | 5–12 |
 
-Chương 3–15: dùng bảng tra mục 5 và phân bổ mục 3.2; chi tiết từng màn viết khi dựng chương đó.
+**Chương 3** (thêm đường đông, ĐK 11–20): đã dựng — bảng số đo ở [Thiet_Ke_Chuong_3.md](Thiet_Ke_Chuong_3.md) mục 3. T_opt đo được thấp hơn bảng mục 5 khoảng 0–20% (bản đồ 8×4); 10 màn đúng ĐK, màn trùm đánh giá bằng số kế hoạch đạt 3★ (21).
+
+Chương 4–15: dùng bảng tra mục 5 và phân bổ mục 3.2; chi tiết từng màn viết khi dựng chương đó.
 
 ---
 

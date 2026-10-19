@@ -7,17 +7,35 @@ Mỗi thay đổi ghi kèm mã quyết định (D-xx, Q-xx) và **vị trí code
 
 ## v1.5 · đang làm
 
-Tóm tắt: (chưa có thay đổi)
+Tóm tắt: Chương 3 "Thành phố Không Ngủ" — 10 màn theo khung độ khó với yếu tố mới đường đông, khung cảnh đêm vẽ bằng code, mẹo đường đông, màn thưởng "Đêm pháo hoa" (D-79 → D-81)
 
 Tài liệu yêu cầu: (ghi khi chốt)
 
 ### Thêm
+- **Chương 3 · Thành phố Không Ngủ** (D-79; thiết kế + số đo: `level_design/Thiet_Ke_Chuong_3.md`): bản đồ chung 8×4, đại lộ ven sông phía Bắc và phía Nam, **đường đông** ở khu trung tâm (phố dọc cột 5 + phố ngang hàng 1, 2) mở từ màn 3; 2 kho (Bến cảng, Kho ga hàng), thêm Trung tâm phân phối từ màn 7. 10 màn ĐK 11–20 đều đúng ĐK (CT-05, CT-06, CT-07); T0 tính lại từ thời gian đo bằng bộ lái tự động.
+- **Khung cảnh đêm vẽ bằng code** (`drawNight` — BA chốt "code trước, ảnh sau"): mặt đường sáng hơn nền, đèn đường có quầng sáng, tòa nhà mái tối có mặt tiền cửa sổ vàng, tháp nước gỗ trên mái, neon và taxi vàng **chỉ ở đường đông**, sông bao 3 phía, cầu treo ra sông phía Nam. Tiến triển "thắp sáng": khu trong vùng thông xe lên đèn, quanh công trình xong có thêm cửa hàng neon (hiệu ứng mọc của cảnh quay). 3 kho và 10 công trình mỗi cái một hình khối riêng; tượng cầm đuốc (màn 10) trên đảo nhỏ giữa vũng cảng, hiện trong cảnh kết và bưu thiếp.
+- **Mẹo đường đông** (D-80): lần đầu mở màn 3 Chương 3 (Màn 23), 2 bước khoanh — các đoạn đường đông trên bản đồ chuẩn bị, rồi mục "Đường đông" ở chú giải. Văn bản cơ chế "Đường đông" ở tab "Màn này".
+- **Màn thưởng "Đêm pháo hoa"**: 25 kim cương, 7 cụm (2 cụm trên phố đông), T0 120 giây.
+- Tiếng Anh cho toàn bộ nội dung Chương 3 (tên màn, giới thiệu, địa danh, công trình, câu thông báo, chương).
+- Cấu hình xem trước `game-demo-win` trong `.claude/launch.json` (dùng `python` trên Windows; `game-demo` giữ `python3` cho máy Mac).
 
 ### Thay đổi
+- **Số màn hiển thị đếm liên tục, bỏ qua màn thưởng** (D-81 [GĐ]): Chương 3 là Màn 21–30 (trước đó sẽ hiện 23–32). Áp dụng ở Trang chủ, thẻ màn, màn chuẩn bị, popup Nhiệm vụ. Khóa lưu tiến trình không đổi.
+- Danh sách chương: Chương 3 bỏ nhãn "Sắp có"; Chương 4 · Đảo Mây Trắng vẫn "Sắp có".
+- `tools/chot_phien_ban.py`: bộ lái tự động chạy thêm 10 màn Chương 3 (đọc `level_design/ket_qua_ch3.json`).
 
 ### Bỏ
 
+### Sửa
+- Lớp mũi tên luật chơi (`pcSteps`, `rulesEnd`) dùng chung được cho mẹo khác (bước và khóa lưu riêng).
+
 ### Vị trí code
+- Cấu hình: `CH3`, `C3_`, `CH3_LV`, `CH3_BONUS` ngay sau `CH1_BONUS,CH2_BONUS` (giữ chỉ số màn cũ); `PLACE`/`PCOL` của Chương 3; `KHO` thêm 3 kho; `MECH` thêm 11 mục; `CHAPTERS[2]`.
+- Bộ vẽ: khối `/* Bộ vẽ cảnh Thành phố Không Ngủ (Chương 3) */` trước bộ vẽ Làng ven sông — `NPAL`, `nDefs`, `nBldg`, `nTree`, `nTaxi`, `nLot`, `nBuild`, `nightKho`, `nightLandmark`, `drawNight` (xóa lớp cảnh trước khi vẽ như `imgDraw`).
+- Mẹo đường đông: `DONG_KEY`, `dongTipStart` (gọi từ `openLevel`), `PC.steps`/`PC.key`; đường trên bản đồ lớn có thuộc tính `data-t`.
+- Số màn: `LVNO` (trước `CHAPTERS`), dùng ở `drawHomeMap`, `renderHome`, `renderPrep`, `openInfo`.
+- Văn bản: `MECHTXT['Đường đông']`, `MECH_EN`, `MECHTXT_EN`; `EN_DATA` (place, lv, ch, cc[2]); `applyData` lặp qua `[CH1,CH2,CH3]`.
+- Dữ liệu màn: `level_design/levels_ch3.py`, `level_design/ket_qua_ch3.json`. Ảnh kiểm chứng: `playtest_evidence/chuong3_v15/`.
 
 ## v1.4 · chốt 19/10/2026
 

@@ -1285,17 +1285,65 @@ Object.assign(PCOL,{BaiVL:'#1c7ed6',KhoTong:'#1864ab',XuongGo:'#1971c2',TiemBanh
   ChungCuB:'#d6336c',NhaMau:'#5c940d',KhuB:'#66a80f',ToaC:'#c2255c',SieuThi:'#e8590c',QuanCafe:'#a61e4d',NhaPho:'#862e9c'});
 const CH1_BONUS=addBonus(CH1),CH2_BONUS=addBonus(CH2); // màn 21, 22 trong danh sách — hiện ở Trang chủ sau cờ Về đích của chương
 
+// ---------- Chương 3: Thành phố Không Ngủ — khớp level_design/levels_ch3.py (thiết kế + số đo: level_design/Thiet_Ke_Chuong_3.md) ----------
+// Yếu tố mới: ĐƯỜNG ĐÔNG (từ màn 3) — khu trung tâm: phố dọc cột 5 + phố ngang hàng 1, 2 từ cột 4 sang Đông. Đại lộ ven sông hàng 0 và hàng 3.
+// Ôn: 2 kho (màn 1–6), 3 kho từ màn 7. Đêm 21 giờ, tông lạnh (Chu_De_Khung_Canh mục 3.3). Màn 23–32, màn thưởng 33.
+const CH3={cols:8,rows:4,start:['c0r1','c1r1',40/350],
+  types:{lon:[...row(0,0,7),...row(3,0,7)],dong:[...col(5,0,3),...row(1,4,7),...row(2,4,7)]},
+  points:{BenCang:['c0r1','c0r2',.5],KhoGa:['c3r0','c3r1',.5],TrungTam:['c7r1','c7r2',.5],
+    GaTau:['c1r0','c1r1',.5],Brownstone:['c4r2','c4r3',.5],QuangTruong:['c5r2','c5r3',.5],NhaHat:['c4r0','c5r0',.5],ThapNuoc:['c6r2','c6r3',.5],
+    CauTreo:['c5r3','c6r3',.5],ArtDeco:['c6r0','c7r0',.5],ChoDem:['c7r2','c7r3',.5],SanBang:['c6r1','c6r2',.5],BenPha:['c7r0','c7r1',.5],
+    ToaBao:['c0r0','c1r0',.5],Pizza:['c1r1','c2r1',.5],CanHo:['c1r2','c1r3',.5],KhachSan:['c2r2','c3r2',.5],Deli:['c2r1','c2r2',.5],
+    HotDog:['c1r2','c2r2',.5],BaoTang:['c2r0','c3r0',.5],Studio:['c3r1','c4r1',.5],RapPhim:['c4r1','c5r1',.5],CuaHangNhac:['c5r1','c6r1',.5],Cafe:['c6r2','c7r2',.5]},
+  sites:['GaTau','Brownstone','QuangTruong','NhaHat','ThapNuoc','CauTreo','ArtDeco','ChoDem','SanBang','BenPha'],
+  siteNames:['Ga tàu điện','Dãy brownstone','Quảng trường LED','Nhà hát','Tháp nước sân thượng','Cầu treo','Tòa Art Deco','Chợ đêm','Sân băng','Tượng cầm đuốc'],
+  regions:[[4,3],[4,3],[5,3],[5,3],[6,3],[6,3],[7,3],[7,3],[7,3],[7,3]],
+  openNote:['Ga tàu điện lên đèn — đêm nay thành phố bắt đầu thức.','Dãy brownstone sáng từng ô cửa — đường vào khu trung tâm đã thông.',
+    'Quảng trường LED rực rỡ — phố trung tâm đông nghịt taxi.','Nhà hát mở màn — đường sang phía Đông đã thông.',
+    'Tháp nước trên sân thượng sáng đèn, vườn trên mái mở cửa.','Cầu treo lên đèn — thông xe tới Trung tâm phân phối phía Đông.',
+    'Tòa Art Deco thắp sáng chóp bạc.','Chợ đêm nhộn nhịp dưới những dây đèn.','Sân băng mở cửa giữa công viên — sẵn sàng cho đêm hội.',
+    'Tượng cầm đuốc rực sáng giữa cảng — thành phố đã lên đèn trọn vẹn.'],
+  finTitle:'Thành phố Không Ngủ đã lên đèn!',draw:o=>drawNight(o),postNote:'Đã thắp sáng thành phố không ngủ',
+  // màn thưởng (D-73): 25 kim cương, 7 cụm (1 cụm trên phố đông cột 5); vòng nhặt hết nhanh nhất ≈ 78 giây (demo, ước theo solver) → T0 120 (+50%)
+  bonus:{name:'Đêm pháo hoa',intro:'Pháo hoa mừng thành phố lên đèn! Lái xe nhặt kim cương rải trên các con đường.',T0:120,
+    gems:[['c0r0','c1r0',4],['c3r1','c4r1',3],['c5r0','c5r1',3],['c7r0','c7r1',4],['c6r3','c7r3',3],['c2r2','c2r3',4],['c4r2','c5r2',4]]}
+};
+const C3_=(f,to,qty)=>({from:f,to,qty});
+const CH3_LV=addChapter(CH3,[
+ {name:'Ga tàu điện',intro:'Đêm đầu ở thành phố: hai kho, nhiều đơn — gom chuyến cho khéo.',T0:80,vehicles:['van'],missions:[C3_('KhoGa','GaTau',2),C3_('KhoGa','CanHo',3),C3_('BenCang','BaoTang',3)]},
+ {name:'Dãy brownstone',intro:'Đại lộ ven sông rộng và nhanh — thử đi vòng qua đại lộ.',T0:95,vehicles:['van'],missions:[C3_('BenCang','GaTau',2),C3_('BenCang','Brownstone',3),C3_('KhoGa','CanHo',2)]},
+ {name:'Quảng trường LED',intro:'Phố trung tâm đông nghịt taxi — xe chạy chậm hơn một nửa. Đi thẳng hay đi vòng?',T0:110,vehicles:['van'],missions:[C3_('BenCang','GaTau',1),C3_('BenCang','QuangTruong',3),C3_('KhoGa','RapPhim',2)]},
+ {name:'Nhà hát',intro:'Phố đông và phố vắng chạy song song — chọn đường nào cho nhanh?',T0:95,vehicles:['van'],missions:[C3_('BenCang','QuangTruong',1),C3_('KhoGa','NhaHat',2),C3_('BenCang','Deli',2),C3_('KhoGa','RapPhim',2)]},
+ {name:'Tháp nước',intro:'Nhiều hàng phải chia chuyến, phố đông chắn giữa — tính kỹ từng chuyến.',T0:120,vehicles:['van'],missions:[C3_('BenCang','NhaHat',3),C3_('KhoGa','ThapNuoc',3),C3_('BenCang','CanHo',1),C3_('KhoGa','RapPhim',3)]},
+ {name:'Cầu treo',intro:'Đại lộ, phố thường, phố đông — chọn đúng loại đường cho từng chặng.',T0:115,vehicles:['van'],missions:[C3_('KhoGa','CauTreo',3),C3_('BenCang','Pizza',3),C3_('KhoGa','BaoTang',1),C3_('KhoGa','CuaHangNhac',3)]},
+ {name:'Tòa Art Deco',intro:'Thêm Trung tâm phân phối phía Đông — giờ có 3 kho!',T0:120,vehicles:['van'],missions:[C3_('BenCang','GaTau',1),C3_('TrungTam','CauTreo',2),C3_('KhoGa','ArtDeco',3),C3_('TrungTam','RapPhim',3)]},
+ {name:'Chợ đêm',intro:'Phố đông chắn giữa hai cụm điểm giao — giao cụm nào trước?',T0:155,vehicles:['van'],missions:[C3_('KhoGa','ChoDem',3),C3_('TrungTam','ToaBao',2),C3_('BenCang','Deli',2),C3_('BenCang','Cafe',3)]},
+ {name:'Sân băng',intro:'3 kho, nhiều đơn, phố đông khắp nơi — tính kỹ từng chuyến.',T0:140,vehicles:['van'],missions:[C3_('KhoGa','SanBang',3),C3_('TrungTam','CuaHangNhac',3),C3_('BenCang','KhachSan',1),C3_('BenCang','RapPhim',3)]},
+ {name:'Tượng cầm đuốc',intro:'Đêm hội lớn nhất thành phố — dùng hết những gì đã học.',T0:155,vehicles:['van'],missions:[C3_('KhoGa','BenPha',2),C3_('TrungTam','CauTreo',2),C3_('BenCang','Cafe',3),C3_('TrungTam','HotDog',3),C3_('KhoGa','ChoDem',1)]}
+]);
+const CH3_BONUS=addBonus(CH3); // màn 33
+Object.assign(PLACE,{BenCang:'Bến cảng',KhoGa:'Kho ga hàng',TrungTam:'Trung tâm phân phối',GaTau:'Ga tàu điện',Brownstone:'Dãy brownstone',QuangTruong:'Quảng trường LED',
+  NhaHat:'Nhà hát',ThapNuoc:'Tháp nước',CauTreo:'Cầu treo',ArtDeco:'Tòa Art Deco',ChoDem:'Chợ đêm',SanBang:'Sân băng',BenPha:'Bến phà',ToaBao:'Tòa báo',
+  Pizza:'Tiệm pizza',CanHo:'Căn hộ',KhachSan:'Khách sạn',Deli:'Tiệm tạp hóa',HotDog:'Xe hot dog',BaoTang:'Bảo tàng',Studio:'Phòng thu',RapPhim:'Rạp phim',
+  CuaHangNhac:'Tiệm nhạc',Cafe:'Quán cà phê'});
+Object.assign(PCOL,{BenCang:'#1c7ed6',KhoGa:'#1864ab',TrungTam:'#1971c2',GaTau:'#2b8a3e',Brownstone:'#a61e4d',QuangTruong:'#e64980',NhaHat:'#c2255c',
+  ThapNuoc:'#5c940d',CauTreo:'#0b7285',ArtDeco:'#7048e8',ChoDem:'#f59f00',SanBang:'#1098ad',BenPha:'#0ca678',ToaBao:'#495057',Pizza:'#e03131',
+  CanHo:'#9c36b5',KhachSan:'#ae3ec9',Deli:'#66a80f',HotDog:'#d6336c',BaoTang:'#862e9c',Studio:'#5f3dc4',RapPhim:'#c92a2a',CuaHangNhac:'#d9480f',Cafe:'#a61e4d'});
+
 Object.assign(PLACE,{HTX:'Hợp tác xã',ChoPhien:'Chợ phiên',GiengLang:'Giếng làng',XomTren:'Xóm Trên',XomGiua:'Xóm Giữa',NhaLy:'Nhà ông Lý',
   TruongLang:'Trường làng',XomDong:'Xóm Đông',TramYTe:'Trạm y tế',XomNam:'Xóm Nam',AoCa:'Ao cá',DinhLang:'Đình làng',BenDo:'Bến đò',NhaVanHoa:'Nhà văn hóa',XomBai:'Xóm Bãi'});
 Object.assign(PCOL,{HTX:'#1c7ed6',ChoPhien:'#e64980',GiengLang:'#0ca678',XomTren:'#7048e8',XomGiua:'#f59f00',NhaLy:'#ae3ec9',TruongLang:'#f76707',
   XomDong:'#d6336c',TramYTe:'#e03131',XomNam:'#5c940d',AoCa:'#1098ad',DinhLang:'#a61e4d',BenDo:'#0b7285',NhaVanHoa:'#9c36b5',XomBai:'#66a80f'});
-const KHO=new Set(['KhoA','KhoB','BaiVL','KhoTong','XuongGo','HTX']);
+const KHO=new Set(['KhoA','KhoB','BaiVL','KhoTong','XuongGo','HTX','BenCang','KhoGa','TrungTam']);
 const MECH=['Điều khiển','Điều khiển','Nhiều điểm giao','Nhiều điểm giao','Chia chuyến','Chia chuyến','Chia chuyến','Đường lớn','Đường lớn','Tổng hợp',
-  'Chia chuyến','Đường lớn','Nhiều kho','Nhiều kho','Nhiều kho','Nhiều kho','Nhiều kho','Nhiều kho','Nhiều kho','Tổng hợp','Thưởng','Thưởng'];
+  'Chia chuyến','Đường lớn','Nhiều kho','Nhiều kho','Nhiều kho','Nhiều kho','Nhiều kho','Nhiều kho','Nhiều kho','Tổng hợp','Thưởng','Thưởng',
+  'Nhiều kho','Đường lớn','Đường đông','Đường đông','Đường đông','Đường đông','Nhiều kho','Đường đông','Đường đông','Tổng hợp','Thưởng'];
+// số màn hiển thị: đếm liên tục qua các chương, bỏ qua màn thưởng (Chương 3 là màn 21–30 dù nằm ở vị trí 23–32 trong danh sách)
+const LVNO=i=>LEVELS.slice(0,i).filter(l=>!l.bonus).length+1;
 const CHAPTERS=[
   {name:'Làng ven sông',mech:'1 kho, nhiều điểm giao, chia chuyến, đường lớn',levels:CH1_LV,cc:CH1,bonus:CH1_BONUS},
   {name:'Khu đô thị mới',mech:'Nhiều kho: 2 kho từ màn 3, 3 kho từ màn 8',levels:CH2_LV,cc:CH2,bonus:CH2_BONUS},
-  {name:'Thành phố Không Ngủ',mech:'Đường đông',soon:true},
+  {name:'Thành phố Không Ngủ',mech:'Đường đông từ màn 3 · 3 kho từ màn 7',levels:CH3_LV,cc:CH3,bonus:CH3_BONUS},
   {name:'Đảo Mây Trắng',mech:'Hạn giao',soon:true}
 ];
 
@@ -1604,6 +1652,192 @@ function landmark(id,b){const R=(x,y,w,h,a)=>el('rect',Object.assign({x,y,width:
     [[.82,.18],[.62,.12],[.88,.42],[.14,.82],[.36,.9],[.88,.86],[.66,.9],[.12,.58]].forEach(([fx,fy])=>tree(b.x+b.w*fx,b.y+b.h*fy,10));
     [[.7,.65,'#f783ac'],[.3,.68,'#ffd43b'],[.62,.34,'#f783ac']].forEach(([fx,fy,c])=>{el('circle',{cx:b.x+b.w*fx,cy:b.y+b.h*fy,r:7,fill:c,stroke:'#fff','stroke-width':2});});
     return;}
+}
+/* ======================= Bộ vẽ cảnh Thành phố Không Ngủ (Chương 3) =======================
+   Theo Chu_De_Khung_Canh.md mục 3.3 + 8.2: đêm 21 giờ, tông lạnh. Mạng đường là phần SÁNG NHẤT bản đồ (mặt đường sáng hơn nền một bậc,
+   quầng đèn đường chỉ rơi trên mặt đường); mái tối viền sáng; cửa sổ vàng ấm. Neon và taxi CHỈ ở đường đông. Ghim có quầng sáng.
+   Tiến triển "thắp sáng thành phố": khu trong vùng thông xe lên đèn, khu ngoài vùng tối; công trình xong thì phố quanh nó sáng thêm.
+   Vẽ bằng code (D-79) — khi có ảnh thiết kế thì đổi draw thành imgDraw(3,o)||drawNight(o) như Chương 1–2 (D-77). */
+const NPAL={ground:'#1c2027',block:'#2b303a',blockD:'#22262e',walk:'#5d6574',road:'#525866',lon:'#474d5a',dong:'#544b55',line:'#d5d8de',
+  roofs:['#4b5058','#5b4a42','#464c56','#55595f','#61534a','#4e5560'],win:'#ffd479',winD:'#3a3f48',water:'#14233a',waterL:'#1f3554',
+  neon:['#ff4fa3','#4fd1ff','#ffd43b','#b197fc'],taxi:'#f7c517',park:'#2f5d3a',parkL:'#3c7349'};
+function nDefs(){const root=TARGET.ownerSVGElement||TARGET;if(root.querySelector&&root.querySelector('#nGlow'))return;const d=el('defs',{});
+  const g=(id,c,a)=>{const r=el('radialGradient',{id},d);el('stop',{offset:0,'stop-color':c,'stop-opacity':a},r);el('stop',{offset:1,'stop-color':c,'stop-opacity':0},r);};
+  g('nGlow','#ffe8a3',.55);g('nPinGlow','#fff6d6',.75);g('nNeonP','#ff4fa3',.6);g('nNeonC','#4fd1ff',.55);g('nTorch','#ffd479',.9);}
+// tòa nhà nhìn từ trên, nghiêng nhẹ: mái + mặt tiền phía Nam có hàng cửa sổ. lit: khu đã lên đèn
+function nBldg(x,y,w,h,r,lit,o){o=o||{};const c=o.c||NPAL.roofs[Math.floor(r()*NPAL.roofs.length)],fh=Math.min(16,Math.max(8,h*.28));
+  el('rect',{x:x+6,y:y+7,width:w,height:h,rx:2,fill:'rgba(0,0,0,.35)'});
+  el('rect',{x,y:y+h-fh,width:w,height:fh,fill:shade(c,-.28)});
+  let wOn='',wOff=''; // cửa sổ gộp thành 2 đường vẽ (sáng / tối) — giữ số phần tử thấp cho máy yếu
+  for(let wy=y+h-fh+3;wy<y+h-4;wy+=6)for(let wx=x+4;wx<x+w-5;wx+=7){const d=`M${wx.toFixed(1)} ${wy.toFixed(1)}h4v3.6h-4z`;if(lit&&r()<.62)wOn+=d;else wOff+=d;}
+  if(wOff)el('path',{d:wOff,fill:NPAL.winD,opacity:lit?1:.8});if(wOn)el('path',{d:wOn,fill:NPAL.win});
+  el('rect',{x,y,width:w,height:h-fh,rx:2,fill:lit?c:shade(c,-.25),stroke:lit?shade(c,.35):shade(c,-.1),'stroke-width':1.5});
+  const q=r();
+  if(w>70&&h>60&&q<.35){el('rect',{x:x+w*.18,y:y+(h-fh)*.18,width:w*.64,height:(h-fh)*.64,rx:2,fill:shade(c,.12),stroke:shade(c,.4),'stroke-width':1.2}); // lùi tầng
+    el('rect',{x:x+w*.34,y:y+(h-fh)*.34,width:w*.32,height:(h-fh)*.32,rx:2,fill:shade(c,.24)});}
+  else if(q<.6){const tx=x+w*(.25+r()*.5),ty=y+(h-fh)*.45;el('circle',{cx:tx+2,cy:ty+3,r:7,fill:'rgba(0,0,0,.35)'}); // tháp nước gỗ trên mái
+    el('circle',{cx:tx,cy:ty,r:7,fill:'#8a5a3a',stroke:'#5e3b24','stroke-width':1.5});el('path',{d:`M${tx-7} ${ty} L${tx} ${ty-6} L${tx+7} ${ty}Z`,fill:'#6b4429'});}
+  else el('rect',{x:x+w*.2,y:y+(h-fh)*.3,width:12,height:8,rx:1,fill:shade(c,.3)}); // máy lạnh
+  if(o.shop&&lit){const nc=NPAL.neon[Math.floor(r()*NPAL.neon.length)];el('rect',{x:x+3,y:y+h-2,width:w-6,height:4,rx:2,fill:nc});
+    el('rect',{x:x-4,y:y+h-6,width:w+8,height:14,rx:7,fill:nc,opacity:.18});}}
+function nTree(x,y,r){el('rect',{x:x-r-2,y:y-r-2,width:2*r+4,height:2*r+4,rx:2,fill:'#3a3f48'});el('circle',{cx:x,cy:y,r,fill:'#2f5d3a'});el('circle',{cx:x-r*.3,cy:y-r*.3,r:r*.5,fill:'#3f7a4c'});}
+function nTaxi(x,y,ang,c){const g=el('g',{transform:`translate(${x},${y}) rotate(${ang})`});
+  el('rect',{x:-10,y:-5.5,width:20,height:11,rx:3,fill:c||NPAL.taxi,stroke:'rgba(0,0,0,.35)','stroke-width':1},g);
+  el('rect',{x:-4,y:-4,width:8,height:8,rx:1.5,fill:shade(c||NPAL.taxi,-.3)},g);el('rect',{x:-2,y:-1.5,width:4,height:3,fill:'#fff'},g);
+  el('circle',{cx:10,cy:-3,r:1.6,fill:'#fff6cc'},g);el('circle',{cx:10,cy:3,r:1.6,fill:'#fff6cc'},g);}
+function nLot(b){el('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx:4,fill:'#363b45',stroke:'#ffd479','stroke-width':2.5,'stroke-dasharray':'8 5'});
+  const g=el('g',{transform:`translate(${b.cx},${b.cy})`});el('rect',{x:-26,y:-11,width:52,height:20,rx:4,fill:'#fff3bf',stroke:'#c9a646','stroke-width':1.5},g);
+  const t=el('text',{y:4,'text-anchor':'middle','font-size':9,'font-weight':900,fill:'#5c3d00','font-family':'Nunito,Segoe UI'},g);t.textContent=TT('Sắp xây','Planned');}
+function nBuild(b,opts){el('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx:4,fill:'#3a3f49'});
+  el('rect',{x:b.x+10,y:b.y+10,width:b.w-20,height:b.h-20,fill:'rgba(134,142,150,.45)',stroke:'#adb5bd','stroke-width':3});
+  for(let q=1;q<3;q++){el('line',{x1:b.x+10+q*(b.w-20)/3,y1:b.y+10,x2:b.x+10+q*(b.w-20)/3,y2:b.y+b.h-10,stroke:'#adb5bd','stroke-width':2});
+    el('line',{x1:b.x+10,y1:b.y+10+q*(b.h-20)/3,x2:b.x+b.w-10,y2:b.y+10+q*(b.h-20)/3,stroke:'#adb5bd','stroke-width':2});}
+  const mx=b.x+b.w-8,top=Math.max(-50,b.y-60);
+  el('line',{x1:mx,y1:b.y+b.h-6,x2:mx,y2:top,stroke:'#f59f00','stroke-width':7});
+  for(let y=b.y+b.h-6;y>top+8;y-=14)el('line',{x1:mx-3.5,y1:y,x2:mx+3.5,y2:y-7,stroke:'#c77c00','stroke-width':1.5});
+  const jib=el('g',{});
+  el('animateTransform',{attributeName:'transform',type:'rotate',values:`-10 ${mx} ${top};10 ${mx} ${top};-10 ${mx} ${top}`,dur:'7s',repeatCount:'indefinite'},jib);
+  el('line',{x1:mx+26,y1:top,x2:b.x-6,y2:top,stroke:'#f59f00','stroke-width':6},jib);el('rect',{x:mx+14,y:top-6,width:16,height:12,rx:2,fill:'#495057'},jib);
+  el('line',{x1:b.x+22,y1:top,x2:b.x+22,y2:top+38,stroke:'#adb5bd','stroke-width':1.5},jib);
+  el('rect',{x:b.x+13,y:top+38,width:18,height:11,rx:2,fill:'#868e96',stroke:'#495057','stroke-width':1.5},jib);
+  const lamp=el('circle',{cx:mx,cy:top-4,r:4,fill:'#ff6b6b'});el('animate',{attributeName:'opacity',values:'1;.2;1',dur:'1.6s',repeatCount:'indefinite'},lamp); // đèn báo đỉnh cẩu
+  el('circle',{cx:b.x+b.w/2,cy:b.y+b.h/2,r:Math.max(b.w,b.h)*.55,fill:'url(#nGlow)'}); // đèn pha công trường
+  opts.siteR={x0:b.x-10,y0:top-12,x1:mx+32,y1:b.y+b.h};}
+// kho: mỗi kho một hình dạng riêng (K4)
+function nightKho(id,b){const R=(x,y,w,h,a)=>el('rect',Object.assign({x,y,width:w,height:h},a||{}));
+  if(id==='BenCang'){R(b.x,b.y,b.w,b.h,{rx:4,fill:'#3b4250',stroke:'#5d6574','stroke-width':2}); // bến cảng: container + cẩu bờ
+    const cs=['#c0392b','#2f9e44','#1971c2','#e8590c','#7048e8'];for(let a=0;a<3;a++)for(let k=0;k<2;k++)R(b.x+8+k*30,b.y+12+a*22,26,16,{rx:1.5,fill:cs[(a*2+k)%5],stroke:'rgba(0,0,0,.35)','stroke-width':1});
+    R(b.x+b.w-22,b.y+4,14,b.h-8,{fill:'none',stroke:'#ffd43b','stroke-width':3});el('circle',{cx:b.x+b.w-15,cy:b.y+8,r:3,fill:'#ff6b6b'});return true;}
+  if(id==='KhoGa'){R(b.x,b.y,b.w,b.h,{rx:4,fill:'#3b4250'}); // kho ga hàng: nhà kho + đường ray
+    [b.y+b.h-14,b.y+b.h-6].forEach(y=>el('line',{x1:b.x+4,y1:y,x2:b.x+b.w-4,y2:y,stroke:'#adb5bd','stroke-width':2}));
+    for(let x=b.x+8;x<b.x+b.w-4;x+=9)R(x,b.y+b.h-16,3,12,{fill:'#6b4429'});
+    R(b.x+6,b.y+6,b.w-12,b.h*.55,{rx:2,fill:'#6c7a89',stroke:'#93a1b0','stroke-width':1.5});for(let k=1;k<5;k++)el('line',{x1:b.x+6+k*(b.w-12)/5,y1:b.y+6,x2:b.x+6+k*(b.w-12)/5,y2:b.y+6+b.h*.55,stroke:'#55626f','stroke-width':1.5});
+    R(b.x+b.w*.35,b.y+b.h*.55,b.w*.3,6,{fill:NPAL.win});return true;}
+  if(id==='TrungTam'){R(b.x,b.y,b.w,b.h,{rx:4,fill:'#3b4250'}); // trung tâm phân phối: mái lớn + cửa xuất hàng sáng đèn + xe tải
+    R(b.x+5,b.y+5,b.w-10,b.h*.6,{rx:3,fill:'#7b8794',stroke:'#a3aebb','stroke-width':1.5});
+    for(let k=0;k<4;k++)R(b.x+10+k*(b.w-20)/4,b.y+5+b.h*.6-6,(b.w-20)/4-6,6,{fill:NPAL.win});
+    [0,1].forEach(k=>{R(b.x+12+k*36,b.y+b.h*.72,28,12,{rx:2,fill:'#e9ecef',stroke:'#868e96','stroke-width':1});R(b.x+12+k*36,b.y+b.h*.72,8,12,{rx:2,fill:'#1c7ed6'});});return true;}
+  return false;}
+// 10 công trình — mỗi công trình một hình khối riêng, "lấy cảm hứng" (mục 4), không dùng cam / xanh dương đậm (màu loại đường)
+function nightLandmark(id,b){const R=(x,y,w,h,a)=>el('rect',Object.assign({x,y,width:w,height:h},a||{})),cx=b.x+b.w/2,cy=b.y+b.h/2;
+  el('circle',{cx,cy,r:Math.max(b.w,b.h)*.7,fill:'url(#nGlow)'});
+  if(id==='GaTau'){R(b.x,b.y,b.w,b.h,{rx:5,fill:'#3d4451',stroke:'#69db7c','stroke-width':2.5}); // lối xuống tàu điện: lan can xanh + 2 đèn cầu xanh
+    R(b.x+b.w*.2,b.y+b.h*.25,b.w*.6,b.h*.5,{rx:3,fill:'#1d2129'});for(let k=0;k<5;k++)R(b.x+b.w*.24,b.y+b.h*.3+k*b.h*.09,b.w*.52,b.h*.05,{fill:'#495057'});
+    [[b.x+12,b.y+12],[b.x+b.w-12,b.y+12]].forEach(([x,y])=>{el('circle',{cx:x,cy:y,r:16,fill:'#69db7c',opacity:.25});el('circle',{cx:x,cy:y,r:6,fill:'#b2f2bb',stroke:'#2b8a3e','stroke-width':1.5});});
+    const t=el('text',{x:cx,y:b.y+b.h-8,'text-anchor':'middle','font-size':14,'font-weight':900,fill:'#b2f2bb','font-family':'Nunito,Segoe UI'});t.textContent='M';return;}
+  if(id==='Brownstone'){R(b.x,b.y,b.w,b.h,{rx:3,fill:'#2b303a'}); // dãy nhà brownstone có bậc thềm, cửa sổ sáng
+    const n=4,w=(b.w-8)/n;for(let k=0;k<n;k++){const x=b.x+4+k*w,c=['#6b4f43','#5b4a42','#73574a','#634c40'][k];
+      R(x,b.y+4,w-2,b.h*.62,{fill:c,stroke:shade(c,.3),'stroke-width':1});for(let a=0;a<2;a++)for(let q=0;q<2;q++)R(x+5+a*(w-14)/1.4,b.y+10+q*12,5,7,{fill:NPAL.win});
+      R(x+w/2-5,b.y+4+b.h*.62,9,b.h*.25,{fill:'#8d6e63'});for(let s=1;s<4;s++)el('line',{x1:x+w/2-5,y1:b.y+4+b.h*.62+s*4,x2:x+w/2+4,y2:b.y+4+b.h*.62+s*4,stroke:'#5e4237','stroke-width':1});}return;}
+  if(id==='QuangTruong'){R(b.x,b.y,b.w,b.h,{rx:4,fill:'#3a2f3d'}); // quảng trường màn hình LED: bậc thang đỏ + bảng LED nhiều màu
+    R(b.x+b.w*.3,b.y+b.h*.3,b.w*.4,b.h*.45,{fill:'#c92a2a'});for(let s=1;s<6;s++)el('line',{x1:b.x+b.w*.3,y1:b.y+b.h*.3+s*b.h*.075,x2:b.x+b.w*.7,y2:b.y+b.h*.3+s*b.h*.075,stroke:'#8f1d1d','stroke-width':1.5});
+    [[b.x+4,b.y+4,b.w*.24,b.h*.4,'#ff4fa3'],[b.x+b.w*.74,b.y+4,b.w*.22,b.h*.5,'#4fd1ff'],[b.x+4,b.y+b.h*.55,b.w*.22,b.h*.4,'#ffd43b'],[b.x+b.w*.3,b.y+4,b.w*.4,b.h*.2,'#b197fc']].forEach(([x,y,w,h,c])=>{
+      R(x-3,y-3,w+6,h+6,{rx:3,fill:c,opacity:.3});R(x,y,w,h,{rx:2,fill:c});R(x+3,y+3,w*.5,h*.25,{fill:'#fff',opacity:.55});});return;}
+  if(id==='NhaHat'){R(b.x,b.y,b.w,b.h,{rx:3,fill:'#4a2a33',stroke:'#a61e4d','stroke-width':2}); // nhà hát: biển đèn viền bóng đèn
+    R(b.x+10,b.y+b.h-20,b.w-20,14,{rx:2,fill:'#ffd479'});for(let x=b.x+12;x<b.x+b.w-10;x+=8){el('circle',{cx:x,cy:b.y+b.h-22,r:2,fill:'#fff3bf'});el('circle',{cx:x,cy:b.y+b.h-4,r:2,fill:'#fff3bf'});}
+    R(b.x+b.w*.3,b.y+6,b.w*.4,b.h*.45,{rx:4,fill:'#c2255c'});const t=el('text',{x:cx,y:b.y+b.h-9,'text-anchor':'middle','font-size':9,'font-weight':900,fill:'#862e9c','font-family':'Nunito,Segoe UI'});t.textContent='★ SHOW ★';return;}
+  if(id==='ThapNuoc'){R(b.x,b.y,b.w,b.h,{rx:3,fill:'#4b5058',stroke:'#868e96','stroke-width':1.5}); // sân thượng tháp nước gỗ + vườn
+    R(b.x+6,b.y+6,b.w*.45,b.h-12,{rx:3,fill:NPAL.park});for(let k=0;k<3;k++)el('circle',{cx:b.x+16+k*14,cy:b.y+b.h/2,r:5,fill:NPAL.parkL});
+    const tx=b.x+b.w*.72,ty=cy;el('circle',{cx:tx+3,cy:ty+5,r:18,fill:'rgba(0,0,0,.4)'});el('circle',{cx:tx,cy:ty,r:18,fill:'#8a5a3a',stroke:'#5e3b24','stroke-width':2});
+    [12,6].forEach(rr=>el('circle',{cx:tx,cy:ty,r:rr,fill:'none',stroke:'#6b4429','stroke-width':1.5}));el('circle',{cx:tx,cy:ty,r:3,fill:'#5e3b24'});return;}
+  if(id==='CauTreo'){R(b.x,b.y,b.w,b.h,{rx:3,fill:'#3b4250'}); // đầu cầu treo: trụ đá + dây cáp lên đèn (cầu vẽ tiếp ra sông trong drawNight)
+    R(cx-14,b.y+4,28,b.h-8,{rx:3,fill:'#8a8070',stroke:'#b8ad9a','stroke-width':2});R(cx-8,b.y+10,6,b.h-20,{fill:'#4a4238'});R(cx+2,b.y+10,6,b.h-20,{fill:'#4a4238'});
+    for(let x=b.x+8;x<b.x+b.w-6;x+=10)el('circle',{cx:x,cy:b.y+b.h-6,r:2,fill:'#fff3bf'});return;}
+  if(id==='ArtDeco'){R(b.x,b.y,b.w,b.h,{rx:2,fill:'#3d4451'}); // tòa Art Deco: các tầng lùi, chóp bạc sáng
+    [[1,'#868e96'],[.72,'#adb5bd'],[.46,'#ced4da'],[.22,'#f1f3f5']].forEach(([s,c])=>R(cx-b.w*.4*s,cy-b.h*.42*s,b.w*.8*s,b.h*.84*s,{rx:2,fill:c,stroke:shade(c,-.25),'stroke-width':1}));
+    el('circle',{cx,cy,r:24,fill:'url(#nPinGlow)'});el('circle',{cx,cy,r:3.5,fill:'#fff'});return;}
+  if(id==='ChoDem'){R(b.x,b.y,b.w,b.h,{rx:3,fill:'#2f2b33'}); // chợ đêm: dãy sạp + dây đèn
+    const cs=['#e64980','#ffd43b','#69db7c','#b197fc'];for(let a=0;a<2;a++)for(let k=0;k<3;k++)R(b.x+8+k*(b.w-16)/3,b.y+10+a*b.h*.45,(b.w-16)/3-4,b.h*.3,{rx:2,fill:cs[(a+k)%4],stroke:'rgba(0,0,0,.3)','stroke-width':1});
+    for(let x=b.x+4;x<b.x+b.w-2;x+=7){el('circle',{cx:x,cy:b.y+5+Math.sin(x/9)*2,r:1.8,fill:'#fff3bf'});el('circle',{cx:x,cy:cy+2+Math.sin(x/9)*2,r:1.8,fill:'#fff3bf'});}return;}
+  if(id==='SanBang'){R(b.x,b.y,b.w,b.h,{rx:6,fill:NPAL.park}); // sân băng trong công viên: ô băng trắng xanh, cây quanh, người trượt
+    el('rect',{x:b.x+14,y:b.y+18,width:b.w-28,height:b.h-36,rx:(b.h-36)/2,fill:'#e7f5ff',stroke:'#a5d8ff','stroke-width':3});
+    for(let k=0;k<5;k++)el('circle',{cx:b.x+24+k*(b.w-48)/4,cy:cy+(k%2?-8:8),r:2.5,fill:['#e64980','#7048e8','#2b8a3e','#e03131','#495057'][k]});
+    [[b.x+8,b.y+8],[b.x+b.w-8,b.y+8],[b.x+8,b.y+b.h-8],[b.x+b.w-8,b.y+b.h-8]].forEach(([x,y])=>el('circle',{cx:x,cy:y,r:7,fill:NPAL.parkL}));return;}
+  if(id==='BenPha'){R(b.x,b.y,b.w,b.h,{rx:8,fill:NPAL.water,stroke:'#5d6574','stroke-width':3}); // đảo tượng cầm đuốc giữa vũng cảng (kỳ quan, màn trùm)
+    for(let k=0;k<5;k++)el('line',{x1:b.x+8+k*22,y1:b.y+12+(k%2)*b.h*.75,x2:b.x+22+k*22,y2:b.y+12+(k%2)*b.h*.75,stroke:NPAL.waterL,'stroke-width':2});
+    el('circle',{cx,cy,r:Math.min(b.w,b.h)*.42,fill:'#2f5d3a',stroke:'#3c7349','stroke-width':3});
+    const st=[];for(let k=0;k<22;k++){const a=k*Math.PI/11,rad=(k%2?.17:.29)*Math.min(b.w,b.h);st.push(`${cx+rad*Math.cos(a)},${cy+rad*Math.sin(a)}`);}
+    el('polygon',{points:st.join(' '),fill:'#8a8070',stroke:'#b8ad9a','stroke-width':1.5}); // bệ hình sao
+    el('circle',{cx,cy,r:12,fill:'#63b39a',stroke:'#3d8b74','stroke-width':3}); // tượng (đồng xanh)
+    el('circle',{cx:cx+9,cy:cy-12,r:26,fill:'url(#nTorch)'});el('circle',{cx:cx+9,cy:cy-12,r:5,fill:'#ffd479'}); // ngọn đuốc
+    R(b.x+b.w-30,cy-4,30,8,{fill:'#8a7a66'});return;} // cầu tàu bến phà
+  landmark(id,b);}
+function drawNight(opts){
+  if(TARGET===ST)ST.innerHTML=''; // vẽ lại từ đầu mỗi lần dựng màn (như imgDraw) — không chồng cảnh cũ
+  nDefs();
+  const C=CC,[c1,r1]=opts.region,Wc=200+(C.cols-1)*SP,Hc=200+(C.rows-1)*SP,ns=C.sites.length;
+  const P=n=>{const m=n.match(/c(\d+)r(\d+)/);return{x:100+ +m[1]*SP,y:100+ +m[2]*SP,i:+m[1],j:+m[2]};};
+  const inR=(i,j)=>i<=c1&&j<=r1;
+  const R=sd=>{let q=sd;return()=>{q=(q*16807)%2147483647;return(q-1)/2147483646;};};
+  const RES=Object.keys(C.points).map(chRect);
+  const hit=(x,y,w,h)=>RES.some(r=>x<r.x+r.w+8&&x+w+8>r.x&&y<r.y+r.h+8&&y+h+8>r.y);
+  const SC=C.sites.map(id=>{const r=chRect(id);return{x:r.cx,y:r.cy};});
+  const built=k=>!!opts.built[k];
+  // nền: thành phố là một hòn đảo — sông phía Tây, phía Nam (cảng) và phía Đông; phía Bắc là phố tối
+  el('rect',{x:-600,y:-600,width:Wc+1200,height:Hc+1200,fill:NPAL.water});
+  el('rect',{x:20,y:-600,width:Wc-40,height:Hc+600-30,fill:NPAL.ground});
+  {const r=R(31);for(let i=0;i<70;i++){const x=-560+r()*(Wc+1120),y=-560+r()*(Hc+1120);if(x>14&&x<Wc-14&&y<Hc-24)continue;
+    el('line',{x1:x,y1:y,x2:x+18+r()*26,y2:y,stroke:NPAL.waterL,'stroke-width':2,opacity:.7});}}
+  {const r=R(57);for(let x=40;x<Wc-60;x+=78){nBldg(x,-120+r()*20,60,80,r,false);}} // phố phía Bắc (ngoài bản đồ), tối
+  // ô phố
+  for(let i=0;i<C.cols-1;i++)for(let j=0;j<C.rows-1;j++){
+    const x0=100+i*SP+40,y0=100+j*SP+40,lit=inR(i+1,j+1),r=R(1000+i*131+j*37);
+    el('rect',{x:x0-6,y:y0-6,width:SP-68,height:SP-68,rx:4,fill:lit?NPAL.block:NPAL.blockD});
+    const park=i===6&&j===1&&built(8);
+    if(park){el('rect',{x:x0,y:y0,width:SP-80,height:SP-80,rx:8,fill:NPAL.park});
+      el('ellipse',{cx:x0+70,cy:y0+SP-150,rx:48,ry:30,fill:NPAL.waterL,stroke:'#4dabf7','stroke-width':1.5,opacity:.9});
+      for(let k=0;k<14;k++){const x=x0+12+r()*(SP-104),y=y0+12+r()*(SP-104);if(!hit(x-8,y-8,16,16))el('circle',{cx:x,cy:y,r:7+r()*4,fill:k%3?NPAL.parkL:'#2b5a36'});}
+      for(let k=0;k<6;k++)el('circle',{cx:x0+20+k*44,cy:y0+SP-92,r:2.4,fill:'#fff3bf'});continue;}
+    const cw=(SP-80)/2;
+    for(let a=0;a<2;a++)for(let b=0;b<2;b++){const w=cw-10-r()*22,h=cw-10-r()*26,x=x0+a*cw+(cw-w)*r(),y=y0+b*cw+(cw-h)*r();
+      if(hit(x,y,w,h)){if(!hit(x+w/2-10,y+h/2-10,20,20))nTree(x+w/2,y+h/2,8);continue;}
+      const cx=x+w/2,cy=y+h/2;let dev=-1,best=300;SC.forEach((p,k)=>{const dd=Math.hypot(p.x-cx,p.y-cy);if(dd<best){best=dd;dev=k;}});
+      const glow=dev>=0&&built(dev),T_=TARGET;
+      if(glow&&opts.grow===dev){const g=el('g',{});(opts.growI=opts.growI||[]).push({g,cx,cy,d:best});TARGET=g;}
+      nBldg(x,y,w,h,r,lit||glow,{shop:glow||(b===1&&r()<.4)});TARGET=T_;}
+  }
+  // đường: trong vùng vẽ theo loại; ngoài vùng là đường tối "chưa thông xe" có rào chắn
+  const types={};for(const t in C.types)for(const [a,b] of C.types[t])types[keyE(a,b)]=t;
+  const all=[];for(let j=0;j<C.rows;j++)for(let i=0;i<C.cols-1;i++)all.push([`c${i}r${j}`,`c${i+1}r${j}`]);
+  for(let i=0;i<C.cols;i++)for(let j=0;j<C.rows-1;j++)all.push([`c${i}r${j}`,`c${i}r${j+1}`]);
+  const RW={thuong:46,lon:64,dong:46,gogh:46,hem:24},RC={thuong:NPAL.road,lon:NPAL.lon,dong:NPAL.dong,gogh:'#8a6a4a',hem:'#7d838c'};
+  const open=[],closed=[];all.forEach(([a,b])=>{const A=P(a),B=P(b);(inR(A.i,A.j)&&inR(B.i,B.j)?open:closed).push({a,b,A,B,type:types[keyE(a,b)]||'thuong'});});
+  closed.forEach(e=>el('line',{x1:e.A.x,y1:e.A.y,x2:e.B.x,y2:e.B.y,stroke:'#30343c','stroke-width':34,'stroke-linecap':'square'}));
+  open.forEach(e=>el('line',{x1:e.A.x,y1:e.A.y,x2:e.B.x,y2:e.B.y,stroke:NPAL.walk,'stroke-width':RW[e.type]+14,'stroke-linecap':'square'}));
+  open.forEach(e=>el('line',{x1:e.A.x,y1:e.A.y,x2:e.B.x,y2:e.B.y,stroke:RC[e.type],'stroke-width':RW[e.type],'stroke-linecap':'square'}));
+  const rr=R(555);
+  open.forEach(e=>{const u=unit(e.A,e.B),px=-u.y,py=u.x,ang=Math.atan2(u.y,u.x)*180/Math.PI;const p=(d,o)=>({x:e.A.x+u.x*d+px*o,y:e.A.y+u.y*d+py*o});
+    if(e.type!=='dong')for(let d=58;d<SP-40;d+=117){const q=p(d,(RW[e.type]/2+3)*(d%234<117?1:-1));el('circle',{cx:q.x,cy:q.y,r:30,fill:'url(#nGlow)'});el('circle',{cx:q.x,cy:q.y,r:2.6,fill:'#fff3cf'});}
+    if(e.type==='thuong'||e.type==='dong'){const s=p(36,0),t=p(SP-36,0);el('line',{x1:s.x,y1:s.y,x2:t.x,y2:t.y,stroke:NPAL.line,'stroke-width':2,'stroke-dasharray':'12 12',opacity:.55});}
+    if(e.type==='lon'){[-2.5,2.5].forEach(o=>{const s=p(40,o),t=p(SP-40,o);el('line',{x1:s.x,y1:s.y,x2:t.x,y2:t.y,stroke:'#ffd43b','stroke-width':2});});}
+    if(e.type==='dong'){ // phố đông: neon hai bên vỉa hè + taxi vàng kín hai làn
+      [[1,'#ff4fa3'],[-1,'#4fd1ff']].forEach(([sg,c])=>{const s=p(20,sg*(RW.dong/2+9)),t=p(SP-20,sg*(RW.dong/2+9));
+        el('line',{x1:s.x,y1:s.y,x2:t.x,y2:t.y,stroke:c,'stroke-width':12,opacity:.22,'stroke-linecap':'round'});el('line',{x1:s.x,y1:s.y,x2:t.x,y2:t.y,stroke:c,'stroke-width':3,'stroke-linecap':'round'});});
+      for(let d=48;d<SP-40;d+=34+rr()*14){const o=rr()<.5?-11:11,q=p(d,o);nTaxi(q.x,q.y,ang+(o<0?0:180),rr()<.8?NPAL.taxi:['#e03131','#f8f9fa','#868e96'][Math.floor(rr()*3)]);}}});
+  closed.forEach(e=>{[[e.A,e.B],[e.B,e.A]].forEach(([X,Y])=>{if(!inR(X.i,X.j))return;const u=unit(X,Y),q={x:X.x+u.x*40,y:X.y+u.y*40},ang=Math.atan2(u.y,u.x)*180/Math.PI+90;
+    const g=el('g',{transform:`translate(${q.x},${q.y}) rotate(${ang})`});el('rect',{x:-22,y:-5,width:44,height:10,rx:2,fill:'#fff',stroke:'#c92a2a','stroke-width':1.5},g);
+    [-14,0,14].forEach(dx=>el('rect',{x:dx-4,y:-5,width:7,height:10,fill:'#e03131'},g));});});
+  const tOf=(a,b)=>{const A=P(a),B=P(b);return inR(A.i,A.j)&&inR(B.i,B.j)?(types[keyE(a,b)]||'thuong'):null;};
+  const runs=[];
+  for(let j=0;j<C.rows;j++){let r=null;for(let i=0;i<C.cols-1;i++){const t=tOf(`c${i}r${j}`,`c${i+1}r${j}`);if(t&&t!=='thuong'&&r&&r.t===t)r.n++;else{r=t&&t!=='thuong'?{t,h:1,i,j,n:1}:null;if(r)runs.push(r);}}}
+  for(let i=0;i<C.cols;i++){let r=null;for(let j=0;j<C.rows-1;j++){const t=tOf(`c${i}r${j}`,`c${i}r${j+1}`);if(t&&t!=='thuong'&&r&&r.t===t)r.n++;else{r=t&&t!=='thuong'?{t,h:0,i,j,n:1}:null;if(r)runs.push(r);}}}
+  runs.forEach(r=>{const mid=r.n*SP/2,x0=100+r.i*SP,y0=100+r.j*SP,d=(mid%SP===0)?mid-SP/2:mid,off=RW[r.t]/2+20;
+    if(r.h)signSVG(r.t,TARGET,x0+d,y0-off,12);else signSVG(r.t,TARGET,x0+off,y0+d,12);});
+  // cầu treo ra sông phía Nam (lên đèn khi xây xong)
+  {const b=chRect('CauTreo'),x=b.x+b.w/2,on=built(5);el('rect',{x:x-18,y:Hc-30,width:36,height:560,fill:on?'#5d6574':'#2c3038'});
+    [Hc+150,Hc+380].forEach(y=>{el('rect',{x:x-26,y:y-14,width:52,height:28,rx:3,fill:on?'#8a8070':'#3a3d42'});});
+    if(on){[-14,14].forEach(o=>el('path',{d:`M${x+o} ${Hc-20} Q${x+o*1.6} ${Hc+265} ${x+o} ${Hc+530}`,fill:'none',stroke:'#fff3bf','stroke-width':2}));
+      for(let y=Hc;y<Hc+530;y+=26)[-16,16].forEach(o=>el('circle',{cx:x+o,cy:y,r:2,fill:'#fff3bf'}));}}
+  // kho, điểm giao, công trình
+  Object.keys(C.points).forEach(id=>{const b=chRect(id),k=C.sites.indexOf(id);
+    if(k<0){if(!nightKho(id,b)){const r=R(id.length*97+id.charCodeAt(0));nBldg(b.x,b.y,b.w,b.h,r,true,{shop:true});}return;}
+    const st=built(k)?'done':opts.constructing===k?'build':'lot',T_=TARGET;
+    if(opts.pop===k&&st==='done'){opts.popG=el('g',{});TARGET=opts.popG;}
+    if(st==='lot')nLot(b);else if(st==='build')nBuild(b,opts);else nightLandmark(id,b);
+    TARGET=T_;});
+  if(opts.growI)opts.growI.sort((a,b)=>a.d-b.d);
+  // ghim có quầng sáng + nhãn (chỉ khi chơi)
+  if(opts.pins)pinLayer(()=>ZONES.forEach(z=>{const b=chRect(z.id);el('circle',{cx:b.px,cy:b.py-26,r:30,fill:'url(#nPinGlow)'});pin(b.px,b.py,z.col,z.kho);label(b.lx,b.ly,z.name);}));
 }
 /* ======================= Bộ vẽ cảnh Làng ven sông (Chương 1) =======================
    Bảng màu theo Chu_De_Khung_Canh.md mục 3.1: lúa non, đất bờ, sông ao; ngói đỏ cũ, tường vôi vàng, mái tôn; nhấn đỏ cờ, vàng rơm.
@@ -2263,7 +2497,7 @@ function drawHomeMap(){
     if(sel)hEl('circle',{cx:x,cy:y,r:r+9,fill:'rgba(255,212,59,.45)'},g);
     hEl('circle',{cx:x,cy:y+3,r,fill:'rgba(0,0,0,.25)'},g);
     hEl('circle',{cx:x,cy:y,r,fill:done?'#37c26b':'#fff',stroke:isCur?'#ffd43b':'#fff','stroke-width':isCur?5:3},g);
-    const t=hEl('text',{x,y:y+6,'text-anchor':'middle','font-size':16,'font-weight':900,fill:done?'#fff':'#2d3440','font-family':'Nunito'},g);t.textContent=k+1;
+    const t=hEl('text',{x,y:y+6,'text-anchor':'middle','font-size':16,'font-weight':900,fill:done?'#fff':'#2d3440','font-family':'Nunito'},g);t.textContent=LVNO(k);
     if(done){hEl('circle',{cx:x+r*.75,cy:y-r*.75,r:8,fill:'#fff'},g);hEl('path',{d:`M${x+r*.75-4} ${y-r*.75} l3 3 l5 -6`,fill:'none',stroke:'#2b8a3e','stroke-width':2.4,'stroke-linecap':'round'},g);
       const sn=getStars(k),sg=hEl('g',{transform:`translate(${x-27},${y+r+3})`},g);hEl('rect',{x:-2,y:-1,width:58,height:18,rx:9,fill:'rgba(255,255,255,.9)'},sg);
       [0,1,2].forEach(i=>{const p=hEl('path',{d:'M0 -10.5 L3.1 -3.6 L10.5 -3.2 L4.8 1.7 L6.6 9 L0 5 L-6.6 9 L-4.8 1.7 L-10.5 -3.2 L-3.1 -3.6Z',transform:`translate(${9+i*18},8) scale(.68)`,fill:i<sn?'#ffc928':'#dee2e6',stroke:i<sn?'#e8a200':'#c4cad1','stroke-width':1.8,'stroke-linejoin':'round'},sg);});}
@@ -2278,7 +2512,7 @@ function drawHomeMap(){
     $('hCard').innerHTML=`<div class="n">🎁 ${TT('MÀN THƯỞNG · CHƯƠNG','BONUS ROUND · CHAPTER')} ${HCH+1}</div><div class="t">${L.name}</div><div class="d">${L.intro}</div>
       <div class="row">${got!==null?`<span class="ok">✓ ${TT('Đã nhận','Received')} ${got} ${GEM}</span>`:`<span>⏱ ${fmt(L.T0)}</span><span class="tag">${GEM} ${L.gems.length} ${TT('kim cương','diamonds')}</span>`}</div>`+
       (got!==null?'':op?`<button class="cta gold" id="bPlay">${TT('Chơi · nhận thưởng 1 lần','Play · one-time reward')}</button>`:`<div class="d" style="font-weight:900">🔒 ${TT('Thắng màn 10 để mở','Win level 10 to unlock')}</div>`);return;}
-  $('hCard').innerHTML=`<div class="n">${TT('MÀN','LEVEL')} ${HSEL+1} · ${TT('CHƯƠNG','CHAPTER')} ${HCH+1}</div><div class="t">${L.name}</div><div class="d">${L.intro}</div>
+  $('hCard').innerHTML=`<div class="n">${TT('MÀN','LEVEL')} ${LVNO(HSEL)} · ${TT('CHƯƠNG','CHAPTER')} ${HCH+1}</div><div class="t">${L.name}</div><div class="d">${L.intro}</div>
     <div class="row"><span>⏱ ${fmt(L.T0)}</span>${b!==null?`<span class="ok">${'★'.repeat(getStars(HSEL))}${'☆'.repeat(3-getStars(HSEL))} · ${TT('Tốt nhất','Best')} ${fmt(b)}</span>`:(newMech(HSEL)?`<span class="tag">! ${TT('Cơ chế mới','New')} · ${MN(MECH[HSEL])}</span>`:'')}</div>
     <button class="cta" id="bPlay">${TT('Chơi','Play')}</button>`;
 }
@@ -2286,7 +2520,7 @@ function legendSVG(type){const s=document.createElementNS(NS,'svg');s.setAttribu
 function openLevel(i){
   buildLevel(i);buildCarLayer();INTRO_LV=-1;HOME_FLASH=null;
   if(!LV.vehicles.includes(VK))VK=LV.vehicles.includes('van')?'van':LV.vehicles[0];
-  reset();renderPrep();show('prep');rulesStart();
+  reset();renderPrep();show('prep');rulesStart();dongTipStart();
 }
 /* ---------- Màn chuẩn bị (PA2 — D-34): nhiệm vụ ghi ngay trên bản đồ (xem buildMarks), cột phải: tên màn, thời gian, xe, nút ---------- */
 const HOMEIC='<svg viewBox="0 0 28 28"><path d="M5 13 L14 5 L23 13 M8 11 V23 H20 V11 M12 23 V17 H16 V23"/></svg>';
@@ -2305,7 +2539,7 @@ function legendTip(e,tipId){const li=e.target.closest('.li');if(!li)return;e.pre
 function renderPrep(){
   const chN=CHAPTERS.findIndex(c=>c.levels&&c.levels.includes(LVI))+1;
   const chB=CHAPTERS.findIndex(c=>c.bonus===LVI)+1;
-  $('pUI').innerHTML=`<div class="ph"><small>${LV.bonus?`🎁 ${TT('MÀN THƯỞNG · CHƯƠNG','BONUS ROUND · CHAPTER')} ${chB}`:`${TT('MÀN','LEVEL')} ${LVI+1} · ${TT('CHƯƠNG','CHAPTER')} ${chN}`}</small><span class="ptime">⏱ ${fmt(LV.T0)}</span></div><div class="pn">${LV.name}</div>`+
+  $('pUI').innerHTML=`<div class="ph"><small>${LV.bonus?`🎁 ${TT('MÀN THƯỞNG · CHƯƠNG','BONUS ROUND · CHAPTER')} ${chB}`:`${TT('MÀN','LEVEL')} ${LVNO(LVI)} · ${TT('CHƯƠNG','CHAPTER')} ${chN}`}</small><span class="ptime">⏱ ${fmt(LV.T0)}</span></div><div class="pn">${LV.name}</div>`+
     `<div class="pi">${LV.bonus?TT(`Nhặt ${LV.gems.length} kim cương trên đường — xe đi qua là nhặt. Không tính sao.`,`Collect ${LV.gems.length} diamonds on the roads — just drive over them. No stars here.`):TT('Nhiệm vụ ghi ngay trên bản đồ','Orders are shown right on the map')}</div>`+vehHTML()+
     `<div class="pbtn"><button class="rb sm" data-act="home" aria-label="${TT('Trang chủ','Home')}">${HOMEIC}</button><button class="cta" data-act="start">${TT('Bắt đầu','Start')}</button></div>`;
   $('pLeg').innerHTML=$('vLeg').innerHTML=legendHTML();
@@ -2321,9 +2555,9 @@ function rulesStart(){if(LVI!==0||rulesDone())return;
   $('rS2').innerHTML=`${pk('ChoPhien',0)}<span>${TT('Giao tới <b>điểm giao</b><br>(hình tròn ▼)','Deliver to the <b>stops</b><br>(▼ circle)')}</span>`;
   $('rS3').innerHTML=`<i style="background:#1d2733;border-radius:50%;color:#fff;font-size:20px">⏱</i><span>${TT('Xong <b>trước khi hết giờ</b><br>là thắng','Finish <b>before<br>time runs out</b> to win')}</span>`;
   $('rulev').classList.add('on');}
-function rulesEnd(save){$('rulev').classList.remove('on');PC=null;['pcCatch','pcRing','pcTip'].forEach(i=>$(i).style.display='none');
-  if(save){try{LS.set(RULE_KEY(),'1');}catch(e){}}}
-function pcSteps(){const it=vPrep.items,zk=ZONES.find(z=>z.kho),zd=ZONES.find(z=>!z.kho),gi=id=>{const k=ZONES.findIndex(z=>z.id===id);return it[k]&&it[k].g;};
+function rulesEnd(save){const key=PC&&PC.key||RULE_KEY();$('rulev').classList.remove('on');PC=null;['pcCatch','pcRing','pcTip'].forEach(i=>$(i).style.display='none');
+  if(save){try{LS.set(key,'1');}catch(e){}}}
+function pcSteps(){if(PC&&PC.steps)return PC.steps();const it=vPrep.items,zk=ZONES.find(z=>z.kho),zd=ZONES.find(z=>!z.kho),gi=id=>{const k=ZONES.findIndex(z=>z.id===id);return it[k]&&it[k].g;};
   return[{el:gi(zk.id),pad:16,t:TT(`Đây là <b>kho ${zk.name}</b> (ô vuông ▲) — hàng lấy ở đây.`,`This is the <b>${zk.name}</b> depot (▲ square) — pick up goods here.`)},
     {el:gi(zd.id),pad:16,lab:true,t:TT(`Đây là <b>điểm giao</b> (hình tròn ▼). Dòng chữ bên dưới cho biết cần <b>mấy kiện</b>, lấy <b>ở đâu</b>.`,`This is a <b>stop</b> (▼ circle). The text below shows <b>how many parcels</b> it needs and <b>where</b> to get them.`)},
     {el:document.querySelector('#pUI .ptime'),pad:6,t:TT(`Đây là <b>thời gian của cả màn</b>. Đồng hồ chỉ chạy khi xe xuất phát.`,`This is the <b>time for the whole level</b>. The clock only starts when the vehicle moves.`)},
@@ -2337,6 +2571,16 @@ function pcShow(){if(!PC)return;const S=pcSteps(),st=S[PC.i];if(!st||!st.el){rul
   let tx=cl(r.x+r.w/2-tw/2,8,844-tw-8),ty=r.y+r.h+p+10;
   if(ty+th>382)ty=r.y-p-10-th;if(ty<8){ty=cl(r.y+r.h/2-th/2,8,382-th);tx=r.x-p-12-tw>8?r.x-p-12-tw:cl(r.x+r.w+p+12,8,844-tw-8);}
   Object.assign(tip.style,{left:`${tx}px`,top:`${ty}px`});}
+/* Mẹo đường đông (D-80): lần đầu mở Màn 3 Chương 3 — vì game không hiện số tốc độ, mức phạt của đường đông khó tự đoán (E2).
+   Bước 1 khoanh các đoạn đường đông trên bản đồ chuẩn bị, bước 2 khoanh mục "Đường đông" ở chú giải. Xem lại ở tab "Màn này" của nút ?. */
+const DONG_KEY=()=>`${SK}demo_dong_tip`;
+function dongTipStart(){if(!LV.cc||LV.cc!==CH3||LV.stage!==2)return;try{if(LS.get(DONG_KEY())==='1')return;}catch(e){}
+  PC={i:0,key:DONG_KEY(),steps:()=>{const ls=[...document.querySelectorAll('#pMap line[data-t=dong]')];let el=null;
+    if(ls.length){const rs=ls.map(l=>l.getBoundingClientRect()),u={left:Math.min(...rs.map(r=>r.left)),top:Math.min(...rs.map(r=>r.top)),right:Math.max(...rs.map(r=>r.right)),bottom:Math.max(...rs.map(r=>r.bottom))};
+      el={getBoundingClientRect:()=>u};}
+    return[{el,pad:8,t:TT('Đây là <b>đường đông</b> (vạch cam): taxi kín làn, xe van chạy <b>chậm hơn một nửa</b>.','These are <b>busy roads</b> (orange): taxis fill every lane, so the van moves at <b>less than half speed</b>.')},
+      {el:document.querySelector('#pLeg .li[data-t=dong]'),pad:6,t:TT('Đi thẳng qua phố đông <b>chưa chắc nhanh</b> — so với đường vòng hoặc đại lộ rồi hãy chọn.','Going straight through <b>isn\'t always quickest</b> — compare it with going around or taking an avenue.')}];}};
+  requestAnimationFrame(()=>requestAnimationFrame(pcShow));}
 function pcNext(){if(!PC)return;PC.i++;if(PC.i>=pcSteps().length){rulesEnd(true);return;}pcShow();}
 let hintT=null;function startHint(){const h=$('pHint');h.classList.add('on');clearTimeout(hintT);hintT=setTimeout(()=>h.classList.remove('on'),2600);}
 
@@ -2383,7 +2627,7 @@ function makeViewer(id){
   v.refresh=(mode,ins)=>{v.ins=ins;const [t,r,b,l]=ins;
     v.smin=Math.min((bw()-l-r-2*MARGIN)/W,(bh()-t-b-2*MARGIN)/H);v.smax=MAX_ZOOM;
     rg.innerHTML='';const RWm={lon:30,dong:22,gogh:22,hem:12};
-    E.forEach(e=>{if(RCOL[e.type])el('line',{x1:N[e.a].x,y1:N[e.a].y,x2:N[e.b].x,y2:N[e.b].y,stroke:RCOL[e.type],'stroke-width':RWm[e.type]},rg);});
+    E.forEach(e=>{if(RCOL[e.type])el('line',{x1:N[e.a].x,y1:N[e.a].y,x2:N[e.b].x,y2:N[e.b].y,stroke:RCOL[e.type],'stroke-width':RWm[e.type],'data-t':e.type},rg);});
     buildMarks(v,og,mode);v.home();};
   const P=new Map();let tap0=null;
   const loc=e=>{const p=toStage(e.clientX,e.clientY),b=rectToStage(box);return{x:p.x-b.x,y:p.y-b.y};};
@@ -2620,13 +2864,13 @@ const foot=()=>`<div class="ifoot">${vehIcon(VK)}<span><b>${V().name}</b> · ${T
 const misList=()=>sortM().map(({m,i})=>`<div class="mrow ${m.delivered>=m.qty?'done':''}"><span class="no">${i+1}</span>${route(m)}${pbar(m)}${mstat(m)}${mdl(m)}</div>`).join('')+foot();
 
 /* ---- nội dung hướng dẫn (dùng chung cho 3 phương án) ---- */
-const MECH_EN={'Điều khiển':'Controls','Nhiều điểm giao':'Multiple stops','Chia chuyến':'Split trips','Đường lớn':'Main roads','Tổng hợp':'Final challenge','Nhiều kho':'Multiple depots','Thưởng':'Bonus',
+const MECH_EN={'Đường đông':'Busy roads','Điều khiển':'Controls','Nhiều điểm giao':'Multiple stops','Chia chuyến':'Split trips','Đường lớn':'Main roads','Tổng hợp':'Final challenge','Nhiều kho':'Multiple depots','Thưởng':'Bonus',
   'Đường lớn & đông':'Main & busy roads','Hạn giao':'Deadlines','Chọn xe':'Choose a vehicle'};
 const MN=m=>LANG==='en'?(MECH_EN[m]||m):m;
-const MECHTXT_EN={'Nhiều kho':'Several depots — each order comes from its own depot. Group orders from the same depot and choose which depot to visit first.','Điều khiển':'Choose a direction at junctions; the vehicle stops at points by itself; pick goods from the menu.','Nhiều điểm giao':'Several places need goods — choose a delivery order that drives the least.',
+const MECHTXT_EN={'Đường đông':"Busy roads (orange): taxis fill every lane and the van moves at less than half speed. Driving straight through isn't always quickest — compare it with going around or taking an avenue.",'Nhiều kho':'Several depots — each order comes from its own depot. Group orders from the same depot and choose which depot to visit first.','Điều khiển':'Choose a direction at junctions; the vehicle stops at points by itself; pick goods from the menu.','Nhiều điểm giao':'Several places need goods — choose a delivery order that drives the least.',
   'Đường lớn':'Main roads are faster — going around via a main road can beat the straight route.','Tổng hợp':"Last level of the chapter: use everything you've learned.",'Chia chuyến':'More goods than the vehicle can carry — split into trips and group nearby orders.',
   'Đường lớn & đông':"Main roads are fast, busy roads are slow — the straight route isn't always quickest.",'Hạn giao':'Some orders have a ⏱ deadline — deliver late and you lose straight away.','Chọn xe':'Pick the right vehicle: motorbikes fit in alleys but carry little, trucks carry a lot but are slow.'};
-const MECHTXT={'Nhiều kho':'Có nhiều kho — mỗi đơn lấy ở đúng kho của nó. Gom các đơn cùng kho, chọn kho nào đi trước.','Điều khiển':'Chọn hướng ở giao lộ, xe tự dừng ở điểm, chọn hàng ở bảng hỏi.','Nhiều điểm giao':'Nhiều nơi cần hàng — chọn thứ tự giao để đi ít đường nhất.',
+const MECHTXT={'Đường đông':'Đường đông (vạch cam): taxi kín làn, xe van chạy chậm hơn một nửa. Đi thẳng qua phố đông chưa chắc nhanh — so với đường vòng hoặc đại lộ.','Nhiều kho':'Có nhiều kho — mỗi đơn lấy ở đúng kho của nó. Gom các đơn cùng kho, chọn kho nào đi trước.','Điều khiển':'Chọn hướng ở giao lộ, xe tự dừng ở điểm, chọn hàng ở bảng hỏi.','Nhiều điểm giao':'Nhiều nơi cần hàng — chọn thứ tự giao để đi ít đường nhất.',
   'Đường lớn':'Đường lớn chạy nhanh hơn — đường vòng qua đường lớn có khi nhanh hơn đường thẳng.','Tổng hợp':'Màn cuối chương: dùng mọi điều đã học trong chương.','Chia chuyến':'Hàng nhiều hơn sức chứa của xe — phải chia chuyến, gom đơn gần nhau đi chung.',
   'Đường lớn & đông':'Đường lớn chạy nhanh, đường đông chạy chậm — đường thẳng chưa chắc nhanh nhất.','Hạn giao':'Có đơn ghi ⏱ hạn — giao trễ hạn là thua ngay.','Chọn xe':'Chọn xe phù hợp: xe máy vào được hẻm nhưng chở ít, xe tải chở nhiều nhưng chậm.'};
 function eff(t,k){const f=ROAD[t].f[k];if(f===null)return['x',TT('✕ Không vào',"✕ Can't enter")];if(f>=1.2)return['f',TT('Nhanh hơn','Faster')];if(f>=.95)return['n',TT('Bình thường','Normal')];if(f>=.75)return['n',TT('Hơi chậm','A bit slower')];if(f>=.55)return['s',TT('Chậm','Slow')];return['vs',TT('Rất chậm','Very slow')];}
@@ -2674,7 +2918,7 @@ function helpTabs(){const S=HSEC(),cur=S.find(x=>x.id===hTab)||S[0];
     return`<div class="tabs"><div class="tl">${S.map(x=>`<button class="tb ${x.id===cur.id?'on':''}" data-tab="${x.id}">${x.ic}${x.t}${x.nw?`<span class="nw">${TT('MỚI','NEW')}</span>`:''}</button>`).join('')}</div>
       <div class="tc">${cur.ill?`<div style="display:flex;gap:12px"><div style="display:flex;flex-direction:column;gap:8px">${[].concat(cur.ill).map(k=>`<div class="ill">${ILL_()[k]}</div>`).join('')}</div><div style="flex:1;display:flex;flex-direction:column;gap:8px">${cur.body()}</div></div>`:cur.body()}</div></div>`;}
 function renderInfo(){const k=INFO.kind;document.querySelector('.ip').classList.toggle('help',k==='help');
-  $('iTitle').innerHTML=k==='mis'?`${IC.list}${TT('Nhiệm vụ · Màn','Orders · Level')} ${LVI+1} ${LV.name}`:`${IC.help}${TT('Cách chơi','How to play')}`;
+  $('iTitle').innerHTML=k==='mis'?`${IC.list}${TT('Nhiệm vụ · Màn','Orders · Level')} ${LVNO(LVI)} ${LV.name}`:`${IC.help}${TT('Cách chơi','How to play')}`;
   $('iTag').innerHTML=`<svg viewBox="0 0 28 28"><path d="M10 7 V21 M18 7 V21"/></svg>${fmt(T0()-G.t)}`;
   $('iBody').innerHTML=k==='mis'?misList():helpTabs();}
 /* ======================= Kim cương & vật phẩm Thêm giờ (D-35 → D-39, mục 17) ======================= */
@@ -2818,7 +3062,10 @@ const EN_DATA={
     XomNam:'South Hamlet',AoCa:'Fish Pond',DinhLang:'Communal House',BenDo:'Ferry Dock',NhaVanHoa:'Village Hall',XomBai:'Riverbank Hamlet',
     BaiVL:'Supply Yard',KhoTong:'Main Depot',XuongGo:'Timber Mill',TiemBanh:'Bakery',NhaTre:'Nursery',TruongHoc:'School',KhuNha:'Housing Estate',ChoMoi:'New Market',NhaVH:'Community Centre',
     HoDieuHoa:'City Lake',ThapVP:'Office Tower',CongVien:'Central Park',VanPhongDA:'Site Office',ChungCuA:'Apartments A',ChungCuB:'Apartments B',NhaMau:'Show Home',KhuB:'Block B',ToaC:'Tower C',
-    SieuThi:'Supermarket',QuanCafe:'Café',NhaPho:'Townhouses'},
+    SieuThi:'Supermarket',QuanCafe:'Café',NhaPho:'Townhouses',
+    BenCang:'Harbour',KhoGa:'Rail Depot',TrungTam:'Distribution Hub',GaTau:'Subway Station',Brownstone:'Brownstones',QuangTruong:'LED Square',NhaHat:'Theatre',
+    ThapNuoc:'Water Tower',CauTreo:'Suspension Bridge',ArtDeco:'Art Deco Tower',ChoDem:'Night Market',SanBang:'Ice Rink',BenPha:'Ferry Pier',ToaBao:'Newspaper',
+    Pizza:'Pizzeria',CanHo:'Apartments',KhachSan:'Hotel',Deli:'Deli',HotDog:'Hot Dog Cart',BaoTang:'Museum',Studio:'Studio',RapPhim:'Cinema',CuaHangNhac:'Music Store',Cafe:'Café'},
   veh:{van:['Van','Medium'],may:['Motorbike','Fast','fits in alleys'],tai:['Truck','Slow']},
   road:{thuong:['Street'],lon:['Main road','Wide, multi-lane — every vehicle goes faster'],dong:['Busy road','Heavy traffic — the bigger the vehicle, the slower'],gogh:['Bumpy road','Potholes — motorbikes are slowest'],hem:['Alley','Narrow — motorbikes only']},
   lv:[['First Day on the Job','Your first day at the Co-op: take goods to the Market Square and Upper Hamlet.'],['Village Well','Carry bricks and tiles to repair the village well.'],
@@ -2831,8 +3078,20 @@ const EN_DATA={
     ['New Market','Group orders from the same depot into one trip.'],['Hospital','Two depots on opposite sides, plus an avenue — choose your route wisely.'],
     ['Community Centre','The order you visit the depots decides the result.'],['City Lake','A Timber Mill joins in — now there are 3 depots!'],
     ['Office Tower','3 depots, lots of orders, an avenue — plan every trip carefully.'],['Central Park',"The district's biggest project — use everything you've learned."],
-    ['Golden Market Day','The village is celebrating! Drive around and collect the diamonds scattered on its roads.'],['Grand Opening','The new town is open! Drive around and collect the diamonds scattered on the roads.']],
-  ch:[['Riverside Village','1 depot, multiple stops, split trips, main roads'],['New Town','Multiple depots: 2 from level 3, 3 from level 8'],['City That Never Sleeps','Busy roads'],['White Cloud Island','Deadlines']],
+    ['Golden Market Day','The village is celebrating! Drive around and collect the diamonds scattered on its roads.'],['Grand Opening','The new town is open! Drive around and collect the diamonds scattered on the roads.'],
+    ["Subway Station", "First night in the city: two depots, lots of orders — group your trips wisely."],
+    ["Brownstones", "The riverside avenue is wide and fast — try going around by the avenue."],
+    ["LED Square", "Midtown is packed with taxis — you drive at less than half speed. Straight through or around?"],
+    ["Theatre", "Busy and quiet streets run side by side — which one is faster?"],
+    ["Water Tower", "Lots of goods to split into trips, with busy streets in the way — plan every trip."],
+    ["Suspension Bridge", "Avenues, streets and busy roads — pick the right road for each leg."],
+    ["Art Deco Tower", "A Distribution Hub opens in the east — now there are 3 depots!"],
+    ["Night Market", "Busy streets split two groups of stops — which group first?"],
+    ["Ice Rink", "3 depots, lots of orders, busy streets everywhere — plan every trip carefully."],
+    ["Torch Statue", "The city’s biggest night — use everything you’ve learned."],
+    ['Fireworks Night','Fireworks for the city lights! Drive around and collect the diamonds scattered on the roads.']
+  ],
+  ch:[['Riverside Village','1 depot, multiple stops, split trips, main roads'],['New Town','Multiple depots: 2 from level 3, 3 from level 8'],['City That Never Sleeps','Busy roads from level 3 · 3 depots from level 7'],['White Cloud Island','Deadlines']],
   cc:[{siteNames:['Market Stalls','Village Well','Village School','East Hamlet','Health Post','Fish Pond','Communal House','Ferry Dock','Village Hall','Market Square'],
       openNote:['The first market stalls are up — the village has a place to trade!','The well is fixed — clean water for everyone. The road to East Hamlet is open.',
         'The village school opens — its drum echoes across East Hamlet.','New homes spring up around the school. The road to South Hamlet is open.',
@@ -2844,7 +3103,14 @@ const EN_DATA={
         'The school opens — the road south is open.','The housing estate welcomes its first residents.','The new market is bustling — the eastern avenue is open.',
         'The hospital is up and running.','The community centre opens — the road to the Timber Mill in the east is open.','The city lake sparkles — with a path all the way around.',
         'The office tower lights up — ready for the central park.','The park opens — all 10 buildings done, the new town is complete.'],
-      finTitle:'The new town is complete!',postNote:'The new town is built'}]};
+      finTitle:'The new town is complete!',postNote:'The new town is built'},
+    {siteNames:['Subway Station','Brownstones','LED Square','Theatre','Rooftop Water Tower','Suspension Bridge','Art Deco Tower','Night Market','Ice Rink','Torch Statue'],
+      openNote:['The subway station lights up — tonight the city wakes.','Every brownstone window glows — the road into Midtown is open.',
+        'LED Square blazes — Midtown streets are packed with taxis.','The theatre opens — the road east is open.',
+        'The rooftop water tower lights up and the roof garden opens.','The suspension bridge lights up — the road to the eastern Distribution Hub is open.',
+        'The Art Deco tower lights its silver spire.','The night market buzzes under strings of lights.','The ice rink opens in the park — ready for the big night.',
+        'The torch statue shines over the harbour — the whole city is lit.'],
+      finTitle:'The City That Never Sleeps is lit!',postNote:'The city that never sleeps is lit'}]};
 const VI0=new WeakMap();
 function loc(o,k,v){let s=VI0.get(o);if(!s){s={};VI0.set(o,s);}if(!(k in s))s[k]=o[k];o[k]=LANG==='en'&&v!=null?v:s[k];}
 function applyData(){const D=EN_DATA;
@@ -2853,7 +3119,7 @@ function applyData(){const D=EN_DATA;
   Object.entries(D.road).forEach(([k,[n,d]])=>{loc(ROAD[k],'name',n);if(ROAD[k].desc)loc(ROAD[k],'desc',d);});
   LEVELS.forEach((L,i)=>{const e=D.lv[i]||[];loc(L,'name',e[0]);loc(L,'intro',e[1]);});
   CHAPTERS.forEach((c,i)=>{const e=D.ch[i]||[];loc(c,'name',e[0]);loc(c,'mech',e[1]);});
-  [CH1,CH2].forEach((C,i)=>{const e=D.cc[i];['siteNames','openNote','finTitle','postNote'].forEach(k=>loc(C,k,e[k]));});
+  [CH1,CH2,CH3].forEach((C,i)=>{const e=D.cc[i];['siteNames','openNote','finTitle','postNote'].forEach(k=>loc(C,k,e[k]));});
   if(ZONES)ZONES.forEach(z=>z.name=PLACE[z.id]);
   if(G&&G.M)G.M.forEach(m=>{m.name=PLACE[m.to];m.src=PLACE[m.from];});}
 // ---------- Khởi động & lần đầu ----------

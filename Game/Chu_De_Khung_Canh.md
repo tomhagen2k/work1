@@ -131,6 +131,7 @@ Danh mục phân tích ngày 14/10, giữ để tham khảo; chi tiết chính t
 | Thể hiện yếu tố | Đường đông là nhân vật chính: neon và taxi chỉ ở đường đông, phần còn lại tối và yên |
 | Vật trang trí | Taxi đỗ, xe hot dog, vòi cứu hỏa đỏ, quầng sáng đèn đường trên mặt đường |
 | Kỳ quan (màn trùm) | **Tượng cầm đuốc** trên đảo ngoài khơi + công viên trung tâm |
+| Đã dựng trong demo (19/10, D-79) | Tên **Thành phố Không Ngủ** (BA chốt). Khung cảnh vẽ bằng code (`drawNight`) chờ ảnh thiết kế. Tượng cầm đuốc đặt trên **đảo nhỏ giữa vũng cảng trong ô công trình màn 10** (không ngoài mép bản đồ) để hiện trong cảnh kết và bưu thiếp; công viên trung tâm có sân băng (màn 9). Chi tiết: [level_design/Thiet_Ke_Chuong_3.md](level_design/Thiet_Ke_Chuong_3.md) mục 4 |
 | Kiểu tiến triển | Thắp sáng thành phố: mỗi màn thêm một khu lên đèn |
 | Bộ tài nguyên | B (đô thị hiện đại) + bộ ánh sáng đêm |
 | Rủi ro & xử lý | Ban đêm giảm tương phản → mặt đường sáng hơn nền một bậc, ghim và biển báo có quầng sáng, mini map giữ bảng màu ngày (N8, mục 8.2). Tòa nhà nổi tiếng → vẽ "lấy cảm hứng" (mục 4) |

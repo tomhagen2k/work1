@@ -94,6 +94,12 @@ def autopilot(exe, page_html, out_txt):
     for k, r in json.load(open(os.path.join(LD, 'ket_qua_ch2.json'), encoding='utf-8')).items():
         lid, v = k.split('_')
         plans.append([9 + int(lid[3:]), v, conv(r['path']), round(r['opt'], 1)])
+    # Chương 3 (Thành phố Không Ngủ, từ v1.5): màn 23–32 (sau 2 màn thưởng 21, 22)
+    p3 = os.path.join(LD, 'ket_qua_ch3.json')
+    if os.path.exists(p3):
+        for k, r in json.load(open(p3, encoding='utf-8')).items():
+            lid, v = k.split('_')
+            plans.append([21 + int(lid[3:]), v, conv(r['path']), round(r['opt'], 1)])
     runner = '''
 (function(){const PLANS=%s,VN={van:'Xe van',may:'Xe máy',tai:'Xe tải'};
 const out=PLANS.map(([li,v,p,opt])=>{try{const r=runPlan(li,v,JSON.parse(JSON.stringify(p)));
