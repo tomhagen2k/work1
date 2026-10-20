@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "contentVersion": 1,
+  "id": "c1-l1",
+  "name": "Ngày đầu đi giao",
+  "timeLimitSeconds": 90,
+  "vehicle": "van",
+  "start": { "from": "c0r1", "to": "c1r1", "distance": 40 },
+  "nodes": [
+    { "id": "c0r0", "x": 100, "y": 100 },
+    { "id": "c1r0", "x": 450, "y": 100 },
+    { "id": "c2r0", "x": 800, "y": 100 },
+    { "id": "c3r0", "x": 1150, "y": 100 },
+    { "id": "c0r1", "x": 100, "y": 450 },
+    { "id": "c1r1", "x": 450, "y": 450 },
+    { "id": "c2r1", "x": 800, "y": 450 },
+    { "id": "c3r1", "x": 1150, "y": 450 },
+    { "id": "c0r2", "x": 100, "y": 800 },
+    { "id": "c1r2", "x": 450, "y": 800 },
+    { "id": "c2r2", "x": 800, "y": 800 },
+    { "id": "c3r2", "x": 1150, "y": 800 }
+  ],
+  "roads": [
+    { "id": "h00", "a": "c0r0", "b": "c1r0", "kind": "normal" },
+    { "id": "h10", "a": "c1r0", "b": "c2r0", "kind": "normal" },
+    { "id": "h20", "a": "c2r0", "b": "c3r0", "kind": "normal" },
+    { "id": "h01", "a": "c0r1", "b": "c1r1", "kind": "normal" },
+    { "id": "h11", "a": "c1r1", "b": "c2r1", "kind": "normal" },
+    { "id": "h21", "a": "c2r1", "b": "c3r1", "kind": "normal" },
+    { "id": "h02", "a": "c0r2", "b": "c1r2", "kind": "normal" },
+    { "id": "h12", "a": "c1r2", "b": "c2r2", "kind": "normal" },
+    { "id": "h22", "a": "c2r2", "b": "c3r2", "kind": "normal" },
+    { "id": "v00", "a": "c0r0", "b": "c0r1", "kind": "normal" },
+    { "id": "v01", "a": "c0r1", "b": "c0r2", "kind": "normal" },
+    { "id": "v10", "a": "c1r0", "b": "c1r1", "kind": "normal" },
+    { "id": "v11", "a": "c1r1", "b": "c1r2", "kind": "normal" },
+    { "id": "v20", "a": "c2r0", "b": "c2r1", "kind": "normal" },
+    { "id": "v21", "a": "c2r1", "b": "c2r2", "kind": "normal" },
+    { "id": "v30", "a": "c3r0", "b": "c3r1", "kind": "normal" },
+    { "id": "v31", "a": "c3r1", "b": "c3r2", "kind": "normal" }
+  ],
+  "places": [
+    {
+      "id": "htx",
+      "name": "Hợp tác xã",
+      "a": "c1r1",
+      "b": "c2r1",
+      "fraction": 0.5,
+      "kind": "warehouse"
+    },
+    {
+      "id": "cho-phien",
+      "name": "Chợ Phiên",
+      "a": "c2r0",
+      "b": "c3r0",
+      "fraction": 0.5,
+      "kind": "delivery"
+    },
+    {
+      "id": "xom-tren",
+      "name": "Xóm Trên",
+      "a": "c0r0",
+      "b": "c1r0",
+      "fraction": 0.5,
+      "kind": "delivery"
+    }
+  ],
+  "orders": [
+    {
+      "id": "c1-l1-cho",
+      "source": "htx",
+      "destination": "cho-phien",
+      "quantity": 2,
+      "deadlineSeconds": null
+    },
+    {
+      "id": "c1-l1-xom",
+      "source": "htx",
+      "destination": "xom-tren",
+      "quantity": 1,
+      "deadlineSeconds": null
+    }
+  ]
+}

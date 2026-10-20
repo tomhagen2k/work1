@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Dependencies, build outputs, and local tool evidence"
+paths = [
+  '''(^|[\\/])(node_modules|dist|build|coverage|playwright-report|test-results|\.tools|\.cache|\.gradle)[\\/]''',
+  '''android[\\/]app[\\/]src[\\/]main[\\/]assets[\\/]public[\\/]''',
+]

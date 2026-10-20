@@ -14,6 +14,7 @@ Chương 3 (Thành phố Không Ngủ) và Chương 4 (Đảo Mây Trắng) hi�
 design_game/
 ├── README.md                     ← tệp này
 ├── PROMPT_cho_AI.md              ← prompt giao việc cho AI
+├── YEU_CAU_KHO_ANH.md            ← khổ ảnh có lề + vẽ gì ở lề (dán thêm nếu AI làm khổ nhỏ)
 ├── xem_tat_ca.html               ← mở bằng trình duyệt để lướt toàn bộ ảnh
 ├── 00_tong_quan/
 │   ├── quy_uoc_chung.json        ← loại đường (tên, hệ số tốc độ, màu mini map), xe, khoảng cách nút 350px, khung 844×390
@@ -44,6 +45,8 @@ design_game/
 | `4_ban_do_co_ghim.svg` / `.png` | **Bản vẽ gốc của khung cảnh** (vector, đúng tọa độ game), có ghim và nhãn điểm | 1950×1250 (Ch.1) · 2300×1250 (Ch.2) · 2650×1250 (Ch.3, Ch.4) |
 | `5_khung_canh_khong_ghim.png` | Cùng bản vẽ, ẩn ghim và nhãn (chỉ cảnh + đường) — nền để vẽ lại | như trên |
 | `du_lieu_man.json` | **Logic màn**: nút, đoạn đường (loại, đã thông / chưa thông), điểm kho và điểm giao (tọa độ điểm dừng, ô công trình, ghim), nhiệm vụ, công trình đang xây, công trình đã xây, thời gian | — |
+
+**Lưu ý khổ ảnh:** `4_*`, `5_*` chỉ là phần bản đồ chơi. Ảnh khung cảnh giao cho game phải **có lề** trái/phải 600, trên/dưới 250 (Ch.1 3150×1750, Ch.2 3500×1750, Ch.3–4 3850×1750; nét ×2 khi xuất) — xem [YEU_CAU_KHO_ANH.md](YEU_CAU_KHO_ANH.md).
 
 Muốn có SVG không ghim: mở `4_ban_do_co_ghim.svg`, đổi `style="--pin:1"` ở thẻ `<svg>` thành `--pin:0`.
 

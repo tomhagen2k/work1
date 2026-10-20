@@ -3,6 +3,7 @@
 > Cách dùng: đưa cho AI **cả thư mục `design_game/`** (hoặc tải lên các tệp của chương cần làm), rồi dán nguyên phần trong khung dưới đây.
 > Nếu AI giới hạn số tệp, làm **từng chương**: gửi `00_tong_quan/` + `chuong_1/`, xong mới gửi `chuong_2/`, rồi `chuong_3/`, `chuong_4/`.
 > Chỉ làm một chương (vd Chương 4): gửi `00_tong_quan/` + `chuong_4/`, và trong prompt sửa mục NHIỆM VỤ thành "chỉ Chương 4".
+> **Khổ ảnh:** ảnh khung cảnh phải có lề quanh bản đồ (trái/phải 600, trên/dưới 250). Nếu AI đã vẽ khổ nhỏ, dán thêm [YEU_CAU_KHO_ANH.md](YEU_CAU_KHO_ANH.md).
 > Nếu AI chỉ xem được ảnh, không đọc được JSON/SVG: tối thiểu gửi `1_man_chuan_bi.png`, `5_khung_canh_khong_ghim.png`, `du_lieu_man.json` (dán dạng văn bản) của từng màn.
 
 ---
@@ -94,7 +95,10 @@ Chương 4 — "Đảo Mây Trắng" (White Cloud Island, lấy cảm hứng San
   • du_lieu_man.json — LOGIC MÀN (nguồn sự thật, ưu tiên hơn ảnh nếu có khác biệt)
 
 # HỆ TỌA ĐỘ (dùng để căn chỉnh chính xác)
-- Bản đồ: Chương 1 = 1950×1250 px (lưới 6 cột × 4 hàng nút); Chương 2 = 2300×1250 px (7 × 4); Chương 3, 4 = 2650×1250 px (8 × 4). Gốc (0,0) ở góc trên trái.
+- Bản đồ CHƠI: Chương 1 = 1950×1250 px (lưới 6 cột × 4 hàng nút); Chương 2 = 2300×1250 px (7 × 4); Chương 3, 4 = 2650×1250 px (8 × 4). Gốc (0,0) ở góc trên trái.
+- ẢNH KHUNG CẢNH phải LỚN HƠN bản đồ chơi: thêm lề trái 600, phải 600, trên 250, dưới 250 → viewBox "-600 -250 (rộng+1200) 1750":
+  Ch.1 = 3150×1750, Ch.2 = 3500×1750, Ch.3, 4 = 3850×1750 (raster nét ×2: 6300×3500, 7000×3500, 7700×3500). Không thu nhỏ, không dịch toạ độ.
+  Chi tiết và cách vẽ lề từng chương: YEU_CAU_KHO_ANH.md.
 - Nút "c{i}r{j}" nằm tại x = 100 + 350·i, y = 100 + 350·j (có sẵn trong "nodes").
 - "edges": mỗi đoạn đường nối 2 nút kề nhau; "type" = loại đường; "open" = true (đã thông, xe đi được) / false (chưa thông xe).
 - "points": mỗi kho / điểm giao có "stop_xy" (chỗ xe dừng trên đường), "building" {x,y,w,h} = ô công trình của điểm đó
@@ -131,7 +135,8 @@ B1. Phân tích hiện trạng: mỗi chương chấm điểm 1–10 theo 6 tiê
 B2. Đề xuất hướng hình ảnh cho từng chương: 2–3 phương án (moodboard bằng lời + bảng màu hex + 1 ảnh mẫu một khu 700×350 px), nêu phương án đề xuất.
     DỪNG lại chờ tôi chọn trước khi làm tiếp.
 B3. Bộ tài nguyên dùng chung của chương: nhà (3–5 kiểu), cây, mặt đất, mặt nước, từng công trình (đã xây + công trường), 5 loại đường, vật trang trí — vẽ trên một tấm tổng hợp.
-B4. Vẽ lại từng màn theo đúng du_lieu_man.json, ĐÚNG KÍCH THƯỚC bản đồ (1950×1250, 2300×1250 hoặc 2650×1250), 2 bản: không ghim và có ghim (ghim + nhãn như ảnh 4_*).
+B4. Vẽ lại từng màn theo đúng du_lieu_man.json, ĐÚNG KHỔ ẢNH CÓ LỀ (viewBox -600 -250 3150/3500/3850 1750 — xem HỆ TOẠ ĐỘ và YEU_CAU_KHO_ANH.md;
+    bản đồ chơi giữ đúng toạ độ, vẽ thêm cảnh nối tiếp ở lề), 2 bản: không ghim và có ghim (ghim + nhãn như ảnh 4_*).
 B5. Tự kiểm tra từng màn bằng bảng (xem mục KẾT QUẢ) và chồng ảnh mới lên 4_ban_do_co_ghim.png để đối chiếu đường/ghim.
 
 # KẾT QUẢ CẦN TRẢ (giữ cấu trúc thư mục)
@@ -139,9 +144,11 @@ design_game_moi/
 ├── 00_phan_tich.md            ← B1, B2 (điểm số, vấn đề, phương án, lựa chọn)
 ├── chuong_N/bo_tai_nguyen.png ← B3
 └── chuong_N/man_XX/
-    ├── khung_canh_moi.png      ← không ghim, đúng kích thước bản đồ
+    ├── khung_canh_moi.svg      ← BẮT BUỘC, không ghim, khổ CÓ LỀ (vd Ch.3, 4: viewBox="-600 -250 3850 1750" width="3850" height="1750") — game xuất ảnh từ tệp này
+    ├── khung_canh_moi_co_ghim.svg ← cùng khổ, có ghim + nhãn để duyệt
+    ├── khung_canh_moi.png      ← xem trước, render từ SVG nét ×2 (Ch.3, 4: 7700×3500)
     ├── khung_canh_moi_co_ghim.png
-    ├── (nếu làm bằng vector/code) khung_canh_moi.svg hoặc đoạn mã thay drawVillage/drawUrban/drawNight
+    ├── (nếu làm bằng code) đoạn mã thay drawVillage/drawUrban/drawNight/drawSanto
     └── kiem_tra.md             ← bảng tự kiểm:
         | Hạng mục | Theo du_lieu_man.json | Ảnh mới | Đạt? |
         - Số đoạn đường đã thông / chưa thông, đoạn đường lớn
@@ -164,4 +171,4 @@ design_game_moi/
 |---|---|---|
 | AI tạo ảnh (vẽ bằng hình) | Dùng `5_khung_canh_khong_ghim.png` làm ảnh tham chiếu bố cục; yêu cầu giữ đúng vị trí đường | Ảnh tạo ra thường lệch vài pixel — cần bước B5 chồng ảnh kiểm tra; khó giữ đúng 100% |
 | AI viết code (Claude, …) | Đưa `ma_nguon_demo/index.html` + JSON; yêu cầu viết lại hàm vẽ cảnh | **Giữ logic chắc chắn nhất** vì vẽ từ cùng dữ liệu; đổi được cho mọi màn cùng lúc |
-| Họa sĩ người | Đưa SVG `4_ban_do_co_ghim.svg` mở bằng Figma/Illustrator | Vẽ đè lên lớp đường gốc rồi xuất PNG đúng kích thước |
+| Họa sĩ người | Đưa SVG `4_ban_do_co_ghim.svg` mở bằng Figma/Illustrator | Vẽ đè lên lớp đường gốc, mở rộng artboard theo khổ có lề (YEU_CAU_KHO_ANH.md) rồi lưu SVG |

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Little Routes Dev</string>
+    <string name="title_activity_main">Little Routes Dev</string>
+    <string name="package_name">dev.littleroutes.slice</string>
+    <string name="custom_url_scheme">dev.littleroutes.slice</string>
+</resources>
