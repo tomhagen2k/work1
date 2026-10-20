@@ -1,7 +1,8 @@
 import { defineConfig } from '@playwright/test';
 
 const built = process.env.LITTLE_ROUTES_TEST_BUILT === '1';
-const baseURL = `http://127.0.0.1:${built ? 4173 : 5173}`;
+// Keep the owner's live preview on 5173; tests get their own server/context.
+const baseURL = `http://127.0.0.1:${built ? 4173 : 5180}`;
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -23,7 +24,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: built ? 'npm run preview' : 'npm run dev',
+    command: built ? 'npm run preview' : 'npm run dev -- --port 5180',
     url: baseURL,
     reuseExistingServer: false,
     timeout: 30_000,

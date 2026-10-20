@@ -4,8 +4,10 @@ import { elapsedSeconds, remainingSeconds, starsFor } from '../core/timer';
 import { VEHICLES } from '../core/vehicle';
 import { RoadMap } from '../core/map';
 import type { SaveService } from '../services/save-service';
+import { ICONS } from './demo-icons';
+import { Minimap } from './minimap';
 
-const required = <T extends HTMLElement>(
+const required = <T extends Element = HTMLElement>(
   root: ParentNode,
   selector: string,
 ): T => {
@@ -34,36 +36,41 @@ export class GameUI {
   private previousPhase = '';
   private readonly map: RoadMap;
   private readonly orderElements = new Map<string, HTMLElement>();
+  private readonly minimap: Minimap;
+  private readonly resizeObserver: ResizeObserver;
+  private panel: 'missions' | 'help' | 'map' | null = null;
+  private readonly panelClick: (event: MouseEvent) => void;
   constructor(
     private readonly root: HTMLElement,
     private readonly level: ValidatedLevel,
     private readonly saves: SaveService,
+    onPanel: (open: boolean) => void,
   ) {
     this.map = new RoadMap(level);
     root.innerHTML = `
-      <main class="game-shell" aria-label="Little Routes">
-        <header class="topbar">
-          <div class="brand"><span class="brand-mark" aria-hidden="true">↗</span><div><h1>Little Routes</h1><p>CHƯƠNG 01 · ĐƯỜNG LÀNG</p></div></div>
-          <div class="hud"><span class="stat"><small>CÒN LẠI</small><strong id="clock">90s</strong></span><span class="stat"><small>TRÊN XE</small><strong id="cargo">0 / 3</strong></span><button class="icon-button" data-action="pause" aria-label="Tạm dừng">Ⅱ</button></div>
-        </header>
-        <div class="play-layout">
-          <section class="map-area" aria-label="Màn chơi"><div id="map-host"></div><div class="map-caption"><span class="chapter-chip">01 / 01</span><div><h2 id="level-name"></h2><p id="message" role="status"></p></div></div><span class="map-legend">K Kho · 1 Chợ · 2 Xóm</span></section>
-          <aside class="sidebar" aria-label="Đơn hàng và điều khiển">
-            <div class="orders-heading"><h2>Chuyến giao hôm nay</h2><span id="delivered">0 / 3</span></div>
-            <div id="orders"></div>
-            <div class="driving"><div class="dpad" aria-label="Điều khiển xe">
-              <button class="up" data-direction="up" aria-label="Đi lên">↑</button>
-              <button class="left" data-direction="left" aria-label="Đi trái">←</button>
-              <button class="uturn" data-action="uturn" aria-label="Quay đầu">↶</button>
-              <button class="right" data-direction="right" aria-label="Đi phải">→</button>
-              <button class="down" data-direction="down" aria-label="Đi xuống">↓</button>
-            </div><p class="control-hint">Mũi tên / WASD · U quay đầu<br>Esc tạm dừng · Chọn sớm hướng rẽ</p></div>
-          </aside>
+      <main class="game-shell" aria-label="Little Routes"><div class="stage-viewport"><div class="game-stage">
+        <h1 class="sr-only">Little Routes</h1><h2 class="sr-only" id="level-name"></h2>
+        <div class="play-layout"><section class="map-area" aria-label="Màn chơi"><div id="map-host"></div></section>
+          <div class="hud-top"><div class="clock-chip">${ICONS.clock}<span id="clock">1:30</span></div>
+            <button class="rbtn top-button" data-panel="missions" aria-label="Nhiệm vụ">${ICONS.missions}</button>
+            <button class="rbtn top-button" data-panel="help" aria-label="Hướng dẫn">${ICONS.help}<i class="new-badge">!</i></button></div>
+          <div id="orders" aria-label="Tiến độ đơn hàng"></div>
+          <button class="rbtn pause-button icon-button" data-action="pause" aria-label="Tạm dừng"><span class="pause-face">${ICONS.pause}</span></button>
+          <button id="minimap" data-panel="map" aria-label="Bản đồ"></button>
+          <div class="dpad" aria-label="Điều khiển xe">
+            <button class="rbtn up" data-direction="up" aria-label="Đi lên">${ICONS.arrow}</button>
+            <button class="rbtn left" data-direction="left" aria-label="Đi trái">${ICONS.arrow}</button>
+            <button class="rbtn right" data-direction="right" aria-label="Đi phải">${ICONS.arrow}</button>
+            <button class="rbtn down" data-direction="down" aria-label="Đi xuống">${ICONS.arrow}</button>
+          </div>
+          <button class="rbtn uturn icon-button" data-action="uturn" aria-label="Quay đầu"><span>${ICONS.uturn}<small>QUAY ĐẦU</small></span></button>
+          <div id="go-hint"><span class="hint-arrow">${ICONS.arrow}</span><span>Nhấn để xe chạy<small>Đồng hồ chưa chạy</small></span></div>
+          <p id="message" class="sr-only" role="status"></p><span id="cargo" class="sr-only"></span><span id="delivered" class="sr-only"></span>
         </div>
         <p id="save-warning" class="save-warning" role="alert" hidden></p>
         <div id="modal-layer" class="modal-layer" hidden><section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"></section></div>
         <div id="orientation" class="orientation" hidden><strong>Xoay ngang để giao hàng</strong><p>Màn chơi đã tạm dừng. Xoay máy rồi nhấn Tiếp tục.</p></div>
-      </main>`;
+      </div></div></main>`;
     this.mapHost = required(root, '#map-host');
     this.modal = required(root, '#modal-layer');
     this.clock = required(root, '#clock');
@@ -78,17 +85,77 @@ export class GameUI {
       card.className = 'order-card';
       card.dataset.order = order.id;
       const label = document.createElement('strong');
-      label.textContent = `${order.destination === 'cho-phien' ? '1' : '2'} · ${this.placeName(order.destination)}`;
+      label.className = 'order-count';
+      label.innerHTML = `${ICONS.box}<span class="count"></span>`;
+      const ring = document.createElement('div');
+      ring.className = 'order-ring';
+      ring.innerHTML =
+        '<svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="22" fill="rgba(20,28,38,.85)" stroke="rgba(255,255,255,.25)" stroke-width="4"/><circle class="progress" cx="25" cy="25" r="22" fill="none" stroke-width="4" stroke-linecap="round"/></svg>';
       const progress = document.createElement('span');
-      card.append(label, progress);
+      progress.className = 'sr-only';
+      card.append(ring, label, progress);
       orderList.append(card);
       this.orderElements.set(order.id, progress);
     }
+    this.minimap = new Minimap(level);
+    required(root, '#minimap').append(this.minimap.element);
+    this.panelClick = (event) => {
+      const button =
+        event.target instanceof Element
+          ? event.target.closest<HTMLButtonElement>(
+              '[data-panel],[data-panel-close]',
+            )
+          : null;
+      if (!button) return;
+      if (button.hasAttribute('data-panel-close')) {
+        this.panel = null;
+        onPanel(false);
+        return;
+      }
+      const panel = button.dataset.panel;
+      if (panel === 'map' || panel === 'missions' || panel === 'help') {
+        this.panel = panel;
+        onPanel(true);
+      }
+    };
+    root.addEventListener('click', this.panelClick);
+    this.resizeObserver = new ResizeObserver(() => {
+      const bounds = required(root, '.stage-viewport').getBoundingClientRect();
+      root.style.setProperty(
+        '--stage-scale',
+        String(Math.min(bounds.width / 844, bounds.height / 390)),
+      );
+    });
+    this.resizeObserver.observe(required(root, '.stage-viewport'));
+  }
+  destroy(): void {
+    this.resizeObserver.disconnect();
+    this.root.removeEventListener('click', this.panelClick);
   }
   render(state: GameState): void {
     const vehicle = VEHICLES[this.level.vehicle],
       left = remainingSeconds(state, this.level.timeLimitSeconds);
-    setText(this.clock, `${Math.ceil(left)}s`);
+    const seconds = Math.ceil(left);
+    setText(
+      this.clock,
+      `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`,
+    );
+    required(this.root, '#go-hint').hidden = state.phase !== 'ready';
+    for (const button of this.root.querySelectorAll<HTMLButtonElement>(
+      '[data-direction]',
+    )) {
+      button.classList.toggle(
+        'go',
+        state.phase === 'ready' &&
+          button.dataset.direction ===
+            this.map.heading(state.car.from, state.car.to),
+      );
+      button.classList.toggle(
+        'selected',
+        state.car.pending === button.dataset.direction,
+      );
+    }
+    this.minimap.render(state);
     this.clock.classList.toggle('urgent', left <= 10);
     setText(this.cargo, `${cargoCount(state.orders)} / ${vehicle.capacity}`);
     setText(
@@ -118,6 +185,19 @@ export class GameUI {
           'complete',
           order.delivered === order.quantity,
         );
+        const card = label.parentElement!;
+        setText(
+          required(card, '.count'),
+          `${order.delivered}/${order.quantity}`,
+        );
+        card.classList.toggle('carrying', order.onboard > 0);
+        const color = order.destination === 'cho-phien' ? '#e64980' : '#7048e8';
+        const ring = required<SVGCircleElement>(card, '.progress');
+        ring.setAttribute('stroke', color);
+        ring.setAttribute(
+          'stroke-dasharray',
+          `${(2 * Math.PI * 22 * order.delivered) / order.quantity} ${2 * Math.PI * 22}`,
+        );
       }
     }
     let message = 'Xe tự chạy · Chọn hướng ở giao lộ';
@@ -142,6 +222,7 @@ export class GameUI {
     this.warning.hidden = !this.saves.warning;
     setText(this.warning, this.saves.warning ?? '');
     const key = JSON.stringify([
+      this.panel,
       state.phase,
       state.pickupPlace,
       state.orders.map((o) => [o.picked, o.delivered]),
@@ -169,12 +250,44 @@ export class GameUI {
       state.phase,
     );
     this.modal.hidden = !open;
-    required(this.root, '.play-layout').inert = open;
+    if (state.phase !== 'paused') this.panel = null;
+    required(this.root, '.play-layout').inert =
+      open && state.phase !== 'pickup';
+    this.modal.classList.toggle('pickup-layer', state.phase === 'pickup');
     required<HTMLButtonElement>(this.root, '[data-action="pause"]').disabled =
       open;
     if (!open) return;
     const dialog = required(this.modal, '.dialog');
     dialog.replaceChildren();
+    if (state.phase === 'paused' && this.panel) {
+      const title = document.createElement('h2');
+      title.id = 'dialog-title';
+      title.textContent =
+        this.panel === 'map'
+          ? 'Bản đồ'
+          : this.panel === 'missions'
+            ? 'Nhiệm vụ'
+            : 'Cách chơi';
+      const body = document.createElement('div');
+      body.className = 'info-content';
+      if (this.panel === 'map')
+        body.append(this.minimap.element.cloneNode(true));
+      else if (this.panel === 'missions')
+        for (const order of state.orders) {
+          const row = document.createElement('p');
+          row.textContent = `${this.placeName(order.source)} → ${this.placeName(order.destination)} · ${order.delivered}/${order.quantity} kiện`;
+          body.append(row);
+        }
+      else
+        body.textContent =
+          'Lấy hàng ở kho, giao đúng điểm trước khi hết giờ. Xe tự chạy; chọn sớm hướng ở giao lộ. Bấm Quay đầu để đổi hướng hoặc hẹn quay đầu khi đang lấy/giao hàng.';
+      const close = document.createElement('button');
+      close.className = 'button secondary';
+      close.textContent = 'Đóng';
+      close.dataset.panelClose = '';
+      dialog.append(title, body, close);
+      return;
+    }
     const heading = document.createElement('h2');
     heading.id = 'dialog-title';
     const text = document.createElement('p');
@@ -210,13 +323,6 @@ export class GameUI {
         item.dataset.order = order.id;
         item.disabled = quantity === 0;
       }
-      button(
-        state.car.queuedUturn
-          ? '✓ Đã hẹn quay đầu khi rời kho'
-          : 'Quay đầu khi rời kho',
-        'uturn',
-        true,
-      );
       button('Đi tiếp', 'skip', true);
     } else if (state.phase === 'paused') {
       heading.textContent = 'Nghỉ một chút';

@@ -1,6 +1,6 @@
 # Kế hoạch chuyển Little Routes sang mobile
 
-Ngày lập/cập nhật: 20/10/2026 · Trạng thái: **Vertical slice C1L1 đã triển khai và kiểm thử web + Android debug trên AVD, chờ chủ dự án nghiệm thu. Chưa kiểm iOS hoặc thiết bị thật. Bằng chứng hiện tại ở mục 11; mục 9–10 là lịch sử khảo sát/cài công cụ.**
+Ngày lập/cập nhật: 20/10/2026 · Trạng thái: **Chủ dự án đã duyệt mẫu C1L1 P1a. P1b đã build/cài/chạy APK debug, pass 8 kiểm tra Android Emulator; chờ nghiệm thu bằng chứng trước mở rộng UI Chương 1–2. Chương 3–4 hoãn. Chưa kiểm iOS hoặc thiết bị thật. Mục 12 là roadmap tổng; phạm vi mới ở mục 14, kết quả P1b ở mục 15.**
 
 Chủ dự án đã cho phép cài công cụ còn thiếu và tạo AGENTS ngày 20/10/2026. Kết quả cài/thử thực tế và lệnh đang có ở mục 10; mục 9 giữ kết quả khảo sát trước cài. Chưa có quyền giao dịch thật, chọn dịch vụ có phí hoặc phát hành; luật biên chưa chốt vẫn cần xác minh trước task phụ thuộc.
 
@@ -199,6 +199,8 @@ Gameplay offline không đồng nghĩa dịch vụ tiền thật có thể tin c
 Content update: bản đầu đóng gói bốn chương; thiết kế adapter để tải thêm chương/assets sau. Gói tải có version, hash/chữ ký được xác thực theo manifest đáng tin cậy, schema/giới hạn kích thước, staging rồi activate, fallback bản tốt gần nhất; không chạy JavaScript từ gói. Chính sách store phải được rà lại khi triển khai, không coi “chỉ JSON” là tự động được duyệt. [Apple App Review 2.5.2](https://developer.apple.com/app-store/review/guidelines/#software-requirements).
 
 ## 5. Roadmap theo cổng nghiệm thu
+
+**Điều chỉnh 20/10/2026:** mục 12 thay thế thứ tự triển khai tiếp theo. Không để toàn bộ giao diện tới sau gameplay theo cách chia M5/M6 cũ; mỗi phần phải được đối chiếu với demo ngay khi chuyển đổi. Các ranh giới kiến trúc, bảo vệ nguồn và kiểm thử ở đây vẫn áp dụng.
 
 Thứ tự điều chỉnh: đưa schema tối thiểu lên trước core để ổn định ID và đơn vị dữ liệu; thử renderer/native sớm trong M2 để phát hiện giới hạn trước khi port toàn bộ game. M3/M4 có thể chỉnh schema qua test nhưng không mở rộng nghiệp vụ. Storage interfaces có từ đầu, persistence đầy đủ ở M7; commerce chỉ bắt đầu sau M7. QA/performance chạy xuyên suốt, M10 là tổng kiểm và release gate.
 
@@ -704,7 +706,7 @@ Responsive test kiểm 568×320, 667×375, 844×390, 932×430, 1024×768; Chromi
 
 Thay đổi đợt này: thêm core/content/application/rendering/input/services/ui, tests unit/integration/support/E2E/native và wrapper test-built; sửa bootstrap/index/package scripts/tsconfig/eslint/Playwright/README/ignore/secret-scan config; thêm Capacitor config và Android project. Thêm đúng một dependency official @capacitor/preferences 8.0.1 sau khi tái hiện mất save native; cập nhật lockfile, không nâng version các package khác. AGENTS bổ sung phạm vi C1L1, điểm dừng nghiệm thu, tiến độ mục 11 và quy tắc save acknowledgement. Không stage/commit; review file mới qua `git diff --no-index NUL <file>` vì app còn untracked (exit 1 nghĩa có diff), review file sinh/manifest/permissions/lockfile. Không sửa design_game của người dùng.
 
-**Chờ nghiệm thu vertical slice web + Android debug.** Chủ dự án đã trả lời chọn `dev.littleroutes.slice` cho debug; không coi đây là ID/signing production đã duyệt. Một màn đã chơi thật và có bằng chứng AVD, không đóng toàn bộ M1/M2/M5 hoặc mở rộng chương/commerce. Bước tiếp theo chỉ sau nghiệm thu: chọn task nhỏ sửa UX theo playtest hoặc kiểm thiết bị thật; chưa tự triển khai thêm.
+**Kết quả kỹ thuật, chưa nghiệm thu giao diện:** chủ dự án phản hồi bản dựng không giống demo; không đánh dấu hoàn thành vertical slice sản phẩm. Những test trên vẫn là bằng chứng trong đúng phạm vi của chúng, không chứng minh tương đồng hình ảnh hoặc đầy đủ tính năng. Chủ dự án đã chọn `dev.littleroutes.slice` cho debug; không coi đây là ID/signing production đã duyệt. Kế hoạch khắc phục và điểm dừng tiếp theo ở mục 12.
 
 Workflow dùng [Vite](https://vite.dev/guide/), [PixiJS Application v8](https://pixijs.com/8.x/guides/components/application), [Playwright Clock](https://playwright.dev/docs/clock) và [Capacitor Live Reload](https://capacitorjs.com/docs/guides/live-reload). Live Reload native hiện mới là hướng dẫn, chưa bật/thử; package/config/khả năng máy được kiểm theo mục 10, không coi tài liệu công cụ là bằng chứng app native đã chạy.
 
@@ -733,4 +735,376 @@ Manifest: sensorLandscape, appCategory=game; allowBackup=false/fullBackupContent
 
 **Giới hạn/rủi ro còn lại:** Android Lint có 17 warnings: bản Gradle/dependency mới hơn (không tự nâng), landscape API, appCategory trên API cũ, resource/icon/splash template. Capacitor upstream có baseline sẵn lọc 6 lỗi; không sửa package hoặc thêm suppression để làm xanh. Một lần AVD first boot hiện dialog “System UI isn't responding”; đã ghi nhận và chọn Wait, chưa kết luận nguyên nhân. Các lượt native chức năng cuối pass, nhưng chưa stress test/soak hoặc chứng minh môi trường native luôn ổn định. Lần am start cold đầu tiên đo 6227 ms (khoảng 6,23 giây) cho Activity launch trên software emulator, không phải time-to-playable máy thật và không được dùng để tuyên bố đạt budget 1,5/3 giây. Chưa đo FPS/RAM/thermal trên thiết bị đích. Android WebView phiên bản của system image không thay cho kiểm nhiều WebView/OEM. iOS cần Mac/Xcode; Preferences yêu cầu PrivacyInfo.xcprivacy/UserDefaults reason CA92.1 trước build/phát hành theo tài liệu plugin, chưa tạo/kiểm manifest iOS tại Windows.
 
-**Điểm dừng:** triển khai slice C1L1 dừng tại đây để nghiệm thu. Chưa chuyển nội dung khác, không commerce, không tài khoản production, không giao dịch/chi phí/phát hành. README app có lệnh dev/log/stop, sync/run/ADB/native smoke đã dùng thật và hướng dẫn Mac/iOS phân biệt rõ chưa kiểm. Thiết bị thật/iOS và các known issues trên tiếp tục là việc cần duyệt/sắp xếp ở bước kế tiếp.
+**Điểm dừng đợt kỹ thuật:** chưa chuyển nội dung khác, không commerce, không tài khoản production, không giao dịch/chi phí/phát hành. README app có lệnh dev/log/stop, sync/run/ADB/native smoke đã dùng thật và hướng dẫn Mac/iOS phân biệt rõ chưa kiểm. Phản hồi về giao diện và kế hoạch tiếp theo được ghi tại mục 12.
+
+## 12. Kế hoạch điều chỉnh — chuyển đầy đủ và giữ sát demo
+
+### 12.1. Mục tiêu và quyết định có hiệu lực
+
+Yêu cầu trực tiếp ngày 20/10/2026: giao diện các màn hình và tính năng phải đầy đủ, giống gần như toàn bộ demo đã cung cấp. Đây là chuyển đổi sản phẩm đã có, không phải thiết kế lại. Kế hoạch này chờ chủ dự án duyệt; các task P bên dưới chưa triển khai.
+
+- Chuẩn hình ảnh/hành vi hiện hữu: `demo/index.html` v1.5 và tài nguyên nó thực sự dùng. Đối chiếu luật với MVP v1.33 và quyết định GD/GA/QC liên quan; nếu mâu thuẫn, ghi đúng nguồn và hỏi tại task bị ảnh hưởng, không tự đặt luật. Mockup đề xuất chưa duyệt không thay demo.
+- Giữ bố cục, màu, chữ, dáng xe, cảnh nền, đường, icon, nội dung, trạng thái nút, chuyển cảnh và nhịp tương tác. Điều chỉnh safe area, vùng chạm hoặc lỗi nguồn phải được nêu riêng khi nghiệm thu, không tự thay phong cách toàn màn.
+- Đích chuyển đổi: bốn chương hiện có, 40 màn chính và bốn màn thưởng, cùng các màn hình/luồng liên quan. Tính năng trong tài liệu nhưng demo còn Sắp có được tách thành phần hoàn thiện, không bỏ sót và không báo là đã có.
+- Một core gameplay và một nguồn trạng thái dùng chung web/native. Demo nguyên trạng là tham chiếu độc lập; không nhúng runtime demo để duy trì engine legacy song song với core mới.
+- Giữ TypeScript/PixiJS/DOM-CSS/Capacitor đã duyệt. Tái sử dụng art và thiết kế; nếu chuyển SVG sang Pixi làm sai hình hoặc cần đổi kiến trúc renderer, trình thử nghiệm cụ thể và xin duyệt trước khi áp dụng rộng.
+- Chỉ công nhận phần đạt cả hành vi và hình ảnh. Các test mục 11 vẫn có giá trị trong phạm vi kỹ thuật, không chứng minh visual parity. Không công bố tỷ lệ “giống 95%” khi chưa có baseline/phương pháp đo.
+
+### 12.2. Kiểm kê nguồn và khoảng cách theo màn hình
+
+Đợt này đã đọc chọn lọc cấu trúc/handler HTML, manifest cảnh, tài liệu UI và renderer mới; **chưa chạy lại toàn bộ demo hoặc chụp baseline mới**. “Có logic” nghĩa là đã thấy implementation trong code, không khẳng định mọi trạng thái đã runtime-test. Các mục Sắp có/mô phỏng không phải chức năng production.
+
+| Màn hình / nguồn demo | Hiện trạng demo đã xác minh từ code | App hiện tại / khoảng cách | Task |
+|---|---|---|---|
+| Khởi động `splash`, `langv`, `consv`, `linkv` | Logo SVG, thanh tải/mẹo/phiên bản, VI/EN, pháp lý; liên kết chỉ ghi cờ local | Vào thẳng C1L1; chưa chuyển luồng đầu tiên/quay lại | P3; link thật P8 |
+| Trang chủ `mainv`, `showMain` | Cảnh chương, ví/hồ sơ, nút nhanh, thẻ sao/chương, CHƠI tới màn chưa qua | Chưa có trang chủ đúng demo | P3 |
+| Chương/màn `home`, `hMap`, `hCard` | Bản đồ chương, chọn màn, sao/kỷ lục, bonus và lối vào bưu thiếp; cần kiểm đủ khóa/mở | Chỉ một JSON C1L1; chưa chuyển navigation/progression | P3, P5 |
+| Chuẩn bị `prep`, `pMap`, `pUI` | Bản đồ/zoom/legend/tooltip, xe/đơn, banner thời gian chưa chạy; chọn xe tùy màn | Ready UI mới khác demo; chưa có màn tương đương | P2 |
+| Gameplay `view`, `hud`, `mm`, `ask` | SVG camera/static/dynamic; timer, minimap, kho/đích/đơn, chọn hàng, nhãn xe/hướng rẽ, nút hướng/quay đầu | Core C1L1 có hoạt động; cảnh vector và HUD tự dựng khác xa demo | P1, P2, P4 |
+| Tutorial `rulev`, `tut*`, `pc*`, `goHint` | Luật, hướng dẫn chuẩn bị, spotlight/skip và trạng thái đã xem | Chỉ gợi ý cơ bản; thiếu tutorial/biến thể demo | P2 |
+| Map lớn `mapv`, thông tin `infov` | Full map, zoom/legend/tooltip, nhiệm vụ/trợ giúp/tab; cần kiểm thời gian và đường quay lại | Chưa chuyển đầy đủ | P2 |
+| Pause `pausev`, `pConfirm` | Resume/restart/home/map/âm thanh/settings và xác nhận | Có pause/restart kỹ thuật nhưng bố cục khác, thiếu luồng | P2, P3 |
+| Hết giờ `tov`, kết quả `result` | Đơn còn lại, vật phẩm/quà đầu, thắng/thua/sao/kỷ lục/next/retry/home | Có xử lý một màn và lưu cơ bản, UI/luồng chưa tương đương | P2, P6 |
+| Công trình `cutv`, `startCut`, `growSet` | Camera/công trình, skip/next/home, cảnh theo tiến trình | Chưa chuyển | P2, P5 |
+| Settings `setv` | Bốn nhóm; ngôn ngữ, SFX, tutorial, FAQ/pháp lý; nhạc disable, chất lượng/thông báo chưa đủ bằng chứng tác động thật | Chưa có popup tương đương; cần tách tùy chọn thật khỏi cờ UI | P3, P7, P8 |
+| Garage `garv`, `SKIN` | Tab van/máy/tải, skin/độ hiếm/preview/1:1, trang bị, mua kim cương local; mua tiền mô phỏng | Chưa chuyển; phải dùng đúng bộ xe/skin gốc | P6; IAP thật P8 |
+| Shop `shopv`, `gatev`, `payv` | Gói kim cương, +30s, bỏ ads, cảnh báo/xác nhận; tiền thật ghi rõ mô phỏng | Chưa chuyển; cờ mua demo không thành entitlement thật | P6, P8 |
+| Quảng cáo `adv`, `showAd` | Overlay đếm 5 giây mô phỏng, bộ đếm lượt; không có SDK thật | Chưa có; cần UI/adapter/failure states riêng | P6, P8 |
+| Bưu thiếp `postv`, `openPost` | SVG, tiêu đề/ngày/chữ ký; cần kiểm phạm vi từng chương thực sự hỗ trợ | Chưa chuyển | P5 |
+| Điểm danh/nhiệm vụ ngày/thành tựu | `mLeft` trỏ Sắp có; tài liệu UI có mô tả, chưa có màn hoàn chỉnh trong demo | Chưa triển khai; là hoàn thiện mới theo đặc tả | P9, duyệt thiết kế trước code |
+| Hồ sơ/hộp thư/sự kiện | `mProf`, mail/events trả toast Sắp có; tên/sao ở home không đồng nghĩa có màn hồ sơ | Chưa có màn hoàn chỉnh; hồ sơ/hộp thư theo tài liệu, sự kiện để sau | P9; sự kiện ngoài đợt |
+| Pháp lý/ngôn ngữ `polv`, `I18N` | VI/EN nhúng offline là bản nháp; chú thích code ghi gameplay cũ chưa tách hết tiếng Việt | Chưa chuyển đủ; đổi được menu không có nghĩa song ngữ toàn game | P3, P7, P8 |
+| Save/backup/restore | LocalStorage có progress/ví/skin/cờ; link/backup timestamp và restore paid flags mô phỏng | Preferences Android thật cho save nhỏ; thiếu model/migration/phục hồi đầy đủ | P7, P8 |
+
+Nguồn art: WebP Chương 1–2 và bounds tại `demo/canh/manifest.js`; bộ vẽ SVG Chương 3–4; `LOGO`, `SKIN`, đường/icon và CSS trong HTML. Demo tải Nunito từ Google Fonts: phải kiểm nguồn/license và đóng gói offline, không thay bằng font gần giống hoặc để ảnh nghiệm thu phụ thuộc mạng. Emoji/icon hệ thống cũng cần baseline vì có thể khác giữa hệ điều hành.
+
+### 12.3. Kiến trúc và phần giữ lại
+
+| Thành phần | Phương án |
+|---|---|
+| Toolchain/app/Capacitor debug/test harness | Giữ nền tảng hiện có; không tạo app mới hoặc cài lại dependency |
+| Core/session/schema | Giữ nền tảng và test kỹ thuật; bổ sung từng luật còn thiếu bằng fixture demo. Một màn pass chưa chứng minh đủ mọi xe/đường/đơn/deadline |
+| Renderer hiện tại | Thay cảnh tự vẽ bằng tài nguyên/thành phần gốc; thử camera/scale/layer C1 và một cảnh SVG C3/C4 trước nhân rộng |
+| PixiJS | World, nền, đường, xe, marker/effect và camera khi đạt đối chiếu. Import/rasterize SVG hoặc tái tạo có kiểm chứng; giữ lớp động công trình/skin, không chụp cả màn thành ảnh giả tương tác |
+| DOM/CSS | Main/chương, chuẩn bị, HUD/nút, đơn/chọn hàng, tutorial, popup/kết quả, Garage/shop/settings/legal. Tách component/token/style từ demo, không áp sidebar tự thiết kế |
+| SVG | Giữ path/thiết kế gốc; có thể dùng trực tiếp trong logo/preview/bưu thiếp. Nếu cần SVG world để giữ art phức tạp, trình phương án và gate kiến trúc trước |
+| UI state | Router/overlay typed, đọc snapshot và gửi commands qua application; popup lồng nhau có pause/return rõ. Không mỗi màn một timer hoặc bản sao đơn/xe |
+| Content | Trích xuất có legacy → stable ID mapping, schema/semantic validation, art/viewport manifest; không copy nguyên runtime demo vào app |
+| Services/save | Giữ adapter, mở rộng model versioned/transaction; không nhận thưởng đôi. Mô phỏng thương mại chỉ trong dev/test, không làm nguồn entitlement production |
+
+Khuyến nghị: giữ stack đã duyệt, chuyển từng component từ demo và chứng minh bằng ảnh trước mở rộng. Ưu tiên đúng hình/hành vi; không ép mọi thành phần thành Pixi nếu làm sai mẫu, không tự đổi renderer toàn dự án khi chưa có phép thử đại diện.
+
+### 12.4. Roadmap theo phần có thể nghiệm thu
+
+P là thứ tự triển khai tiếp theo; M1–M10 giữ để tra nền tảng/lịch sử. Trong mỗi P làm lần lượt task con, không viết toàn bộ một lần. Save/responsive/lifecycle/test làm ngay trong phần liên quan; P7 là tổng hợp, không phải đợi tới đó mới lưu.
+
+#### P0 — Khóa mẫu đối chiếu (ưu tiên bắt buộc đầu tiên)
+
+- **Phụ thuộc/phạm vi:** nguồn hiện có; chỉ khảo sát và bằng chứng, không gameplay mới.
+- **Task:** P0.1 inventory từng screen/state/asset và fingerprint; P0.2 chạy demo trong profile test riêng, chụp ảnh; P0.3 map luật/luồng/pause và xung đột; P0.4 chọn cảnh đại diện C1 và SVG C3/C4.
+- **Đầu ra/test:** checklist traceability tới ID/handler; baseline 844×390 và 667×375 ghi DPR/font/locale/save; kiểm tải asset và đường đi tới từng trạng thái. Ảnh hỗ trợ không thay test luật.
+- **Nghiệm thu:** xác định đầy đủ mẫu cần chuyển, không sửa nguồn/save cá nhân. **Dừng** phần phụ thuộc khi thiếu asset hoặc mâu thuẫn không thể xác định mẫu.
+
+#### P1 — Bản đồ và HUD C1L1 đúng demo (ưu tiên cao, sau P0)
+
+- **Task:** P1.1 asset/font manifest; P1.2 khung 844×390/safe area; P1.3 background/roads/camera/xe gốc; P1.4 timer/minimap/nút/marker/nhãn; thử một cảnh SVG phức tạp để kiểm renderer.
+- **Đầu ra/test:** demo/new/ảnh diff cùng state; kiểm art/road/đỗ/xe alignment, hit target, camera và resource disposal/restart; lint/typecheck/build và test core/integration liên quan.
+- **Nghiệm thu:** không còn cảnh tạm hoặc HUD tự thiết kế; không mất nhãn/nút. **Dừng cho chủ dự án duyệt hình ảnh một màn**, không nhân layout chưa đạt; đổi renderer phải trình bằng chứng/phương án trước.
+
+#### P2 — Chuyến chơi C1L1 hoàn chỉnh giống demo (ưu tiên cao, sau P0–P1)
+
+- **Task:** P2.1 prep/zoom/tooltip/luật; P2.2 tutorial/input/chọn hàng; P2.3 pause/map/missions/help/return; P2.4 timeout/thêm giờ/win/loss; P2.5 công trình/kết quả/restart và đường đi tiếp trong phạm vi đã có.
+- **Đầu ra/test:** unit luật; integration transition/timer/save; E2E từ prep tới thắng và thua, resume/retry; ảnh đủ overlay; smoke APK Android cập nhật.
+- **Nghiệm thu:** một màn đạt cả hình ảnh, luật, luồng và thời gian. **Dừng nghiệm thu vertical slice sửa lại** trước mở rộng bốn chương; lỗi luật/timer/test bắt buộc phải sửa.
+
+#### P3 — Khởi động và điều hướng chung (ưu tiên cao, sau P0/P1, nối phiên P2)
+
+- **Task:** P3.1 splash/language/consent/legal; P3.2 main/CHƠI; P3.3 bản đồ chương/thẻ màn/back; P3.4 settings bốn nhóm/SFX/tutorial replay/popup stack. Luồng chưa kết nối thật phải ghi rõ.
+- **Đầu ra/test:** first/returning launch, chọn đúng màn tiếp, back/pause không trừ giờ sai; ảnh VI/EN/chữ dài; test settings/lưu/reset đúng namespace, policy reader offline.
+- **Nghiệm thu:** đủ màn tương ứng demo, đúng hình/nội dung/đường đi; không giả vờ tùy chọn chưa có tác dụng. **Dừng** phần cloud/restore/push cần provider/quyền mới.
+
+#### P4 — Đủ luật và model dùng chung (ưu tiên cao, sau P0/P2, phối hợp P5)
+
+- **Task:** P4.1 loại đường/hạn chế/hướng/tốc độ; P4.2 xe/sức chứa/chọn xe; P4.3 nhiều kho/đơn/đích/deadline/đổi hàng theo màn; P4.4 timer/stars/bonus; P4.5 schema/semantic checks/ID mapping.
+- **Đầu ra/test:** fixture từng cơ chế từ demo, positive/negative/boundary tests, plan thắng cho màn đại diện. Core không import DOM/Pixi/SDK.
+- **Nghiệm thu:** rule coverage truy nguồn được, không tự cân bằng lại. **Dừng** luật mâu thuẫn chưa chốt, gồm Q03 nếu ảnh hưởng task; tiếp tục phần độc lập đã rõ.
+
+#### P5 — Bốn chương và cảnh tiến trình (ưu tiên cao, P1–P4 đủ cho từng nhóm màn)
+
+- **Task:** P5.1 Chương 1 (10+bonus); P5.2 Chương 2; P5.3 Chương 3; P5.4 Chương 4; P5.5 unlock/stars/record/công trình/cutscene/bưu thiếp thực có. Bàn giao từng chương riêng.
+- **Đầu ra/test:** validator toàn data; kiểm từng entrypoint/road-art alignment; plan thắng mọi màn; replay cho cơ chế tiêu biểu/bonus; manual playtest từng màn; ảnh các giai đoạn phát triển cảnh.
+- **Nghiệm thu:** cuối mốc đủ 44 playable IDs, không tái gắn tên C1 thay nội dung; unlock/thưởng không lặp. **Dừng** chương có lỗi bắt buộc hoặc asset lệch; không tự thêm chương 5–15.
+
+#### P6 — Garage, ví, vật phẩm và UI thương mại demo (sau P3/P4 và save transaction liên quan)
+
+- **Task:** P6.1 catalog/preview/lưới/trang bị skin; P6.2 ví/thưởng/vật phẩm/thiếu tiền; P6.3 shop/gate/confirm/no-ads UI; P6.4 ad counter và adapter dev có nhãn mô phỏng. Không giao dịch thật.
+- **Đầu ra/test:** ảnh owned/equipped/locked/affordable/insufficient và preview 1:1; skin đúng tại gameplay/prep/home/cutscene, không đổi chỉ số; cancel/double tap/reload/thiếu tiền/no double-grant.
+- **Nghiệm thu:** đủ UI demo, kinh tế đúng nguồn; dev simulation không báo thành IAP/ads thật. Reset ví demo chỉ đề xuất ở dev tools, ghi rõ khác biệt khi duyệt. **Dừng** khi cần đổi kinh tế hoặc production service chưa duyệt.
+
+#### P7 — Save đầy đủ, ngôn ngữ và vòng đời (làm tăng dần P2–P6, tổng hợp sau)
+
+- **Task:** P7.1 progress/wallet/skin/settings/consent versions; P7.2 checkpoint nếu đã chốt quy tắc phục hồi chuyến; P7.3 migration/backup/corrupt/quota/future version; P7.4 VI/EN toàn game; P7.5 nền/resume/rotate/offline/audio/chất lượng thực.
+- **Đầu ra/test:** migration fixtures, transaction/acknowledgement, force-stop/relaunch/save failure, no double-grant; cold-start APK offline; native pause/resume Android và iOS khi có; rà mọi chuỗi dịch.
+- **Nghiệm thu:** không xóa namespace khác hoặc migrate paid flags giả; không hứa giữ dữ liệu sau uninstall bằng backup giả. **Dừng** phần phục hồi chưa chốt hoặc mất dữ liệu; thiếu iOS/máy thật phải ghi chưa kiểm.
+
+#### P8 — Dịch vụ native thật (sau P6/P7, cần duyệt provider/quyền/chi phí)
+
+- **Task:** P8.1 consent/legal drafts; P8.2 ads đúng vị trí/tần suất; P8.3 IAP products/prices/restore/verification; P8.4 account/backup/cloud, notification/haptic nếu thuộc yêu cầu chốt. Không tự thêm rewarded ads: tài liệu UI ghi không có quảng cáo đổi thưởng.
+- **Đầu ra/test:** sandbox/test IDs/tài khoản test; entitlement/duplicate/retry/restore/cancel/offline; native lifecycle/network failures/privacy; xác minh SDK chính thức tại lúc triển khai.
+- **Nghiệm thu:** phân biệt UI mô phỏng với dịch vụ thật bằng bằng chứng native, privacy khớp implementation. **Dừng** thiếu quyền/provider/tài khoản/backend/chi phí chưa duyệt; không giao dịch tiền thật hoặc upload/release.
+
+#### P9 — Hoàn thiện màn chưa có trong demo (sau P3/P7 và duyệt thiết kế từng phần)
+
+- **Task:** P9.1 điểm danh; P9.2 nhiệm vụ ngày/thành tựu; P9.3 hồ sơ/hộp thư theo Cau_Truc_Giao_Dien. Mỗi tính năng: kiểm đặc tả hiện có → trình state/flow/ảnh cùng phong cách demo → duyệt → code.
+- **Đầu ra/test:** chính sách thời gian/phần thưởng và ảnh được duyệt; đổi ngày/offline/chỉnh giờ/nhận lặp/progression/persistence; E2E đầy đủ đường đi.
+- **Nghiệm thu:** không dùng toast Sắp có thay tính năng. **Dừng** thiết kế/phần thưởng/quy tắc chưa duyệt; không tự sáng tác sự kiện.
+
+#### P10 — Nghiệm thu tổng thể và bản internal (sau các P thuộc phạm vi phát hành)
+
+- **Task:** P10.1 screen/state/rule coverage; P10.2 visual regression/playtest; P10.3 responsive/safe area/lifecycle/performance; P10.4 version/signing/privacy/store assets/release checklist.
+- **Đầu ra/test:** web/Android build thật, iOS trên Mac khi có; audit/secret scan; đo FPS/RAM/load/soak trên thiết bị đích; cài/cập nhật/migration/offline và báo cáo lỗi.
+- **Nghiệm thu:** không thiếu màn/tính năng bắt buộc hoặc blocker; chủ dự án duyệt nội bộ. **Dừng** release khi thiếu máy thật/iOS/signing hoặc test bắt buộc; public release cần duyệt riêng.
+
+P3 có thể làm sớm các component độc lập sau khi P1 đạt mẫu nhưng không bỏ gate P1/P2. P9 có thể làm trước P8 để hoàn thiện game offline; không cần làm IAP trước hồ sơ. Không dùng một lần duyệt roadmap để triển khai mọi P liên tục mà không bàn giao từng phần.
+
+### 12.5. Tiêu chí chung cho từng task
+
+1. **Có nguồn:** mã task, screen ID/handler/asset/decision, states và dependency. Kiểm default/selected/locked/disabled/empty/error/insufficient/loading khi màn đó có trạng thái tương ứng, không chỉ ảnh mặc định.
+2. **Ảnh so được:** demo và app cùng viewport/DPR/locale/font/level/progress/skin/camera, cùng thời điểm animation. Ưu tiên 844×390 và 667×375; bổ sung 568×320, 932×430, tablet/safe area. Baseline có version/hash, không tự thay baseline để test xanh.
+3. **Review chênh lệch:** ảnh cạnh nhau và diff, kiểm layout/màu/font/asset/scale/layer/nhãn/animation. Mask chỉ vùng động có lý do, không che cả map/HUD. P0 xác lập ngưỡng pixel theo nhiễu render; máy đo hỗ trợ, không thay duyệt hình ảnh. Không còn khác biệt trọng yếu chưa được chấp thuận khi đánh dấu xong.
+4. **Hành vi:** cùng input/scenario cho cùng state/time/cargo/delivery/stars/unlock/reward; kiểm modal pause và back, không chỉ tìm thấy nút. Mỗi luật quan trọng có fixture nguồn và kiểm biên.
+5. **Mobile:** vùng chạm ≥44 CSS px, không bị safe area/HUD che; giữ landscape demo, không chỉ co tất cả tới mức khó đọc. Ghi rõ mọi điều chỉnh so demo. Browser CDP không thay notch/Dynamic Island/gesture native thật.
+6. **Test đúng phạm vi:** scripts thật hiện có gồm `lint`, `typecheck`, `format:check`, `test:unit`, `test:integration`, `validate:levels`, `test:e2e`, `build`, `test:built`. Khi bàn giao native dùng `cap:sync`, Android build/lint và `test:android` với AVD xác minh. Chưa có script iOS đã kiểm. Visual assertions sẽ thêm vào suite theo task, hiện chưa có baseline/diff test chứng minh giống demo.
+7. **Bàn giao:** files/diff, hành vi, ảnh demo-new-diff, lệnh/kết quả, lỗi/giới hạn, kiểm nguồn bảo vệ và task tiếp theo. Phân biệt đã test/chưa đủ test/mô phỏng/chưa làm/blocked/chưa kiểm máy thật. Test bắt buộc fail thì sửa hoặc dừng, không vô hiệu hóa.
+
+### 12.6. Rủi ro và quyết định chờ duyệt
+
+| Rủi ro / quyết định | Phương án và thời điểm |
+|---|---|
+| Dựng gameplay trước khiến UI tiếp tục lệch | Gate hình ảnh P1 trước mở rộng; P2 đạt cả hình và luật mới gọi slice hoàn thành |
+| SVG/camera/công trình không khớp Pixi | Thử C1 và cảnh C3/C4 trong P0/P1; giữ assets. Chỉ trình đổi renderer khi có bằng chứng, không tự đổi stack |
+| Demo có mô phỏng/Sắp có | P1–P6 chuyển phần hiện hữu; P8 services thật, P9 màn thiếu có gate riêng; không bỏ sót hoặc giả vờ đã hoàn thiện |
+| Demo/tài liệu/mockup khác nhau | Demo chuẩn hình hiện hữu, quyết định đã duyệt chuẩn nghiệp vụ; chỉ hỏi xung đột cụ thể, không yêu cầu chủ dự án nghiên cứu lại kỹ thuật/cung cấp lại nguồn |
+| Font/emoji/CDN và assets lớn | Kiểm license/nguồn, đóng gói offline, quản lý textures/cache/disposal, đo mobile; không tự đổi/nén art hàng loạt |
+| Luật biên/checkpoint/kinh tế/chống chỉnh giờ | Xác minh đúng nguồn tại task; điểm còn mở chặn đúng phần, không ngăn dựng UI đã rõ |
+| SDK/backup gây chi phí, quyền, sai tuyên bố privacy | Duyệt provider/sandbox/permissions trước; không lấy flags demo làm entitlement; không giao dịch thật/public release |
+| Hiểu nhầm test cũ là sản phẩm đã đạt | Giữ mục 11 đúng phạm vi; hiện chưa có visual parity, iOS hoặc máy thật |
+
+**Đề nghị duyệt ngay:** hướng chuyển sát demo và thứ tự P0 → P1 → P2, với điểm dừng duyệt ảnh P1 và nghiệm thu chuyến chơi P2. Đích toàn bộ bốn chương và các màn được đặc tả nhưng chưa có, theo gate P8/P9; không phải quyền tự thiết kế phần thiếu, mua dịch vụ hoặc phát hành.
+
+**Task đầu tiên sau duyệt — P0.1–P0.2:** checklist screen/state/asset và bộ ảnh baseline từ demo nguyên trạng trong profile test riêng; ưu tiên chuẩn bị/gameplay/pause/hết giờ/kết quả C1L1, một cảnh SVG C3/C4. Đầu ra là mẫu cụ thể để dựng P1. Không cài dependency, không sửa demo, chưa mở rộng gameplay. Bàn giao P0 kèm đúng file dự kiến sửa ở P1.
+
+### 12.7. Tiến độ lần điều chỉnh này
+
+- Kiểm Git: root `E:\work1`, HEAD `ee46137`; working tree sạch trước thay đổi lần này. App/kế hoạch nay đã được Git theo dõi, khác lần triển khai trước. Không stage/commit hoặc sửa `design_game`.
+- Đọc chọn lọc nguồn demo/UI/manifest, AGENTS/package scripts/renderer. Kiểm kê tĩnh không thay runtime-test.
+- Chỉ cập nhật kế hoạch này và quy tắc fidelity tại `mobile-app/AGENTS.md`. Không sửa code, cài dependency, tạo app, thay dev server hoặc chạy lại build/native và không tuyên bố test mới pass.
+- Tại lúc lập kế hoạch, P0–P10 chưa triển khai. Sau đó chủ dự án duyệt “bắt đầu phần P0 cho tôi”; kết quả P0 ở mục 13. C1L1 kỹ thuật chưa được nghiệm thu giao diện.
+
+## 13. P0 — kiểm kê và baseline demo, 20/10/2026
+
+### 13.1. Phạm vi, đầu ra và cách xem
+
+**Đã thực hiện P0.1–P0.4:** inventory source/runtime, chụp baseline ưu tiên và xác định luồng/khác biệt/asset đại diện cho P1. Chưa sửa gameplay, renderer hoặc UI ứng dụng. P1 chưa bắt đầu. Không xem baseline ưu tiên là bộ test mọi trạng thái của 44 màn.
+
+- [Gallery ảnh demo](mobile-app/tests/reference/demo-v1.5/index.html): 54 trạng thái, mỗi trạng thái có ảnh 844×390 và 667×375, tổng **108 PNG**, 10.738.527 bytes. Gallery hiển thị bộ 844; bộ nhỏ nằm trong thư mục `667x375` cùng ID ảnh.
+- [Manifest](mobile-app/tests/reference/demo-v1.5/manifest.json): version/hash nguồn, toàn bộ 44 level IDs và dữ liệu cơ chế liên quan, 31 skin, 21 overlay containers/nút, asset bounds, fingerprint tài nguyên/font và setup/state/camera/save test/vùng nút cho từng ảnh.
+- [Kết quả kiểm tra integrity](mobile-app/tests/reference/demo-v1.5/verification.json): pass; kiểm kích thước/hash PNG, ID/chương, font, ảnh lặp cùng frame, overlay coverage và nguồn không đổi.
+- [Công cụ chụp](mobile-app/scripts/capture-demo-reference.mjs) và [công cụ xác minh](mobile-app/scripts/verify-demo-reference.mjs): dùng Playwright đang có, không dependency mới. Helper là công cụ QA, không phải implementation của ứng dụng.
+- Nếu Vite đang mở: `http://127.0.0.1:5173/tests/reference/demo-v1.5/index.html`; có thể mở file gallery trực tiếp bằng trình duyệt. Không thay trang game ở `/` hoặc cấu hình server ứng dụng.
+
+### 13.2. Điều kiện và độ tin cậy của ảnh
+
+- Chromium **156.0.8078.4**, Windows, DPR 1, locale vi-VN, timezone Asia/Bangkok; clock gốc `2026-10-20T05:00:00Z`, random cố định. Có ảnh trang chủ tiếng Anh; chưa chụp mọi màn/chuỗi dịch EN.
+- BrowserContext mới, không dùng profile/save người dùng. Demo được phục vụ chỉ đọc từ `demo` bằng server localhost cổng tạm; server/context được đóng khi hoàn tất. Chỉ cho phép demo local và hai domain font gốc của demo. Không đăng nhập, gửi email, xác nhận thanh toán hoặc gọi SDK production.
+- Nunito gốc tải thành công ở tất cả 108 trạng thái, không fallback; URL/hash các response CSS/WOFF2 nằm trong manifest. Chưa đóng gói hoặc rà license font để phân phối trong app; việc đó thuộc P1 trước khi copy font. Font hiện vẫn phụ thuộc mạng khi tái chụp.
+- Clock điều khiển, SMIL dừng tại mốc 0, CSS animation hữu hạn ở cuối và animation lặp ở mốc 0; warm-up paint trước chụp. **108/108 ảnh ổn định khi chụp lặp cùng frozen frame**. Đây không phải bằng chứng pixel giống nhau giữa hai process, máy khác hoặc Pixi so với SVG; chưa đặt ngưỡng phần trăm giống toàn màn.
+- Những trạng thái cần tiến độ/vị trí đặc biệt được thiết lập bằng fixture gọi logic demo và ghi nguyên setup trong manifest. Đặc biệt thắng/công trình, teleport tới kho, timeout, bưu thiếp không chứng minh một lượt chơi thực tế hoặc điều kiện mở khóa. Không sửa DOM/art để giả thành game mới.
+
+### 13.3. Checklist màn hình/trạng thái đã có ảnh
+
+Mỗi ID dưới đây tương ứng `mobile-app/tests/reference/demo-v1.5/<viewport>/<ID>.png`. Toàn bộ 21 overlay containers có mặt trong ảnh, cộng các lớp tutorial/HUD/chọn hàng; một container được chụp không có nghĩa mọi nhánh của nó đã được kiểm.
+
+| Nguồn/nhóm | IDs ảnh | Ghi chú / phần còn phải kiểm ở task phụ thuộc |
+|---|---|---|
+| Boot/onboarding | `splash`, `language`, `consent`, `first-link` | Đi bằng handler chọn VI → đồng ý local → Để sau. Link cloud mô phỏng, không thử đăng nhập thật |
+| Trang chủ/chương | `main`, `main-en`, `chapters-c1`…`chapters-c4` | Main EN và bản đồ bốn chương đã render. Khóa/mở theo tiến độ, chọn lại mọi màn và returning launch đầy đủ thuộc P3/P5 |
+| Luật/coach/prep | `c1l1-rules`, `c1l1-prep-coach`, `c1l1-prep` | Đã có thẻ luật và coach bước đầu. Các bước còn lại, replay/skip/zoom/pan/tooltip gesture kiểm tại P2 |
+| Gameplay/tutorial | `c1l1-tutorial`, `c1l1-hud` | Hướng dẫn lúc chờ xuất phát và HUD sạch. Mẹo quay đầu điểm giao, queued/cancel input, busy/delivery và đường rẽ cần thêm scenario P2/P4 |
+| Kho/cargo | `c1l1-pickup`, `c1l1-picking`, `c1l1-cargo` | Fixture tới kho, chọn 2 kiện, chạy service và hiện đơn đã lấy disabled; đây là quan sát handler demo, không replay đường đi tới kho |
+| Map/info/pause | `c1l1-map`, `c1l1-missions`, `c1l1-help`, `c1l1-pause`, `c1l1-confirm-restart` | Đã có màn và popup xác nhận. Tất cả help tabs, map-from-pause/settings stack/back và timer boundaries bổ sung P2/P3 |
+| Timeout/shop | `c1l1-timeout-gift`, `c1l1-timeout-empty`, `shop-gate`, `shop`, `payment` | Có/không vật phẩm, thiếu tiền, gate và thanh toán mô phỏng chưa xác nhận. Buy-use/max extension/retry/duplicate/cancel/error cần kiểm P2/P6/P8 |
+| Kết quả/công trình | `c1l1-lost`, `c1l1-won`, `c1l1-construction`, `c1l1-construction-done` | Win fixture chụp sau 1,2 giây để thấy đủ sao, trước auto-cut 2,2 giây. Chưa chụp tất cả 1/2 sao, deadline loss, kết chương và tiến độ mọi công trình |
+| Garage | `garage-default`, `garage-locked`, `garage-diamonds`, `garage-real-size`, `garage-premium`, `garage-motorbike`, `garage-truck` | Preview mặc định/chưa sở hữu/kim cương/1:1/premium/ba loại xe. `locked` là chưa sở hữu, không phải thưởng chương. Trang bị/mua/đủ-thiếu tiền/scroll toàn catalog cần P6 |
+| Settings/legal | `settings-general`, `settings-sound`, `settings-data`, `settings-help`, `policy-tos`, `policy-privacy`, `policy-refund` | Đã có bốn nhóm/ba văn bản nháp. Không bấm xóa dữ liệu, restore thật, link, email; toggles chưa đủ test tác dụng native |
+| Ads | `ad-simulated` | Overlay demo, chưa xác minh lịch mỗi 5 lượt/failure/offline bằng replay; không phải ads SDK |
+| Cảnh đại diện | `c2l1-prep`, `c3l3-prep`, `c3l3-hud`, `c4l3-prep`, `c4l3-hud`, `c1-bonus-prep`, `postcard-c2` | Đủ WebP/SVG/ngày/đêm/đảo/đường đông/hạn giao/bonus/postcard để đánh giá renderer. Chưa chụp từng cảnh của 44 màn; bưu thiếp dùng fixture không kiểm unlock |
+
+### 13.4. Inventory dữ liệu và tài nguyên
+
+| Chương | Index trong LEVELS / hash URL | Số màn hiển thị | Bonus index / URL | Nguồn cảnh |
+|---|---|---|---|---|
+| 1 · Làng ven sông | 0–9 / `#lv=1`…`#lv=10` | 1–10 | 20 / `#lv=21` | 11 WebP; bounds [-600,-250,3150,1750] |
+| 2 · Khu đô thị mới | 10–19 / `#lv=11`…`#lv=20` | 11–20 | 21 / `#lv=22` | 11 WebP; bounds [-600,-250,3500,1750] |
+| 3 · Thành phố Không Ngủ | 22–31 / `#lv=23`…`#lv=32` | 21–30 | 32 / `#lv=33` | `drawNight` SVG theo code |
+| 4 · Đảo Mây Trắng | 33–42 / `#lv=34`…`#lv=43` | 31–40 | 43 / `#lv=44` | `drawSanto` SVG theo code |
+
+- Manifest có riêng từng level và route; **index, số hiển thị, hash URL khác nhau**, không dùng chúng thay stable save IDs. Đặc biệt C3L3 hiển thị Màn 23 nhưng URL là `#lv=25`.
+- `demo/canh` gồm **22 WebP + manifest.js**, tổng 11.685.604 bytes; đã hash từng file trước/sau. Không xuất lại, sửa hoặc copy đè ảnh nguồn. `design_moi` là nguồn sản xuất, không chọn các PNG “có ghim” làm nền rồi vẽ thêm ghim lần nữa.
+- World origin trong `buildLevel`: node `(100+col×350,100+row×350)`; bản đồ rộng `200+(cols−1)×350`, cao tương tự; region giới hạn đường đang mở, không cắt bỏ cảnh thế giới ngoài region. Đây là điểm bản prototype cần sửa ở P1: giữ cảnh toàn map và camera/bounds đúng nguồn, trong khi core chỉ cho đi cạnh hợp lệ.
+- Giữ các lớp: nền → roads/construction/growth → kho/đích/nhãn → xe/badge/hướng/service → HUD/overlay; minimap và fullmap dùng cùng topology/progress. Không gộp các lớp động thành ảnh nền cố định.
+- Logo inline `LOGO()` tương ứng bộ SVG trong `logo&skin/logo`; xe mặc định/SKNEW/skin SVG lấy từ code demo, không tự vẽ xe thay. CSS/font/color/button shapes và camera helpers là nguồn trình bày của P1.
+- Model có ba xe và năm loại đường; runtime data **cả 44 màn chỉ cho van**, không có màn chọn nhiều xe. Xe máy/tải đã xuất hiện trong Garage, không đồng nghĩa có gameplay cho hai xe đó trong bốn chương. Không tự thêm chọn xe hoặc cơ chế hành khách/đổi xe vào bản port.
+- Khi review cuối, Git xuất hiện thêm `design_moi/chuong_3/` và `design_moi/chuong_4/` chưa được theo dõi, ngoài output của P0. Giữ nguyên, không stage/xóa/xuất lại. Demo/fingerprint và tài nguyên runtime vẫn như bộ đã chụp, nên baseline hiện ghi đúng SVG đang chạy; chưa tự chọn các tài nguyên mới đó thay mẫu. P1 cần kiểm nguồn mới liên quan trước quyết định asset để không bỏ qua thay đổi diễn ra đồng thời.
+
+### 13.5. Luồng, thời gian và khác biệt đã xác minh
+
+Luồng nguồn: boot 1,5 giây → language/consent/link khi chưa có flags → main → chapters hoặc CHƠI → prep (`ready`) → intro nếu có → `wait` → bấm đúng hướng xuất phát → `play` ↔ `ask`/`info`/`map`/`paused` → `timeout` hoặc `won`/`lost` → construction/next/retry/home. Overlay phụ như shop/settings/legal có thể lồng trên màn nền; không dùng cùng một biến “screen” để làm mất return context.
+
+| Chủ đề | Kết luận và nguồn | Tác động / quyết định |
+|---|---|---|
+| Đồng hồ | `loop/step`, GL-01/06/10: prep/intro/wait/ask/info/map/paused không chạy gameplay; lấy 2s/giao 1,5s/quay đầu có tính giờ | Giữ một scheduler và pause reasons trong P2; chưa coi P0 là test mọi timing boundary |
+| Win/công trình | `end()` hiện đủ sao theo timer 250/530/810ms; tự `startCut` sau 2200ms nếu vẫn màn thắng; người chơi có thể bấm trước | P1/P2 phải giữ transition, không chỉ có result popup đứng yên |
+| Garage 19 so với 31 | **Đã giải quyết bằng D-78:** giữ 3 mặc định +28 mới; 27 mua kim cương, 1 `truck-gold` 99.000đ mô phỏng. GA-Q2/Q5 cũ bị thay | Không cần hỏi lại catalog cũ; bám 31 IDs manifest |
+| Skin thưởng chương/sự kiện | D-78 và SK-Q1/Q2/Q3 ghi BA hoãn chốt; catalog hiện không có source `ch:`/`ev:` | Không khôi phục hoặc tự đổi skin mua thành phần thưởng; chỉ chặn nhánh này khi làm P6, không chặn P1 |
+| Xe/đường chưa dùng | Models có may/tai và gồ ghề/hẻm nhưng 44 màn đều van; D-64 hoãn chở khách/đổi xe | Giữ ranh giới model, không tự thêm nội dung để trình diễn tính năng chưa có |
+| UI demo có nút nhỏ | Gameplay 844: pause 40×40px; 667: pause ≈31,61px và D-pad ≈41,09px do stage scale | P1 đề xuất vùng chạm ≥44px trong khi giữ hình và vị trí, kiểm vùng nhận không chồng nhau; không coi nhân tỷ lệ toàn UI là đã đạt mobile UX |
+| Chương 3/4 còn SVG | D-79/D-82 cho phép code art trước, ảnh sau; có baseline thật cho đêm/đảo | Port đúng art hiện tại, không tự thay SVG bằng cảnh mới khác mẫu |
+| Main features | Điểm danh/nhiệm vụ/thành tựu/hồ sơ/mail/events là Sắp có; cloud/ads/payment/restore mô phỏng | P9 là hoàn thiện theo spec; P8 dịch vụ thật có gate riêng. P0 không chứng nhận production |
+| Hình/label nguồn | Prep C3/C4 có cụm nhãn dày và có thể sát/chồng cảnh; một số chữ quy định ≥12px nhưng stage co nhỏ | Ghi thành vấn đề nguồn để P1/P2 so sánh; không âm thầm “sửa đẹp” rồi báo giống hoàn toàn |
+
+### 13.6. Lệnh, kết quả và giới hạn
+
+Chạy từ `E:\work1\Game\mobile-app`; không thêm npm script giả:
+
+```powershell
+node scripts/capture-demo-reference.mjs
+node scripts/verify-demo-reference.mjs
+npm run lint
+npm run format:check
+```
+
+Lệnh chụp lần đầu dùng khi chưa có manifest. Sau đó helper **từ chối ghi đè baseline** nếu không có `--refresh`; chỉ dùng cờ đó khi đã review thay đổi nguồn/cách capture và có quyền cập nhật baseline, không dùng để làm visual test xanh. Trong P0 đã tái chụp sau sửa fixture/ổn định timeline; giữ bộ hoàn tất cuối, không dùng ảnh lượt capture bị dừng.
+
+| Kiểm tra | Kết quả thực tế |
+|---|---|
+| Capture cuối | Exit 0; 108 ảnh, 54 states×2 viewport; không page errors hoặc network failures; Nunito loaded 108/108 |
+| Repeat cùng frozen frame | 108/108 PNG có hash bằng ảnh chụp lặp; không suy ra cross-run/cross-platform determinism |
+| Gallery | 54 ảnh bộ 844 đã decode/render và rà bằng ba contact sheets; xem riêng prep, HUD, chọn hàng/cargo, kết quả và SVG; bộ 667 có ảnh đủ và kiểm kích thước/hash, chưa manual-review mọi chi tiết |
+| Verifier | Exit 0; 21/21 overlay containers, 44 IDs/4 bonus/chapter mapping, 31 skins, 22 WebP, PNG headers/hash/font/stability; guard không ghi đè đã được thử |
+| Nguồn bảo vệ | Sáu source fingerprints và 23 file canh khớp trước/sau; không sửa demo/tài liệu gốc/art |
+| Lint/format | `npm run lint` và `npm run format:check` đều exit 0 sau hoàn tất helper/verifier |
+| Diff/URL gallery | `git diff --check` exit 0; diff nguồn app/demo/tài liệu gốc rỗng. URL gallery trên Vite 5173 trả HTTP 200. Không stage/commit |
+
+Các lượt đầu bắt gặp sandbox không thấy browser cache; dùng Chromium đã cài qua quyền chạy công cụ phù hợp, không cài lại. Fixture ban đầu giả định skin thưởng chương còn tồn tại đã bị dừng; đọc D-78/correct catalog rồi bỏ giả định. Lượt thử chờ result quá 2,2 giây bị dừng vì auto-cut thật; đưa mốc chụp về 1,2 giây. Ảnh preview Garage từng dao động vì animation/first paint; helper đóng băng timeline và warm-up, lượt cuối đạt 108/108. Không sửa demo để vượt kiểm tra.
+
+**Chưa kiểm:** toàn bộ trạng thái/gesture/cân bằng của 44 màn, mọi chuỗi EN, âm thanh nghe thực, offline font, screenshot fidelity app mới, native/iOS/thiết bị thật/performance. Không build APK hoặc chạy test gameplay lại vì không sửa app code. P0 là baseline/browser QA, không thay bằng chứng native.
+
+### 13.7. Đầu vào P1 và điểm dừng
+
+P0 hoàn tất inventory và baseline ưu tiên; dừng để chủ dự án xem mẫu. P1 đề xuất bắt đầu bằng **cảnh và HUD C1L1**, đối chiếu `c1l1-prep`/`c1l1-hud`/`c1l1-pickup`, rồi kiểm phép thử SVG C3/C4. Giữ core và test kỹ thuật hiện có; chưa nhân rộng chương.
+
+Phạm vi file dự kiến P1 (chưa sửa): `src/rendering/map-renderer.ts`, `src/ui/game-ui.ts`, `src/ui/style.css`, `src/ui/tokens.css`, phần wiring cần thiết của `src/bootstrap.ts`; thêm module asset/camera nhỏ và thư mục asset app ở vị trí cụ thể sau khi kiểm license/font. Chỉ copy tài nguyên cần vào app, giữ nguồn bất biến, không dùng đường dẫn máy trong bundle. `src/content/c1-l1.json`/schema chỉ điều chỉnh metadata world/art nếu cần, không thay topology hoặc luật; nếu vượt scope phải báo trước.
+
+Nghiệm thu P1 bằng ảnh demo/app/diff cùng viewport/state, đúng cảnh gốc/xe/camera/HUD, không còn hình vector tạm; test liên quan pass và vùng chạm/safe area được kiểm. Bộ ảnh P0 không tự trở thành baseline của renderer mới. Quyết định dùng SVG world thay Pixi vẫn cần bằng chứng/duyệt nếu phát sinh.
+
+## 14. Ưu tiên giao diện Chương 1–2; tạm hoãn Chương 3–4
+
+### 14.1. Quyết định phạm vi của chủ dự án
+
+Ngày 20/10/2026, chủ dự án yêu cầu “làm giao diện trước cho chương 1, 2 thôi”, vì Chương 3–4 chưa hoàn thành. Quyết định này thay phạm vi/thứ tự triển khai tiếp theo trong mục 12–13:
+
+- Đợt hiện tại chỉ chuyển giao diện phục vụ **Chương 1 và 2**, gồm 20 màn chính +2 màn thưởng và các màn/overlay dùng chung liên quan; làm từng phần, không tuyên bố cả 22 màn đã chơi thật.
+- Tạm hoãn Chương 3–4 và phép thử SVG của hai chương trong P1. Giữ toàn bộ code/demo/art/baseline P0 của chúng, không xóa, di chuyển, chỉnh sửa hoặc tự chọn art mới làm chuẩn.
+- Ưu tiên: (a) cảnh/xe/camera/HUD C1L1; (b) chuẩn bị/tutorial/map/pause/result và điều hướng Chương 1; (c) áp dụng cùng thiết kế sang Chương 2 với cảnh/thông tin màn đúng nguồn; (d) rà đủ các trạng thái của hai chương. Các luật còn thiếu chỉ triển khai ở task gameplay riêng sau khi được duyệt.
+- Bố cục chung có thể tái sử dụng sau, nhưng không mở rộng nội dung, commerce hoặc services production trong task UI. Không tạo hai engine để hiển thị demo; mọi điều khiển chơi C1L1 tiếp tục dùng core/session hiện có.
+
+### 14.2. Task đầu tiên P1a — cảnh và HUD C1L1
+
+**Tiêu chí:** dùng đúng WebP gốc, van trắng và lane offset 11 đơn vị của `carPose`; camera/bounds đúng `camPlay`, không fit vùng đường đang mở thành một bản đồ mới; HUD trên bản đồ, minimap/topology/progress đọc cùng snapshot; bỏ sidebar và cảnh vector tạm. Giữ cách chơi đã kiểm, có đối chiếu 844×390 và 667×375. Các panel/transition chưa chuyển sát mẫu phải ghi còn thiếu; không đóng toàn bộ P1 chỉ vì C1L1 đổi hình.
+
+Phạm vi: renderer/scene metadata, UI/icons/minimap/fonts/CSS và wiring cleanup; QA browser/asset provenance. Không sửa core/luật/data đơn, không đụng source demo. Font được đóng gói từ đúng WOFF2 đã hash trong P0, kèm copyright/OFL chính thức và URL/hash trong `public/assets/fonts/sources.json`; không phụ thuộc CDN khi app chạy.
+
+Chương 2 chưa được chuyển trong P1a; Chương 3–4 vẫn hoãn. Đây là cổng bàn giao phần hình ảnh đầu tiên trước mở rộng UI tiếp, không đóng toàn bộ P1 hoặc phạm vi UI hai chương.
+
+### 14.3. Kết quả P1a và kiểm chứng
+
+**Đã triển khai, đã test web; chờ chủ dự án duyệt hình ảnh:** C1L1 dùng đúng WebP gốc và bounds, van trắng theo SVG demo, lane offset 11 và animation quay đầu theo snapshot; camera giữ world 1950×1250 thay vì fit vùng đường; HUD trên map, đồng hồ m:ss, vòng tiến độ đơn, minimap, D-pad/Quay đầu/gợi ý xuất phát. Font Nunito local có SHA-256 khớp P0. Không nhúng engine HTML hoặc thêm dependency.
+
+Các nút Nhiệm vụ/Hướng dẫn/Bản đồ có panel cơ bản và pause/resume qua session hiện có; pickup chuyển xuống đáy thay vì dialog giữa màn. Chúng hoạt động nhưng **chưa đạt đủ layout/nội dung/tab/gesture của demo**, không đánh dấu xong các màn đó. Timer, đơn, cargo, win/save tiếp tục lấy từ core cũ; không sửa luật, schema/data gameplay hoặc service production.
+
+- Files sửa: `src/rendering/map-renderer.ts`, `src/ui/game-ui.ts`, `src/ui/style.css`, `src/bootstrap.ts`; thêm `src/rendering/scene.ts`, `src/ui/minimap.ts`, `src/ui/demo-icons.ts`, `src/ui/fonts.css` và asset/font/license/provenance trong `public/assets`.
+- QA: cập nhật hai assertion đồng hồ sang m:ss và assertion landmark thay heading đã chuyển thành screen-reader text; không bỏ scenario. Thêm `tests/e2e/visual.spec.ts`. Dev E2E dùng server riêng 5180, built smoke vẫn 4173, giữ preview chủ dự án 5173. Không sửa package/lockfile/permissions/native project.
+- [Review demo/app](mobile-app/tests/reference/reviews/p1a-c1-l1/index.html), ảnh mới hai viewport và [metadata](mobile-app/tests/reference/reviews/p1a-c1-l1/review.json); ảnh diff ×4 có tại `diff-844x390.png` và `diff-667x375.png` trong cùng thư mục. Đây là **candidate chờ duyệt**, không thay baseline P0. URL: `http://127.0.0.1:5173/tests/reference/reviews/p1a-c1-l1/index.html`.
+
+| Lệnh / kiểm tra cuối | Kết quả |
+|---|---|
+| `npm run typecheck`, `npm run lint`, `npm run format:check` | Exit 0 |
+| `npm run test:unit` | 20/20 pass; core/schema không sửa |
+| `npm run test:integration` | 13/13 pass |
+| `npm run test:e2e` | 8/8 pass, 3,6 phút; hai viewport. Chơi thắng thật/save/restart, timeout/extend/loss, pause/rotate, touch/safe area/offline và visual/panel integration |
+| Visual source-art checks | Hai ROI cảnh/camera và van/lane tại mỗi viewport: giới hạn 5% pixels có chênh kênh >16. Đây chỉ là ROI regression phát hiện sai art/scale/camera/lane; **không phải tuyên bố toàn UI giống 95%**. Có screenshot toàn màn và ảnh diff để duyệt thủ công |
+| Responsive | 568×320, 667×375, 844×390, 932×430, 1024×768; safe area mô phỏng left44/right24/bottom21. Vùng chạm thực ≥44px, không nới assertion |
+| `npm run build`, `npm run test:built` | Build web pass, 2/2 smoke dist pass; assets/fonts local, input thật và tiếp tục sau ngắt mạng. Không thay cho cold-start APK offline |
+| `node scripts/verify-demo-reference.mjs` | Pass; baseline 108 ảnh/nguồn/font/art P0 nguyên vẹn; không refresh nguồn để làm visual test pass |
+| Gitleaks 8.30.1, redact/config hiện có | Exit 0; scan source app ~1,66MB, không findings. Không suy ra toàn repo/history sạch |
+
+Lượt E2E đầu có ba lỗi vùng chạm: CSS transform làm kích thước tính ra 43,996–43,997px. Đã tăng vùng nhận lên 44,25px trước scale để bù rounding, không thay điều kiện ≥44px. Lượt chọn lọc responsive/visual 4/4 pass, sau đó chạy đủ 8/8 pass. Unit/integration vẫn giữ các case cũ, không mock thắng hoặc tắt test. SVG asset không có parser Prettier mặc định khi chỉ định trực tiếp; lệnh format toàn dự án cuối pass, không thay config để bỏ kiểm source.
+
+**Known issues / chưa làm:** Chương 2 và các màn UI còn lại của Chương 1 chưa chuyển; chưa intro/tutorial đầy đủ, thẻ prep/chọn chương/main/garage/shop/cutscene. Popup/map/help hiện cơ bản; animation camera easing, fade HUD khi che công trình, nhãn/marker và trạng thái UI cần đối chiếu thêm ở task tiếp theo. Màn nhỏ có thay kích thước/vị trí control/hint để giữ vùng chạm; không khẳng định pixel-identical toàn viewport. Texture gốc là **6300×3500** (~84MiB RGBA chưa tính mipmaps/buffer), chưa đo GPU/RAM hoặc kiểm giới hạn texture trên máy yếu; cần kiểm trước nhân nhiều cảnh/load đồng thời. Chưa chạy lại Android/iOS/thiết bị thật; APK cũ chưa chứa UI này, không lấy native pass cũ làm bằng chứng cho UI mới.
+
+**Điểm dừng:** bàn giao mẫu P1a C1L1 để duyệt; tiếp theo hoàn thiện chuẩn bị/map/pause/tutorial/kết quả Chương 1 theo demo rồi chuyển Chương 2. Không tự mở Chương 3–4 hoặc thương mại. Không stage/commit hoặc sửa art/doc nguồn; các file Chương 3–4 đang được thêm ngoài task này được giữ nguyên.
+
+## 15. P1b — kiểm chứng APK Android sau duyệt C1L1
+
+### 15.1. Phạm vi và tiêu chí
+
+Chủ dự án xác nhận “tôi duyệt C1L1”. Đây là duyệt mẫu cảnh/HUD P1a để thực hiện P1b đã trao đổi, không phải nghiệm thu toàn bộ gameplay/UI hai chương hoặc cho phát hành. Chương 3–4 tiếp tục hoãn.
+
+- Build/sync Android trong app hiện có, giữ `dev.littleroutes.slice`, tên Little Routes Dev, version 0.1.0/code 1 và debug signing. Không Live Reload/server.url, giao dịch thật, release signing, upload hoặc dịch vụ production.
+- Cài `install -r` lên AVD riêng `LittleRoutes_API36`, xác minh qemu=1 và SHA-256 APK cài khớp file build. Không clear app data hoặc dùng điện thoại thật chưa được chỉ định.
+- Chạy cold start offline, font/cảnh thực, vùng chạm ≥44 CSS px, mở/đóng panel bằng ADB tap, nền/resume, lấy/giao thắng, restart và save sau process restart. Chụp ADB screencap, không dùng browser screenshot thay ảnh emulator.
+- Kiểm thêm một kích thước display của chính emulator rồi phục hồi; giữ Wi-Fi/data/display như trước test. So với web/demo tại viewport phù hợp, nêu khác biệt WebView/system bars/DPR, không suy ra toàn iOS hoặc mọi điện thoại.
+- Sửa tương thích nếu phát hiện trong phạm vi renderer/test, giữ nguyên art và luật. Dừng khi có lỗi bắt buộc chưa giải quyết; không mở rộng màn trong khi native còn lỗi.
+
+### 15.2. Lỗi đã phát hiện và xử lý trong P1b
+
+- Lượt đầu lưu ở `test-results/android-p1b`: System UI ANR lúc boot, canvas có mặt trước khi texture async xong nên assertion phase nhận null. Đã lưu ảnh lỗi, chọn nút Wait thực tế của OS; bài test chuyển sang đợi `data-phase` sau load thay vì coi canvas visible là đủ readiness. Không xóa save hoặc tắt assertion.
+- Lượt thứ hai ở `test-results/android-p1b-run2`: APK/ID khớp và cold-start local, nhưng native thiếu cảnh. Console có `texImage2D: width or height out of range`; texture gốc 6300×3500 vượt giới hạn GPU của môi trường kiểm. Lượt này **failed**, không coi HUD đã hiện là pass giao diện.
+- Sửa renderer bằng `src/rendering/texture-tiles.ts` và `scenery.ts`: đọc `MAX_TEXTURE_SIZE`, chia texture runtime có gutter 1 pixel cho filtering, giữ đủ từng pixel ảnh và world bounds; GPU đủ lớn vẫn dùng một texture. Không nén/resize/đổi nguồn WebP. Quản lý texture sở hữu và giải phóng khi destroy/HMR/lỗi load; không đổi kiến trúc Pixi hoặc gameplay.
+- Thêm unit tests cho phủ đủ pixel/không hở hoặc chồng content/không vượt kích thước GPU/giữ ảnh nhỏ một texture/đầu vào lỗi. Native check chuyển từ yêu cầu GPU chứa nguyên 6300px sang kiểm source 6300×3500 và từng texture thực ≤ giới hạn GPU; không bỏ kiểm cảnh.
+- Test native nhận `LITTLE_ROUTES_ANDROID_RUN_ID` chỉ là slug an toàn trong `test-results`, giúp giữ riêng các lượt fail/pass; mặc định vẫn `android`.
+- Lượt 3 đã chơi thắng nhưng failed ở assertion restart chạy ngay sau ADB input. Sửa test đợi acknowledgement `ready` rồi vẫn kiểm cargo/timer về 0. Lượt 4 pass 8 mục; rà ảnh thấy compositor có thể còn frame cũ dù DOM đã đổi. Lượt 5 thêm đợi heading đúng panel và hai animation frames + 250ms trước ADB screencap; pass 8 mục, ảnh đã xem thủ công. Không thay gameplay, seed thắng hoặc bỏ assertion để pass. Giữ riêng toàn bộ lượt fail và pass trong `test-results/android-p1b*` (ignored).
+
+### 15.3. Kết quả và bằng chứng bàn giao
+
+**Đã triển khai và kiểm trên emulator, chờ chủ dự án nghiệm thu P1b:** `LittleRoutes_API36`, Pixel 5/Android 16 API 36 x86_64, GPU phần mềm; WebView 133.0.6943.137, DPR 2,75. Đây là một AVD với hai display sizes, không phải hai thiết bị. APK local, không Live Reload, không INTERNET permission hoặc tài nguyên ngoài `https://localhost/`.
+
+- APK: `mobile-app/android/app/build/outputs/apk/debug/app-debug.apk`, **5.158.971 bytes**, debug ID `dev.littleroutes.slice`, versionName 0.1.0/code 1. SHA-256 **`87d9310f141bbb626f7d06d14f93d872a4225f32eac1a1a9bf00533e252bcd9d`**; bản cài được kiểm SHA-256 khớp file build, dùng `install -r`, không clear data.
+- Lượt cuối `android-p1b-run5`, 10:22:51–10:24:22 UTC ngày 20/10/2026: **passed, 8 checks**. [Bản sao báo cáo](mobile-app/tests/reference/reviews/p1b-android/native-report.json) và [trang đối chiếu](mobile-app/tests/reference/reviews/p1b-android/index.html) được giữ trong phần review, kèm hash từng ảnh và metadata nguồn; không thay baseline P0. URL preview: `http://127.0.0.1:5173/tests/reference/reviews/p1b-android/index.html`.
+- Ảnh native là ADB screencap nguyên bản 2340×1080 và 1280×720, giữ OS bars. Đối chiếu ready dùng demo/web tại **802×345 CSS px**; ảnh Android dẫn xuất được cắt đúng WebView bounds `[136,66,2340,1014]` rồi thu về viewport này, ghi rõ là ảnh dẫn xuất. Demo chụp trong profile riêng, dùng URL mở màn và fixture ready/freeze animation; không sửa source. Native thắng bằng OS touch thật, không fixture thắng.
+- Native GPU báo `MAX_TEXTURE_SIZE=4096`; source vẫn 6300×3500, hai texture thực 4095×3500 và 2207×3500. Font Nunito local load offline. Chia texture xử lý giới hạn kích thước, **chưa chứng minh giảm RAM hoặc đạt FPS máy yếu**.
+- Display chính: WebView 802×345 CSS px; display nhỏ cùng AVD: 439×214 CSS px. D-pad/pause/quay đầu đo ≥44 CSS px và nằm trong viewport. Kích thước tương đối nút thay đổi ở display nhỏ để giữ vùng chạm; không tuyên bố toàn UI pixel-identical demo. Native status/navigation bars còn hiển thị.
+- Kiểm cold start offline; panel nhiệm vụ/hướng dẫn/map mở và đóng bằng ADB tap; Home/background/resume dừng timer và yêu cầu tiếp tục; lấy đủ hàng/điều khiển/giao/thắng offline; restart reset; best 3 sao trong SharedPreferences còn nguyên sau force-stop/restart; display thứ hai giữ controls. Giữ best có trước, không reset save để tạo thành tích mới.
+
+| Kiểm tra trong P1b | Kết quả thực tế |
+|---|---|
+| `npm run cap:sync` | Pass; build web và sync Android |
+| Gradle `assembleDebug lintDebug --no-daemon --max-workers=2 --console=plain` | BUILD SUCCESSFUL, 176 tasks; lint app 0 errors/17 warnings có sẵn, không thêm suppressions |
+| `npm run typecheck`, `npm run lint` | Pass |
+| `npm run test:unit` | 28/28 pass, gồm 8 case texture tiling |
+| `npm run test:integration` | 13/13 pass |
+| `npm run test:e2e -- --grep 'original scene\|touch layout'` | 4/4 pass sau sửa renderer; kiểm ROI cảnh/camera/làn, responsive/touch/safe-area/panels; không tuyên bố chạy lại đủ 8 dev E2E trong P1b |
+| `npm run test:built` | Build pass, 2/2 smoke assets đóng gói pass |
+| `npm run test:android` với run ID `android-p1b-run5` | Exit 0, 8 checks pass trên APK đã xác minh hash |
+| `node scripts/verify-demo-reference.mjs` | Pass: 108 PNG, nguồn/art/font nguyên vẹn; không refresh baseline |
+| `npm run format:check`, `git diff --check -- Game` | Exit 0; Git chỉ cảnh báo LF/CRLF theo cấu hình hiện có |
+| Gitleaks 8.30.1 `dir . --redact --no-banner --config .gitleaks.toml` | Exit 0, ~1,70MB, không findings; không suy ra toàn repo/history sạch |
+
+Files P1b: sửa `src/rendering/map-renderer.ts`, thêm `src/rendering/scenery.ts`, `texture-tiles.ts`, `tests/unit/texture-tiles.test.ts`; mở rộng `tests/native/android-smoke.mjs`; thêm bằng chứng review P1b; cập nhật roadmap/README/AGENTS. Không thêm dependency hoặc quyền native; không sửa core/schema/data/luật, demo/art/doc nguồn, không stage/commit. Script chụp đối chiếu tạm ở `.cache/capture-p1b-review.mjs` (ignored), metadata/hash ảnh được giữ cùng review.
+
+Sau QA đã kiểm lại display về physical 1080×2340, Wi-Fi/data đều trở về 1 và ADB forward list trống. Dừng AVD headless do phiên này mở bằng `adb -s emulator-5580 emu kill`; giữ nguyên app/save trong AVD và dev server 5173 cho chủ dự án. Không dừng tiến trình ngoài phạm vi.
+
+**Chưa xác minh / known issues:** chưa iOS, điện thoại thật, camera/notch/Dynamic Island thật, FPS/RAM/nhiệt/chạy dài; System UI ANR lúc boot đầu chưa kết luận nguyên nhân. Chưa hoàn tất popup/pause/prep/tutorial/kết quả/cutscene theo demo hoặc UI Chương 2. Không coi native pass là nghiệm thu toàn bộ giao diện. Cần kiểm texture seam ở nhiều vị trí/cảnh khi mở rộng, không nạp đồng thời tất cả cảnh lớn.
+
+**Điểm dừng và phần tiếp:** bàn giao P1b để nghiệm thu ảnh Android/APK. Sau duyệt, task UI nhỏ tiếp theo là màn chuẩn bị C1 và luồng vào C1L1 theo demo, kèm ảnh cùng trạng thái/viewport và kiểm navigation. Chương 3–4 và hệ thống thương mại tiếp tục ngoài phạm vi.

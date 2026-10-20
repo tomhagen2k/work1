@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>P1b — C1L1 trên Android Emulator</title>
+    <style>
+      body {
+        margin: 24px;
+        font: 16px/1.5 system-ui;
+        color: #1d2733;
+        background: #eef1ed;
+      }
+      h1 {
+        font-size: 25px;
+      }
+      h2 {
+        font-size: 20px;
+      }
+      .compare {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: 16px;
+      }
+      figure {
+        margin: 0 0 20px;
+        padding: 12px;
+        background: white;
+        border-radius: 10px;
+      }
+      img {
+        width: 100%;
+        display: block;
+      }
+      figcaption {
+        margin-top: 8px;
+      }
+      a {
+        color: #15519b;
+      }
+      code {
+        overflow-wrap: anywhere;
+      }
+      @media (max-width: 430px) {
+        body {
+          margin: 12px;
+        }
+        .compare {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>P1b — C1L1 đã chạy bằng APK trên Android Emulator</h1>
+    <p>
+      Chủ dự án đã duyệt mẫu cảnh/HUD C1L1 P1a. Trang này là bằng chứng Android
+      để nghiệm thu P1b; chưa đánh dấu hoàn tất giao diện Chương 1–2. Chương 3–4
+      tiếp tục hoãn.
+    </p>
+    <p>
+      <a href="native-report.json">Báo cáo native: 8 kiểm tra pass</a> ·
+      <a href="review.json">Nguồn, hash và cách chụp</a> ·
+      <a href="http://127.0.0.1:5173/">Chơi bản web</a>
+    </p>
+    <p>
+      AVD LittleRoutes_API36, Android 16/API 36, WebView 133, GPU phần mềm. APK
+      debug <code>dev.littleroutes.slice</code>, 0.1.0/code 1; SHA-256
+      <code
+        >87d9310f141bbb626f7d06d14f93d872a4225f32eac1a1a9bf00533e252bcd9d</code
+      >. Assets/font đóng gói local; kiểm khi tắt Wi-Fi/data, không Live Reload.
+    </p>
+    <h2>Ảnh Android gốc — ADB screencap</h2>
+    <figure>
+      <a href="native-ready.png"
+        ><img
+          src="native-ready.png"
+          alt="APK C1L1 ready, ảnh Android gốc 2340×1080"
+      /></a>
+      <figcaption>
+        2340×1080, giữ cả status/navigation bars và vùng WebView; không ghép vào
+        khung điện thoại. WebView 802×345 CSS px, DPR 2,75. Có khoảng trống bên
+        trái do bố trí hệ thống và letterbox của stage.
+      </figcaption>
+    </figure>
+    <h2>Đối chiếu cùng viewport 802×345 CSS px</h2>
+    <p>
+      Hai ảnh web chụp Chromium 156/DPR 1 trong profile riêng. Demo ở fixture
+      ready, tắt tutorial và đóng băng animation chỉ trong phiên chụp. Ảnh
+      Android dưới đây
+      <strong
+        >đã cắt theo bounds WebView [136,66,2340,1014] rồi thu về
+        802×345</strong
+      >
+      để so bố cục; ảnh gốc ở trên. Có khác raster/font/DPR, không khẳng định
+      pixel-identical.
+    </p>
+    <div class="compare">
+      <figure>
+        <img src="demo-ready-802x345.png" alt="Demo gốc ở trạng thái ready" />
+        <figcaption>Demo gốc — nguồn tham chiếu</figcaption>
+      </figure>
+      <figure>
+        <img src="web-ready-802x345.png" alt="App web mới ở trạng thái ready" />
+        <figcaption>App TypeScript/PixiJS trên browser</figcaption>
+      </figure>
+      <figure>
+        <img
+          src="native-ready-cropped.png"
+          alt="Ảnh Android đã cắt và chuẩn hóa để đối chiếu"
+        />
+        <figcaption>APK Android — ảnh dẫn xuất để so bố cục</figcaption>
+      </figure>
+    </div>
+    <h2>Chạm Android và vòng đời — ảnh gốc</h2>
+    <div class="compare">
+      <figure>
+        <a href="native-orders.png"
+          ><img src="native-orders.png" alt="Panel nhiệm vụ trên Android"
+        /></a>
+        <figcaption>
+          Nhiệm vụ — hoạt động cơ bản, UI chưa chuyển đầy đủ theo demo
+        </figcaption>
+      </figure>
+      <figure>
+        <a href="native-help.png"
+          ><img src="native-help.png" alt="Panel cách chơi trên Android"
+        /></a>
+        <figcaption>
+          Hướng dẫn — hoạt động cơ bản, UI chưa chuyển đầy đủ
+        </figcaption>
+      </figure>
+      <figure>
+        <a href="native-map.png"
+          ><img src="native-map.png" alt="Panel bản đồ trên Android"
+        /></a>
+        <figcaption>
+          Bản đồ — hoạt động cơ bản, chưa đủ UI/gesture demo
+        </figcaption>
+      </figure>
+      <figure>
+        <a href="native-paused.png"
+          ><img src="native-paused.png" alt="Pause sau Home và mở lại app"
+        /></a>
+        <figcaption>
+          Home → trở lại: giữ pause, thời gian dừng cho đến khi chạm Tiếp tục
+        </figcaption>
+      </figure>
+      <figure>
+        <a href="native-pickup.png"
+          ><img src="native-pickup.png" alt="Lấy hàng thực tại kho"
+        /></a>
+        <figcaption>Lấy hàng thực, không seed trạng thái thắng</figcaption>
+      </figure>
+      <figure>
+        <a href="native-won.png"
+          ><img
+            src="native-won.png"
+            alt="Kết quả sau chạm điều khiển giao đủ hàng"
+        /></a>
+        <figcaption>
+          Chạm điều khiển để giao đủ 3 kiện, thắng; UI kết quả chưa giống đầy đủ
+          demo
+        </figcaption>
+      </figure>
+    </div>
+    <h2>Display thứ hai của cùng emulator</h2>
+    <figure>
+      <a href="native-compact-ready.png"
+        ><img src="native-compact-ready.png" alt="APK tại display nhỏ hơn"
+      /></a>
+      <figcaption>
+        Display 1280×720, WebView 439×214 CSS px. D-pad/pause/quay đầu ≥44px,
+        không bị cắt; nút được tăng tương đối để chạm được, khác tỷ lệ demo. Đây
+        không phải thiết bị thứ hai.
+      </figcaption>
+    </figure>
+    <p>
+      Chưa kiểm điện thoại thật/iOS, notch/camera thật, FPS/RAM/nhiệt hoặc chạy
+      dài. Scene gốc đã được chia texture runtime để chạy trên GPU giới hạn
+      4096px; không sửa ảnh nguồn. Popup/prep/tutorial/cutscene và UI các màn
+      khác còn cần chuyển.
+    </p>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-20T09:54:31.860Z",
+  "status": "review candidate; not accepted golden",
+  "scope": "P1a C1L1 scenery, van, camera and HUD; Chapters 1-2 UI is incomplete; Chapters 3-4 deferred",
+  "sourceSha256": "34281d99747292a57f41113ba479afe3bfefaa83223b56b1ad2eafb09e809591",
+  "shots": [
+    {
+      "file": "c1l1-844x390.png",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "sha256": "3a1022ef198a433c2627ebf16e8fd6f1fe9a5f04b3196612e606b01188dd298e",
+      "phase": "ready",
+      "font": true,
+      "imageSize": [6300, 3500],
+      "errors": []
+    },
+    {
+      "file": "c1l1-667x375.png",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "sha256": "f55db000cb9648e4c02feb4e76aeb5a7453031f1c5ecc62a2450733f49e9bfba",
+      "phase": "ready",
+      "font": true,
+      "imageSize": [6300, 3500],
+      "errors": []
+    }
+  ],
+  "limits": [
+    "No full-screen parity claim",
+    "Basic map/help/orders/pause/result panels still differ from demo",
+    "Not a current native build or physical-device test"
+  ]
+}

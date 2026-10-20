@@ -1,9 +1,21 @@
 # Little Routes mobile — quy tắc làm việc
 
 - Mục tiêu: TypeScript strict + PixiJS/WebGL + DOM/CSS + Capacitor; một core
-  chung cho web/Android/iOS. Chuyển bốn chương trước, đo thiết bị thật trước mở rộng.
-  Hiện chỉ triển khai vertical slice C1L1; dừng nghiệm thu trước mở rộng nội dung.
-  Chi tiết: [roadmap](../KE_HOACH_TRIEN_KHAI_MOBILE.md), mục 3–6; tiến độ mới nhất mục 11.
+  chung cho web/Android/iOS. Phạm vi hiện tại: ưu tiên giao diện Chương 1–2;
+  tạm hoãn Chương 3–4 theo yêu cầu chủ dự án, giữ nguyên toàn bộ nguồn của chúng.
+  Demo là chuẩn hình ảnh và hành vi: tái sử dụng art, bố cục, xe, icon, chuyển cảnh;
+  không tự thiết kế lại hoặc dùng hình tạm để đánh dấu hoàn thành. C1L1 mới chuyển
+  cảnh/HUD P1a; chủ dự án đã duyệt mẫu C1L1, chưa hoàn tất UI hai chương.
+  P1b đã build/chạy APK debug và pass kiểm Android Emulator; chờ nghiệm thu trước mở rộng.
+  P0 đã được chủ dự án
+  duyệt; inventory/baseline ưu tiên ở [roadmap](../KE_HOACH_TRIEN_KHAI_MOBILE.md)
+  mục 13 và `tests/reference/demo-v1.5`; chủ dự án cho làm giao diện Chương 1–2,
+  bắt đầu bằng P1 C1L1 rồi áp dụng sang Chương 2. Không đòi hoàn thiện gameplay
+  22 màn hoặc thương mại trong task giao diện; báo rõ phần nào còn chưa chuyển.
+  Phạm vi/tiến độ mới nhất mục 14–15; kế hoạch mục 12, kiến trúc mục 3–6,
+  bằng chứng kỹ thuật cũ mục 11 (không thay test native cho UI mới).
+  Không tự refresh baseline để làm test pass. Mỗi phần cần ảnh đối chiếu cùng
+  viewport/trạng thái và kiểm hành vi; thay đổi khác demo phải được ghi và duyệt.
   Chỉ đọc nguồn liên quan đến task, không đọc lại mọi tài liệu cho mỗi thay đổi nhỏ.
 - Trước sửa: kiểm repository root, Git status/diff và phạm vi. Không sửa `../demo`,
   `../versions`, art hoặc tài liệu gốc ngoài quyền đã duyệt; không reset/discard,

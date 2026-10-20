@@ -29,7 +29,9 @@ async function boot(): Promise<() => void> {
     if (before !== session.snapshot().phase) clock.reset();
     ui.render(session.snapshot());
   };
-  const ui = new GameUI(root, level, session.saves);
+  const ui = new GameUI(root, level, session.saves, (open) =>
+    command({ type: open ? 'pause' : 'resume' }),
+  );
   const unsubscribeSave = session.saves.onChange(() =>
     ui.render(session.snapshot()),
   );
@@ -60,6 +62,7 @@ async function boot(): Promise<() => void> {
     unbind();
     unbindTouch();
     unsubscribeSave();
+    ui.destroy();
     renderer.destroy();
     document.removeEventListener('visibilitychange', visibility);
     window.removeEventListener('resize', orientation);

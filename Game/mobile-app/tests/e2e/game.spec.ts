@@ -29,7 +29,7 @@ test('renders the real map, keeps touch targets usable and can finish/restart/sa
   page.on('pageerror', (error) => errors.push(error.message));
   await openGame(page);
   await expect(
-    page.getByRole('heading', { name: 'Little Routes', exact: true }),
+    page.getByRole('main', { name: 'Little Routes', exact: true }),
   ).toBeVisible();
   for (const button of await page.locator('.dpad button, .icon-button').all()) {
     const box = await button.boundingBox();
@@ -90,7 +90,7 @@ test('renders the real map, keeps touch targets usable and can finish/restart/sa
   await page.getByRole('button', { name: 'Chơi lại', exact: true }).click();
   await expect(page.locator('#app')).toHaveAttribute('data-phase', 'ready');
   await expect(page.locator('#cargo')).toHaveText('0 / 3');
-  await expect(page.locator('#clock')).toHaveText('90s');
+  await expect(page.locator('#clock')).toHaveText('1:30');
   await page.reload();
   await expect(page.locator('canvas')).toBeVisible();
   expect(
@@ -136,7 +136,7 @@ test('pauses on demand/rotation, resumes explicitly, and handles real timeout, e
   await page
     .getByRole('button', { name: 'Dùng +30 giây', exact: true })
     .click();
-  await expect(page.locator('#clock')).toHaveText('30s');
+  await expect(page.locator('#clock')).toHaveText('0:30');
   await advanceUntil(
     page,
     async () =>

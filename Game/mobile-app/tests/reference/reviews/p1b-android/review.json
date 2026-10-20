@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-20T10:25:47.562Z",
+  "status": "P1b native review pending owner acceptance; P1a C1L1 already approved",
+  "sourceSha256": "34281d99747292a57f41113ba479afe3bfefaa83223b56b1ad2eafb09e809591",
+  "apkSha256": "87d9310f141bbb626f7d06d14f93d872a4225f32eac1a1a9bf00533e252bcd9d",
+  "android": {
+    "width": 802,
+    "height": 345,
+    "dpr": 2.75,
+    "ua": "Mozilla/5.0 (Linux; Android 16; sdk_gphone64_x86_64 Build/BE2A.250530.026.F3; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/133.0.6943.137 Mobile Safari/537.36"
+  },
+  "browser": "156.0.8078.4",
+  "shots": [
+    {
+      "file": "web-ready-802x345.png",
+      "viewport": {
+        "width": 802,
+        "height": 345
+      },
+      "dpr": 1,
+      "fontLoaded": true,
+      "sha256": "f51330ed3beebd3dd31b5358f8dc22c983d89c8b219638cc92b697960535a0f9",
+      "errors": []
+    },
+    {
+      "file": "demo-ready-802x345.png",
+      "viewport": {
+        "width": 802,
+        "height": 345
+      },
+      "dpr": 1,
+      "fontLoaded": true,
+      "sha256": "2a865d93136167042a731f2190b6ba60829247e443f3e5cda9f8908e4d4eee3c",
+      "errors": []
+    },
+    {
+      "file": "native-ready-cropped.png",
+      "derivation": "Raw ADB native-ready.png cropped to measured WebView bounds and rescaled to CSS viewport; not a raw screenshot",
+      "bounds": [136, 66, 2340, 1014],
+      "viewport": {
+        "width": 802,
+        "height": 345
+      },
+      "sha256": "ead8b23926af37b5362481f3f3178ae6ea90b8fe0a2b0f72b90d966e56a46c01"
+    }
+  ],
+  "limits": [
+    "One Android API36 software-GPU emulator only",
+    "No full-screen parity claim; basic panels still differ from demo",
+    "No physical-device or iOS verification",
+    "Demo screenshot uses isolated ready-state fixture and frozen animation; native win uses real ADB taps"
+  ]
+}

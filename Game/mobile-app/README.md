@@ -186,6 +186,24 @@ cấu hình mạng riêng cho debug, không nới quyền/cấu hình chuẩn c�
   Chỉ đọc fallback key mobile prototype khi native chưa có; không xóa key cũ hoặc ví demo.
 - Ra nền giữ phiên trong RAM và pause; chưa checkpoint/khôi phục chuyến dở sau process kill,
   chưa migrate ví/quyền mua giả từ demo. Chưa có dịch vụ commerce/production/analytics.
-- UI/art vector cho slice; chưa chuyển đủ tutorial D72, art hoàn thiện và các màn hình khác.
+- Đợt UI hiện tại ưu tiên Chương 1–2, tạm hoãn Chương 3–4. C1L1 đã dùng WebP gốc,
+  van trắng, camera/làn xe và HUD trên bản đồ theo demo; chưa hoàn tất toàn bộ UI
+  hai chương, prep/tutorial D72/cutscene và các màn khác. Một số popup mới ở mức
+  chức năng cơ bản, chưa đạt đối chiếu đầy đủ với demo; xem roadmap mục 14.
   Vòng đời Android đã kiểm trên một AVD; hiệu năng máy yếu, safe areas trên máy thật,
   các kiểu tai thỏ/camera/Dynamic Island và toàn bộ iOS vẫn cần thiết bị phù hợp.
+
+Browser E2E phát triển dùng server riêng **5180** để không dừng preview 5173 của
+chủ dự án; smoke bản build dùng 4173. `npm run dev` vẫn là 5173. Font Nunito đóng
+gói local kèm OFL trong `public/assets/fonts`; app không gọi Google Fonts khi chạy.
+P1b đã build/sync và cài lại APK chứa UI C1L1 mới: `android/app/build/outputs/apk/debug/app-debug.apk`
+(0.1.0/code 1, `dev.littleroutes.slice`, debug). SHA-256:
+`87d9310f141bbb626f7d06d14f93d872a4225f32eac1a1a9bf00533e252bcd9d`.
+Đã pass 8 native checks trên API 36/WebView 133, gồm cold start offline, OS touch chơi
+thắng, pause/resume, restart, native save và hai display sizes của cùng AVD. Xem
+[ảnh gốc Android, đối chiếu demo/web và báo cáo](tests/reference/reviews/p1b-android/index.html),
+hoặc preview `http://127.0.0.1:5173/tests/reference/reviews/p1b-android/index.html`.
+Nguồn WebP 6300×3500 được chia texture runtime theo GPU limit; không thay ảnh nguồn.
+Chưa kiểm iOS/điện thoại thật/hiệu năng máy yếu; popup và các màn khác vẫn chưa chuyển đầy đủ.
+Có thể đặt `LITTLE_ROUTES_ANDROID_RUN_ID` (slug chữ/số/gạch nối) trước `npm run test:android`
+để giữ báo cáo từng lượt trong `test-results/<run-id>`; lượt bàn giao là `android-p1b-run5`.

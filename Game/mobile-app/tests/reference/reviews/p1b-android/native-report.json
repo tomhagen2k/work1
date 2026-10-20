@@ -1,0 +1,280 @@
+{
+  "status": "passed",
+  "serial": "emulator-5580",
+  "api": "36",
+  "checks": [
+    "packaged cold start without internet permission/network",
+    "bundled artwork/font and native touch targets render in landscape",
+    "Android touches open and close orders/help/map panels without starting time",
+    "OS background/resume freezes time and requires explicit resume",
+    "real Android touches complete pickup, driving, automatic delivery and win offline",
+    "restart resets the trip",
+    "saved best survives Android process restart offline",
+    "second emulator display size keeps landscape controls visible and at least 44px"
+  ],
+  "started": "2026-10-20T10:22:51.145Z",
+  "screenshots": [
+    {
+      "file": "native-ready.png",
+      "width": 2340,
+      "height": 1080,
+      "sha256": "5f83f7d2fd0b3a036bf5434cbd78da41c1de8a0636ff5b277d9855d7fb063f62"
+    },
+    {
+      "file": "native-orders.png",
+      "width": 2340,
+      "height": 1080,
+      "sha256": "18a2ed27bd1cf79b0dbcc535044cfcc5bffe82d5200a2270e31b1a48f319dee6"
+    },
+    {
+      "file": "native-help.png",
+      "width": 2340,
+      "height": 1080,
+      "sha256": "eefb4a82b7038313d602e6048a1a5d7c24199a18642684572ca84bc03b59d25a"
+    },
+    {
+      "file": "native-map.png",
+      "width": 2340,
+      "height": 1080,
+      "sha256": "2b40540362d3316c5e385aba76a33f52c3907b4c83fe32db36dbcb22ca6e13c3"
+    },
+    {
+      "file": "native-paused.png",
+      "width": 2340,
+      "height": 1080,
+      "sha256": "f69b351957b0d031352d05082cb92ab57350007bdae030ce23ddee97b08026e8"
+    },
+    {
+      "file": "native-pickup.png",
+      "width": 2340,
+      "height": 1080,
+      "sha256": "e8de9975f9fa760d863efa38d6ce2eceabd6dfd66482f5c19234c7ad08c07cae"
+    },
+    {
+      "file": "native-won.png",
+      "width": 2340,
+      "height": 1080,
+      "sha256": "5dcfea49e039b976e197e4ef15a23cec8cdd8773662b437ae64db9dd7f1794c4"
+    },
+    {
+      "file": "native-compact-ready.png",
+      "width": 1280,
+      "height": 720,
+      "sha256": "789946370e2ce9099b8189046b29da6d450bd27eb620dd3fb5c98aa2c1af29b6"
+    }
+  ],
+  "apkSha256": "87d9310f141bbb626f7d06d14f93d872a4225f32eac1a1a9bf00533e252bcd9d",
+  "installedApkSha256": "87d9310f141bbb626f7d06d14f93d872a4225f32eac1a1a9bf00533e252bcd9d",
+  "viewport": {
+    "width": 802,
+    "height": 345,
+    "dpr": 2.75,
+    "ua": "Mozilla/5.0 (Linux; Android 16; sdk_gphone64_x86_64 Build/BE2A.250530.026.F3; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/133.0.6943.137 Mobile Safari/537.36"
+  },
+  "visual": {
+    "viewport": {
+      "width": 802,
+      "height": 345,
+      "dpr": 2.75
+    },
+    "url": "https://localhost/",
+    "fontLoaded": true,
+    "maxTextureSize": 4096,
+    "sceneTextures": {
+      "source": {
+        "width": 6300,
+        "height": 3500
+      },
+      "tiles": [
+        {
+          "width": 4095,
+          "height": 3500
+        },
+        {
+          "width": 2207,
+          "height": 3500
+        }
+      ],
+      "limit": 4096
+    },
+    "stage": {
+      "x": 27.684837341308594,
+      "y": 0,
+      "width": 746.8121948242188,
+      "height": 345.0909118652344
+    },
+    "controls": [
+      {
+        "label": "Tạm dừng",
+        "x": 517.8858642578125,
+        "y": 7.0787882804870605,
+        "width": 44.2474250793457,
+        "height": 44.24745178222656
+      },
+      {
+        "label": "Đi lên",
+        "x": 91.39392852783203,
+        "y": 184.04849243164062,
+        "width": 46.01212692260742,
+        "height": 46.01213073730469
+      },
+      {
+        "label": "Đi trái",
+        "x": 38.303016662597656,
+        "y": 237.13938903808594,
+        "width": 46.01212692260742,
+        "height": 46.012142181396484
+      },
+      {
+        "label": "Đi phải",
+        "x": 144.48483276367188,
+        "y": 237.13938903808594,
+        "width": 46.01213073730469,
+        "height": 46.012142181396484
+      },
+      {
+        "label": "Đi xuống",
+        "x": 91.39392852783203,
+        "y": 290.23028564453125,
+        "width": 46.01212692260742,
+        "height": 46.012142181396484
+      },
+      {
+        "label": "Quay đầu",
+        "x": 703.7091064453125,
+        "y": 276.07275390625,
+        "width": 56.63024139404297,
+        "height": 56.630306243896484
+      }
+    ],
+    "resources": [
+      "https://localhost/assets/index-UXkUz_Qa.js",
+      "https://localhost/assets/CanvasPool-CyKqekf_.js",
+      "https://localhost/assets/Filter-UIVLQHX1.js",
+      "https://localhost/assets/canvasUtils-WMdbvjln.js",
+      "https://localhost/assets/Cache-DJ_YcGA8.js",
+      "https://localhost/assets/GCManagedHash-CCYZKdjt.js",
+      "https://localhost/assets/RenderTargetSystem-Ch8AZ4W0.js",
+      "https://localhost/assets/getTextureBatchBindGroup-BGtCxeVW.js",
+      "https://localhost/assets/GraphicsContext-xXVs6ud7.js",
+      "https://localhost/assets/getTexelRangeRects-BeigegLb.js",
+      "https://localhost/assets/index-TrJsFggH.css",
+      "https://localhost/assets/esm-C5Lu6ocy.js",
+      "https://localhost/assets/fonts/nunito-latin-ext.woff2",
+      "https://localhost/assets/fonts/nunito-latin.woff2",
+      "https://localhost/assets/fonts/nunito-vietnamese.woff2",
+      "https://localhost/favicon.ico",
+      "https://localhost/assets/browserAll-Ik_9ymMw.js",
+      "https://localhost/assets/init-CKtWrIxA.js",
+      "https://localhost/assets/scenes/c1_man_01.webp",
+      "https://localhost/assets/scenes/van-white.svg"
+    ]
+  },
+  "webviewBounds": [136, 66, 2340, 1014],
+  "runSeconds": 29.316666666666666,
+  "best": {
+    "seconds": 27.516666666666666,
+    "stars": 3
+  },
+  "compactVisual": {
+    "viewport": {
+      "width": 439,
+      "height": 214,
+      "dpr": 2.75
+    },
+    "url": "https://localhost/",
+    "fontLoaded": true,
+    "maxTextureSize": 4096,
+    "sceneTextures": {
+      "source": {
+        "width": 6300,
+        "height": 3500
+      },
+      "tiles": [
+        {
+          "width": 4095,
+          "height": 3500
+        },
+        {
+          "width": 2207,
+          "height": 3500
+        }
+      ],
+      "limit": 4096
+    },
+    "stage": {
+      "x": 0,
+      "y": 5.600175380706787,
+      "width": 439.2727355957031,
+      "height": 202.9814453125
+    },
+    "controls": [
+      {
+        "label": "Tạm dừng",
+        "x": 270.1126403808594,
+        "y": 9.763897895812988,
+        "width": 44.2484016418457,
+        "height": 44.2484245300293
+      },
+      {
+        "label": "Đi lên",
+        "x": 54.65773391723633,
+        "y": 62.304283142089844,
+        "width": 44.24842071533203,
+        "height": 44.24842071533203
+      },
+      {
+        "label": "Đi trái",
+        "x": 6.245584011077881,
+        "y": 110.7164306640625,
+        "width": 44.2484245300293,
+        "height": 44.2484130859375
+      },
+      {
+        "label": "Đi phải",
+        "x": 103.06988525390625,
+        "y": 110.7164306640625,
+        "width": 44.2484245300293,
+        "height": 44.2484130859375
+      },
+      {
+        "label": "Đi xuống",
+        "x": 54.65773391723633,
+        "y": 159.12857055664062,
+        "width": 44.24842071533203,
+        "height": 44.2484245300293
+      },
+      {
+        "label": "Quay đầu",
+        "x": 386.6968688964844,
+        "y": 157.0467071533203,
+        "width": 44.2484016418457,
+        "height": 44.248435974121094
+      }
+    ],
+    "resources": [
+      "https://localhost/assets/index-UXkUz_Qa.js",
+      "https://localhost/assets/CanvasPool-CyKqekf_.js",
+      "https://localhost/assets/Filter-UIVLQHX1.js",
+      "https://localhost/assets/canvasUtils-WMdbvjln.js",
+      "https://localhost/assets/Cache-DJ_YcGA8.js",
+      "https://localhost/assets/GCManagedHash-CCYZKdjt.js",
+      "https://localhost/assets/RenderTargetSystem-Ch8AZ4W0.js",
+      "https://localhost/assets/getTextureBatchBindGroup-BGtCxeVW.js",
+      "https://localhost/assets/GraphicsContext-xXVs6ud7.js",
+      "https://localhost/assets/getTexelRangeRects-BeigegLb.js",
+      "https://localhost/assets/index-TrJsFggH.css",
+      "https://localhost/assets/fonts/nunito-latin-ext.woff2",
+      "https://localhost/assets/fonts/nunito-latin.woff2",
+      "https://localhost/assets/fonts/nunito-vietnamese.woff2",
+      "https://localhost/assets/esm-C5Lu6ocy.js",
+      "https://localhost/favicon.ico",
+      "https://localhost/assets/browserAll-Ik_9ymMw.js",
+      "https://localhost/assets/init-CKtWrIxA.js",
+      "https://localhost/assets/scenes/c1_man_01.webp",
+      "https://localhost/assets/scenes/van-white.svg"
+    ]
+  },
+  "restoredDisplay": "Physical size: 1080x2340",
+  "finished": "2026-10-20T10:24:22.912Z"
+}

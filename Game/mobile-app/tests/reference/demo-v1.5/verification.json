@@ -1,0 +1,22 @@
+{
+  "verifiedAt": "2026-10-20T10:25:15.142Z",
+  "result": "pass",
+  "screenshots": 108,
+  "statesPerViewport": 54,
+  "overlayContainersCovered": 21,
+  "levels": 44,
+  "skins": 31,
+  "webpAssets": 22,
+  "screenshotBytes": 10738527,
+  "checks": [
+    "PNG dimensions and SHA-256",
+    "unique IDs and chapter mapping",
+    "Nunito loaded",
+    "same frozen-frame stability",
+    "all 21 overlay containers captured",
+    "source and art fingerprints unchanged",
+    "no recorded page/network errors",
+    "explicit refresh guard"
+  ],
+  "limitations": "Reference integrity only; not visual parity of the mobile app, gameplay acceptance, cross-run pixel determinism, native or physical-device testing."
+}

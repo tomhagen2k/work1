@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="vi">
+  <meta charset="utf-8" /><title>Little Routes — P0 reference</title
+  ><style>
+    body {
+      font: 16px system-ui;
+      margin: 24px;
+      background: #eef1ed;
+      color: #202922;
+    }
+    h1 {
+      font-size: 24px;
+    }
+    main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 20px;
+    }
+    article {
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+    }
+    img {
+      width: 100%;
+      display: block;
+    }
+    b,
+    small {
+      display: block;
+      margin-top: 8px;
+    }
+    small {
+      color: #536059;
+    }
+  </style>
+  <h1>P0 — Demo v1.5: ảnh tham chiếu</h1>
+  <p>
+    Ảnh thật từ demo nguyên trạng trong Chromium riêng, không phải ảnh app mới.
+    Các trạng thái thắng/công trình được thiết lập bằng fixture; không chứng
+    minh chơi thắng.
+    <a href="manifest.json">Manifest, nguồn, font và setup từng ảnh</a>. Có bộ
+    667×375 trong thư mục cùng tên.
+  </p>
+  <main>
+    <article>
+      <a href="844x390/splash.png"
+        ><img src="844x390/splash.png" alt="splash" loading="lazy" /></a
+      ><b>Khởi động</b><small>splash · home</small>
+    </article>
+    <article>
+      <a href="844x390/language.png"
+        ><img src="844x390/language.png" alt="language" loading="lazy" /></a
+      ><b>Chọn ngôn ngữ lần đầu</b><small>language · home</small>
+    </article>
+    <article>
+      <a href="844x390/consent.png"
+        ><img src="844x390/consent.png" alt="consent" loading="lazy" /></a
+      ><b>Đồng ý chính sách</b><small>consent · home</small>
+    </article>
+    <article>
+      <a href="844x390/first-link.png"
+        ><img src="844x390/first-link.png" alt="first-link" loading="lazy" /></a
+      ><b>Liên kết tài khoản (mô phỏng)</b><small>first-link · home</small>
+    </article>
+    <article>
+      <a href="844x390/main.png"
+        ><img src="844x390/main.png" alt="main" loading="lazy" /></a
+      ><b>Trang chủ</b><small>main · home</small>
+    </article>
+    <article>
+      <a href="844x390/chapters-c1.png"
+        ><img
+          src="844x390/chapters-c1.png"
+          alt="chapters-c1"
+          loading="lazy" /></a
+      ><b>Bản đồ Chương 1</b><small>chapters-c1 · home</small>
+    </article>
+    <article>
+      <a href="844x390/chapters-c2.png"
+        ><img
+          src="844x390/chapters-c2.png"
+          alt="chapters-c2"
+          loading="lazy" /></a
+      ><b>Bản đồ Chương 2</b><small>chapters-c2 · home</small>
+    </article>
+    <article>
+      <a href="844x390/chapters-c3.png"
+        ><img
+          src="844x390/chapters-c3.png"
+          alt="chapters-c3"
+          loading="lazy" /></a
+      ><b>Bản đồ Chương 3</b><small>chapters-c3 · home</small>
+    </article>
+    <article>
+      <a href="844x390/chapters-c4.png"
+        ><img
+          src="844x390/chapters-c4.png"
+          alt="chapters-c4"
+          loading="lazy" /></a
+      ><b>Bản đồ Chương 4</b><small>chapters-c4 · home</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-rules.png"
+        ><img src="844x390/c1l1-rules.png" alt="c1l1-rules" loading="lazy" /></a
+      ><b>Luật lần đầu</b><small>c1l1-rules · ready</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-prep-coach.png"
+        ><img
+          src="844x390/c1l1-prep-coach.png"
+          alt="c1l1-prep-coach"
+          loading="lazy" /></a
+      ><b>Hướng dẫn chuẩn bị bước 1</b><small>c1l1-prep-coach · ready</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-prep.png"
+        ><img src="844x390/c1l1-prep.png" alt="c1l1-prep" loading="lazy" /></a
+      ><b>Chuẩn bị C1L1</b><small>c1l1-prep · ready</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-tutorial.png"
+        ><img
+          src="844x390/c1l1-tutorial.png"
+          alt="c1l1-tutorial"
+          loading="lazy" /></a
+      ><b>Chờ xuất phát và tutorial</b><small>c1l1-tutorial · wait</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-hud.png"
+        ><img src="844x390/c1l1-hud.png" alt="c1l1-hud" loading="lazy" /></a
+      ><b>HUD và xe chờ xuất phát</b><small>c1l1-hud · wait</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-pickup.png"
+        ><img
+          src="844x390/c1l1-pickup.png"
+          alt="c1l1-pickup"
+          loading="lazy" /></a
+      ><b>Bảng chọn hàng tại kho (fixture vị trí)</b
+      ><small>c1l1-pickup · ask</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-picking.png"
+        ><img
+          src="844x390/c1l1-picking.png"
+          alt="c1l1-picking"
+          loading="lazy" /></a
+      ><b>Đang lấy hàng (fixture)</b><small>c1l1-picking · play</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-cargo.png"
+        ><img src="844x390/c1l1-cargo.png" alt="c1l1-cargo" loading="lazy" /></a
+      ><b>Xe đã có hàng, đơn đã lấy bị vô hiệu hóa</b
+      ><small>c1l1-cargo · ask</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-map.png"
+        ><img src="844x390/c1l1-map.png" alt="c1l1-map" loading="lazy" /></a
+      ><b>Bản đồ lớn</b><small>c1l1-map · map</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-missions.png"
+        ><img
+          src="844x390/c1l1-missions.png"
+          alt="c1l1-missions"
+          loading="lazy" /></a
+      ><b>Danh sách đơn</b><small>c1l1-missions · info</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-help.png"
+        ><img src="844x390/c1l1-help.png" alt="c1l1-help" loading="lazy" /></a
+      ><b>Hướng dẫn trong game</b><small>c1l1-help · info</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-pause.png"
+        ><img src="844x390/c1l1-pause.png" alt="c1l1-pause" loading="lazy" /></a
+      ><b>Tạm dừng</b><small>c1l1-pause · paused</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-confirm-restart.png"
+        ><img
+          src="844x390/c1l1-confirm-restart.png"
+          alt="c1l1-confirm-restart"
+          loading="lazy" /></a
+      ><b>Xác nhận chơi lại</b><small>c1l1-confirm-restart · paused</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-timeout-gift.png"
+        ><img
+          src="844x390/c1l1-timeout-gift.png"
+          alt="c1l1-timeout-gift"
+          loading="lazy" /></a
+      ><b>Hết giờ, có vật phẩm</b><small>c1l1-timeout-gift · timeout</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-timeout-empty.png"
+        ><img
+          src="844x390/c1l1-timeout-empty.png"
+          alt="c1l1-timeout-empty"
+          loading="lazy" /></a
+      ><b>Hết giờ, thiếu vật phẩm/kim cương</b
+      ><small>c1l1-timeout-empty · timeout</small>
+    </article>
+    <article>
+      <a href="844x390/shop-gate.png"
+        ><img src="844x390/shop-gate.png" alt="shop-gate" loading="lazy" /></a
+      ><b>Cảnh báo mở cửa hàng</b><small>shop-gate · timeout</small>
+    </article>
+    <article>
+      <a href="844x390/shop.png"
+        ><img src="844x390/shop.png" alt="shop" loading="lazy" /></a
+      ><b>Cửa hàng</b><small>shop · timeout</small>
+    </article>
+    <article>
+      <a href="844x390/payment.png"
+        ><img src="844x390/payment.png" alt="payment" loading="lazy" /></a
+      ><b>Thanh toán mô phỏng, chưa xác nhận</b><small>payment · timeout</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-lost.png"
+        ><img src="844x390/c1l1-lost.png" alt="c1l1-lost" loading="lazy" /></a
+      ><b>Kết quả thua</b><small>c1l1-lost · lost</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-won.png"
+        ><img src="844x390/c1l1-won.png" alt="c1l1-won" loading="lazy" /></a
+      ><b>Kết quả thắng (fixture, không phải lượt chơi thật)</b
+      ><small>c1l1-won · won</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-construction.png"
+        ><img
+          src="844x390/c1l1-construction.png"
+          alt="c1l1-construction"
+          loading="lazy" /></a
+      ><b>Cảnh công trình (fixture thắng)</b
+      ><small>c1l1-construction · cut</small>
+    </article>
+    <article>
+      <a href="844x390/c1l1-construction-done.png"
+        ><img
+          src="844x390/c1l1-construction-done.png"
+          alt="c1l1-construction-done"
+          loading="lazy" /></a
+      ><b>Hoàn thành công trình</b
+      ><small>c1l1-construction-done · cutdone</small>
+    </article>
+    <article>
+      <a href="844x390/garage-default.png"
+        ><img
+          src="844x390/garage-default.png"
+          alt="garage-default"
+          loading="lazy" /></a
+      ><b>Garage mặc định</b><small>garage-default · home</small>
+    </article>
+    <article>
+      <a href="844x390/garage-locked.png"
+        ><img
+          src="844x390/garage-locked.png"
+          alt="garage-locked"
+          loading="lazy" /></a
+      ><b>Garage skin chưa sở hữu</b><small>garage-locked · home</small>
+    </article>
+    <article>
+      <a href="844x390/garage-diamonds.png"
+        ><img
+          src="844x390/garage-diamonds.png"
+          alt="garage-diamonds"
+          loading="lazy" /></a
+      ><b>Garage skin mua kim cương</b><small>garage-diamonds · home</small>
+    </article>
+    <article>
+      <a href="844x390/garage-real-size.png"
+        ><img
+          src="844x390/garage-real-size.png"
+          alt="garage-real-size"
+          loading="lazy" /></a
+      ><b>Garage kích thước thật</b><small>garage-real-size · home</small>
+    </article>
+    <article>
+      <a href="844x390/garage-premium.png"
+        ><img
+          src="844x390/garage-premium.png"
+          alt="garage-premium"
+          loading="lazy" /></a
+      ><b>Garage skin tiền thật (chỉ preview)</b
+      ><small>garage-premium · home</small>
+    </article>
+    <article>
+      <a href="844x390/garage-motorbike.png"
+        ><img
+          src="844x390/garage-motorbike.png"
+          alt="garage-motorbike"
+          loading="lazy" /></a
+      ><b>Garage xe máy</b><small>garage-motorbike · home</small>
+    </article>
+    <article>
+      <a href="844x390/garage-truck.png"
+        ><img
+          src="844x390/garage-truck.png"
+          alt="garage-truck"
+          loading="lazy" /></a
+      ><b>Garage xe tải</b><small>garage-truck · home</small>
+    </article>
+    <article>
+      <a href="844x390/settings-general.png"
+        ><img
+          src="844x390/settings-general.png"
+          alt="settings-general"
+          loading="lazy" /></a
+      ><b>Cài đặt chung</b><small>settings-general · home</small>
+    </article>
+    <article>
+      <a href="844x390/settings-sound.png"
+        ><img
+          src="844x390/settings-sound.png"
+          alt="settings-sound"
+          loading="lazy" /></a
+      ><b>Cài đặt âm thanh</b><small>settings-sound · home</small>
+    </article>
+    <article>
+      <a href="844x390/settings-data.png"
+        ><img
+          src="844x390/settings-data.png"
+          alt="settings-data"
+          loading="lazy" /></a
+      ><b>Cài đặt dữ liệu và mua hàng</b><small>settings-data · home</small>
+    </article>
+    <article>
+      <a href="844x390/settings-help.png"
+        ><img
+          src="844x390/settings-help.png"
+          alt="settings-help"
+          loading="lazy" /></a
+      ><b>Cài đặt hỗ trợ/pháp lý</b><small>settings-help · home</small>
+    </article>
+    <article>
+      <a href="844x390/policy-tos.png"
+        ><img src="844x390/policy-tos.png" alt="policy-tos" loading="lazy" /></a
+      ><b>Điều khoản (bản nháp)</b><small>policy-tos · home</small>
+    </article>
+    <article>
+      <a href="844x390/policy-privacy.png"
+        ><img
+          src="844x390/policy-privacy.png"
+          alt="policy-privacy"
+          loading="lazy" /></a
+      ><b>Quyền riêng tư (bản nháp)</b><small>policy-privacy · home</small>
+    </article>
+    <article>
+      <a href="844x390/policy-refund.png"
+        ><img
+          src="844x390/policy-refund.png"
+          alt="policy-refund"
+          loading="lazy" /></a
+      ><b>Hoàn tiền (bản nháp)</b><small>policy-refund · home</small>
+    </article>
+    <article>
+      <a href="844x390/ad-simulated.png"
+        ><img
+          src="844x390/ad-simulated.png"
+          alt="ad-simulated"
+          loading="lazy" /></a
+      ><b>Quảng cáo mô phỏng, chưa được đóng</b
+      ><small>ad-simulated · home</small>
+    </article>
+    <article>
+      <a href="844x390/c2l1-prep.png"
+        ><img src="844x390/c2l1-prep.png" alt="c2l1-prep" loading="lazy" /></a
+      ><b>Chuẩn bị cảnh WebP Chương 2</b><small>c2l1-prep · ready</small>
+    </article>
+    <article>
+      <a href="844x390/c3l3-prep.png"
+        ><img src="844x390/c3l3-prep.png" alt="c3l3-prep" loading="lazy" /></a
+      ><b>Chuẩn bị SVG Chương 3, đường đông</b><small>c3l3-prep · ready</small>
+    </article>
+    <article>
+      <a href="844x390/c3l3-hud.png"
+        ><img src="844x390/c3l3-hud.png" alt="c3l3-hud" loading="lazy" /></a
+      ><b>Gameplay cảnh SVG Chương 3</b><small>c3l3-hud · wait</small>
+    </article>
+    <article>
+      <a href="844x390/c4l3-prep.png"
+        ><img src="844x390/c4l3-prep.png" alt="c4l3-prep" loading="lazy" /></a
+      ><b>Chuẩn bị SVG Chương 4, hạn giao</b><small>c4l3-prep · ready</small>
+    </article>
+    <article>
+      <a href="844x390/c4l3-hud.png"
+        ><img src="844x390/c4l3-hud.png" alt="c4l3-hud" loading="lazy" /></a
+      ><b>Gameplay cảnh SVG Chương 4</b><small>c4l3-hud · wait</small>
+    </article>
+    <article>
+      <a href="844x390/c1-bonus-prep.png"
+        ><img
+          src="844x390/c1-bonus-prep.png"
+          alt="c1-bonus-prep"
+          loading="lazy" /></a
+      ><b>Chuẩn bị màn thưởng Chương 1</b><small>c1-bonus-prep · ready</small>
+    </article>
+    <article>
+      <a href="844x390/postcard-c2.png"
+        ><img
+          src="844x390/postcard-c2.png"
+          alt="postcard-c2"
+          loading="lazy" /></a
+      ><b>Bưu thiếp Chương 2 (fixture, không kiểm unlock)</b
+      ><small>postcard-c2 · ready</small>
+    </article>
+    <article>
+      <a href="844x390/main-en.png"
+        ><img src="844x390/main-en.png" alt="main-en" loading="lazy" /></a
+      ><b>Trang chủ tiếng Anh</b><small>main-en · home</small>
+    </article>
+  </main>
+</html>
